@@ -32,7 +32,7 @@ const FormBuilder = ({ formData, setFormData, isPreview, setIsPreview }) => {
     }
 
     return (
-        <div className="formBuilderMain pt-8 px-4 pb-20">
+        <div className="formBuilderMain w-full max-w-4xl mx-auto pt-8 px-4 pb-20">
             {/*MOBILE TOOL BAR COMPONENT 
             CONTAINING - TOOLBAR && JSON LOG MODAL */}
 
@@ -52,7 +52,7 @@ const FormBuilder = ({ formData, setFormData, isPreview, setIsPreview }) => {
                         const shouldShow = isPreview ? checkFieldVisibility(field, formData) : true
                         return (
                             FieldComponent && shouldShow && (
-                                <div key={field.id} className="mb-4">
+                                <div key={field.id} className="FieldComponents mb-2">
                                     <FieldComponent
                                         field={field}
                                         label={fieldTypes[field.fieldType]?.label}

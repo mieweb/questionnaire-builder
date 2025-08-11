@@ -7,7 +7,7 @@ const App = () => {
     const [isPreview, setIsPreview] = useState(false)
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100 font-titillium">
             <Header
                 formData={formData}
                 setFormData={setFormData}
