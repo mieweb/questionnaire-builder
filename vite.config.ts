@@ -7,7 +7,9 @@ export default defineConfig({
     server: {
       host: '0.0.0.0',
       port: 5173,
-      allowedHosts: ['lattln-questionnaire-builder-main.opensource.mieweb.org']
+      allowedHosts: ['lattln-questionnaire-builder-main.opensource.mieweb.org', 
+        'lattln-questionnaire-builder-feature-request.opensource.mieweb.org'
+      ]
     },
     plugins: [
         tailwindcss(),

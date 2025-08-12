@@ -3,7 +3,7 @@ import FormBuilderMain from "./components/FormBuilderMain"
 import Header from "./components/Header"
 import MobileToolBar from "./components/MobileToolBar"
 import fieldTypes from "./components/fields/fieldTypes-config"
-import { deleteField, updateField } from "./utils/formActions"
+import { addField, deleteField, updateField } from "./utils/formActions"
 
 const App = () => {
   const [formData, setFormData] = useState([])
@@ -22,9 +22,8 @@ const App = () => {
         setFormData={setFormData}
         isPreview={isPreview}
         setIsPreview={setIsPreview}
+        addField={addField}
       />
-
-
 
       <FormBuilderMain
         formData={formData}
