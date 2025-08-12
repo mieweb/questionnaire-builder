@@ -24,7 +24,7 @@ jobs:
     needs: setup-runner
     steps:
       - name: deploy-to-proxmox
-        uses: maxklema/promox-launchpad@main
+        uses: maxklema/proxmox-launchpad@main
         with:
           proxmox_username: lattln
           proxmox_password: ${{ secrets.proxmox_password }}
