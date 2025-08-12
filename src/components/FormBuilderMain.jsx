@@ -1,4 +1,4 @@
-import React, {} from "react";
+import React, { } from "react";
 import { checkFieldVisibility } from "../utils/visibilityChecker"
 import fieldTypes from "./fields/fieldTypes-config"
 import { addField } from "../utils/formActions";
@@ -29,6 +29,14 @@ export function renderFormFields({ formData = [], isPreview, setIsPreview, updat
 }
 
 export default function FormBuilderMain({ formData, setFormData, isPreview, updateField, deleteField }) {
+
+  if (isPreview) {
+    return (
+      <div className="FormBuilder-Container w-full max-w-4xl mx-auto pt-8 px-4 pb-20">
+        {renderFormFields({ formData, isPreview, updateField, deleteField })}
+      </div>
+    )
+  }
 
   return (
     <div className="FormBuilder-Container w-full max-w-4xl mx-auto pt-8 px-4 pb-20">
