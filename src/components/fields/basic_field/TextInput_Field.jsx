@@ -14,7 +14,7 @@ const TextInputField = ({ field, label, onUpdate, onDelete, isPreview, formData,
   if (isPreview) {
     return (
       <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300"}`}>
-        <div className="bg-white border-b-1 border-gray-300 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div className={`bg-white  ${insideSection ? "border-b-1 border-gray-300" : "border-0"} grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4`}>
           <div className="font-light">{field.question || "Question"}</div>
           <input
             id={`answer-uuid-${uniqueId}`}
@@ -32,7 +32,7 @@ const TextInputField = ({ field, label, onUpdate, onDelete, isPreview, formData,
   // EDIT MODE 
   return (
     <div className="p-4 bg-white">
-      <div className="flex justify-between mb-2">
+      <div className="flex justify-between mb-2 ml-1">
         {label}
         <div className="flex items-center gap-2 ml-2">
           <button onClick={toggleEdit}><EDIT_ICON className="h-6 w-6" /></button>

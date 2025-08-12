@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { DATALOG_ICON, EYEEDIT_ICON, EYECLOSED_ICON, PLUSSQUARE_ICON, X_ICON } from "../assets/icons"
 import { motion } from "framer-motion"
 import { addField } from "../utils/formActions"
 
-const MobileToolBar = ({fieldTypes, formData, setFormData, isPreview, setIsPreview }) => {
+const MobileToolBar = ({ fieldTypes, formData, setFormData, isPreview, setIsPreview }) => {
   const [isToolBarExpanded, setIsToolBarExpanded] = useState(false)
   const [isLogExpanded, setIsLogExpanded] = useState(false)
+  const containerRef = useRef(null);
 
   const handleToolBarExpanded = () => {
     setIsToolBarExpanded(!isToolBarExpanded)
@@ -22,24 +23,20 @@ const MobileToolBar = ({fieldTypes, formData, setFormData, isPreview, setIsPrevi
     setIsLogExpanded(false)
   }
 
-  const handleClickOutside = (event) => {
-    if (!event.target.closest(".MobileToolBar-Modal")) {
-      setIsToolBarExpanded(false)
-      setIsLogExpanded(false)
-    }
-  }
-
   useEffect(() => {
-    if (isToolBarExpanded || isLogExpanded) {
-      document.addEventListener("mousedown", handleClickOutside)
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
+    if (!isToolBarExpanded && !isLogExpanded) return;
 
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [isToolBarExpanded, isLogExpanded])
+    const handleDocDown = (event) => {
+      const el = containerRef.current;
+      if (el && !el.contains(event.target)) {
+        setIsToolBarExpanded(false);
+        setIsLogExpanded(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleDocDown);
+    return () => document.removeEventListener("pointerdown", handleDocDown);
+  }, [isToolBarExpanded, isLogExpanded]);
 
   return (
     <div className="MobileToolBar fixed bottom-0 left-0 w-full text-stone-900 shadow-lg z-10">
@@ -113,6 +110,7 @@ const MobileToolBar = ({fieldTypes, formData, setFormData, isPreview, setIsPrevi
 
       {/*TOOLBAR MODAL DIV */}
       <motion.div
+        ref={containerRef}
         initial={{ opacity: 0, y: "100%", scale: 0 }}
         animate={{ opacity: isToolBarExpanded ? 1 : 0, y: isToolBarExpanded ? "0%" : "100%", scale: isToolBarExpanded ? 1 : 0.6 }}
         transition={{ type: "spring", stiffness: 150, damping: 20 }}
