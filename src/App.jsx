@@ -1,6 +1,9 @@
 import React, { useState } from "react"
-import FormBuilder from "./components/FormBuilderMain"
+import FormBuilderMain from "./components/FormBuilderMain"
 import Header from "./components/Header"
+import MobileToolBar from "./components/MobileToolBar"
+import fieldTypes from "./components/fields/fieldTypes-config"
+import { deleteField, updateField } from "./utils/formActions"
 
 const App = () => {
   const [formData, setFormData] = useState([])
@@ -13,12 +16,29 @@ const App = () => {
         setFormData={setFormData}
       />
 
-      <FormBuilder
+      <MobileToolBar
+        fieldTypes={fieldTypes}
         formData={formData}
         setFormData={setFormData}
         isPreview={isPreview}
-        setIsPreview={setIsPreview} />
+        setIsPreview={setIsPreview}
+      />
+
+
+
+      <FormBuilderMain
+        formData={formData}
+        setFormData={setFormData}
+        isPreview={isPreview}
+        setIsPreview={setIsPreview}
+        updateField={(id, key, value) =>
+          updateField(formData, setFormData, id, key, value)
+        }
+        deleteField={(id) => 
+          deleteField(formData, setFormData, id)}
+      />
     </div>
+
   )
 }
 

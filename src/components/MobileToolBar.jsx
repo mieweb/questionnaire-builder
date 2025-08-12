@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react"
 import { DATALOG_ICON, EYEEDIT_ICON, EYECLOSED_ICON, PLUSSQUARE_ICON, X_ICON } from "../assets/icons"
 import { motion } from "framer-motion"
+import { addField } from "../utils/formActions"
 
-const MobileToolBar = ({ addField, fieldTypes, formData, isPreview, setIsPreview }) => {
+const MobileToolBar = ({fieldTypes, formData, setFormData, isPreview, setIsPreview }) => {
   const [isToolBarExpanded, setIsToolBarExpanded] = useState(false)
   const [isLogExpanded, setIsLogExpanded] = useState(false)
 
@@ -22,7 +23,7 @@ const MobileToolBar = ({ addField, fieldTypes, formData, isPreview, setIsPreview
   }
 
   const handleClickOutside = (event) => {
-    if (!event.target.closest(".navbar-container")) {
+    if (!event.target.closest(".MobileToolBar-Modal")) {
       setIsToolBarExpanded(false)
       setIsLogExpanded(false)
     }
@@ -41,7 +42,7 @@ const MobileToolBar = ({ addField, fieldTypes, formData, isPreview, setIsPreview
   }, [isToolBarExpanded, isLogExpanded])
 
   return (
-    <div className="MobileToolBar-Container fixed bottom-0 left-0 w-full text-stone-900 shadow-lg z-10">
+    <div className="MobileToolBar fixed bottom-0 left-0 w-full text-stone-900 shadow-lg z-10">
 
       <motion.div
         initial={{ y: "100%" }}
@@ -115,7 +116,7 @@ const MobileToolBar = ({ addField, fieldTypes, formData, isPreview, setIsPreview
         initial={{ opacity: 0, y: "100%", scale: 0 }}
         animate={{ opacity: isToolBarExpanded ? 1 : 0, y: isToolBarExpanded ? "0%" : "100%", scale: isToolBarExpanded ? 1 : 0.6 }}
         transition={{ type: "spring", stiffness: 150, damping: 20 }}
-        className="fixed bottom-0 w-full mx-auto bg-black/5 border-black/15 border px-9 py-4 mb-2 rounded-2xl backdrop-blur-xl 
+        className="MobileToolBar-Modal fixed bottom-0 w-full mx-auto bg-black/5 border-black/15 border px-9 py-4 mb-2 rounded-2xl backdrop-blur-xl 
                             overflow-y-scroll scrollbar-thin scrollbar-track-gray-200 scrollbar-thumb-gray-400"
       >
         <div className="grid grid-cols-1 gap-2">
@@ -132,7 +133,7 @@ const MobileToolBar = ({ addField, fieldTypes, formData, isPreview, setIsPreview
               key={type}
               className="px-4 pl-6 py-2 text-black text-left rounded hover:bg-slate-50"
               onClick={() => {
-                addField(type)
+                addField(formData, setFormData, type)
                 setIsToolBarExpanded(!isToolBarExpanded)
               }}
             >
