@@ -17,7 +17,7 @@ const CheckField = ({ field, label, onUpdate, onDelete, isPreview, formData, par
   if (isPreview) {
     return (
       <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300"}`}>
-        <div className="p-4 border-b-1 border-gray-300 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div className="border-b-1 border-gray-300 grid grid-cols-1 gap-2 sm:grid-cols-2">
           <div className="font-light">{field.question || "Question"}</div>
           <div>
             {field.options.map(option => (

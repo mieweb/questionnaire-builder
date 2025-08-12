@@ -18,7 +18,7 @@ const DropDownField = ({ field, label, onUpdate, onDelete, isPreview, formData, 
 
     return (
       <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300"}`}>
-        <div className="p-4 bg-white border-b-1 border-gray-300 grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <div className="bg-white border-b-1 border-gray-300 grid grid-cols-1 gap-2 sm:grid-cols-2">
           <div className="font-light ">{field.question || "Question"}</div>
 
           <div className="relative">

@@ -55,7 +55,7 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
           {field.title || "Section"}
         </div>
         <div className="p-4 bg-white border-1 border-gray-300">
-            {(field.fields || []).map(renderChild)}
+          {(field.fields || []).map(renderChild)}
         </div>
 
       </section>
