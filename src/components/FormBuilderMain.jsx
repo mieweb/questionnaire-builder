@@ -45,7 +45,7 @@ export default function FormBuilderMain({ formData, setFormData, isPreview, upda
       {Object.keys(fieldTypes).map((type) => (
         <button
           key={type}
-          className="px-4 pl-6 py-2 text-black text-left rounded hover:bg-slate-50"
+          className="px-4 pl-6 py-2 text-black text-left rounded hover:bg-slate-50 invisible sm:visible"
           onClick={() => {
             addField(formData, setFormData, type)
           }}

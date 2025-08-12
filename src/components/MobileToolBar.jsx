@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react"
 import { DATALOG_ICON, EYEEDIT_ICON, EYECLOSED_ICON, PLUSSQUARE_ICON, X_ICON } from "../assets/icons"
 import { motion } from "framer-motion"
-import { addField } from "../utils/formActions"
 
-const MobileToolBar = ({ fieldTypes, formData, setFormData, isPreview, setIsPreview }) => {
+const MobileToolBar = ({ fieldTypes, formData, setFormData, isPreview, setIsPreview, addField }) => {
   const [isToolBarExpanded, setIsToolBarExpanded] = useState(false)
   const [isLogExpanded, setIsLogExpanded] = useState(false)
   const containerRef = useRef(null);
