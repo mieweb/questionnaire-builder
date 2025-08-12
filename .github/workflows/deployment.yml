@@ -31,7 +31,5 @@ jobs:
           github_pat: ${{ secrets.runner_pat }}
           http_port: 5173
           install_command: npm install
-          start_command: npm run dev --host 0.0.0.0
+          start_command: npm run dev
           runtime_language: nodejs
-
-
