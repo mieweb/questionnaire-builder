@@ -44,7 +44,7 @@ const MobileToolBar = ({ fieldTypes, formData, setFormData, isPreview, setIsPrev
         initial={{ y: "100%" }}
         animate={{ y: "0%" }}
         transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-        className={`flex ${!isPreview ? "justify-around" : "justify-center"} py-5`}
+        className={`flex ${!isPreview ? "justify-around" : "justify-center"} pb-5 max-w-xl sm:max-w-4xl mx-auto`}
       >
         {/*MODE SWITCH BUTTON (PREVIEW / EDIT MODE) */}
         <motion.button
@@ -84,6 +84,7 @@ const MobileToolBar = ({ fieldTypes, formData, setFormData, isPreview, setIsPrev
 
       {/*JSON DATA LOG MODAL DIV*/}
       <motion.div
+        ref={containerRef}
         initial={{ opacity: 0, y: "100%", scale: 0 }}
         animate={{ opacity: isLogExpanded ? 1 : 0, y: isLogExpanded ? "0%" : "100%", scale: isLogExpanded ? 1 : 0.6 }}
         transition={{ type: "spring", stiffness: 150, damping: 20 }}
