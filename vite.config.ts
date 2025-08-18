@@ -6,8 +6,8 @@ export default defineConfig({
       host: '0.0.0.0',
       port: 5173,
       allowedHosts: [
-        'lattln-questionnaire-builder-main.opensource.mieweb.org',
-        'lattln-questionnaire-builder-feature-request.opensource.mieweb.org'
+        'mieweb-questionnaire-builder-main.opensource.mieweb.org',
+        'mieweb-questionnaire-builder-feature-request.opensource.mieweb.org'
       ]
     },
     plugins: [
