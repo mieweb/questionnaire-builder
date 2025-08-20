@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "screenshots": "node scripts/simple-screenshots.js",
+    "screenshots:full": "node scripts/take-screenshots.js",
+    "update-screenshots": "./scripts/update-screenshots.sh"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
@@ -30,6 +33,7 @@
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
     "postcss": "^8.4.49",
+    "puppeteer-core": "^24.16.2",
     "tailwind-scrollbar": "^4.0.0",
     "tailwindcss": "^4.0.6",
     "vite": "^5.4.10"
