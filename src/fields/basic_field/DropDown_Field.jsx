@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
 import { v4 as uuidv4 } from "uuid"
-import { EDIT_ICON, PLUSOPTION_ICON, TRASHCAN_ICON, TRASHCANTWO_ICON } from "../../../assets/icons"
-import EnableWhenLogic from "../../EnableWhenLogic"
+import { ARROWDOWN_ICON, EDIT_ICON, PLUSOPTION_ICON, TRASHCAN_ICON, TRASHCANTWO_ICON } from "../../assets/icons"
+import EnableWhenLogic from "../../utils/EnableWhenLogic"
 
-const CheckField = ({ field, label, onUpdate, onDelete, isPreview, formData, parentType }) => {
+const DropDownField = ({ field, label, onUpdate, onDelete, isPreview, formData, parentType }) => {
   const [isEdit, setIsEdit] = useState(false)
   const toggleEdit = () => setIsEdit(!isEdit)
 
@@ -13,31 +13,32 @@ const CheckField = ({ field, label, onUpdate, onDelete, isPreview, formData, par
   const deleteOption = (id) => onUpdate("options", field.options.filter(o => o.id !== id))
   const insideSection = parentType === "section"
 
-  // PREVIEW MODE
+  // PREVIEW MODE 
   if (isPreview) {
+
     return (
-      <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300"}`}>
+      <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300 rounded-lg"}`}>
         <div className={`bg-white  ${insideSection ? "border-b-1 border-gray-300" : "border-0"} grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4`}>
-          <div className="font-light">{field.question || "Question"}</div>
-          <div>
-            {field.options.map(option => (
-              <label key={option.id} className="flex items-center px-3 py-1 my-2">
-                <input
-                  type="checkbox"
-                  className="mr-2 w-9 h-9"
-                  checked={field.selected?.includes(option.id)}
-                  onChange={() => {
-                    const selected = field.selected || []
-                    const updated = selected.includes(option.id)
-                      ? selected.filter(id => id !== option.id)
-                      : [...selected, option.id]
-                    onUpdate("selected", updated)
-                  }}
-                />
-                {option.value}
-              </label>
-            ))}
+          <div className="font-light ">{field.question || "Question"}</div>
+
+          <div className="relative">
+
+            <select
+              className="w-full px-4 shadow border border-black/10 rounded-lg h-10 appearance-none"
+              value={field.selected || ""}
+              onChange={(e) => onUpdate("selected", e.target.value)}
+            >
+              <option value="">Select an option</option>
+              {field.options.map(option => (
+                <option key={option.id} value={option.id}>
+                  {option.value}
+                </option>
+              ))}
+            </select>
+
+            <ARROWDOWN_ICON className="absolute top-2 bottom-0 right-2" />
           </div>
+
         </div>
       </div>
     )
@@ -45,7 +46,7 @@ const CheckField = ({ field, label, onUpdate, onDelete, isPreview, formData, par
 
   // EDIT MODE
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-white rounded-lg">
       <div className="flex justify-between mb-2 ml-1">
         {label}
         <div className="flex items-center gap-2 ml-2">
@@ -70,9 +71,19 @@ const CheckField = ({ field, label, onUpdate, onDelete, isPreview, formData, par
         <EnableWhenLogic fieldId={field.id} formData={formData} onUpdate={onUpdate} />
       </motion.div>
 
+      <div className="relative">
+        <select className="w-full px-4 pr-10 mt-2 shadow border border-black/10 rounded-lg h-10 appearance-none" disabled>
+          <option value="">Select an option</option>
+          {field.options.map(option => (
+            <option key={option.id} value={option.id}>
+              {option.value}
+            </option>
+          ))}
+        </select>
+        <ARROWDOWN_ICON className="absolute top-4 bottom-0 right-2" />
+      </div>
       {field.options.map(option => (
-        <div key={option.id} className="flex items-center px-3 shadow my-1.5 border border-black/10 rounded-lg h-10">
-          <input type="checkbox" disabled className="mr-2" />
+        <div key={option.id} className="flex items-center px-3 my-1.5 shadow border border-black/10 rounded-lg h-10">
           <input
             type="text"
             value={option.value}
@@ -88,4 +99,4 @@ const CheckField = ({ field, label, onUpdate, onDelete, isPreview, formData, par
   )
 }
 
-export default CheckField
+export default DropDownField

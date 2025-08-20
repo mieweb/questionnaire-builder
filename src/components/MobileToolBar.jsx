@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { DATALOG_ICON, EYEEDIT_ICON, EYECLOSED_ICON, PLUSSQUARE_ICON, X_ICON } from "../assets/icons"
 import { motion } from "framer-motion"
 
-const MobileToolBar = ({ fieldTypes, formData, setFormData, isPreview, setIsPreview, addField }) => {
+const MobileToolBar = ({ fieldTypes, formData, isPreview, setIsPreview, onAdd }) => {
   const [isToolBarExpanded, setIsToolBarExpanded] = useState(false)
   const [isLogExpanded, setIsLogExpanded] = useState(false)
   const containerRef = useRef(null);
@@ -131,7 +131,7 @@ const MobileToolBar = ({ fieldTypes, formData, setFormData, isPreview, setIsPrev
               key={type}
               className="px-4 pl-6 py-2 text-black text-left rounded hover:bg-slate-50"
               onClick={() => {
-                addField(formData, setFormData, type)
+                onAdd(type)
                 setIsToolBarExpanded(!isToolBarExpanded)
               }}
             >

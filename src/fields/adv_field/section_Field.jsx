@@ -1,9 +1,9 @@
 import React from "react"
 import { v4 as uuidv4 } from "uuid"
 import fieldTypes from "../fieldTypes-config"
-import { initializeField } from "../../../utils/initializedFieldOptions"
-import { checkFieldVisibility } from "../../../utils/visibilityChecker"
-import { EDIT_ICON, TRASHCAN_ICON, PLUSSQUARE_ICON, X_ICON } from "../../../assets/icons"
+import { initializeField } from "../../utils/initializedFieldOptions"
+import { checkFieldVisibility } from "../../utils/visibilityChecker"
+import { EDIT_ICON, TRASHCAN_ICON, PLUSSQUARE_ICON, X_ICON } from "../../assets/icons"
 
 
 const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData }) => {
@@ -51,10 +51,10 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
   if (isPreview) {
     return (
       <section>
-        <div className="bg-[#0076a8] text-white text-xl px-4 py-2">
+        <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
           {field.title || "Section"}
         </div>
-        <div className="p-4 bg-white border-1 border-gray-300">
+        <div className="p-4 bg-white border-1 border-gray-300 rounded-b-lg">
           {(field.fields || []).map(renderChild)}
         </div>
 
@@ -64,7 +64,7 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
 
   // Edit mode 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-white rounded-lg">
       <div className="flex justify-between items-center mb-3">
         <div className="flex-1">
           <input
