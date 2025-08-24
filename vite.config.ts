@@ -7,7 +7,7 @@ export default defineConfig({
       port: 5173,
       allowedHosts: [
         'mieweb-questionnaire-builder-main.opensource.mieweb.org',
-        'mieweb-questionnaire-builder-feature-request.opensource.mieweb.org'
+        'mieweb-questionnaire-builder-refactor/layout-desktop-panels.opensource.mieweb.org'
       ]
     },
     plugins: [

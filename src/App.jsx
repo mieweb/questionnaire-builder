@@ -49,14 +49,13 @@ const App = () => {
       <div className="hidden lg:block">
         <ThreePanelLayout
           left={
-            <ToolPanel onAdd={handleAddField} isPreview={isPreview} />
+            <ToolPanel onAdd={handleAddField}/>
           }
           center={
             <div className="FormBuilder-Container">
               <FormBuilderMain
                 formData={formData}
                 setFormData={setFormData}
-                isPreview={isPreview}
                 setIsPreview={setIsPreview}
                 updateField={handleUpdateField}
                 deleteField={handleDeleteField}
@@ -69,9 +68,9 @@ const App = () => {
             <EditPanel
               selectedField={selectedField}
               onUpdate={(id, key, value) => handleUpdateField(id, key, value)}
-              isPreview={isPreview}
             />
           }
+          isPreview={isPreview}
         />
       </div>
     </div>
