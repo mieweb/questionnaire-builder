@@ -3,8 +3,6 @@ import OptionListEditor from "./OptionListEditor";
 
 export default function EditPanel({ selectedField, onUpdate, isPreview }) {
 
-  if (isPreview) return null;
-
   if (!selectedField) {
     return (
       <div className="p-4 text-gray-600">

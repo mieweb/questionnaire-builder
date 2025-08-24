@@ -20,7 +20,7 @@ export function renderFormFields({
       shouldShow && (
         <div
           key={field.id}
-          className={`rounded-lg mb-2 ${isPreview ? "mb-0 " : "border"} ${isSelected ? "border-blue-500 ring-1 ring-blue-400" : "border-transparent"}`}
+          className={`rounded-lg mb-2  ${isPreview ? "mb-0" : "border"} ${isSelected ? "border-blue-500 ring-1 ring-blue-400" : "border-transparent"}`}
           onClick={(e) => {
             e.stopPropagation?.();
             onSelectField?.(field.id);

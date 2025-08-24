@@ -6,13 +6,12 @@ import fieldTypes from "./fields/fieldTypes-config";
 import { addField, deleteField, updateField } from "./utils/formActions";
 
 import ThreePanelLayout from "./components/layouts/ThreePanelLayout";
-import ToolPanel from "./components/panels/ToolPanel";
-import EditPanel from "./components/panels/EditPanel";
+import ToolPanel from "./components/layouts/panels/ToolPanel";
+import EditPanel from "./components/layouts/panels/EditPanel";
 
 const App = () => {
   const [formData, setFormData] = useState([]);
   const [isPreview, setIsPreview] = useState(false);
-
   const [selectedFieldId, setSelectedFieldId] = useState(null);
   const selectedField = useMemo(
     () => formData.find(f => f.id === selectedFieldId) || null,
@@ -46,33 +45,7 @@ const App = () => {
       </div>
 
       {/* Desktop / wide layout */}
-      <div className="hidden lg:block">
-        <ThreePanelLayout
-          left={
-            <ToolPanel onAdd={handleAddField}/>
-          }
-          center={
-            <div className="FormBuilder-Container">
-              <FormBuilderMain
-                formData={formData}
-                setFormData={setFormData}
-                setIsPreview={setIsPreview}
-                updateField={handleUpdateField}
-                deleteField={handleDeleteField}
-                onSelectField={(id) => setSelectedFieldId(id)}
-                selectedFieldId={selectedFieldId}
-              />
-            </div>
-          }
-          right={
-            <EditPanel
-              selectedField={selectedField}
-              onUpdate={(id, key, value) => handleUpdateField(id, key, value)}
-            />
-          }
-          isPreview={isPreview}
-        />
-      </div>
+
     </div>
   );
 };
