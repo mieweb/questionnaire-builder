@@ -25,3 +25,6 @@ dist-ssr
 
 # TESTING FILES
 TEMP
+
+# Environment variables file
+.env
