@@ -1,8 +1,13 @@
 import React from "react";
 import OptionListEditor from "./OptionListEditor";
+import { updateField } from "../../../utils/formActions";
 
-export default function EditPanel({ selectedField, onUpdate, isPreview }) {
+export default function EditPanel({ selectedField, formData, setFormData, isPreview }) {
+  
+  // Do not render at all in preview mode
+  if (isPreview) return null;
 
+  // If nothing selected, show a friendly placeholder
   if (!selectedField) {
     return (
       <div className="p-4 text-gray-600">
@@ -13,7 +18,7 @@ export default function EditPanel({ selectedField, onUpdate, isPreview }) {
   }
 
   const f = selectedField;
-  const change = (key, value) => onUpdate(f.id, key, value);
+  const onUpdateField = (key, value) => updateField(formData, setFormData, f.id, key, value);
   const isChoice = ["radio", "check", "selection"].includes(f.fieldType);
 
   return (
@@ -27,7 +32,7 @@ export default function EditPanel({ selectedField, onUpdate, isPreview }) {
           <input
             className="w-full px-3 py-2 border border-black/20 rounded"
             value={f.id}
-            onChange={(e) => change("id", e.target.value)}
+            onChange={(e) => onUpdateField("id", e.target.value)}
           />
         </div>
 
@@ -36,7 +41,7 @@ export default function EditPanel({ selectedField, onUpdate, isPreview }) {
           <input
             className="w-full px-3 py-2 border border-black/20 rounded"
             value={f.question || ""}
-            onChange={(e) => change("question", e.target.value)}
+            onChange={(e) => onUpdateField("question", e.target.value)}
             placeholder="Enter question text"
           />
         </div>
@@ -46,7 +51,7 @@ export default function EditPanel({ selectedField, onUpdate, isPreview }) {
             <input
               type="checkbox"
               checked={!!f.required}
-              onChange={(e) => change("required", e.target.checked)}
+              onChange={(e) => onUpdateField("required", e.target.checked)}
             />
             Required
           </label>
@@ -57,7 +62,7 @@ export default function EditPanel({ selectedField, onUpdate, isPreview }) {
           <textarea
             className="w-full px-3 py-2 border border-black/20 rounded"
             value={f.sublabel || ""}
-            onChange={(e) => change("sublabel", e.target.value)}
+            onChange={(e) => onUpdateField("sublabel", e.target.value)}
             placeholder="Helper text / description"
           />
         </div>
@@ -70,13 +75,13 @@ export default function EditPanel({ selectedField, onUpdate, isPreview }) {
           <input
             className="w-full px-3 py-2 border border-black/20 rounded"
             value={f.answer || ""}
-            onChange={(e) => change("answer", e.target.value)}
+            onChange={(e) => onUpdateField("answer", e.target.value)}
             placeholder="Default value"
           />
         </div>
       )}
 
-      {isChoice && <OptionListEditor field={f} onUpdate={change} />}
+      {isChoice && <OptionListEditor field={f} onUpdate={onUpdateField} />}
     </div>
   );
 }

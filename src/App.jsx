@@ -1,38 +1,31 @@
-import React, { useState, useMemo } from "react";
-import FormBuilderMain from "./components/FormBuilderMain";
+import React, { useMemo, useState } from "react";
 import Header from "./components/Header";
 import MobileToolBar from "./components/MobileToolBar";
+import ThreePanelLayout from "./components/desktopLayout/ThreePanelLayout";
 import fieldTypes from "./fields/fieldTypes-config";
-import { addField, deleteField, updateField } from "./utils/formActions";
 
-import ThreePanelLayout from "./components/layouts/ThreePanelLayout";
-import ToolPanel from "./components/layouts/panels/ToolPanel";
-import EditPanel from "./components/layouts/panels/EditPanel";
-
-const App = () => {
+export default function App() {
   const [formData, setFormData] = useState([]);
   const [isPreview, setIsPreview] = useState(false);
   const [selectedFieldId, setSelectedFieldId] = useState(null);
+
   const selectedField = useMemo(
     () => formData.find(f => f.id === selectedFieldId) || null,
     [formData, selectedFieldId]
   );
 
-  const handleUpdateField = (id, key, value) =>
-    updateField(formData, setFormData, id, key, value);
-
-  const handleDeleteField = (id) => {
-    deleteField(formData, setFormData, id);
-    if (selectedFieldId === id) setSelectedFieldId(null);
-  };
-
-  const handleAddField = (type) => addField(formData, setFormData, type);
-
   return (
     <div className="min-h-screen bg-gray-100 font-titillium">
-      <Header formData={formData} setFormData={setFormData} isPreview={isPreview} setIsPreview={setIsPreview} />
 
-      {/* Mobile toolbar kept for small screens; desktop uses the panels */}
+        <Header
+          formData={formData}
+          setFormData={setFormData}
+          isPreview={isPreview}
+          setIsPreview={setIsPreview}
+          setSelectedFieldId={setSelectedFieldId}
+        />
+
+      {/* Mobile ToolBar*/}
       <div className="lg:hidden">
         <MobileToolBar
           fieldTypes={fieldTypes}
@@ -40,14 +33,21 @@ const App = () => {
           setFormData={setFormData}
           isPreview={isPreview}
           setIsPreview={setIsPreview}
-          onAdd={handleAddField}
+          selectedFieldId={selectedFieldId}
+          setSelectedFieldId={setSelectedFieldId}
         />
       </div>
 
-      {/* Desktop / wide layout */}
-
+      {/* Desktop / three-panel */}
+        <ThreePanelLayout
+          formData={formData}
+          setFormData={setFormData}
+          isPreview={isPreview}
+          setIsPreview={setIsPreview}
+          selectedFieldId={selectedFieldId}
+          setSelectedFieldId={setSelectedFieldId}
+          selectedField={selectedField}
+        />
     </div>
   );
-};
-
-export default App;
+}

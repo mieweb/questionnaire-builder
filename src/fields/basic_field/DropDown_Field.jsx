@@ -46,7 +46,7 @@ const DropDownField = ({ field, label, onUpdate, onDelete, isPreview, formData, 
 
   // EDIT MODE
   return (
-    <div className="p-4 bg-white rounded-lg">
+    <div className="p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between mb-2 ml-1">
         {label}
         <div className="flex items-center gap-2 ml-2">

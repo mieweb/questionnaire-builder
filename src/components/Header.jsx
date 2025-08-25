@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react"
-const Header = ({ formData, setFormData, isPreview, setIsPreview }) => {
+const Header = ({ formData, setFormData, isPreview, setIsPreview, setSelectedFieldId}) => {
+
   const [showJson, setShowJson] = useState(false)
   const drawerRef = useRef(null)
 
@@ -21,6 +22,10 @@ const Header = ({ formData, setFormData, isPreview, setIsPreview }) => {
     a.href = url
     a.download = "form-data.json"
     a.click()
+  }
+  const onPreview = () => {
+    setIsPreview(true)
+    setSelectedFieldId(null)
   }
 
   useEffect(() => {
@@ -52,7 +57,7 @@ const Header = ({ formData, setFormData, isPreview, setIsPreview }) => {
           </button>
           <button
             className={`py-3 rounded-xl text-sm font-medium ${isPreview ? "bg-black/5" : ""}`}
-            onClick={() => setIsPreview(true)}
+            onClick={onPreview}
           >
             Preview
           </button>
@@ -95,7 +100,7 @@ const Header = ({ formData, setFormData, isPreview, setIsPreview }) => {
 
       {/* JSON drawer*/}
       {showJson && (
-        <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/20">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/20">
           <div
             ref={drawerRef}
             className="w-full sm:max-w-3xl sm:rounded-2xl rounded-t-2xl bg-white shadow-lg border border-black/10 max-h-[80vh] overflow-hidden"

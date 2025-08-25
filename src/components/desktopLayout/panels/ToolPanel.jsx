@@ -1,7 +1,9 @@
 import React from "react";
 import fieldTypes from "../../../fields/fieldTypes-config"
+import { addField } from "../../../utils/formActions";
 
-export default function ToolPanel({ onAdd}) {
+export default function ToolPanel({ formData, setFormData, isPreview }) {
+  if (isPreview) return null;
 
   return (
     <div className="p-4">
@@ -11,7 +13,7 @@ export default function ToolPanel({ onAdd}) {
           <button
             key={t}
             className="px-3 py-2 text-left border border-black/10 rounded-md hover:bg-slate-50"
-            onClick={() => onAdd(t)}
+            onClick={() => addField(formData, setFormData, t)}
           >
             Add {fieldTypes[t].label}
           </button>
