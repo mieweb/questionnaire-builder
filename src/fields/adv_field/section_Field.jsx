@@ -1,9 +1,9 @@
 import React from "react"
 import { v4 as uuidv4 } from "uuid"
 import fieldTypes from "../fieldTypes-config"
-import { initializeField } from "../../../utils/initializedFieldOptions"
-import { checkFieldVisibility } from "../../../utils/visibilityChecker"
-import { EDIT_ICON, TRASHCAN_ICON, PLUSSQUARE_ICON, X_ICON } from "../../../assets/icons"
+import { initializeField } from "../../utils/initializedFieldOptions"
+import { checkFieldVisibility } from "../../utils/visibilityChecker"
+import { EDIT_ICON, TRASHCAN_ICON, PLUSSQUARE_ICON, X_ICON } from "../../assets/icons"
 
 
 const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData }) => {
@@ -33,7 +33,8 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
     if (!shouldShow) return null
 
     return (
-      <div key={child.id}>
+      <div key={child.id}
+        className={`${isPreview ? "" : "border"} border-gray-200 rounded-lg mb-3`}>
         <Comp
           field={child}
           label={fieldTypes[child.fieldType]?.label}
@@ -51,10 +52,10 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
   if (isPreview) {
     return (
       <section>
-        <div className="bg-[#0076a8] text-white text-xl px-4 py-2">
+        <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
           {field.title || "Section"}
         </div>
-        <div className="p-4 bg-white border-1 border-gray-300">
+        <div className="p-4 bg-white border-1 border-gray-300 rounded-b-lg">
           {(field.fields || []).map(renderChild)}
         </div>
 
@@ -64,12 +65,12 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
 
   // Edit mode 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-3">
         <div className="flex-1">
           <input
             type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            className="w-full px-3 py-2 border border-gray-200 rounded-md"
             value={field.title || ""}
             onChange={(e) => onUpdate("title", e.target.value)}
             placeholder="Section title (e.g., Data Consent)"
@@ -78,6 +79,15 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
         <button onClick={onDelete} className="ml-2 px-2 py-1 text-black/80 hover:text-red-600">
           <TRASHCAN_ICON className="cursor-pointer" />
         </button>
+      </div>
+
+      {/* Child fields */}
+      <div>
+        {(field.fields || []).map((child) => (
+          <div key={child.id}>
+            {renderChild(child)}
+          </div>
+        ))}
       </div>
 
       {/* Mini toolbar to add child fields (no nested sections) */}
@@ -97,15 +107,6 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
               </button>
             ))}
         </div>
-      </div>
-
-      {/* Child fields */}
-      <div>
-        {(field.fields || []).map((child) => (
-          <div key={child.id}>
-            {renderChild(child)}
-          </div>
-        ))}
       </div>
     </div>
   )

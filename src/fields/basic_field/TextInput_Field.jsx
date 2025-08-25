@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
 import { v4 as uuidv4 } from "uuid"
-import { EDIT_ICON, TRASHCAN_ICON } from "../../../assets/icons"
-import EnableWhenLogic from "../../EnableWhenLogic"
+import { EDIT_ICON, TRASHCAN_ICON } from "../../assets/icons"
+import EnableWhenLogic from "../../utils/EnableWhenLogic"
 
 const TextInputField = ({ field, label, onUpdate, onDelete, isPreview, formData, parentType }) => {
   const [isEdit, setIsEdit] = useState(false)
@@ -13,7 +13,7 @@ const TextInputField = ({ field, label, onUpdate, onDelete, isPreview, formData,
   // PREVIEW MODE
   if (isPreview) {
     return (
-      <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300"}`}>
+      <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300 rounded-lg"}`}>
         <div className={`bg-white  ${insideSection ? "border-b-1 border-gray-300" : "border-0"} grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4`}>
           <div className="font-light">{field.question || "Question"}</div>
           <input
@@ -31,7 +31,7 @@ const TextInputField = ({ field, label, onUpdate, onDelete, isPreview, formData,
 
   // EDIT MODE 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between mb-2 ml-1">
         {label}
         <div className="flex items-center gap-2 ml-2">

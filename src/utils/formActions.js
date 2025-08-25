@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { initializeField } from "./initializedFieldOptions";
-import fieldTypes from "../components/fields/fieldTypes-config";
+import fieldTypes from "../fields/fieldTypes-config";
 
 export function addField(formData, setFormData, type) {
   const fieldTemplate = fieldTypes[type]?.defaultProps;
