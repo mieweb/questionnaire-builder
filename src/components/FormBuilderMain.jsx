@@ -4,12 +4,18 @@ import { initializeField } from "../utils/initializedFieldOptions"
 import { checkFieldVisibility } from "../utils/visibilityChecker"
 import fieldTypes from "./fields/fieldTypes-config"
 import MobileToolBar from "./MobileToolBar"
+import AISuggestionModal from "./AISuggestionModal";
 
 // Importing the AI suggestion utility
 import { getSuggestedQuestions } from '../utils/aiSuggest';
 
 
 const FormBuilder = ({ formData, setFormData, isPreview, setIsPreview }) => {
+
+     // Add these state hooks here:
+    const [showModal, setShowModal] = React.useState(false);
+    const [aiSuggestions, setAISuggestions] = React.useState([]);
+    const [loadingSuggestions, setLoadingSuggestions] = React.useState(false);
 
     const addField = (type) => {
         const fieldTemplate = fieldTypes[type]?.defaultProps
@@ -36,16 +42,47 @@ const FormBuilder = ({ formData, setFormData, isPreview, setIsPreview }) => {
 
 
      // Snippet 2 // Add this function here:
+    //const handleSuggestQuestion = async () => {
+    //const topic = prompt("What is your form about?");
+  //  if (!topic) return;
+//
+  //  try {
+   //     const suggestions = await getSuggestedQuestions(topic);
+  //      alert("AI Suggestions:\n\n" + suggestions.join('\n'));
+  //  } catch (error) {
+  //      alert("Failed to get AI suggestions.");
+  //  }
+//};
+
+//for UI
+
     const handleSuggestQuestion = async () => {
     const topic = prompt("What is your form about?");
     if (!topic) return;
 
+    setLoadingSuggestions(true);
+    setShowModal(true);
     try {
         const suggestions = await getSuggestedQuestions(topic);
-        alert("AI Suggestions:\n\n" + suggestions.join('\n'));
+        setAISuggestions(suggestions);
     } catch (error) {
-        alert("Failed to get AI suggestions.");
+        setAISuggestions(["Failed to get AI suggestions."]);
+    } finally {
+        setLoadingSuggestions(false);
     }
+};
+
+    const handleAddSuggestion = (question) => {
+    setFormData([
+        ...formData,
+        {
+            id: Date.now().toString(),
+            type: "text",
+            label: question,
+            options: [],
+        },
+    ]);
+    setShowModal(false);
 };
 
     //snippet 2 ends here
@@ -99,6 +136,13 @@ const FormBuilder = ({ formData, setFormData, isPreview, setIsPreview }) => {
                     })
                 }
             </div>
+
+            <AISuggestionModal
+    open={showModal}
+    suggestions={loadingSuggestions ? ["Loading..."] : aiSuggestions}
+    onClose={() => setShowModal(false)}
+    onAdd={handleAddSuggestion}
+/>
         </div>
     )
 }
