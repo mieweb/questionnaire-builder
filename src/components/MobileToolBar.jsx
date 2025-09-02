@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from "react"
 import { DATALOG_ICON, EYEEDIT_ICON, EYECLOSED_ICON, PLUSSQUARE_ICON, X_ICON } from "../assets/icons"
 import { motion } from "framer-motion"
+import { addField } from "../utils/formActions"
+import JsonViewer from "./JsonViewer"
 
-const MobileToolBar = ({ fieldTypes, formData, isPreview, setIsPreview, onAdd }) => {
+const MobileToolBar = ({ fieldTypes, formData, setFormData, isPreview, setIsPreview }) => {
   const [isToolBarExpanded, setIsToolBarExpanded] = useState(false)
   const [isLogExpanded, setIsLogExpanded] = useState(false)
   const containerRef = useRef(null);
@@ -23,13 +25,14 @@ const MobileToolBar = ({ fieldTypes, formData, isPreview, setIsPreview, onAdd })
   }
 
   useEffect(() => {
-    if (!isToolBarExpanded && !isLogExpanded) return;
+    if (!isToolBarExpanded || isLogExpanded) return;
 
     const handleDocDown = (event) => {
       const el = containerRef.current;
       if (el && !el.contains(event.target)) {
         setIsToolBarExpanded(false);
         setIsLogExpanded(false);
+        setIsToolBarExpanded(false);
       }
     };
 
@@ -83,34 +86,20 @@ const MobileToolBar = ({ fieldTypes, formData, isPreview, setIsPreview, onAdd })
       </motion.div>
 
       {/*JSON DATA LOG MODAL DIV*/}
-      <motion.div
-        ref={containerRef}
-        initial={{ opacity: 0, y: "100%", scale: 0 }}
-        animate={{ opacity: isLogExpanded ? 1 : 0, y: isLogExpanded ? "0%" : "100%", scale: isLogExpanded ? 1 : 0.6 }}
-        transition={{ type: "spring", stiffness: 150, damping: 20 }}
-        className="fixed isolate bottom-0 w-full bg-black/5 border-black/15 border px-6 py-4 max-h-96 rounded-2xl backdrop-blur-xl
-                            overflow-hidden"
-      >
-        <button
-          className="flex w-full justify-end"
-          onClick={() => {
-            setIsLogExpanded(!isLogExpanded)
-          }}
-        >
-          <X_ICON />
-        </button>
-        <h3 className="font-bold text-lg mb-4">Form Data (JSON)</h3>
-        <div className="p-4 rounded-lg overflow-y-auto max-h-80 scrollbar-thin scrollbar-track-gray-200 scrollbar-thumb-gray-400">
-          <pre className="whitespace-pre-wrap break-words text-sm text-gray-700">
-            {JSON.stringify(formData, null, 2)}
-          </pre>
-        </div>
-      </motion.div>
+      <JsonViewer
+        open={isLogExpanded}
+        onClose={() => setIsLogExpanded(false)}
+        data={formData}
+        title="Form Data (JSON)"
+        placement="bottom"
+        contentClassName="scrollbar-thin scrollbar-track-gray-200 scrollbar-thumb-gray-400"
+      />
 
 
       {/*TOOLBAR MODAL DIV */}
       <motion.div
         ref={containerRef}
+        onPointerDown={(e) => e.stopPropagation()}
         initial={{ opacity: 0, y: "100%", scale: 0 }}
         animate={{ opacity: isToolBarExpanded ? 1 : 0, y: isToolBarExpanded ? "0%" : "100%", scale: isToolBarExpanded ? 1 : 0.6 }}
         transition={{ type: "spring", stiffness: 150, damping: 20 }}
@@ -131,7 +120,7 @@ const MobileToolBar = ({ fieldTypes, formData, isPreview, setIsPreview, onAdd })
               key={type}
               className="px-4 pl-6 py-2 text-black text-left rounded hover:bg-slate-50"
               onClick={() => {
-                onAdd(type)
+                addField(formData, setFormData, type);
                 setIsToolBarExpanded(!isToolBarExpanded)
               }}
             >

@@ -42,7 +42,8 @@ export default function ThreePanelLayout({
           />
         </div>
         {editMode && (
-          <div className="bg-white border border-gray-200 rounded-lg shadow-sm hidden lg:block">
+          <div className={`bg-white border border-gray-200 rounded-lg shadow-sm hidden lg:block
+                            h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] overflow-y-auto custom-scrollbar ${ !selectedField ? "max-h-29" : "" }`}>
             <EditPanel
               isPreview={isPreview}
               selectedField={selectedField}

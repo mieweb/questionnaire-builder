@@ -10,7 +10,7 @@ export default function EditPanel({ selectedField, formData, setFormData, isPrev
   // If nothing selected, show a friendly placeholder
   if (!selectedField) {
     return (
-      <div className="p-4 text-gray-600">
+      <div className="p-4 text-gray-600 max-h-28">
         <h3 className="text-lg font-semibold mb-2">Edit</h3>
         <p>Select a field in the center panel to edit its properties.</p>
       </div>
@@ -81,7 +81,7 @@ export default function EditPanel({ selectedField, formData, setFormData, isPrev
         </div>
       )}
 
-      {isChoice && <OptionListEditor field={f} onUpdate={onUpdateField} />}
+      {isChoice && <OptionListEditor field={f} onUpdateField={onUpdateField} />}
     </div>
   );
 }
