@@ -1,8 +1,9 @@
-import React, { useRef, useEffect, useState } from "react"
-const Header = ({ formData, setFormData, isPreview, setIsPreview, setSelectedFieldId}) => {
+import React, { useState } from "react"
+import JsonViewer from "./JsonViewer"
+
+const Header = ({ formData, setFormData, isPreview, setIsPreview, setSelectedFieldId }) => {
 
   const [showJson, setShowJson] = useState(false)
-  const drawerRef = useRef(null)
 
   const importData = (data) => {
     try {
@@ -27,16 +28,6 @@ const Header = ({ formData, setFormData, isPreview, setIsPreview, setSelectedFie
     setIsPreview(true)
     setSelectedFieldId(null)
   }
-
-  useEffect(() => {
-    if (!showJson) return
-    const onDown = (e) => {
-      const el = drawerRef.current
-      if (el && !el.contains(e.target)) setShowJson(false)
-    }
-    document.addEventListener("pointerdown", onDown)
-    return () => document.removeEventListener("pointerdown", onDown)
-  }, [showJson])
 
   return (
     <header className="sticky top-0 z-50 bg-transparent mx-auto">
@@ -98,30 +89,14 @@ const Header = ({ formData, setFormData, isPreview, setIsPreview, setSelectedFie
         </div>
       </div>
 
-      {/* JSON drawer*/}
-      {showJson && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/20">
-          <div
-            ref={drawerRef}
-            className="w-full sm:max-w-3xl sm:rounded-2xl rounded-t-2xl bg-white shadow-lg border border-black/10 max-h-[80vh] overflow-hidden"
-          >
-            <div className="flex items-center justify-between px-4 py-3 border-b border-black/10">
-              <h3 className="font-semibold">Form Data (JSON)</h3>
-              <button
-                className="px-3 py-1 rounded-lg border border-black/10 hover:bg-black/5 text-sm"
-                onClick={() => setShowJson(false)}
-              >
-                Close
-              </button>
-            </div>
-            <div className="p-4 overflow-auto max-h-[70vh]">
-              <pre className="whitespace-pre-wrap break-words text-sm text-gray-700">
-                {JSON.stringify(formData, null, 2)}
-              </pre>
-            </div>
-          </div>
-        </div>
-      )}
+      <JsonViewer
+        open={showJson}
+        onClose={() => setShowJson(false)}
+        data={formData}
+        title="Form Data (JSON)"
+        placement="bottom"
+        contentClassName="scrollbar-thin scrollbar-track-gray-200 scrollbar-thumb-gray-400"
+      />
     </header>
   )
 }

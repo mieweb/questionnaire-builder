@@ -22,6 +22,7 @@ export default function App() {
           setFormData={setFormData}
           isPreview={isPreview}
           setIsPreview={setIsPreview}
+          selectedFieldId={selectedFieldId}
           setSelectedFieldId={setSelectedFieldId}
         />
 
