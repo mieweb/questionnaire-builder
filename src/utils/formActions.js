@@ -26,3 +26,28 @@ export function updateField(formData, setFormData, id, key, value) {
 export function deleteField(formData, setFormData, id) {
   setFormData(formData.filter((field) => field.id !== id));
 }
+
+export function updateChildField(formData, setFormData, sectionId, childId, key, value) {
+  setFormData(
+    formData.map((f) =>
+      f.id !== sectionId
+        ? f
+        : {
+            ...f,
+            fields: (f.fields || []).map((c) =>
+              c.id === childId ? { ...c, [key]: value } : c
+            ),
+          }
+    )
+  );
+}
+
+export function deleteChildField(formData, setFormData, sectionId, childId) {
+  setFormData(
+    formData.map((f) =>
+      f.id !== sectionId
+        ? f
+        : { ...f, fields: (f.fields || []).filter((c) => c.id !== childId) }
+    )
+  );
+}

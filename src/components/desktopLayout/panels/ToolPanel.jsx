@@ -6,7 +6,7 @@ export default function ToolPanel({ formData, setFormData, isPreview }) {
   if (isPreview) return null;
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
       <h3 className="text-lg font-semibold mb-3">Tools</h3>
       <div className="grid grid-cols-1 gap-2">
         {Object.keys(fieldTypes).map((t) => (

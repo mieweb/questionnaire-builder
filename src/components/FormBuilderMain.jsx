@@ -9,6 +9,7 @@ export function renderFormFields({
   isPreview,
   selectedFieldId,
   setSelectedFieldId,
+  getSectionHighlightId,
 }) {
   return formData.map((field) => {
     const FieldComponent = fieldTypes[field.fieldType]?.component;
@@ -24,7 +25,7 @@ export function renderFormFields({
 
     const onDeleteField = (id) => {
       deleteField(formData, setFormData, id);
-      if (selectedFieldId === id) setSelectedFieldId?.(null); 
+      if (selectedFieldId === id) setSelectedFieldId?.(null);
     };
 
     return (
@@ -52,6 +53,9 @@ export function renderFormFields({
           formData={formData}
           isSelected={isSelected}
           onSelect={() => !isPreview && setSelectedFieldId?.(field.id)}
+          {...(field.fieldType === "section"
+            ? { highlightChildId: getSectionHighlightId?.(field.id) || null }
+            : {})}
         />
       </div>
     );
@@ -64,6 +68,7 @@ export default function FormBuilderMain({
   isPreview,
   selectedFieldId,
   setSelectedFieldId,
+  getSectionHighlightId
 }) {
   return (
     <div
@@ -76,6 +81,7 @@ export default function FormBuilderMain({
         isPreview,
         selectedFieldId,
         setSelectedFieldId,
+        getSectionHighlightId
       })}
     </div>
   );

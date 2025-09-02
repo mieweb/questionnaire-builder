@@ -95,7 +95,7 @@ const Header = ({ formData, setFormData, isPreview, setIsPreview, setSelectedFie
         data={formData}
         title="Form Data (JSON)"
         placement="bottom"
-        contentClassName="scrollbar-thin scrollbar-track-gray-200 scrollbar-thumb-gray-400"
+        contentClassName="custom-scrollbar"
       />
     </header>
   )
