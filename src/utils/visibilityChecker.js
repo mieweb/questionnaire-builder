@@ -1,4 +1,26 @@
 /**
+ * Recursively finds a field by ID, including fields nested in sections.
+ * @param {string} fieldId - The ID of the field to find.
+ * @param {Array} formData - The array of fields to search in.
+ * @returns {Object|null} - The found field or null if not found.
+ */
+function findFieldRecursively(fieldId, formData) {
+  for (const field of formData) {
+    if (field.id === fieldId) {
+      return field
+    }
+    // If this is a section with child fields, search recursively
+    if (field.fieldType === "section" && field.fields) {
+      const nestedField = findFieldRecursively(fieldId, field.fields)
+      if (nestedField) {
+        return nestedField
+      }
+    }
+  }
+  return null
+}
+
+/**
  * Checks whether a given field is visible based on its "enableWhen" logic.
  * @param {Object} field - The field whose visibility we're checking.
  * @param {Array} formData - The array of all fields in the form.
@@ -31,8 +53,8 @@ export function checkFieldVisibility(field, formData) {
 function evaluateCondition(condition, formData) {
   const { fieldId, operator, value } = condition
 
-  // 1. Find the triggering field that this condition depends on.
-  const triggerField = formData.find((f) => f.id === fieldId)
+  // 1. Find the triggering field that this condition depends on using recursive search.
+  const triggerField = findFieldRecursively(fieldId, formData)
   if (!triggerField) return false // If no field found, condition fails.
 
   // 2. Get the current "actual" value from that trigger field,
@@ -128,4 +150,47 @@ function applyOperator(operator, actualValue, conditionValue) {
       // Unknown operator => fail condition
       return false
   }
+}
+
+/**
+ * Checks if a section should be visible based on:
+ * 1. Its own enableWhen logic (if any)
+ * 2. Whether any of its children are visible
+ * @param {Object} section - The section field to check.
+ * @param {Array} formData - The full form data array.
+ * @returns {boolean} - True if the section should be visible, false otherwise.
+ */
+export function checkSectionVisibility(section, formData) {
+  // 1. First check the section's own enableWhen logic
+  const sectionShouldShow = checkFieldVisibility(section, formData)
+  if (!sectionShouldShow) return false
+
+  // 2. If section has no children, show it if its enableWhen logic passes
+  if (!section.fields || section.fields.length === 0) return true
+
+  // 3. Check if any children are visible
+  const anyChildVisible = section.fields.some(child => 
+    checkFieldVisibility(child, formData)
+  )
+
+  return anyChildVisible
+}
+
+/**
+ * Recursively collects all fields from the form data, including nested fields in sections.
+ * @param {Array} formData - The form data array to flatten.
+ * @returns {Array} - Flattened array of all fields.
+ */
+export function getAllFieldsRecursively(formData) {
+  const allFields = []
+  
+  for (const field of formData) {
+    allFields.push(field)
+    // If this is a section with child fields, add them recursively
+    if (field.fieldType === "section" && field.fields) {
+      allFields.push(...getAllFieldsRecursively(field.fields))
+    }
+  }
+  
+  return allFields
 }

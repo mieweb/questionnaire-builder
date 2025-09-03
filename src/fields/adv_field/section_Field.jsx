@@ -2,7 +2,7 @@ import React from "react"
 import { v4 as uuidv4 } from "uuid"
 import fieldTypes from "../fieldTypes-config"
 import { initializeField } from "../../utils/initializedFieldOptions"
-import { checkFieldVisibility } from "../../utils/visibilityChecker"
+import { checkFieldVisibility, checkSectionVisibility } from "../../utils/visibilityChecker"
 import { EDIT_ICON, TRASHCAN_ICON, PLUSSQUARE_ICON, X_ICON } from "../../assets/icons"
 
 
@@ -29,7 +29,8 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
   const renderChild = (child) => {
     const Comp = fieldTypes[child.fieldType]?.component
     if (!Comp) return null
-    const shouldShow = isPreview ? checkFieldVisibility(child, (field.fields || [])) : true
+    // Pass the full formData instead of just section children for proper enableWhen evaluation
+    const shouldShow = isPreview ? checkFieldVisibility(child, formData) : true
     if (!shouldShow) return null
 
     return (
@@ -41,7 +42,7 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
           onUpdate={(k, v) => updateChild(child.id, k, v)}
           onDelete={() => !isPreview && deleteChild(child.id)}
           isPreview={isPreview}
-          formData={field.fields || []}
+          formData={formData} // Pass full formData instead of just section children
           parentType="section"
         />
       </div>
@@ -50,6 +51,10 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
 
   // Preview mode
   if (isPreview) {
+    // Check if section should be visible based on enableWhen logic and child visibility
+    const shouldShowSection = checkSectionVisibility(field, formData)
+    if (!shouldShowSection) return null
+
     return (
       <section>
         <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
