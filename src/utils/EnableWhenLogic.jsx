@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react"
 import { X_ICON } from "../assets/icons"
+import { getAllFieldsRecursively } from "./visibilityChecker"
 
 const DEFAULT_CONDITION = {
   fieldId: "",
@@ -88,7 +89,7 @@ const EnableWhenLogic = ({ fieldId, formData, onUpdate }) => {
 
         // If the user just changed the fieldId, auto-set the operator
         if (key === "fieldId") {
-          const chosenField = formData.find(f => f.id === val);
+          const chosenField = getAllFieldsRecursively(formData).find(f => f.id === val);
 
           if (chosenField) {
             // Get the allowed operators based on field type
@@ -134,7 +135,7 @@ const EnableWhenLogic = ({ fieldId, formData, onUpdate }) => {
         const { fieldId: triggerFieldId, operator, value } = cond
 
         // 1) Identify the trigger field
-        const triggerField = formData.find((f) => f.id === triggerFieldId)
+        const triggerField = getAllFieldsRecursively(formData).find((f) => f.id === triggerFieldId)
         // 2) Which fieldType is it?
         const triggerFieldType = triggerField?.fieldType
         // 3) Allowed operators for that field
@@ -165,11 +166,11 @@ const EnableWhenLogic = ({ fieldId, formData, onUpdate }) => {
               className="border p-1 rounded w-full"
             >
               <option value="">--Select Field--</option>
-              {formData
+              {getAllFieldsRecursively(formData)
                 .filter((f) => f.id !== fieldId) // exclude self
                 .map((f) => (
                   <option key={f.id} value={f.id}>
-                    {f.question || `Field ${f.id}`}
+                    {f.question || f.title || `Field ${f.id}`}
                   </option>
                 ))}
             </select>
