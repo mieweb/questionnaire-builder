@@ -34,6 +34,86 @@ const fieldTypes = {
             selected: null,
         },
     },
+    radioYesNo: {
+        label: "Yes/No Radio",
+        component: RadioField,
+        defaultProps: {
+            fieldType: "radio",
+            question: "",
+            options: ["Yes", "No"],
+            selected: null,
+        },
+    },
+    radioLikert4: {
+        label: "4-Point Likert Scale",
+        component: RadioField,
+        defaultProps: {
+            fieldType: "radio",
+            question: "",
+            options: ["1", "2", "3", "4"],
+            selected: null,
+        },
+    },
+    radioLikert5: {
+        label: "5-Point Likert Scale",
+        component: RadioField,
+        defaultProps: {
+            fieldType: "radio",
+            question: "",
+            options: ["1", "2", "3", "4", "5"],
+            selected: null,
+        },
+    },
+    radioLikert6: {
+        label: "6-Point Likert Scale",
+        component: RadioField,
+        defaultProps: {
+            fieldType: "radio",
+            question: "",
+            options: ["1", "2", "3", "4", "5", "6"],
+            selected: null,
+        },
+    },
+    radioLikert7: {
+        label: "7-Point Likert Scale",
+        component: RadioField,
+        defaultProps: {
+            fieldType: "radio",
+            question: "",
+            options: ["1", "2", "3", "4", "5", "6", "7"],
+            selected: null,
+        },
+    },
+    radioLikert8: {
+        label: "8-Point Likert Scale",
+        component: RadioField,
+        defaultProps: {
+            fieldType: "radio",
+            question: "",
+            options: ["1", "2", "3", "4", "5", "6", "7", "8"],
+            selected: null,
+        },
+    },
+    radioLikert9: {
+        label: "9-Point Likert Scale",
+        component: RadioField,
+        defaultProps: {
+            fieldType: "radio",
+            question: "",
+            options: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+            selected: null,
+        },
+    },
+    radioLikert10: {
+        label: "10-Point Likert Scale",
+        component: RadioField,
+        defaultProps: {
+            fieldType: "radio",
+            question: "",
+            options: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+            selected: null,
+        },
+    },
     check: {
         label: "Check Field",
         component: CheckField,
