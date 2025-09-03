@@ -5,10 +5,6 @@ export default defineConfig({
     server: {
       host: '0.0.0.0',
       port: 5173,
-      allowedHosts: [
-        'mieweb-questionnaire-builder-main.opensource.mieweb.org',
-        'mieweb-questionnaire-builder-refactor/layout-desktop-panels.opensource.mieweb.org'
-      ]
     },
     plugins: [
       tailwindcss(),
