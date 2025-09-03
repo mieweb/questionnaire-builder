@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import { motion } from "framer-motion"
 import { v4 as uuidv4 } from "uuid"
-import { EDIT_ICON, PLUSOPTION_ICON, TRASHCAN_ICON, TRASHCANTWO_ICON } from "../../../assets/icons"
-import EnableWhenLogic from "../../EnableWhenLogic"
+import { EDIT_ICON, PLUSOPTION_ICON, TRASHCAN_ICON, TRASHCANTWO_ICON } from "../../assets/icons"
+import EnableWhenLogic from "../../utils/EnableWhenLogic"
 
-const RadioField = ({ field, label, onUpdate, onDelete, isPreview, formData, parentType }) => {
+const CheckField = ({ field, label, onUpdate, onDelete, isPreview, formData, parentType }) => {
   const [isEdit, setIsEdit] = useState(false)
   const toggleEdit = () => setIsEdit(!isEdit)
 
@@ -23,11 +23,16 @@ const RadioField = ({ field, label, onUpdate, onDelete, isPreview, formData, par
             {field.options.map(option => (
               <label key={option.id} className="flex items-center px-3 py-1 my-2">
                 <input
-                  type="radio"
-                  name={`question-${field.id}`}
-                  className="mr-2 h-9 w-9 flex-shrink-0 font-light"
-                  checked={field.selected === option.id}
-                  onChange={() => onUpdate("selected", option.id)}
+                  type="checkbox"
+                  className="mr-2 w-9 h-9"
+                  checked={field.selected?.includes(option.id)}
+                  onChange={() => {
+                    const selected = field.selected || []
+                    const updated = selected.includes(option.id)
+                      ? selected.filter(id => id !== option.id)
+                      : [...selected, option.id]
+                    onUpdate("selected", updated)
+                  }}
                 />
                 {option.value}
               </label>
@@ -40,12 +45,12 @@ const RadioField = ({ field, label, onUpdate, onDelete, isPreview, formData, par
 
   // EDIT MODE
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between mb-2 ml-1">
         {label}
         <div className="flex items-center gap-2 ml-2">
-          <button onClick={toggleEdit}><EDIT_ICON className="h-6 w-6" /></button>
-          <button onClick={onDelete}><TRASHCAN_ICON className="h-6 w-6" /></button>
+          <button onClick={toggleEdit}><EDIT_ICON /></button>
+          <button onClick={onDelete}><TRASHCAN_ICON /></button>
         </div>
       </div>
 
@@ -66,8 +71,8 @@ const RadioField = ({ field, label, onUpdate, onDelete, isPreview, formData, par
       </motion.div>
 
       {field.options.map(option => (
-        <div key={option.id} className="flex items-center px-3 my-1.5 shadow border border-black/10 rounded-lg h-10">
-          <input type="radio" disabled className="mr-2" />
+        <div key={option.id} className="flex items-center px-3 shadow my-1.5 border border-black/10 rounded-lg h-10">
+          <input type="checkbox" disabled className="mr-2" />
           <input
             type="text"
             value={option.value}
@@ -83,4 +88,4 @@ const RadioField = ({ field, label, onUpdate, onDelete, isPreview, formData, par
   )
 }
 
-export default RadioField
+export default CheckField

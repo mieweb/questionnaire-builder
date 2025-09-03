@@ -134,32 +134,6 @@ const fieldTypes = {
             selected: null,
         },
     },
-
-    // import EnableWhenField from "./adv_field/EnableWhen_Field"
-    // enableWhen: {
-    //     label: "Enable When",
-    //     component: EnableWhenField,
-    //     defaultProps: {
-    //         fieldType: "enableWhen",
-    //         question: "New EnableWhen Condition",
-    //         condition: {
-    //             fieldId: null,
-    //             value: "", 
-    //         },
-    //         field1: {
-    //             id: "child-field1-id",
-    //             fieldType: "input", 
-    //             question: "Child Field 1",
-    //             answer: "",
-    //         },
-    //         field2: {
-    //             id: "child-field2-id",
-    //             fieldType: "input", 
-    //             question: "Child Field 2",
-    //             answer: "",
-    //         },
-    //     },
-    // },
 }
 
 export default fieldTypes
