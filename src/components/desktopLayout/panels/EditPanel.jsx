@@ -17,7 +17,7 @@ export default function EditPanel({
   const isSection = selectedField?.fieldType === "section";
 
   return (
-    <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+    <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm mb-2">
       {/* Placeholder */}
       {isNone && (
         <div className="text-gray-600">

@@ -35,7 +35,7 @@ export function renderFormFields({
           "rounded-lg bg-white mb-2",
           isPreview ? "" : "border",
           isSelected
-            ? "border-blue-500 ring-2 ring-blue-300"
+            ? "border-blue-300 border-2 border-dashed"
             : "border-gray-200",
         ].join(" ")}
         onClick={(e) => {

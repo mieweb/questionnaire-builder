@@ -50,7 +50,7 @@ export default function ThreePanelLayout({
           />
         </div>
         {editMode && (
-          <div className={`h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] overflow-y-auto custom-scrollbar ${!selectedField ? "max-h-29" : ""}`}>
+          <div className={`h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] overflow-y-auto custom-scrollbar ${!selectedField ? "max-h-32" : ""}`}>
             <EditPanel
               key={editPanelKey}
               isPreview={isPreview}

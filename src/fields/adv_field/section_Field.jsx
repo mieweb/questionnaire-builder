@@ -57,8 +57,8 @@ const SectionField = ({
         }}
         className={[
           !isPreview ? "border" : "",
-          "border-gray-200 rounded-lg mb-3",
-          isHighlighted ? "ring-2 ring-blue-400 border-blue-500" : "",
+          "border-0 rounded-lg mb-3",
+          isHighlighted ? "border-2 border-blue-400 border-dashed" : "",
         ].join(" ")}
       >
         <Comp
