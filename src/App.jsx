@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import Header from "./components/Header";
 import MobileToolBar from "./components/MobileToolBar";
 import ThreePanelLayout from "./components/desktopLayout/ThreePanelLayout";
@@ -10,7 +10,7 @@ export default function App() {
   const [selectedFieldId, setSelectedFieldId] = useState(null);
   const [sectionHighlight, setSectionHighlight] = useState({});
   const getSectionHighlightId = (sectionId) => sectionHighlight[sectionId] || null;
-  
+
   const setSectionActiveChild = useCallback((sid, cid) => {
     setSectionHighlight(prev => {
       if (prev[sid] === cid) return prev;
@@ -18,14 +18,14 @@ export default function App() {
     });
   }, []);
 
-  const clearAllSectionHighlights = useCallback(() => {
-    setSectionHighlight({});
-  }, []);
-
   const selectedField = useMemo(
     () => formData.find(f => f.id === selectedFieldId) || null,
     [formData, selectedFieldId]
   );
+
+  useEffect(() => {
+    setSectionHighlight({});
+  }, [selectedFieldId, isPreview]);
 
   return (
     <div className="min-h-screen bg-gray-100 font-titillium">
@@ -36,7 +36,6 @@ export default function App() {
         setIsPreview={setIsPreview}
         selectedFieldId={selectedFieldId}
         setSelectedFieldId={setSelectedFieldId}
-        clearAllSectionHighlights={clearAllSectionHighlights}
       />
 
       {/* Mobile ToolBar*/}

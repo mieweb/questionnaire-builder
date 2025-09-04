@@ -4,10 +4,10 @@ import fieldTypes from "../../../fields/fieldTypes-config";
 import { updateField, updateChildField, deleteChildField } from "../../../utils/formActions";
 
 export default function EditPanel({
+  isPreview,
   selectedField,
   formData,
   setFormData,
-  isPreview,
   onActiveChildChange
 }) {
 

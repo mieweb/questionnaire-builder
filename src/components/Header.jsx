@@ -7,7 +7,6 @@ const Header = ({
   isPreview,
   setIsPreview,
   setSelectedFieldId,
-  clearAllSectionHighlights,
 }) => {
 
   const [showJson, setShowJson] = useState(false)
@@ -34,12 +33,10 @@ const Header = ({
   const onPreview = () => {
     setIsPreview(true);
     setSelectedFieldId(null);
-    clearAllSectionHighlights?.(); 
   };
 
   const onEdit = () => {
     setIsPreview(false);
-    clearAllSectionHighlights?.();
   };
 
   return (

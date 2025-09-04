@@ -57,8 +57,6 @@ export default function ThreePanelLayout({
               selectedField={selectedField}
               formData={formData}
               setFormData={setFormData}
-              selectedFieldId={selectedFieldId}
-              setSelectedFieldId={setSelectedFieldId}
               onActiveChildChange={onActiveChildChange}
             />
           </div>

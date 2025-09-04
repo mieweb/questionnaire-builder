@@ -54,7 +54,9 @@ export function renderFormFields({
           isSelected={isSelected}
           onSelect={() => !isPreview && setSelectedFieldId?.(field.id)}
           {...(field.fieldType === "section"
-            ? { highlightChildId: getSectionHighlightId?.(field.id) || null }
+            ? {
+                highlightChildId: getSectionHighlightId?.(field.id) || null,
+              }
             : {})}
         />
       </div>
@@ -69,7 +71,6 @@ export default function FormBuilderMain({
   selectedFieldId,
   setSelectedFieldId,
   getSectionHighlightId,
-  clearSectionHighlightId
 }) {
   const isEmpty = !formData || formData.length === 0;
 
@@ -96,7 +97,6 @@ export default function FormBuilderMain({
           selectedFieldId,
           setSelectedFieldId,
           getSectionHighlightId,
-          clearSectionHighlightId
         })
       )}
     </div>
