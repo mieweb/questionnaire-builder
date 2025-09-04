@@ -9,6 +9,7 @@ export function renderFormFields({
   isPreview,
   selectedFieldId,
   setSelectedFieldId,
+  getSectionHighlightId,
 }) {
   return formData.map((field) => {
     const FieldComponent = fieldTypes[field.fieldType]?.component;
@@ -24,7 +25,7 @@ export function renderFormFields({
 
     const onDeleteField = (id) => {
       deleteField(formData, setFormData, id);
-      if (selectedFieldId === id) setSelectedFieldId?.(null); 
+      if (selectedFieldId === id) setSelectedFieldId?.(null);
     };
 
     return (
@@ -34,7 +35,7 @@ export function renderFormFields({
           "rounded-lg bg-white mb-2",
           isPreview ? "" : "border",
           isSelected
-            ? "border-blue-500 ring-2 ring-blue-300"
+            ? "border-blue-300 border-2 border-dashed"
             : "border-gray-200",
         ].join(" ")}
         onClick={(e) => {
@@ -52,6 +53,9 @@ export function renderFormFields({
           formData={formData}
           isSelected={isSelected}
           onSelect={() => !isPreview && setSelectedFieldId?.(field.id)}
+          {...(field.fieldType === "section"
+            ? { highlightChildId: getSectionHighlightId?.(field.id) || null }
+            : {})}
         />
       </div>
     );
@@ -64,19 +68,37 @@ export default function FormBuilderMain({
   isPreview,
   selectedFieldId,
   setSelectedFieldId,
+  getSectionHighlightId,
+  clearSectionHighlightId
 }) {
+  const isEmpty = !formData || formData.length === 0;
+
   return (
     <div
       className="w-full max-w-4xl mx-auto rounded-lg"
       onClick={() => !isPreview && setSelectedFieldId?.(null)}
     >
-      {renderFormFields({
-        formData,
-        setFormData,
-        isPreview,
-        selectedFieldId,
-        setSelectedFieldId,
-      })}
+      {isEmpty ? (
+        <div className="flex flex-col items-center justify-center h-72 bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-blue-200 rounded-xl shadow-md text-center px-8 py-10">
+          <div className="text-xl font-semibold text-gray-700 mb-2">
+            Start building your questionnaire
+          </div>
+          <div className="text-base text-gray-500">
+            Add tools with <span className="font-semibold text-blue-500">Tool Panel</span> on the left.<br />
+            Select fields to edit on the <span className="font-semibold text-blue-500">Edit Panel</span> on the left.
+          </div>
+        </div>
+      ) : (
+        renderFormFields({
+          formData,
+          setFormData,
+          isPreview,
+          selectedFieldId,
+          setSelectedFieldId,
+          getSectionHighlightId,
+          clearSectionHighlightId
+        })
+      )}
     </div>
   );
 }

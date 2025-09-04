@@ -11,7 +11,14 @@ export default function ThreePanelLayout({
   selectedFieldId,
   setSelectedFieldId,
   selectedField,
+  getSectionHighlightId,
+  onActiveChildChange,
 }) {
+
+  const editPanelKey = selectedField
+    ? `${selectedField.fieldType}:${selectedField.id}`
+    : "empty";
+
   const editMode = !isPreview;
   const cols = editMode
     ? "lg:grid-cols-[280px_minmax(0,1fr)_320px]"
@@ -22,7 +29,7 @@ export default function ThreePanelLayout({
       <div className={`grid grid-cols-1 ${cols} gap-3 h-full items-start`}>
 
         {editMode && (
-          <div className="bg-white border border-gray-200 rounded-lg shadow-sm hidden lg:block">
+          <div className="">
             <ToolPanel
               isPreview={isPreview}
               formData={formData}
@@ -31,7 +38,7 @@ export default function ThreePanelLayout({
           </div>
         )}
 
-        <div className="overflow-y-auto h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] custom-scrollbar rounded-lg px-1">
+        <div className="overflow-y-auto h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] custom-scrollbar px-1">
           <FormBuilderMain
             formData={formData}
             setFormData={setFormData}
@@ -39,18 +46,20 @@ export default function ThreePanelLayout({
             setIsPreview={setIsPreview}
             selectedFieldId={selectedFieldId}
             setSelectedFieldId={setSelectedFieldId}
+            getSectionHighlightId={getSectionHighlightId}
           />
         </div>
         {editMode && (
-          <div className={`bg-white border border-gray-200 rounded-lg shadow-sm hidden lg:block
-                            h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] overflow-y-auto custom-scrollbar ${ !selectedField ? "max-h-29" : "" }`}>
+          <div className={`h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] overflow-y-auto custom-scrollbar ${!selectedField ? "max-h-32" : ""}`}>
             <EditPanel
+              key={editPanelKey}
               isPreview={isPreview}
               selectedField={selectedField}
               formData={formData}
               setFormData={setFormData}
               selectedFieldId={selectedFieldId}
               setSelectedFieldId={setSelectedFieldId}
+              onActiveChildChange={onActiveChildChange}
             />
           </div>
         )}

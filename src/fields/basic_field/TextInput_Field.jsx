@@ -49,7 +49,7 @@ const TextInputField = ({ field, label, onUpdate, onDelete, isPreview, formData,
         placeholder="Enter question"
       />
       <motion.div
-        initial={{ height: "auto", opacity: 1 }}
+        initial={false}
         animate={{ height: isEdit ? "auto" : 0, opacity: isEdit ? 1 : 0 }}
         transition={{ duration: 0.25 }}
         className={`overflow-hidden ${!isEdit ? "pointer-events-none" : ""}`}

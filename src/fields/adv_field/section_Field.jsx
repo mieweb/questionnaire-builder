@@ -1,40 +1,66 @@
-import React from "react"
-import { v4 as uuidv4 } from "uuid"
-import fieldTypes from "../fieldTypes-config"
-import { initializeField } from "../../utils/initializedFieldOptions"
-import { checkFieldVisibility } from "../../utils/visibilityChecker"
-import { EDIT_ICON, TRASHCAN_ICON, PLUSSQUARE_ICON, X_ICON } from "../../assets/icons"
+// fields/adv_field/section_Field.jsx
+import React, { useEffect, useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
+import fieldTypes from "../fieldTypes-config";
+import { initializeField } from "../../utils/initializedFieldOptions";
+import { checkFieldVisibility } from "../../utils/visibilityChecker";
+import { TRASHCAN_ICON, PLUSSQUARE_ICON } from "../../assets/icons";
 
+const SectionField = ({
+  field,
+  label,
+  onUpdate,
+  onDelete,
+  isPreview,
+  formData,           
+  highlightChildId = null, 
+}) => {
 
-const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData }) => {
+  const childRefs = useRef({});
+
   const addChild = (type) => {
-    if (type === "section") return
-    const template = fieldTypes[type]?.defaultProps
-    if (!template) return
-    const newChild = initializeField({ ...template, id: uuidv4() })
-    onUpdate("fields", [...(field.fields || []), newChild])
-  }
+    if (type === "section") return;
+    const template = fieldTypes[type]?.defaultProps;
+    if (!template) return;
+    const newChild = initializeField({ ...template, id: uuidv4() });
+    onUpdate("fields", [...(field.fields || []), newChild]);
+  };
 
   const updateChild = (id, key, value) => {
     const updated = (field.fields || []).map((f) =>
       f.id === id ? { ...f, [key]: value } : f
-    )
-    onUpdate("fields", updated)
-  }
+    );
+    onUpdate("fields", updated);
+  };
 
   const deleteChild = (id) => {
-    onUpdate("fields", (field.fields || []).filter((f) => f.id !== id))
-  }
+    onUpdate(
+      "fields",
+      (field.fields || []).filter((f) => f.id !== id)
+    );
+  };
 
   const renderChild = (child) => {
-    const Comp = fieldTypes[child.fieldType]?.component
-    if (!Comp) return null
-    const shouldShow = isPreview ? checkFieldVisibility(child, (field.fields || [])) : true
-    if (!shouldShow) return null
+    const Comp = fieldTypes[child.fieldType]?.component;
+    if (!Comp) return null;
+
+    const shouldShow = isPreview ? checkFieldVisibility(child, formData) : true;
+    if (!shouldShow) return null;
+
+    const isHighlighted = !isPreview && highlightChildId === child.id;
 
     return (
-      <div key={child.id}
-        className={`${isPreview ? "" : "border"} border-gray-200 rounded-lg mb-3`}>
+      <div
+        key={child.id}
+        ref={(el) => {
+          if (el) childRefs.current[child.id] = el;
+        }}
+        className={[
+          !isPreview ? "border" : "",
+          "border-0 rounded-lg mb-3",
+          isHighlighted ? "border-2 border-blue-400 border-dashed" : "",
+        ].join(" ")}
+      >
         <Comp
           field={child}
           label={fieldTypes[child.fieldType]?.label}
@@ -45,8 +71,21 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
           parentType="section"
         />
       </div>
-    )
-  }
+    );
+  };
+
+  // Auto-scroll the highlighted child into view
+  useEffect(() => {
+    if (isPreview) return;
+    if (!highlightChildId) return;
+    const el = childRefs.current[highlightChildId];
+    if (!el) return;
+    try {
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } catch {
+      // ignore
+    }
+  }, [highlightChildId, isPreview]);
 
   // Preview mode
   if (isPreview) {
@@ -55,15 +94,14 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
         <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
           {field.title || "Section"}
         </div>
-        <div className="p-4 bg-white border-1 border-gray-300 rounded-b-lg">
+        <div className="p-4 bg-white border border-gray-300 rounded-b-lg">
           {(field.fields || []).map(renderChild)}
         </div>
-
       </section>
-    )
+    );
   }
 
-  // Edit mode 
+  // Edit mode
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-3">
@@ -76,19 +114,16 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
             placeholder="Section title (e.g., Data Consent)"
           />
         </div>
-        <button onClick={onDelete} className="ml-2 px-2 py-1 text-black/80 hover:text-red-600">
+        <button
+          onClick={onDelete}
+          className="ml-2 px-2 py-1 text-black/80 hover:text-red-600"
+        >
           <TRASHCAN_ICON className="cursor-pointer" />
         </button>
       </div>
 
       {/* Child fields */}
-      <div>
-        {(field.fields || []).map((child) => (
-          <div key={child.id}>
-            {renderChild(child)}
-          </div>
-        ))}
-      </div>
+      <div>{(field.fields || []).map((child) => renderChild(child))}</div>
 
       {/* Mini toolbar to add child fields (no nested sections) */}
       <div className="mb-3">
@@ -109,7 +144,7 @@ const SectionField = ({ field, label, onUpdate, onDelete, isPreview, formData })
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SectionField
+export default SectionField;

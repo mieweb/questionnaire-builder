@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useCallback } from "react";
 import Header from "./components/Header";
 import MobileToolBar from "./components/MobileToolBar";
 import ThreePanelLayout from "./components/desktopLayout/ThreePanelLayout";
@@ -8,6 +8,19 @@ export default function App() {
   const [formData, setFormData] = useState([]);
   const [isPreview, setIsPreview] = useState(false);
   const [selectedFieldId, setSelectedFieldId] = useState(null);
+  const [sectionHighlight, setSectionHighlight] = useState({});
+  const getSectionHighlightId = (sectionId) => sectionHighlight[sectionId] || null;
+  
+  const setSectionActiveChild = useCallback((sid, cid) => {
+    setSectionHighlight(prev => {
+      if (prev[sid] === cid) return prev;
+      return { ...prev, [sid]: cid };
+    });
+  }, []);
+
+  const clearAllSectionHighlights = useCallback(() => {
+    setSectionHighlight({});
+  }, []);
 
   const selectedField = useMemo(
     () => formData.find(f => f.id === selectedFieldId) || null,
@@ -16,15 +29,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 font-titillium">
-
-        <Header
-          formData={formData}
-          setFormData={setFormData}
-          isPreview={isPreview}
-          setIsPreview={setIsPreview}
-          selectedFieldId={selectedFieldId}
-          setSelectedFieldId={setSelectedFieldId}
-        />
+      <Header
+        formData={formData}
+        setFormData={setFormData}
+        isPreview={isPreview}
+        setIsPreview={setIsPreview}
+        selectedFieldId={selectedFieldId}
+        setSelectedFieldId={setSelectedFieldId}
+        clearAllSectionHighlights={clearAllSectionHighlights}
+      />
 
       {/* Mobile ToolBar*/}
       <div className="lg:hidden">
@@ -40,15 +53,17 @@ export default function App() {
       </div>
 
       {/* Desktop / three-panel */}
-        <ThreePanelLayout
-          formData={formData}
-          setFormData={setFormData}
-          isPreview={isPreview}
-          setIsPreview={setIsPreview}
-          selectedFieldId={selectedFieldId}
-          setSelectedFieldId={setSelectedFieldId}
-          selectedField={selectedField}
-        />
+      <ThreePanelLayout
+        formData={formData}
+        setFormData={setFormData}
+        isPreview={isPreview}
+        setIsPreview={setIsPreview}
+        selectedFieldId={selectedFieldId}
+        setSelectedFieldId={setSelectedFieldId}
+        selectedField={selectedField}
+        getSectionHighlightId={getSectionHighlightId}
+        onActiveChildChange={setSectionActiveChild}
+      />
     </div>
   );
 }
