@@ -4,7 +4,18 @@ import { v4 as uuidv4 } from "uuid"
 import { EDIT_ICON, TRASHCAN_ICON } from "../../assets/icons"
 import EnableWhenLogic from "../../utils/EnableWhenLogic"
 
-const TextInputField = ({ field, label, onUpdate, onDelete, isPreview, formData, parentType }) => {
+const TextInputField = ({ 
+  field, 
+  label, 
+  onUpdate, 
+  onDelete, 
+  isPreview, 
+  formData, 
+  parentType,
+  isEditModalOpen, 
+  setEditModalOpen
+}) => {
+
   const [isEdit, setIsEdit] = useState(false)
   const toggleEdit = () => setIsEdit(!isEdit)
   const uniqueId = field.id || uuidv4()

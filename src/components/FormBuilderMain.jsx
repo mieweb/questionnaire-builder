@@ -10,6 +10,8 @@ export function renderFormFields({
   selectedFieldId,
   setSelectedFieldId,
   getSectionHighlightId,
+  isEditModalOpen,
+  setEditModalOpen,
 }) {
   return formData.map((field) => {
     const FieldComponent = fieldTypes[field.fieldType]?.component;
@@ -58,6 +60,8 @@ export function renderFormFields({
                 highlightChildId: getSectionHighlightId?.(field.id) || null,
               }
             : {})}
+          isEditModalOpen={isEditModalOpen}
+          setEditModalOpen={setEditModalOpen}
         />
       </div>
     );
@@ -71,6 +75,8 @@ export default function FormBuilderMain({
   selectedFieldId,
   setSelectedFieldId,
   getSectionHighlightId,
+  isEditModalOpen,
+  setEditModalOpen
 }) {
   const isEmpty = !formData || formData.length === 0;
 
@@ -97,6 +103,8 @@ export default function FormBuilderMain({
           selectedFieldId,
           setSelectedFieldId,
           getSectionHighlightId,
+          isEditModalOpen,
+          setEditModalOpen
         })
       )}
     </div>
