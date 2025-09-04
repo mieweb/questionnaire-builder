@@ -18,6 +18,10 @@ export default function App() {
     });
   }, []);
 
+  const clearAllSectionHighlights = useCallback(() => {
+    setSectionHighlight({});
+  }, []);
+
   const selectedField = useMemo(
     () => formData.find(f => f.id === selectedFieldId) || null,
     [formData, selectedFieldId]
@@ -25,7 +29,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 font-titillium">
-
       <Header
         formData={formData}
         setFormData={setFormData}
@@ -33,6 +36,7 @@ export default function App() {
         setIsPreview={setIsPreview}
         selectedFieldId={selectedFieldId}
         setSelectedFieldId={setSelectedFieldId}
+        clearAllSectionHighlights={clearAllSectionHighlights}
       />
 
       {/* Mobile ToolBar*/}

@@ -1,7 +1,14 @@
 import React, { useState } from "react"
 import JsonViewer from "./JsonViewer"
 
-const Header = ({ formData, setFormData, isPreview, setIsPreview, setSelectedFieldId }) => {
+const Header = ({
+  formData,
+  setFormData,
+  isPreview,
+  setIsPreview,
+  setSelectedFieldId,
+  clearAllSectionHighlights,
+}) => {
 
   const [showJson, setShowJson] = useState(false)
 
@@ -25,9 +32,15 @@ const Header = ({ formData, setFormData, isPreview, setIsPreview, setSelectedFie
     a.click()
   }
   const onPreview = () => {
-    setIsPreview(true)
-    setSelectedFieldId(null)
-  }
+    setIsPreview(true);
+    setSelectedFieldId(null);
+    clearAllSectionHighlights?.(); 
+  };
+
+  const onEdit = () => {
+    setIsPreview(false);
+    clearAllSectionHighlights?.();
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-transparent mx-auto">
@@ -42,7 +55,7 @@ const Header = ({ formData, setFormData, isPreview, setIsPreview, setSelectedFie
         <div className="grid grid-cols-2 rounded-xl border border-black/10 bg-white shadow-sm">
           <button
             className={`py-3 rounded-xl text-sm font-medium ${!isPreview ? "bg-black/5" : ""}`}
-            onClick={() => setIsPreview(false)}
+            onClick={onEdit}
           >
             Builder
           </button>
