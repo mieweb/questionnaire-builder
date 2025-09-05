@@ -41,8 +41,8 @@ export default function Layout({
             />
           </div>
         )}
-        
-        {/* Center Panel / Form Builder */} 
+
+        {/* Center Panel / Form Builder */}
         <div>
           <FormBuilderMain
             formData={formData}
@@ -73,10 +73,12 @@ export default function Layout({
 
         {/* Mobile EditPanel Modal */}
         {editMode && (
-          <div className={`lg:hidden`}>
+          <div className={`lg:hidden`} >
             {isEditModalOpen && selectedField && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent/30 backdrop-blur-sm p-4">
-                <div className="w-full max-w-md mx-auto p-4 relative overflow-y-auto custom-scrollbar h-screen">
+              <div className="fixed inset-0 top-5 z-50 flex items-center justify-center bg-transparent/30 backdrop-blur-sm p-4"
+                onClick={() => setEditModalOpen(false)}>
+                <div className="w-full max-w-md mx-auto relative"
+                  onClick={(e) => e.stopPropagation()}>
                   <button
                     className="absolute top-3 right-7 text-gray-500"
                     onClick={() => setEditModalOpen(false)}

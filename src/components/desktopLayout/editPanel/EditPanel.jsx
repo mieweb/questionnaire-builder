@@ -16,7 +16,7 @@ export default function EditPanel({
   const isSection = selectedField?.fieldType === "section";
 
   return (
-    <div className={`p-4 bg-white border border-gray-200 rounded-lg shadow-sm mb-2 overflow-y-auto custom-scrollbar 
+    <div className={`p-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar 
                     ${selectedField ? "" : "max-h-32"} max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)]`}>
 
       {/* Placeholder */}
