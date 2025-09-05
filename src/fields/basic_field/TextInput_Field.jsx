@@ -10,14 +10,13 @@ const TextInputField = ({
   onUpdate, 
   onDelete, 
   isPreview, 
-  formData, 
+  formData, //Could be needed
   parentType,
   isEditModalOpen, 
   setEditModalOpen
 }) => {
 
-  const [isEdit, setIsEdit] = useState(false)
-  const toggleEdit = () => setIsEdit(!isEdit)
+  const toggleEdit = () => setEditModalOpen(!isEditModalOpen);
   const uniqueId = field.id || uuidv4()
   const insideSection = parentType === "section"
 
@@ -59,14 +58,6 @@ const TextInputField = ({
         onChange={(e) => onUpdate("question", e.target.value)}
         placeholder="Enter question"
       />
-      <motion.div
-        initial={false}
-        animate={{ height: isEdit ? "auto" : 0, opacity: isEdit ? 1 : 0 }}
-        transition={{ duration: 0.25 }}
-        className={`overflow-hidden ${!isEdit ? "pointer-events-none" : ""}`}
-      >
-        <EnableWhenLogic fieldId={field.id} formData={formData} onUpdate={onUpdate} />
-      </motion.div>
       <input
         type="text"
         value={field.answer || ""}
