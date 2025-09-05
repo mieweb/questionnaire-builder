@@ -54,7 +54,7 @@ const RadioField = ({
       <div className="flex justify-between mb-2 ml-1">
         {label}
         <div className="flex items-center gap-2 ml-2">
-          <button onClick={toggleEdit}><EDIT_ICON className="h-6 w-6" /></button>
+          <button onClick={toggleEdit} className="block lg:hidden"><EDIT_ICON className="h-6 w-6" /></button>
           <button onClick={onDelete}><TRASHCAN_ICON className="h-6 w-6" /></button>
         </div>
       </div>
