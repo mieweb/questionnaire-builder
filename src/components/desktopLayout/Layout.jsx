@@ -3,7 +3,7 @@ import ToolPanel from "./panels/ToolPanel";
 import FormBuilderMain from "../FormBuilderMain";
 import EditPanel from "./panels/EditPanel";
 
-export default function ThreePanelLayout({
+export default function Layout({
   formData,
   setFormData,
   isPreview,
@@ -13,6 +13,8 @@ export default function ThreePanelLayout({
   selectedField,
   getSectionHighlightId,
   onActiveChildChange,
+  isEditModalOpen,
+  setEditModalOpen,
 }) {
 
   const editPanelKey = selectedField
@@ -28,8 +30,9 @@ export default function ThreePanelLayout({
     <div className="w-full max-w-6xl mx-auto px-4 h-fit rounded-lg mt-2">
       <div className={`grid grid-cols-1 ${cols} gap-3 h-full items-start`}>
 
+        {/* Tool Panel */}
         {editMode && (
-          <div className="">
+          <div className="hidden lg:block">
             <ToolPanel
               isPreview={isPreview}
               formData={formData}
@@ -37,7 +40,8 @@ export default function ThreePanelLayout({
             />
           </div>
         )}
-
+        
+        {/* Center Panel / Form Builder */} 
         <div className="overflow-y-auto h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] custom-scrollbar px-1">
           <FormBuilderMain
             formData={formData}
@@ -47,20 +51,48 @@ export default function ThreePanelLayout({
             selectedFieldId={selectedFieldId}
             setSelectedFieldId={setSelectedFieldId}
             getSectionHighlightId={getSectionHighlightId}
+            isEditModalOpen={isEditModalOpen}
+            setEditModalOpen={setEditModalOpen}
           />
         </div>
+
+        {/* Desktop EditPanel */}
         {editMode && (
-          <div className={`h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] overflow-y-auto custom-scrollbar ${!selectedField ? "max-h-32" : ""}`}>
+          <div className={`hidden lg:block h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] overflow-y-auto custom-scrollbar ${!selectedField ? "max-h-32" : ""}`}>
             <EditPanel
               key={editPanelKey}
               isPreview={isPreview}
               selectedField={selectedField}
               formData={formData}
               setFormData={setFormData}
-              selectedFieldId={selectedFieldId}
-              setSelectedFieldId={setSelectedFieldId}
               onActiveChildChange={onActiveChildChange}
             />
+          </div>
+        )}
+
+        {/* Mobile EditPanel Modal */}
+        {editMode && (
+          <div className={`lg:hidden`}>
+            {isEditModalOpen && selectedField && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent/30 backdrop-blur-sm p-4">
+                <div className="w-full max-w-md mx-auto p-4 relative">
+                  <button
+                    className="absolute top-3 right-7 text-gray-500"
+                    onClick={() => setEditModalOpen(false)}
+                  >
+                    <span className="text-3xl">&times;</span>
+                  </button>
+                  <EditPanel
+                    key={editPanelKey}
+                    isPreview={isPreview}
+                    selectedField={selectedField}
+                    formData={formData}
+                    setFormData={setFormData}
+                    onActiveChildChange={onActiveChildChange}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -4,9 +4,19 @@ import { v4 as uuidv4 } from "uuid"
 import { EDIT_ICON, PLUSOPTION_ICON, TRASHCAN_ICON, TRASHCANTWO_ICON } from "../../assets/icons"
 import EnableWhenLogic from "../../utils/EnableWhenLogic"
 
-const RadioField = ({ field, label, onUpdate, onDelete, isPreview, formData, parentType }) => {
-  const [isEdit, setIsEdit] = useState(false)
-  const toggleEdit = () => setIsEdit(!isEdit)
+const RadioField = ({
+  field,
+  label,
+  onUpdate,
+  onDelete,
+  isPreview,
+  formData, //Could be needed
+  parentType,
+  isEditModalOpen,
+  setEditModalOpen
+}) => {
+
+  const toggleEdit = () => setEditModalOpen(!isEditModalOpen);
 
   const addOption = () => onUpdate("options", [...field.options, { id: uuidv4(), value: "" }])
   const updateOption = (id, value) => onUpdate("options", field.options.map(o => o.id === id ? { ...o, value } : o))
@@ -56,14 +66,6 @@ const RadioField = ({ field, label, onUpdate, onDelete, isPreview, formData, par
         onChange={(e) => onUpdate("question", e.target.value)}
         placeholder="Enter question"
       />
-      <motion.div
-        initial={false}
-        animate={{ height: isEdit ? "auto" : 0, opacity: isEdit ? 1 : 0 }}
-        transition={{ duration: 0.25 }}
-        className={`overflow-hidden ${!isEdit ? "pointer-events-none" : ""}`}
-      >
-        <EnableWhenLogic fieldId={field.id} formData={formData} onUpdate={onUpdate} />
-      </motion.div>
 
       {field.options.map(option => (
         <div key={option.id} className="flex items-center px-3 my-1.5 shadow border border-black/10 rounded-lg h-10">

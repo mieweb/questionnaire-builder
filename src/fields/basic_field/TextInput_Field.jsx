@@ -4,9 +4,19 @@ import { v4 as uuidv4 } from "uuid"
 import { EDIT_ICON, TRASHCAN_ICON } from "../../assets/icons"
 import EnableWhenLogic from "../../utils/EnableWhenLogic"
 
-const TextInputField = ({ field, label, onUpdate, onDelete, isPreview, formData, parentType }) => {
-  const [isEdit, setIsEdit] = useState(false)
-  const toggleEdit = () => setIsEdit(!isEdit)
+const TextInputField = ({ 
+  field, 
+  label, 
+  onUpdate, 
+  onDelete, 
+  isPreview, 
+  formData, //Could be needed
+  parentType,
+  isEditModalOpen, 
+  setEditModalOpen
+}) => {
+
+  const toggleEdit = () => setEditModalOpen(!isEditModalOpen);
   const uniqueId = field.id || uuidv4()
   const insideSection = parentType === "section"
 
@@ -48,14 +58,6 @@ const TextInputField = ({ field, label, onUpdate, onDelete, isPreview, formData,
         onChange={(e) => onUpdate("question", e.target.value)}
         placeholder="Enter question"
       />
-      <motion.div
-        initial={false}
-        animate={{ height: isEdit ? "auto" : 0, opacity: isEdit ? 1 : 0 }}
-        transition={{ duration: 0.25 }}
-        className={`overflow-hidden ${!isEdit ? "pointer-events-none" : ""}`}
-      >
-        <EnableWhenLogic fieldId={field.id} formData={formData} onUpdate={onUpdate} />
-      </motion.div>
       <input
         type="text"
         value={field.answer || ""}

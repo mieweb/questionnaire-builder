@@ -3,6 +3,49 @@ import { checkFieldVisibility } from "../utils/visibilityChecker";
 import { updateField, deleteField } from "../utils/formActions";
 import fieldTypes from "../fields/fieldTypes-config";
 
+export default function FormBuilderMain({
+  formData = [],
+  setFormData,
+  isPreview,
+  selectedFieldId,
+  setSelectedFieldId,
+  getSectionHighlightId,
+  isEditModalOpen,
+  setEditModalOpen
+}) {
+  const isEmpty = !formData || formData.length === 0;
+
+  return (
+    <div
+      className="w-full max-w-4xl mx-auto rounded-lg"
+      onClick={() => !isPreview && setSelectedFieldId?.(null)}
+    >
+      {isEmpty ? (
+        <div className="flex flex-col items-center justify-center h-72 bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-blue-200 rounded-xl shadow-md text-center px-8 py-10">
+          <div className="text-xl font-semibold text-gray-700 mb-2">
+            Start building your questionnaire
+          </div>
+          <div className="text-base text-gray-500">
+            Add tools with <span className="font-semibold text-blue-500">Tool Panel</span> on the left.<br />
+            Select fields to edit on the <span className="font-semibold text-blue-500">Edit Panel</span> on the left.
+          </div>
+        </div>
+      ) : (
+        renderFormFields({
+          formData,
+          setFormData,
+          isPreview,
+          selectedFieldId,
+          setSelectedFieldId,
+          getSectionHighlightId,
+          isEditModalOpen,
+          setEditModalOpen
+        })
+      )}
+    </div>
+  );
+}
+
 export function renderFormFields({
   formData = [],
   setFormData,
@@ -10,6 +53,8 @@ export function renderFormFields({
   selectedFieldId,
   setSelectedFieldId,
   getSectionHighlightId,
+  isEditModalOpen,
+  setEditModalOpen,
 }) {
   return formData.map((field) => {
     const FieldComponent = fieldTypes[field.fieldType]?.component;
@@ -51,54 +96,16 @@ export function renderFormFields({
           onDelete={() => !isPreview && onDeleteField(field.id)}
           isPreview={isPreview}
           formData={formData}
-          isSelected={isSelected}
           onSelect={() => !isPreview && setSelectedFieldId?.(field.id)}
           {...(field.fieldType === "section"
-            ? { highlightChildId: getSectionHighlightId?.(field.id) || null }
+            ? {
+              highlightChildId: getSectionHighlightId?.(field.id) || null,
+            }
             : {})}
+          isEditModalOpen={isEditModalOpen}
+          setEditModalOpen={setEditModalOpen}
         />
       </div>
     );
   });
-}
-
-export default function FormBuilderMain({
-  formData = [],
-  setFormData,
-  isPreview,
-  selectedFieldId,
-  setSelectedFieldId,
-  getSectionHighlightId,
-  clearSectionHighlightId
-}) {
-  const isEmpty = !formData || formData.length === 0;
-
-  return (
-    <div
-      className="w-full max-w-4xl mx-auto rounded-lg"
-      onClick={() => !isPreview && setSelectedFieldId?.(null)}
-    >
-      {isEmpty ? (
-        <div className="flex flex-col items-center justify-center h-72 bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-blue-200 rounded-xl shadow-md text-center px-8 py-10">
-          <div className="text-xl font-semibold text-gray-700 mb-2">
-            Start building your questionnaire
-          </div>
-          <div className="text-base text-gray-500">
-            Add tools with <span className="font-semibold text-blue-500">Tool Panel</span> on the left.<br />
-            Select fields to edit on the <span className="font-semibold text-blue-500">Edit Panel</span> on the left.
-          </div>
-        </div>
-      ) : (
-        renderFormFields({
-          formData,
-          setFormData,
-          isPreview,
-          selectedFieldId,
-          setSelectedFieldId,
-          getSectionHighlightId,
-          clearSectionHighlightId
-        })
-      )}
-    </div>
-  );
 }
