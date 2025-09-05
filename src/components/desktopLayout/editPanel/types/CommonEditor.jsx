@@ -45,4 +45,5 @@ function CommonEditor({ f, onUpdateField }) {
     </div>
   );
 }
+
 export default CommonEditor;
