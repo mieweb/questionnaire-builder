@@ -7,6 +7,7 @@ on:
 
 jobs:
   setup-runner:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: install-dep
@@ -20,6 +21,7 @@ jobs:
           proxmox_password: ${{ secrets.proxmox_password }}
           github_pat: ${{ secrets.runner_pat }}
   deploy:
+    if: github.ref == 'refs/heads/main'
     runs-on: self-hosted
     needs: setup-runner
     steps:
