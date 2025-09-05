@@ -57,7 +57,7 @@ const CheckField = ({
       <div className="flex justify-between mb-2 ml-1">
         {label}
         <div className="flex items-center gap-2 ml-2">
-          <button onClick={toggleEdit} className="block lg:hidden"><EDIT_ICON /></button>
+          <button onClick={toggleEdit} className={`block lg:hidden ${insideSection ? "hidden" : ""}`}><EDIT_ICON /></button>
           <button onClick={onDelete}><TRASHCAN_ICON /></button>
         </div>
       </div>

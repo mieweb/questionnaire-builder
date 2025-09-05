@@ -1,7 +1,8 @@
 import React from "react";
-import ToolPanel from "./panels/ToolPanel";
+import ToolPanel from "./toolPanel/ToolPanel";
+import EditPanel from "./editPanel/EditPanel";
 import FormBuilderMain from "../FormBuilderMain";
-import EditPanel from "./panels/EditPanel";
+
 
 export default function Layout({
   formData,
@@ -42,7 +43,7 @@ export default function Layout({
         )}
         
         {/* Center Panel / Form Builder */} 
-        <div className="overflow-y-auto h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] custom-scrollbar px-1">
+        <div>
           <FormBuilderMain
             formData={formData}
             setFormData={setFormData}
@@ -58,7 +59,7 @@ export default function Layout({
 
         {/* Desktop EditPanel */}
         {editMode && (
-          <div className={`hidden lg:block h-[calc(100svh-19rem)] lg:h-[calc(100dvh-15rem)] overflow-y-auto custom-scrollbar ${!selectedField ? "max-h-32" : ""}`}>
+          <div className={`hidden lg:block`}>
             <EditPanel
               key={editPanelKey}
               isPreview={isPreview}
@@ -75,7 +76,7 @@ export default function Layout({
           <div className={`lg:hidden`}>
             {isEditModalOpen && selectedField && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent/30 backdrop-blur-sm p-4">
-                <div className="w-full max-w-md mx-auto p-4 relative">
+                <div className="w-full max-w-md mx-auto p-4 relative overflow-y-auto custom-scrollbar h-screen">
                   <button
                     className="absolute top-3 right-7 text-gray-500"
                     onClick={() => setEditModalOpen(false)}
