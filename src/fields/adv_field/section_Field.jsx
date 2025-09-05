@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import fieldTypes from "../fieldTypes-config";
 import { initializeField } from "../../utils/initializedFieldOptions";
 import { checkFieldVisibility } from "../../utils/visibilityChecker";
-import { TRASHCAN_ICON, PLUSSQUARE_ICON } from "../../assets/icons";
+import { TRASHCAN_ICON, PLUSSQUARE_ICON, EDIT_ICON } from "../../assets/icons";
 
 const SectionField = ({
   field,
@@ -12,12 +12,15 @@ const SectionField = ({
   onUpdate,
   onDelete,
   isPreview,
-  formData,           
-  highlightChildId = null, 
+  formData,
+  highlightChildId = null,
+  isEditModalOpen,
+  setEditModalOpen
 }) => {
 
   const childRefs = useRef({});
 
+  const toggleEdit = () => setEditModalOpen(!isEditModalOpen);
   const addChild = (type) => {
     if (type === "section") return;
     const template = fieldTypes[type]?.defaultProps;
@@ -104,7 +107,7 @@ const SectionField = ({
   // Edit mode
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex justify-between items-center mb-3 gap-2">
         <div className="flex-1">
           <input
             type="text"
@@ -114,12 +117,8 @@ const SectionField = ({
             placeholder="Section title (e.g., Data Consent)"
           />
         </div>
-        <button
-          onClick={onDelete}
-          className="ml-2 px-2 py-1 text-black/80 hover:text-red-600"
-        >
-          <TRASHCAN_ICON className="cursor-pointer" />
-        </button>
+        <button onClick={toggleEdit} className={`block lg:hidden`}><EDIT_ICON /></button>
+        <button onClick={onDelete}><TRASHCAN_ICON /></button>
       </div>
 
       {/* Child fields */}

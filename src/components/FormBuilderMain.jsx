@@ -17,7 +17,7 @@ export default function FormBuilderMain({
 
   return (
     <div
-      className="w-full max-w-4xl mx-auto rounded-lg"
+      className="w-full max-w-4xl mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)] custom-scrollbar px-1"
       onClick={() => !isPreview && setSelectedFieldId?.(null)}
     >
       {isEmpty ? (
