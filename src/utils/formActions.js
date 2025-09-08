@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { initializeField } from "./initializedFieldOptions";
+import { initializeField } from "./initializedField";
 import fieldTypes from "../fields/fieldTypes-config";
 
 export function addField(formData, setFormData, type) {

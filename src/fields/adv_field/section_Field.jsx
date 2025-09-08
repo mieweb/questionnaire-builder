@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import fieldTypes from "../fieldTypes-config";
-import { initializeField } from "../../utils/initializedFieldOptions";
+import { initializeField } from "../../utils/initializedField";
 import { checkFieldVisibility } from "../../utils/visibilityChecker";
 import { TRASHCAN_ICON, PLUSSQUARE_ICON, EDIT_ICON } from "../../assets/icons";
 
