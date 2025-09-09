@@ -1,5 +1,5 @@
 import React from "react";
-// Shared editor for common field properties
+
 function CommonEditor({ f, onUpdateField }) {
   return (
     <div className="space-y-3">

@@ -1,46 +1,35 @@
-import React, { useState } from "react"
-import { motion } from "framer-motion"
-import { v4 as uuidv4 } from "uuid"
-import { EDIT_ICON, PLUSOPTION_ICON, TRASHCAN_ICON, TRASHCANTWO_ICON } from "../../assets/icons"
+import React from "react";
+import { v4 as uuidv4 } from "uuid";
+import { EDIT_ICON, PLUSOPTION_ICON, TRASHCAN_ICON, TRASHCANTWO_ICON } from "../../assets/icons";
+import { useFieldApi } from "../../state/formStore";
 
-const CheckField = ({
+const CheckField = React.memo(function CheckField({
   field,
   label,
-  onUpdate,
-  onDelete,
   isPreview,
-  formData, //Could be needed
   parentType,
+  onDelete,                 
   isEditModalOpen,
-  setEditModalOpen
-}) => {
+  setEditModalOpen,
+}) {
+  const api = useFieldApi(field.id);   
+  const insideSection = parentType === "section";
+  const toggleEdit = () => setEditModalOpen?.(!isEditModalOpen);
 
-  const toggleEdit = () => setEditModalOpen(!isEditModalOpen);
-  const addOption = () => onUpdate("options", [...field.options, { id: uuidv4(), value: "" }])
-  const updateOption = (id, value) => onUpdate("options", field.options.map(o => o.id === id ? { ...o, value } : o))
-  const deleteOption = (id) => onUpdate("options", field.options.filter(o => o.id !== id))
-  const insideSection = parentType === "section"
-
-  // PREVIEW MODE
+  {/* ────────── Preview UI ──────────  */}
   if (isPreview) {
     return (
       <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300"}`}>
-        <div className={`bg-white  ${insideSection ? "border-b-1 border-gray-300" : "border-0"} grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4`}>
+        <div className={`bg-white ${insideSection ? "border-b-1 border-gray-300" : "border-0"} grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4`}>
           <div className="font-light">{field.question || "Question"}</div>
           <div>
-            {field.options.map(option => (
+            {(field.options || []).map(option => (
               <label key={option.id} className="flex items-center px-3 py-1 my-2">
                 <input
                   type="checkbox"
                   className="mr-2 w-9 h-9"
-                  checked={field.selected?.includes(option.id)}
-                  onChange={() => {
-                    const selected = field.selected || []
-                    const updated = selected.includes(option.id)
-                      ? selected.filter(id => id !== option.id)
-                      : [...selected, option.id]
-                    onUpdate("selected", updated)
-                  }}
+                  checked={Array.isArray(field.selected) && field.selected.includes(option.id)}
+                  onChange={() => api.selection.multiToggle(option.id)}
                 />
                 {option.value}
               </label>
@@ -48,10 +37,10 @@ const CheckField = ({
           </div>
         </div>
       </div>
-    )
+    );
   }
 
-  // EDIT MODE
+  {/* ────────── Edit UI ──────────  */}
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between mb-2 ml-1">
@@ -65,27 +54,31 @@ const CheckField = ({
       <input
         className="px-3 py-2 w-full border border-black/40 rounded"
         type="text"
-        value={field.question}
-        onChange={(e) => onUpdate("question", e.target.value)}
+        value={field.question || ""}
+        onChange={(e) => api.field.update("question", e.target.value)}
         placeholder="Enter question"
       />
 
-      {field.options.map(option => (
+      {(field.options || []).map(option => (
         <div key={option.id} className="flex items-center px-3 shadow my-1.5 border border-black/10 rounded-lg h-10">
           <input type="checkbox" disabled className="mr-2" />
           <input
             type="text"
             value={option.value}
-            onChange={(e) => updateOption(option.id, e.target.value)}
+            onChange={(e) => api.option.update(option.id, e.target.value)}
             placeholder="Option text"
             className="w-full"
           />
-          <button onClick={() => deleteOption(option.id)}><TRASHCANTWO_ICON className="h-5 w-5" /></button>
+          <button onClick={() => api.option.remove(option.id)}>
+            <TRASHCANTWO_ICON className="h-5 w-5" />
+          </button>
         </div>
       ))}
-      <button onClick={addOption} className="mt-2 ml-2 flex gap-3 justify-center"><PLUSOPTION_ICON className="h-6 w-6" /> Add Option</button>
+      <button onClick={() => api.option.add()} className="mt-2 ml-2 flex gap-3 justify-center">
+        <PLUSOPTION_ICON className="h-6 w-6" /> Add Option
+      </button>
     </div>
-  )
-}
+  );
+});
 
-export default CheckField
+export default CheckField;

@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import CommonEditor from "./CommonEditor";
 import OptionListEditor from "./OptionListEditor";
-import { updateField } from "../../../../utils/formActions";
+import { useFormStore } from "../../../../state/formStore";
 
-// Non Section Editor
-function NonSectionEditor({ f, formData, setFormData }) {
-  const onUpdateField = (key, value) => updateField(formData, setFormData, f.id, key, value);
-  const isChoice = ["radio", "check", "selection"].includes(f.fieldType);
+function NonSectionEditor({ f }) {
+  const updateField = useFormStore((s) => s.updateField);
+
+  const onUpdateField = useCallback(
+    (key, value) => updateField(f.id, { [key]: value }),
+    [updateField, f.id]
+  );
+
+  const isChoice = useMemo(
+    () => ["radio", "check", "selection"].includes(f.fieldType),
+    [f.fieldType]
+  );
 
   return (
     <>
@@ -25,7 +33,9 @@ function NonSectionEditor({ f, formData, setFormData }) {
         </div>
       )}
 
-      {isChoice && <OptionListEditor field={f} onUpdateField={onUpdateField} />}
+      {isChoice && (
+        <OptionListEditor field={f} onUpdateField={onUpdateField} />
+      )}
     </>
   );
 }

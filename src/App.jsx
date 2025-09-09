@@ -4,26 +4,26 @@ import MobileToolBar from "./components/MobileToolBar";
 import fieldTypes from "./fields/fieldTypes-config";
 import Layout from "./components/desktopLayout/Layout.jsx";
 
+import { useFormStore } from "./state/formStore"; 
 export default function App() {
-  const [formData, setFormData] = useState([]);
+
   const [isPreview, setIsPreview] = useState(false);
   const [selectedFieldId, setSelectedFieldId] = useState(null);
   const [sectionHighlight, setSectionHighlight] = useState({});
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
-  const getSectionHighlightId = (sectionId) => sectionHighlight[sectionId] || null;
+  const selectedField = useFormStore(
+    React.useCallback((s) => (selectedFieldId ? s.byId[selectedFieldId] : null), [selectedFieldId])
+  );
+
+  const getSectionHighlightId = useCallback(
+    (sectionId) => sectionHighlight[sectionId] || null,
+    [sectionHighlight]
+  );
 
   const setSectionActiveChild = useCallback((sid, cid) => {
-    setSectionHighlight(prev => {
-      if (prev[sid] === cid) return prev;
-      return { ...prev, [sid]: cid };
-    });
+    setSectionHighlight((prev) => (prev[sid] === cid ? prev : { ...prev, [sid]: cid }));
   }, []);
-
-  const selectedField = useMemo(
-    () => formData.find(f => f.id === selectedFieldId) || null,
-    [formData, selectedFieldId]
-  );
 
   useEffect(() => {
     setSectionHighlight({});
@@ -32,31 +32,23 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-100 font-titillium">
       <Header
-        formData={formData}
-        setFormData={setFormData}
         isPreview={isPreview}
         setIsPreview={setIsPreview}
         selectedFieldId={selectedFieldId}
         setSelectedFieldId={setSelectedFieldId}
       />
 
-      {/* Mobile ToolBar*/}
+      {/* Mobile ToolBar */}
       <div className="lg:hidden">
         <MobileToolBar
           fieldTypes={fieldTypes}
-          formData={formData}
-          setFormData={setFormData}
           isPreview={isPreview}
           setIsPreview={setIsPreview}
-          selectedFieldId={selectedFieldId}
-          setSelectedFieldId={setSelectedFieldId}
         />
       </div>
 
       {/* Desktop / three-panel */}
       <Layout
-        formData={formData}
-        setFormData={setFormData}
         isPreview={isPreview}
         setIsPreview={setIsPreview}
         selectedFieldId={selectedFieldId}

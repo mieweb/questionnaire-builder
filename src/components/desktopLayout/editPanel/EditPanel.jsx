@@ -5,11 +5,8 @@ import SectionEditor from "./types/SectionEditor";
 export default function EditPanel({
   isPreview,
   selectedField,
-  formData,
-  setFormData,
   onActiveChildChange
 }) {
-
   if (isPreview) return null;
 
   const isNone = !selectedField;
@@ -19,7 +16,7 @@ export default function EditPanel({
     <div className={`p-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar 
                     ${selectedField ? "" : "max-h-32"} max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)]`}>
 
-      {/* Placeholder */}
+      {/* ────────── Place holder ──────────  */} 
       {isNone && (
         <div className="text-gray-600">
           <h3 className="text-lg font-semibold mb-2">Edit</h3>
@@ -27,14 +24,14 @@ export default function EditPanel({
         </div>
       )}
 
-      {/* Non-section editor */}
+      {/* ────────── Non Section Editor ──────────  */} 
       {!isNone && !isSection && (
-        <NonSectionEditor f={selectedField} formData={formData} setFormData={setFormData} />
+        <NonSectionEditor f={selectedField} />
       )}
 
-      {/* Section editor */}
+      {/* ────────── Section Editor ──────────  */} 
       {!isNone && isSection && (
-        <SectionEditor section={selectedField} formData={formData} setFormData={setFormData} onActiveChildChange={onActiveChildChange} />
+        <SectionEditor section={selectedField} onActiveChildChange={onActiveChildChange} />
       )}
     </div>
   );
