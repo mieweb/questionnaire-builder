@@ -3,7 +3,6 @@ import { create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
 import fieldTypes from "../fields/fieldTypes-config";
 import { initializeField } from "../utils/initializedField";
-import { useForm } from "react-hook-form";
 
 // --- tiny helpers ---
 const shallowEqual = (a, b) => {
@@ -13,6 +12,11 @@ const shallowEqual = (a, b) => {
   if (ak.length !== bk.length) return false;
   for (const k of ak) if (a[k] !== b[k]) return false;
   return true;
+};
+
+const insertAt = (arr, item, index) => {
+  if (typeof index !== "number" || index < 0 || index > arr.length) return [...arr, item];
+  return [...arr.slice(0, index), item, ...arr.slice(index)];
 };
 
 // Normalize array of fields -> {byId, order}
@@ -28,174 +32,188 @@ const normalize = (arr) => {
   return { byId, order };
 };
 
+// Generic helper to update a field either top-level or within a section
+function updateFieldHelper(state, id, sectionId, makeNext) {
+  if (!sectionId) {
+    const prev = state.byId[id];
+    if (!prev) return null;
+    const next = makeNext(prev, null);
+    if (!next || shallowEqual(prev, next)) return null;
+    return { byId: { ...state.byId, [id]: next } };
+  }
+  const section = state.byId[sectionId];
+  if (!section || !Array.isArray(section.fields)) return null;
+  let changed = false;
+  const newFields = section.fields.map((c) => {
+    if (c.id !== id) return c;
+    const next = makeNext(c, section);
+    if (!next || shallowEqual(c, next)) return c;
+    changed = true;
+    return next;
+  });
+  if (!changed) return null;
+  return { byId: { ...state.byId, [sectionId]: { ...section, fields: newFields } } };
+}
+
 export const useFormStore = create((set, get) => ({
-  // ────────── States  ────────── 
+  // ────────── State ──────────
   byId: {},
   order: [],
 
-
-
-  // ────────── Action: Replaces All ────────── 
+  // ────────── Action: Replaces All ──────────
   replaceAll: (fields) => set(() => normalize(fields)),
 
-  // ────────── Fields ────────── 
-  addField: (type) =>
+  // ────────── Fields (top-level or section child via options.sectionId) ──────────
+  addField: (type, options = {}) =>
     set((state) => {
+      const { sectionId, initialPatch = {}, index } = options;
       const tpl = fieldTypes[type]?.defaultProps;
       if (!tpl) return {};
       const id = uuidv4();
-      const f = initializeField({ ...tpl, id });
-      return {
-        byId: { ...state.byId, [id]: f },
-        order: [...state.order, id],
-      };
-    }),
+      const f = initializeField({ ...tpl, id, ...initialPatch });
 
-  updateField: (id, patchOrFn) =>
-    set((state) => {
-      const prev = state.byId[id];
-      if (!prev) return {};
-      const patch = typeof patchOrFn === "function" ? patchOrFn(prev) : patchOrFn;
-      if (!patch) return {};
-      const next = { ...prev, ...patch };
-      if (shallowEqual(next, prev)) return {};
-      return { byId: { ...state.byId, [id]: next } };
-    }),
-
-  deleteField: (id) =>
-    set((state) => {
-      if (!state.byId[id]) return {};
-      const { [id]: _, ...rest } = state.byId;
-      return { byId: rest, order: state.order.filter((x) => x !== id) };
-    }),
-
-  // ────────── Section Childrens (section.fields) ────────── 
-  addChildField: (sectionId, type, initialPatch = {}) =>
-    set((state) => {
-      const section = state.byId[sectionId];
-      if (!section || !Array.isArray(section.fields)) return {};
-      const tpl = fieldTypes[type]?.defaultProps;
-      if (!tpl) return {};
-
-      const child = initializeField({ ...tpl, id: uuidv4(), ...initialPatch });
-      const fields = [...section.fields, child];
-
-      return {
-        byId: {
-          ...state.byId,
-          [sectionId]: { ...section, fields },
-        },
-      };
-    }),
-
-  updateChildField: (sectionId, childId, patchOrFn) =>
-    set((state) => {
-      const section = state.byId[sectionId];
-      if (!section || !Array.isArray(section.fields)) return {};
-      let changed = false;
-      const newFields = section.fields.map((c) => {
-        if (c.id !== childId) return c;
-        const patch = typeof patchOrFn === "function" ? patchOrFn(c, section) : patchOrFn;
-        const merged = { ...c, ...patch };
-        if (shallowEqual(merged, c)) return c;
-        changed = true;
-        return merged;
-      });
-      if (!changed) return {};
-      return {
-        byId: { ...state.byId, [sectionId]: { ...section, fields: newFields } },
-      };
-    }),
-
-  deleteChildField: (sectionId, childId) =>
-    set((state) => {
-      const section = state.byId[sectionId];
-      if (!section || !Array.isArray(section.fields)) return {};
-      const next = section.fields.filter((c) => c.id !== childId);
-      if (next.length === section.fields.length) return {};
-      return {
-        byId: { ...state.byId, [sectionId]: { ...section, fields: next } },
-      };
-    }),
-
-  // ────────── Options (<field>.otpions[]) ────────── 
-  addOption: (fieldId) =>
-    set((state) => {
-      const f = state.byId[fieldId];
-      if (!f) return {};
-      const options = [...(f.options || []), { id: uuidv4(), value: "" }];
-      return { byId: { ...state.byId, [fieldId]: { ...f, options } } };
-    }),
-
-  updateOption: (fieldId, optId, value) =>
-    set((state) => {
-      const f = state.byId[fieldId];
-      if (!f) return {};
-      let changed = false;
-      const options = (f.options || []).map((o) => {
-        if (o.id !== optId) return o;
-        if (o.value === value) return o;
-        changed = true;
-        return { ...o, value };
-      });
-      if (!changed) return {};
-      return { byId: { ...state.byId, [fieldId]: { ...f, options } } };
-    }),
-
-  deleteOption: (fieldId, optId) =>
-    set((state) => {
-      const f = state.byId[fieldId];
-      if (!f) return {};
-      const oldOpts = f.options || [];
-      const options = oldOpts.filter((o) => o.id !== optId);
-      if (options.length === oldOpts.length) return {};
-      const next = { ...f, options };
-      if (Array.isArray(f.selected)) {
-        const sel = f.selected.filter((id) => id !== optId);
-        if (sel.length !== f.selected.length) next.selected = sel;
-      } else if (f.selected === optId) {
-        next.selected = "";
+      if (!sectionId) {
+        return {
+          byId: { ...state.byId, [id]: f },
+          order: insertAt(state.order, id, index),
+        };
       }
-      return { byId: { ...state.byId, [fieldId]: next } };
+
+      const section = state.byId[sectionId];
+      if (!section || !Array.isArray(section.fields)) return {};
+      const fields = insertAt(section.fields, f, index);
+      return { byId: { ...state.byId, [sectionId]: { ...section, fields } } };
     }),
 
-  // ────────── Selection (single / Multi[]) might be unused.. ────────── 
-  selectSingle: (fieldId, optId) =>
+  updateField: (id, patchOrFn, options = {}) =>
     set((state) => {
-      const f = state.byId[fieldId];
-      if (!f) return {};
-      const nextSel = optId ?? "";
-      if (f.selected === nextSel) return {};
-      return { byId: { ...state.byId, [fieldId]: { ...f, selected: nextSel } } };
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, id, sectionId, (prev) => {
+        const patch = typeof patchOrFn === "function" ? patchOrFn(prev) : patchOrFn;
+        if (!patch) return null;
+        return { ...prev, ...patch };
+      });
+      return res || {};
     }),
 
-  toggleMulti: (fieldId, optId) =>
+  deleteField: (id, options = {}) =>
     set((state) => {
-      const f = state.byId[fieldId];
-      if (!f) return {};
-      const prev = Array.isArray(f.selected) ? f.selected : [];
-      const present = prev.includes(optId);
-      const selected = present ? prev.filter((x) => x !== optId) : [...prev, optId];
-      if (selected.length === prev.length && present) return {};
-      return { byId: { ...state.byId, [fieldId]: { ...f, selected } } };
+      const { sectionId } = options;
+      if (!sectionId) {
+        if (!state.byId[id]) return {};
+        const { [id]: _omit, ...rest } = state.byId;
+        return { byId: rest, order: state.order.filter((x) => x !== id) };
+      }
+      const section = state.byId[sectionId];
+      if (!section || !Array.isArray(section.fields)) return {};
+      const next = section.fields.filter((c) => c.id !== id);
+      if (next.length === section.fields.length) return {};
+      return { byId: { ...state.byId, [sectionId]: { ...section, fields: next } } };
+    }),
+
+  // ────────── Options (<field>.options[]) ──────────
+  addOption: (fieldId, value = "", options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const opts = Array.isArray(f.options) ? f.options : [];
+        const next = [...opts, { id: uuidv4(), value }];
+        return { ...f, options: next };
+      });
+      return res || {};
+    }),
+
+  updateOption: (fieldId, optId, value, options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const opts = Array.isArray(f.options) ? f.options : [];
+        let changed = false;
+        const next = opts.map((o) => {
+          if (o.id !== optId) return o;
+          if (o.value === value) return o;
+          changed = true;
+          return { ...o, value };
+        });
+        if (!changed) return null;
+        return { ...f, options: next };
+      });
+      return res || {};
+    }),
+
+  deleteOption: (fieldId, optId, options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const oldOpts = Array.isArray(f.options) ? f.options : [];
+        const optionsNext = oldOpts.filter((o) => o.id !== optId);
+        if (optionsNext.length === oldOpts.length) return null;
+        const next = { ...f, options: optionsNext };
+        if (Array.isArray(f.selected)) {
+          const sel = f.selected.filter((id) => id !== optId);
+          if (sel.length !== f.selected.length) next.selected = sel;
+        } else if (f.selected === optId) {
+          next.selected = "";
+        }
+        return next;
+      });
+      return res || {};
+    }),
+
+  // ────────── Selection (single / Multi[]) ──────────
+  selectSingle: (fieldId, optId, options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const nextSel = optId ?? "";
+        if (f.selected === nextSel) return null;
+        return { ...f, selected: nextSel };
+      });
+      return res || {};
+    }),
+
+  toggleMulti: (fieldId, optId, options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const prev = Array.isArray(f.selected) ? f.selected : [];
+        const present = prev.includes(optId);
+        const selected = present ? prev.filter((x) => x !== optId) : [...prev, optId];
+        if (selected.length === prev.length && present) return null;
+        return { ...f, selected };
+      });
+      return res || {};
     }),
 }));
 
-// ────────── maybe handy  ────────── 
+// ────────── Selectors / Hooks ──────────
 
-// ────────── One field by id (re-renders ONLY when this object changes) ────────── 
+// One top-level field by id (re-renders ONLY when this object changes)
 export const useField = (id) =>
   useFormStore(React.useCallback((s) => s.byId[id], [id]));
 
-// ────────── All fields as array (use sparingly; virtualize large lists) ────────── 
+// Child field within a section
+export const useChildField = (sectionId, childId) =>
+  useFormStore(
+    React.useCallback((s) => {
+      const sec = s.byId[sectionId];
+      if (!sec || !Array.isArray(sec.fields)) return undefined;
+      return sec.fields.find((c) => c.id === childId);
+    }, [sectionId, childId])
+  );
+
+// All fields as array (use sparingly; virtualize large lists)
 export const useFieldsArray = () => {
   const order = useFormStore((s) => s.order);
   const byId = useFormStore((s) => s.byId);
   return React.useMemo(() => order.map((id) => byId[id]), [order, byId]);
 };
 
-// ────────── Bound API for a field (No need to memoize again on caller / Stable Return) ────────── 
-export const useFieldApi = (id) => {
+// ────────── Bound API for a field (works for top-level or section child) ──────────
+// Pass: useFieldApi(fieldId) for top-level
+//       useFieldApi(childId, sectionId) for a child inside a section
+//       useFieldApi(sectionId, sectionId) inside a Section component to make `add` add children
+export const useFieldApi = (id, sectionId) => {
   const addField = useFormStore((s) => s.addField);
   const updateField = useFormStore((s) => s.updateField);
   const deleteField = useFormStore((s) => s.deleteField);
@@ -207,38 +225,24 @@ export const useFieldApi = (id) => {
   const selectSingle = useFormStore((s) => s.selectSingle);
   const toggleMulti = useFormStore((s) => s.toggleMulti);
 
-  const addChildField = useFormStore((s) => s.addChildField);
-  const updateChildField = useFormStore((s) => s.updateChildField);
-  const deleteChildField = useFormStore((s) => s.deleteChildField);
   return React.useMemo(
     () => ({
       field: {
-        add: (type) => addField(type),
-        update: (k, v) => updateField(id, { [k]: v }),
-        remove: () => deleteField(id),
+        add: (type, initialPatch, index) => addField(type, { sectionId, initialPatch, index }),
+        update: (k, v) => updateField(id, { [k]: v }, { sectionId }),
+        patch: (patchOrFn) => updateField(id, patchOrFn, { sectionId }),
+        remove: () => deleteField(id, { sectionId }),
       },
       option: {
-        add: () => addOption(id),
-        update: (optId, v) => updateOption(id, optId, v),
-        remove: (optId) => deleteOption(id, optId),
+        add: (value = "") => addOption(id, value, { sectionId }),
+        update: (optId, value) => updateOption(id, optId, value, { sectionId }),
+        remove: (optId) => deleteOption(id, optId, { sectionId }),
       },
       selection: {
-        single: (optId) => selectSingle(id, optId),
-        multiToggle: (optId) => toggleMulti(id, optId),
-      },
-
-      section: {
-        addChild: (type, initialPatch) => addChildField(id, type, initialPatch),
-        updateChild: (childId, patch) => updateChildField(id, childId, patch),
-        removeChild: (childId) => deleteChildField(id, childId),
+        single: (optId) => selectSingle(id, optId, { sectionId }),
+        multiToggle: (optId) => toggleMulti(id, optId, { sectionId }),
       },
     }),
-    [
-      id,
-      addField, updateField, deleteField,
-      addChildField, updateChildField, deleteChildField,
-      addOption, updateOption, deleteOption,
-      selectSingle, toggleMulti,
-    ]
+    [id, sectionId, addField, updateField, deleteField, addOption, updateOption, deleteOption, selectSingle, toggleMulti]
   );
 };

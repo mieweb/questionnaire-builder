@@ -1,18 +1,19 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
 import { EDIT_ICON, PLUSOPTION_ICON, TRASHCAN_ICON, TRASHCANTWO_ICON } from "../../assets/icons";
 import { useFieldApi } from "../../state/formStore";
 
 const CheckField = React.memo(function CheckField({
   field,
   label,
+  onDelete,
   isPreview,
-  parentType,
-  onDelete,                 
   isEditModalOpen,
   setEditModalOpen,
+  parentType,
+  sectionId, 
 }) {
-  const api = useFieldApi(field.id);   
+  // If rendered inside a section, bind to that section via sectionId
+  const api = useFieldApi(field.id, parentType === "section" ? sectionId : undefined);
   const insideSection = parentType === "section";
   const toggleEdit = () => setEditModalOpen?.(!isEditModalOpen);
 

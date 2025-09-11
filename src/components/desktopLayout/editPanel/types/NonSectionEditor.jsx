@@ -1,14 +1,15 @@
 import React, { useCallback, useMemo } from "react";
 import CommonEditor from "./CommonEditor";
 import OptionListEditor from "./OptionListEditor";
-import { useFormStore } from "../../../../state/formStore";
+import { useFieldApi } from "../../../../state/formStore";
 
 function NonSectionEditor({ f }) {
-  const updateField = useFormStore((s) => s.updateField);
+  const api = useFieldApi(f.id);
 
+  {/* ────────── update top-level field props ──────────  */}
   const onUpdateField = useCallback(
-    (key, value) => updateField(f.id, { [key]: value }),
-    [updateField, f.id]
+    (key, value) => api.field.update(key, value),
+    [api]
   );
 
   const isChoice = useMemo(
@@ -33,9 +34,7 @@ function NonSectionEditor({ f }) {
         </div>
       )}
 
-      {isChoice && (
-        <OptionListEditor field={f} onUpdateField={onUpdateField} />
-      )}
+      {isChoice && <OptionListEditor field={f} onUpdateField={onUpdateField} />}
     </>
   );
 }

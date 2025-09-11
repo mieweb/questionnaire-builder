@@ -10,9 +10,10 @@ const RadioField = React.memo(function RadioField({
   parentType,
   isEditModalOpen,
   setEditModalOpen,
+  sectionId, 
 }) {
-  const api = useFieldApi(field.id);
   const insideSection = parentType === "section";
+  const api = useFieldApi(field.id, insideSection ? sectionId : undefined);
   const toggleEdit = () => setEditModalOpen?.(!isEditModalOpen);
 
   {/* ────────── Preview UI ──────────  */}

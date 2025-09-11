@@ -1,35 +1,34 @@
-import React, { useEffect, useRef, useMemo } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useEffect, useRef } from "react";
 import fieldTypes from "../fieldTypes-config";
 import { checkFieldVisibility } from "../../utils/visibilityChecker";
 import { TRASHCAN_ICON, PLUSSQUARE_ICON, EDIT_ICON } from "../../assets/icons";
-import { useFieldApi } from "../../state/formStore";
-
-const EMPTY = Object.freeze([]);
+import { useFormStore, useFieldApi } from "../../state/formStore";
 
 function SectionFieldImpl({
   field,
-  onDelete,            
+  label,
+  onDelete,
   isPreview,
-  highlightChildId = null,
   isEditModalOpen,
-  setEditModalOpen
+  setEditModalOpen,
+  highlightChildId = null,
 }) {
-  const api = useFieldApi(field.id);
-  const childRefs = useRef({});
+  // Hook usage is STATIC: these two are always called in the same order/number.
+  const sectionSelfApi = useFieldApi(field.id);         // update section props
+  const sectionChildrenApi = useFieldApi(field.id, field.id); // add children into this section
 
-  const children = field.fields ?? EMPTY;      
+  const childRefs = useRef({});
+  const children = field.fields || [];
   const toggleEdit = () => setEditModalOpen?.(!isEditModalOpen);
 
+  // ────────── Autoscroll to Child ──────────
+  useEffect(() => {
+    if (isPreview || !highlightChildId) return;
+    const el = childRefs.current[highlightChildId];
+    el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+  }, [highlightChildId, isPreview]);
 
-  const addChild = (type) => {
-    if (type === "section") return;
-    const tpl = fieldTypes[type]?.defaultProps;
-    if (!tpl) return;
-    api.section.addChild(type); 
-  };
-
-  {/* ────────── Render Child Preview ──────────  */} 
+  // ────────── Render Child Preview ──────────
   const renderChildPreview = (child) => {
     const Comp = fieldTypes[child.fieldType]?.component;
     if (!Comp) return null;
@@ -41,20 +40,24 @@ function SectionFieldImpl({
         <Comp
           field={child}
           label={fieldTypes[child.fieldType]?.label}
-          onUpdate={(k, v) => api.section.updateChild(child.id, { [k]: v })}
           isPreview
           parentType="section"
+          sectionId={field.id}   // child uses its own useFieldApi(childId, sectionId)
         />
       </div>
     );
   };
 
-  {/* ────────── Render Child Edit ──────────  */} 
+  // ────────── Render Child Edit ──────────
   const renderChildEdit = (child) => {
-    const Comp = fieldTypes[child.fieldType]?.component;
-    if (!Comp) return null;
+    const ChildField = fieldTypes[child.fieldType]?.component;
+    if (!ChildField) return null;
 
     const isHighlighted = highlightChildId === child.id;
+
+    // IMPORTANT: no hooks here. Use store action directly for delete.
+    const handleDelete = () =>
+      useFormStore.getState().deleteField(child.id, { sectionId: field.id });
 
     return (
       <div
@@ -65,26 +68,19 @@ function SectionFieldImpl({
           isHighlighted ? "border-2 border-blue-400 border-dashed" : "border border-transparent",
         ].join(" ")}
       >
-        <Comp
+        <ChildField
           field={child}
           label={fieldTypes[child.fieldType]?.label}
-          onUpdate={(k, v) => api.section.updateChild(child.id, { [k]: v })}
-          onDelete={() => api.section.removeChild(child.id)}
-          isPreview={false}
+          onDelete={handleDelete}
+          isPreview={isPreview}
           parentType="section"
+          sectionId={field.id}   // child binds its own API with sectionId
         />
       </div>
     );
   };
 
-  {/* ────────── Autoscroll to Child ──────────  */} 
-  useEffect(() => {
-    if (isPreview || !highlightChildId) return;
-    const el = childRefs.current[highlightChildId];
-    el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
-  }, [highlightChildId, isPreview]);
-
-  {/* ────────── Preview UI ──────────  */} 
+  // ────────── Preview UI ──────────
   if (isPreview) {
     return (
       <section>
@@ -98,7 +94,7 @@ function SectionFieldImpl({
     );
   }
 
-  {/* ────────── Edit UI ──────────  */} 
+  // ────────── Edit UI ──────────
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-3 gap-2">
@@ -107,7 +103,7 @@ function SectionFieldImpl({
             type="text"
             className="w-full px-3 py-2 border border-gray-200 rounded-md"
             value={field.title || ""}
-            onChange={(e) => api.field.update("title", e.target.value)}
+            onChange={(e) => sectionSelfApi.field.update("title", e.target.value)}
             placeholder="Section title (e.g., Data Consent)"
           />
         </div>
@@ -115,10 +111,10 @@ function SectionFieldImpl({
         <button onClick={onDelete}><TRASHCAN_ICON /></button>
       </div>
 
-      {/* ────────── Child Field ──────────  */} 
+      {/* Child Fields */}
       <div>{children.map(renderChildEdit)}</div>
 
-      {/* ────────── Toolbar to Add Child ──────────  */} 
+      {/* Toolbar to Add Child */}
       <div className="mb-3">
         <div className="text-sm font-medium text-gray-700 mb-2">Add a field</div>
         <div className="flex flex-wrap gap-2">
@@ -128,7 +124,7 @@ function SectionFieldImpl({
               <button
                 key={t}
                 className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
-                onClick={() => addChild(t)}
+                onClick={() => sectionChildrenApi.field.add(t)}
               >
                 <PLUSSQUARE_ICON className="h-4 w-4" />
                 Add {fieldTypes[t].label}
@@ -140,9 +136,8 @@ function SectionFieldImpl({
   );
 }
 
-{/* ────────── Memo ──────────  */} 
 const areEqual = (prev, next) =>
-  prev.field === next.field &&                      
+  prev.field === next.field &&
   prev.isPreview === next.isPreview &&
   prev.highlightChildId === next.highlightChildId &&
   prev.onDelete === next.onDelete &&

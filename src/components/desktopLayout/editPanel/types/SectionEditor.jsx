@@ -2,22 +2,20 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import OptionListEditor from "./OptionListEditor";
 import CommonEditor from "./CommonEditor";
 import fieldTypes from "../../../../fields/fieldTypes-config";
-import { useFormStore } from "../../../../state/formStore";
+import { useFormStore, useFieldApi } from "../../../../state/formStore";
 
 function SectionEditor({ section, onActiveChildChange }) {
-  const updateSection = useFormStore((s) => s.updateField);
-  const updateChildField = useFormStore((s) => s.updateChildField);
-  const deleteChildField = useFormStore((s) => s.deleteChildField);
+  const sectionApi = useFieldApi(section.id); 
 
   const children = Array.isArray(section.fields) ? section.fields : [];
   const [activeChildId, setActiveChildId] = useState(children[0]?.id || null);
 
-  {/* ────────── Reset ONLY when switching to a different section ──────────  */} 
+  {/* ────────── Reset ONLY when switching to a different section ──────────  */}
   useEffect(() => {
     setActiveChildId(children[0]?.id || null);
   }, [section.id]);
 
-  {/* ────────── If children change, keep current active if it still exists; else fallback ──────────  */} 
+  {/* ────────── If children change, keep current active if it still exists; else fallback ──────────  */}
   useEffect(() => {
     if (!children.length) {
       if (activeChildId !== null) setActiveChildId(null);
@@ -27,15 +25,15 @@ function SectionEditor({ section, onActiveChildChange }) {
     if (!stillExists) setActiveChildId(children[0].id);
   }, [children, activeChildId]);
 
-  {/* ────────── Keep parent informed ──────────  */} 
+  {/* ────────── Keep parent informed ──────────  */}
   useEffect(() => {
     onActiveChildChange?.(section.id, activeChildId || null);
   }, [section.id, activeChildId, onActiveChildChange]);
 
-  {/* ────────── update section-level props ──────────  */} 
+  {/* ────────── update section-level props ──────────  */}
   const onUpdateSection = useCallback(
-    (key, value) => updateSection(section.id, { [key]: value }),
-    [updateSection, section.id]
+    (key, value) => sectionApi.field.update(key, value),
+    [sectionApi]
   );
 
   const activeChild = useMemo(
@@ -43,22 +41,25 @@ function SectionEditor({ section, onActiveChildChange }) {
     [children, activeChildId]
   );
 
-  {/* ────────── update active child prop ──────────  */} 
+  {/* ────────── update active child prop (unified store) ──────────  */}
   const onUpdateChild = useCallback(
     (key, value) => {
       if (!activeChild) return;
-      updateChildField(section.id, activeChild.id, { [key]: value });
-      if (key === "id" && value) {
-        setActiveChildId(value);
-      }
+      useFormStore.getState().updateField(
+        activeChild.id,
+        { [key]: value },
+        { sectionId: section.id }
+      );
+      if (key === "id" && value) setActiveChildId(value);
     },
-    [activeChild, section.id, updateChildField]
+    [activeChild, section.id]
   );
 
+  {/* ────────── delete active child (unified store) ──────────  */}
   const onDeleteChild = useCallback(() => {
     if (!activeChild) return;
-    deleteChildField(section.id, activeChild.id);
-  }, [activeChild, section.id, deleteChildField]);
+    useFormStore.getState().deleteField(activeChild.id, { sectionId: section.id });
+  }, [activeChild, section.id]);
 
   const isChoiceChild = useMemo(
     () => activeChild && ["radio", "check", "selection"].includes(activeChild.fieldType),
@@ -69,7 +70,7 @@ function SectionEditor({ section, onActiveChildChange }) {
     <>
       <h3 className="text-lg font-semibold mb-3">Edit Section</h3>
 
-      {/* ────────── Section Control ──────────  */} 
+      {/* ────────── Section Control ──────────  */}
       <div className="space-y-3">
         <div>
           <label className="block text-sm mb-1">Section ID</label>
@@ -90,7 +91,7 @@ function SectionEditor({ section, onActiveChildChange }) {
         </div>
       </div>
 
-      {/* ────────── Child tabs ──────────  */} 
+      {/* ────────── Child tabs ──────────  */}
       <div className="mt-6">
         <div className="text-sm font-semibold mb-2">Fields in this section</div>
         {children.length === 0 ? (
