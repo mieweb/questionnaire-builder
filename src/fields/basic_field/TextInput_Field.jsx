@@ -1,63 +1,62 @@
-import React, { useState } from "react"
-import { motion } from "framer-motion"
-import { v4 as uuidv4 } from "uuid"
-import { EDIT_ICON, TRASHCAN_ICON } from "../../assets/icons"
-import EnableWhenLogic from "../../utils/EnableWhenLogic"
+import React from "react";
+import { EDIT_ICON, TRASHCAN_ICON } from "../../assets/icons";
+import { useFieldApi } from "../../state/formStore";
 
-const TextInputField = ({ 
-  field, 
-  label, 
-  onUpdate, 
-  onDelete, 
-  isPreview, 
-  formData, //Could be needed
+const TextInputField = React.memo(function TextInputField({
+  field,
+  label,
+  onDelete,
+  isPreview,
   parentType,
-  isEditModalOpen, 
-  setEditModalOpen
-}) => {
+  isEditModalOpen,
+  setEditModalOpen,
+  sectionId,
+}) {
+  const insideSection = parentType === "section";
+  const api = useFieldApi(field.id, insideSection ? sectionId : undefined);
+  const toggleEdit = () => setEditModalOpen?.(!isEditModalOpen);
 
-  const toggleEdit = () => setEditModalOpen(!isEditModalOpen);
-  const uniqueId = field.id || uuidv4()
-  const insideSection = parentType === "section"
-
-  // PREVIEW MODE
+  {/* ────────── Preview UI ──────────  */}
   if (isPreview) {
     return (
       <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300 rounded-lg"}`}>
-        <div className={`bg-white  ${insideSection ? "border-b-1 border-gray-300" : "border-0"} grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4`}>
+        <div className={`bg-white ${insideSection ? "border-b-1 border-gray-300" : "border-0"} grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4`}>
           <div className="font-light">{field.question || "Question"}</div>
           <input
-            id={`answer-uuid-${uniqueId}`}
             type="text"
             value={field.answer || ""}
-            onChange={(e) => onUpdate("answer", e.target.value)}
+            onChange={(e) => api.field.update("answer", e.target.value)}
             placeholder="Type your answer"
             className="px-3 py-2 w-full border border-black/10 shadow-2xs rounded h-9"
           />
         </div>
       </div>
-    )
+    );
   }
 
-  // EDIT MODE 
+  {/* ────────── Edit UI ──────────  */}
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between mb-2 ml-1">
         {label}
         <div className="flex items-center gap-2 ml-2">
-          <button onClick={toggleEdit} className={`block lg:hidden ${insideSection ? "hidden" : ""}`}><EDIT_ICON className="h-6 w-6" /></button>
-          <button onClick={onDelete}><TRASHCAN_ICON className="h-6 w-6" /></button>
+          <button onClick={toggleEdit} className={`block lg:hidden ${insideSection ? "hidden" : ""}`}>
+            <EDIT_ICON className="h-6 w-6" />
+          </button>
+          <button onClick={onDelete}>
+            <TRASHCAN_ICON className="h-6 w-6" />
+          </button>
         </div>
       </div>
 
       <input
         className="px-3 py-2 w-full border border-black/40 rounded"
-        id={`input-uuid-${uniqueId}`}
         type="text"
-        value={field.question}
-        onChange={(e) => onUpdate("question", e.target.value)}
+        value={field.question || ""}
+        onChange={(e) => api.field.update("question", e.target.value)}
         placeholder="Enter question"
       />
+
       <input
         type="text"
         value={field.answer || ""}
@@ -66,7 +65,7 @@ const TextInputField = ({
         disabled
       />
     </div>
-  )
-}
+  );
+});
 
-export default TextInputField
+export default TextInputField;

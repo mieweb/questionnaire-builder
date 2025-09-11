@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import CommonEditor from "./CommonEditor";
 import OptionListEditor from "./OptionListEditor";
-import { updateField } from "../../../../utils/formActions";
+import { useFieldApi } from "../../../../state/formStore";
 
-// Non Section Editor
-function NonSectionEditor({ f, formData, setFormData }) {
-  const onUpdateField = (key, value) => updateField(formData, setFormData, f.id, key, value);
-  const isChoice = ["radio", "check", "selection"].includes(f.fieldType);
+function NonSectionEditor({ f }) {
+  const api = useFieldApi(f.id);
+
+  {/* ────────── update top-level field props ──────────  */}
+  const onUpdateField = useCallback(
+    (key, value) => api.field.update(key, value),
+    [api]
+  );
+
+  const isChoice = useMemo(
+    () => ["radio", "check", "selection"].includes(f.fieldType),
+    [f.fieldType]
+  );
 
   return (
     <>

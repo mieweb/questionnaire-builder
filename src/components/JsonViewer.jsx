@@ -4,16 +4,21 @@ import { AnimatePresence, motion } from "framer-motion";
 export default function JsonViewer({
   open,
   onClose,
-  data,
+  data,                       
   title = "Form Data (JSON)",
-  placement = "center", // "center" | "bottom"
+  placement = "center",      
   pretty = 2,
-  contentClassName = "", // Css styling
+  contentClassName = "",
 }) {
-  const jsonText = JSON.stringify(data ?? {}, null, pretty);
   const isCenter = placement === "center";
 
-  const download = () => {
+  const jsonText = React.useMemo(
+    () => (open ? JSON.stringify(data ?? {}, null, pretty) : ""),
+    [open, data, pretty]
+  );
+
+  const download = (e) => {
+    e?.stopPropagation?.();
     const blob = new Blob([jsonText], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -23,10 +28,9 @@ export default function JsonViewer({
     URL.revokeObjectURL(url);
   };
 
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(jsonText);
-    } catch {}
+  const copy = async (e) => {
+    e?.stopPropagation?.();
+    try { await navigator.clipboard.writeText(jsonText); } catch {}
   };
 
   return (
@@ -54,42 +58,28 @@ export default function JsonViewer({
                   : "w-full mx-auto bg-black/5 border border-black/15 px-6 py-4 rounded-2xl backdrop-blur-xl overflow-hidden"
               }
             >
-              {/* Header */}
+              {/* ────────── Headaer ──────────  */}
               <div className={`flex items-center justify-between ${isCenter ? "px-4 py-3 border-b border-black/10" : ""}`}>
                 <h3 className="font-semibold">{title}</h3>
                 <div className="flex items-center gap-2">
-                  <button
-                    onClick={copy}
-                    className="px-3 py-1 rounded-lg border border-black/10 hover:bg-black/5 text-sm"
-                  >
+                  <button className="px-3 py-1 rounded-lg border border-black/10 hover:bg-black/5 text-sm" onClick={copy}>
                     Copy
                   </button>
-                  <button
-                    onClick={download}
-                    className="px-3 py-1 rounded-lg border border-black/10 hover:bg-black/5 text-sm"
-                  >
+                  <button className="px-3 py-1 rounded-lg border border-black/10 hover:bg-black/5 text-sm" onClick={download}>
                     Download
                   </button>
-                  <button
-                    onClick={onClose}
-                    className="px-3 py-1 rounded-lg border border-black/10 hover:bg-black/5 text-sm"
-                  >
+                  <button className="px-3 py-1 rounded-lg border border-black/10 hover:bg-black/5 text-sm"
+                          onClick={(e)=>{e.stopPropagation(); onClose?.();}}>
                     Close
                   </button>
                 </div>
               </div>
 
-              {/* Content */}
-              <div
-                className={
-                  isCenter
+              {/* ────────── Content ──────────  */}
+              <div className={isCenter
                     ? `p-4 overflow-auto max-h-[70vh] ${contentClassName}`
-                    : `mt-2 p-2 rounded-lg overflow-y-auto max-h-96 ${contentClassName}`
-                }
-              >
-                <pre className="whitespace-pre-wrap break-words text-sm text-gray-700">
-                  {jsonText}
-                </pre>
+                    : `mt-2 p-2 rounded-lg overflow-y-auto max-h-96 ${contentClassName}`}>
+                <pre className="whitespace-pre-wrap break-words text-sm text-gray-700">{jsonText}</pre>
               </div>
             </motion.div>
           </div>

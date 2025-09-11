@@ -1,48 +1,76 @@
-
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import OptionListEditor from "./OptionListEditor";
 import CommonEditor from "./CommonEditor";
 import fieldTypes from "../../../../fields/fieldTypes-config";
-import { updateField, updateChildField, deleteChildField } from "../../../../utils/formActions";
+import { useFormStore, useFieldApi } from "../../../../state/formStore";
 
-// Section Editor with child tabs
-function SectionEditor({ section, formData, setFormData, onActiveChildChange }) {
+function SectionEditor({ section, onActiveChildChange }) {
+  const sectionApi = useFieldApi(section.id); 
+
   const children = Array.isArray(section.fields) ? section.fields : [];
   const [activeChildId, setActiveChildId] = useState(children[0]?.id || null);
 
-  // reset tab when a different section is selected
+  {/* ────────── Reset ONLY when switching to a different section ──────────  */}
   useEffect(() => {
     setActiveChildId(children[0]?.id || null);
   }, [section.id]);
 
+  {/* ────────── If children change, keep current active if it still exists; else fallback ──────────  */}
+  useEffect(() => {
+    if (!children.length) {
+      if (activeChildId !== null) setActiveChildId(null);
+      return;
+    }
+    const stillExists = children.some((c) => c.id === activeChildId);
+    if (!stillExists) setActiveChildId(children[0].id);
+  }, [children, activeChildId]);
+
+  {/* ────────── Keep parent informed ──────────  */}
   useEffect(() => {
     onActiveChildChange?.(section.id, activeChildId || null);
   }, [section.id, activeChildId, onActiveChildChange]);
 
-  const onUpdateSection = (key, value) =>
-    updateField(formData, setFormData, section.id, key, value);
+  {/* ────────── update section-level props ──────────  */}
+  const onUpdateSection = useCallback(
+    (key, value) => sectionApi.field.update(key, value),
+    [sectionApi]
+  );
 
   const activeChild = useMemo(
     () => children.find((c) => c.id === activeChildId) || null,
     [children, activeChildId]
   );
 
-  const onUpdateChild = (key, value) =>
-    activeChild &&
-    updateChildField(formData, setFormData, section.id, activeChild.id, key, value);
+  {/* ────────── update active child prop (unified store) ──────────  */}
+  const onUpdateChild = useCallback(
+    (key, value) => {
+      if (!activeChild) return;
+      useFormStore.getState().updateField(
+        activeChild.id,
+        { [key]: value },
+        { sectionId: section.id }
+      );
+      if (key === "id" && value) setActiveChildId(value);
+    },
+    [activeChild, section.id]
+  );
 
-  const onDeleteChild = () =>
-    activeChild &&
-    deleteChildField(formData, setFormData, section.id, activeChild.id);
+  {/* ────────── delete active child (unified store) ──────────  */}
+  const onDeleteChild = useCallback(() => {
+    if (!activeChild) return;
+    useFormStore.getState().deleteField(activeChild.id, { sectionId: section.id });
+  }, [activeChild, section.id]);
 
-  const isChoiceChild =
-    activeChild && ["radio", "check", "selection"].includes(activeChild.fieldType);
+  const isChoiceChild = useMemo(
+    () => activeChild && ["radio", "check", "selection"].includes(activeChild.fieldType),
+    [activeChild]
+  );
 
   return (
     <>
       <h3 className="text-lg font-semibold mb-3">Edit Section</h3>
 
-      {/* Section controls */}
+      {/* ────────── Section Control ──────────  */}
       <div className="space-y-3">
         <div>
           <label className="block text-sm mb-1">Section ID</label>
@@ -63,11 +91,13 @@ function SectionEditor({ section, formData, setFormData, onActiveChildChange }) 
         </div>
       </div>
 
-      {/* Child tabs */}
+      {/* ────────── Child tabs ──────────  */}
       <div className="mt-6">
         <div className="text-sm font-semibold mb-2">Fields in this section</div>
         {children.length === 0 ? (
-          <div className="text-sm text-gray-500">No fields yet. Use the section’s mini toolbar to add fields.</div>
+          <div className="text-sm text-gray-500">
+            No fields yet. Use the section’s mini toolbar to add fields.
+          </div>
         ) : (
           <>
             <div className="flex flex-wrap gap-2 mb-3">
@@ -111,6 +141,13 @@ function SectionEditor({ section, formData, setFormData, onActiveChildChange }) 
                 {isChoiceChild && (
                   <OptionListEditor field={activeChild} onUpdateField={onUpdateChild} />
                 )}
+
+                <button
+                  className="mt-3 px-3 py-2 text-sm text-red-400 border rounded"
+                  onClick={onDeleteChild}
+                >
+                  Delete this field
+                </button>
               </div>
             )}
           </>

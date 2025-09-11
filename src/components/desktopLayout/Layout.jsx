@@ -3,10 +3,7 @@ import ToolPanel from "./toolPanel/ToolPanel";
 import EditPanel from "./editPanel/EditPanel";
 import FormBuilderMain from "../FormBuilderMain";
 
-
 export default function Layout({
-  formData,
-  setFormData,
   isPreview,
   setIsPreview,
   selectedFieldId,
@@ -17,7 +14,6 @@ export default function Layout({
   isEditModalOpen,
   setEditModalOpen,
 }) {
-
   const editPanelKey = selectedField
     ? `${selectedField.fieldType}:${selectedField.id}`
     : "empty";
@@ -36,17 +32,13 @@ export default function Layout({
           <div className="hidden lg:block">
             <ToolPanel
               isPreview={isPreview}
-              formData={formData}
-              setFormData={setFormData}
             />
           </div>
         )}
-        
-        {/* Center Panel / Form Builder */} 
+
+        {/* Center Panel / Form Builder */}
         <div>
           <FormBuilderMain
-            formData={formData}
-            setFormData={setFormData}
             isPreview={isPreview}
             setIsPreview={setIsPreview}
             selectedFieldId={selectedFieldId}
@@ -59,13 +51,11 @@ export default function Layout({
 
         {/* Desktop EditPanel */}
         {editMode && (
-          <div className={`hidden lg:block`}>
+          <div className="hidden lg:block">
             <EditPanel
               key={editPanelKey}
               isPreview={isPreview}
               selectedField={selectedField}
-              formData={formData}
-              setFormData={setFormData}
               onActiveChildChange={onActiveChildChange}
             />
           </div>
@@ -73,10 +63,16 @@ export default function Layout({
 
         {/* Mobile EditPanel Modal */}
         {editMode && (
-          <div className={`lg:hidden`}>
+          <div className="lg:hidden">
             {isEditModalOpen && selectedField && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent/30 backdrop-blur-sm p-4">
-                <div className="w-full max-w-md mx-auto p-4 relative overflow-y-auto custom-scrollbar h-screen">
+              <div
+                className="fixed inset-0 top-5 z-50 flex items-center justify-center bg-transparent/30 backdrop-blur-sm p-4"
+                onClick={() => setEditModalOpen(false)}
+              >
+                <div
+                  className="w-full max-w-md mx-auto relative"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <button
                     className="absolute top-3 right-7 text-gray-500"
                     onClick={() => setEditModalOpen(false)}
@@ -87,8 +83,6 @@ export default function Layout({
                     key={editPanelKey}
                     isPreview={isPreview}
                     selectedField={selectedField}
-                    formData={formData}
-                    setFormData={setFormData}
                     onActiveChildChange={onActiveChildChange}
                   />
                 </div>
