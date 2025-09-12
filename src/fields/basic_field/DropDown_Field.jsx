@@ -16,7 +16,7 @@ const DropDownField = React.memo(function DropDownField({
   const api = useFieldApi(field.id, insideSection ? sectionId : undefined);
   const toggleEdit = () => setEditModalOpen?.(!isEditModalOpen);
 
-  {/* ────────── Preview UI ──────────  */}
+  {/* ────────── Preview UI ──────────  */ }
   if (isPreview) {
     return (
       <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300 rounded-lg"}`}>
@@ -42,7 +42,7 @@ const DropDownField = React.memo(function DropDownField({
     );
   }
 
-  {/* ────────── Edit UI ──────────  */}
+  {/* ────────── Edit UI ──────────  */ }
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between mb-2 ml-1">
@@ -52,6 +52,14 @@ const DropDownField = React.memo(function DropDownField({
           <button onClick={onDelete}><TRASHCAN_ICON /></button>
         </div>
       </div>
+
+      <input
+        className="px-3 py-2 w-full border border-black/40 rounded"
+        type="text"
+        value={field.question || ""}
+        onChange={(e) => api.field.update("question", e.target.value)}
+        placeholder="Enter question"
+      />
 
       <div className="relative">
         <select className="w-full px-4 pr-10 mt-2 shadow border border-black/10 rounded-lg h-10 appearance-none" disabled>

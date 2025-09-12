@@ -106,7 +106,7 @@ export const useFormStore = create((set, get) => ({
     set((state) => {
       const { sectionId, initialPatch = {}, index } = options;
       const tpl = fieldTypes[type]?.defaultProps;
-      if (!tpl) return {};
+      if (!tpl) return state;;
       const id = uuidv4();
       const f = initializeField({ ...tpl, id, ...initialPatch });
 
@@ -118,7 +118,7 @@ export const useFormStore = create((set, get) => ({
       }
 
       const section = state.byId[sectionId];
-      if (!section || !Array.isArray(section.fields)) return {};
+      if (!section || !Array.isArray(section.fields)) return state;;
       const fields = insertAt(section.fields, f, index);
       return { byId: { ...state.byId, [sectionId]: { ...section, fields } } };
     }),
@@ -136,7 +136,7 @@ export const useFormStore = create((set, get) => ({
         },
         { onIdChange, forbidCollision: true } 
       );
-      return res || {};
+      return res ? res : state;
     }),
 
 
@@ -144,14 +144,14 @@ export const useFormStore = create((set, get) => ({
     set((state) => {
       const { sectionId } = options;
       if (!sectionId) {
-        if (!state.byId[id]) return {};
+        if (!state.byId[id]) return state;;
         const { [id]: _omit, ...rest } = state.byId;
         return { byId: rest, order: state.order.filter((x) => x !== id) };
       }
       const section = state.byId[sectionId];
-      if (!section || !Array.isArray(section.fields)) return {};
+      if (!section || !Array.isArray(section.fields)) return state;;
       const next = section.fields.filter((c) => c.id !== id);
-      if (next.length === section.fields.length) return {};
+      if (next.length === section.fields.length) return state;;
       return { byId: { ...state.byId, [sectionId]: { ...section, fields: next } } };
     }),
 
@@ -164,7 +164,7 @@ export const useFormStore = create((set, get) => ({
         const next = [...opts, { id: uuidv4(), value }];
         return { ...f, options: next };
       });
-      return res || {};
+      return res ? res : state;;
     }),
 
   updateOption: (fieldId, optId, value, options = {}) =>
@@ -182,7 +182,7 @@ export const useFormStore = create((set, get) => ({
         if (!changed) return null;
         return { ...f, options: next };
       });
-      return res || {};
+      return res ? res : state;;
     }),
 
   deleteOption: (fieldId, optId, options = {}) =>
@@ -201,7 +201,7 @@ export const useFormStore = create((set, get) => ({
         }
         return next;
       });
-      return res || {};
+      return res ? res : state;;
     }),
 
   // ────────── Selection (single / Multi[]) ──────────
@@ -213,7 +213,7 @@ export const useFormStore = create((set, get) => ({
         if (f.selected === nextSel) return null;
         return { ...f, selected: nextSel };
       });
-      return res || {};
+      return res ? res : state;;
     }),
 
   toggleMulti: (fieldId, optId, options = {}) =>
@@ -226,7 +226,7 @@ export const useFormStore = create((set, get) => ({
         if (selected.length === prev.length && present) return null;
         return { ...f, selected };
       });
-      return res || {};
+      return res ? res : state;;
     }),
 }));
 
