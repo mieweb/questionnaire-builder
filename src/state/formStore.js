@@ -84,7 +84,7 @@ export const useFormStore = create((set, get) => ({
       const fields = insertAt(section.fields, f, index);
       return { byId: { ...state.byId, [sectionId]: { ...section, fields } } };
     }),
-
+    //handle id
   updateField: (id, patchOrFn, options = {}) =>
     set((state) => {
       const { sectionId } = options;
