@@ -7,8 +7,8 @@ import {
   PLUSSQUARE_ICON,
   X_ICON,
 } from "../assets/icons";
-import JsonViewer from "./JsonViewer";
 import { useFormStore, useFieldsArray } from "../state/formStore";
+import DataViewer from "./DataViewer";
 
 const MobileToolBar = ({ fieldTypes, isPreview, setIsPreview }) => {
   const [isToolBarExpanded, setIsToolBarExpanded] = useState(false);
@@ -99,11 +99,11 @@ const MobileToolBar = ({ fieldTypes, isPreview, setIsPreview }) => {
       </motion.div>
 
       {/* ────────── JSON Viewer ──────────  */}
-      <JsonViewer
+      <DataViewer
         open={isLogExpanded}
         onClose={() => setIsLogExpanded(false)}
         data={fieldsArray}
-        title="Form Data (JSON)"
+        title="Form Data"
         placement="bottom"
         contentClassName="custom-scrollbar"
       />
@@ -131,7 +131,7 @@ const MobileToolBar = ({ fieldTypes, isPreview, setIsPreview }) => {
               key={type}
               className="px-4 pl-6 py-2 text-black text-left rounded hover:bg-slate-50"
               onClick={() => {
-                addField(type); // ✅ from zustand
+                addField(type); 
                 setIsToolBarExpanded(false);
               }}
             >

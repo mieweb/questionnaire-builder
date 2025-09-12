@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import JsonViewer from "./JsonViewer";
 import { useFormStore, useFieldsArray } from "../state/formStore";
+import DataViewer from "./DataViewer";
 
 export default function Header({ isPreview, setIsPreview, setSelectedFieldId }) {
   const [showJson, setShowJson] = useState(false);
@@ -21,13 +21,13 @@ export default function Header({ isPreview, setIsPreview, setSelectedFieldId }) 
     }
   };
 
-  const exportData = () => {
-    const blob = new Blob([JSON.stringify(fieldsArray, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "form-data.json"; a.click();
-    URL.revokeObjectURL(url);
-  };
+  // const exportData = () => {
+  //   const blob = new Blob([JSON.stringify(fieldsArray, null, 2)], { type: "application/json" });
+  //   const url = URL.createObjectURL(blob);
+  //   const a = document.createElement("a");
+  //   a.href = url; a.download = "form-data.json"; a.click();
+  //   URL.revokeObjectURL(url);
+  // };
 
   const onPreview = () => { setIsPreview(true); setSelectedFieldId(null); };
   const onEdit = () => setIsPreview(false);
@@ -81,28 +81,28 @@ export default function Header({ isPreview, setIsPreview, setSelectedFieldId }) 
           </label>
           
           {/* ────────── Export Button ──────────  */}
-          <button
+          {/* <button
             className="px-4 py-2 rounded-xl border border-black/15 bg-white hover:bg-black/5 text-sm"
             onClick={exportData}
           >
             Export
-          </button>
+          </button> */}
 
           {/* ────────── JSON Preview ──────────  */}
           <button
             className="px-4 py-2 rounded-xl border border-black/15 bg-white hover:bg-black/5 text-sm"
             onClick={() => setShowJson(true)}
           >
-            Preview JSON
+            Data Viewer
           </button>
         </div>
       </div>
 
-      <JsonViewer
+      <DataViewer
         open={showJson}
         onClose={() => setShowJson(false)}
         data={fieldsArray}             
-        title="Form Data (JSON)"
+        title="Form Data"
         placement="bottom"
         contentClassName="custom-scrollbar"
       />
