@@ -93,7 +93,7 @@ export default function Header({ isPreview, setIsPreview, setSelectedFieldId }) 
             className="px-4 py-2 rounded-xl border border-black/15 bg-white hover:bg-black/5 text-sm"
             onClick={() => setShowJson(true)}
           >
-            Preview JSON
+            Data Viewer
           </button>
         </div>
       </div>

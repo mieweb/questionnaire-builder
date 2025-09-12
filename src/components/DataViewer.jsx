@@ -89,14 +89,14 @@ export default function DataViewer({
                   {/* Toggle */}
                   <div className="inline-flex rounded-lg border border-black/10 overflow-hidden">
                     <button
-                      className={`px-3 py-1 text-sm ${mode === "yaml" ? "bg-black/5" : "bg-white hover:bg-black/5"}`}
+                      className={`px-3 py-1 text-sm ${mode === "yaml" ? "bg-black/6" : "bg-gray-200 hover:bg-black/5"}`}
                       aria-pressed={mode === "yaml"}
                       onClick={(e) => { stop(e); setMode("yaml"); }}
                     >
                       YAML
                     </button>
                     <button
-                      className={`px-3 py-1 text-sm ${mode === "json" ? "bg-black/5" : "bg-white hover:bg-black/5"}`}
+                      className={`px-3 py-1 text-sm ${mode === "json" ? "bg-black/6" : "bg-gray-200 hover:bg-black/5"}`}
                       aria-pressed={mode === "json"}
                       onClick={(e) => { stop(e); setMode("json"); }}
                     >
