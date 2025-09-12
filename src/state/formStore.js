@@ -32,28 +32,66 @@ const normalize = (arr) => {
   return { byId, order };
 };
 
-// Generic helper to update a field either top-level or within a section
-function updateFieldHelper(state, id, sectionId, makeNext) {
+// Generic helper to update a field either top-level or within a section with a 5th arg optional allowing for id updates
+function updateFieldHelper(state, id, sectionId, makeNext, opts = {}) {
+  const { onIdChange, forbidCollision = true } = opts;
+
+  // ────────── Top-level ──────────
   if (!sectionId) {
     const prev = state.byId[id];
     if (!prev) return null;
+
     const next = makeNext(prev, null);
     if (!next || shallowEqual(prev, next)) return null;
+
+    // If id changed, migrate key + order
+    if (next.id && next.id !== id) {
+      const newId = next.id;
+      if (forbidCollision && state.byId[newId]) return null; // collision guard
+
+      const { [id]: _omit, ...rest } = state.byId;
+      const byId = { ...rest, [newId]: next };
+      const order = state.order.map((x) => (x === id ? newId : x));
+
+      onIdChange?.(newId, id);
+      return { byId, order };
+    }
+
+    // Normal patch
     return { byId: { ...state.byId, [id]: next } };
   }
+
+  // ────────── Child inside a section ──────────
   const section = state.byId[sectionId];
   if (!section || !Array.isArray(section.fields)) return null;
+
   let changed = false;
+  let renamedTo = null;
+
   const newFields = section.fields.map((c) => {
     if (c.id !== id) return c;
+
     const next = makeNext(c, section);
     if (!next || shallowEqual(c, next)) return c;
+
+    if (next.id && next.id !== id) {
+      if (forbidCollision && section.fields.some((f) => f.id === next.id && f !== c)) {
+        return c; // abort rename within the same section
+      }
+      renamedTo = next.id;
+    }
+
     changed = true;
     return next;
   });
+
   if (!changed) return null;
-  return { byId: { ...state.byId, [sectionId]: { ...section, fields: newFields } } };
+
+  const byId = { ...state.byId, [sectionId]: { ...section, fields: newFields } };
+  if (renamedTo) onIdChange?.(renamedTo, id);
+  return { byId };
 }
+
 
 export const useFormStore = create((set, get) => ({
   // ────────── State ──────────
@@ -84,17 +122,23 @@ export const useFormStore = create((set, get) => ({
       const fields = insertAt(section.fields, f, index);
       return { byId: { ...state.byId, [sectionId]: { ...section, fields } } };
     }),
-    //handle id
+
   updateField: (id, patchOrFn, options = {}) =>
     set((state) => {
-      const { sectionId } = options;
-      const res = updateFieldHelper(state, id, sectionId, (prev) => {
-        const patch = typeof patchOrFn === "function" ? patchOrFn(prev) : patchOrFn;
-        if (!patch) return null;
-        return { ...prev, ...patch };
-      });
+      const { sectionId, onIdChange } = options;
+      const res = updateFieldHelper(
+        state,
+        id,
+        sectionId,
+        (prev) => {
+          const patch = typeof patchOrFn === "function" ? patchOrFn(prev) : patchOrFn;
+          return patch ? { ...prev, ...patch } : null;
+        },
+        { onIdChange, forbidCollision: true } 
+      );
       return res || {};
     }),
+
 
   deleteField: (id, options = {}) =>
     set((state) => {
