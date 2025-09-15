@@ -1,64 +1,34 @@
-import React, { useMemo, useState, useCallback, useEffect } from "react";
+// App.jsx
+import React, { useEffect } from "react";
 import Header from "./components/Header";
 import MobileToolBar from "./components/MobileToolBar";
-import fieldTypes from "./fields/fieldTypes-config";
 import Layout from "./components/desktopLayout/Layout.jsx";
+import { useFormStore } from "./state/formStore";
+import { useUIStore } from "./state/uiStore";
 
-import { useFormStore } from "./state/formStore"; 
 export default function App() {
-
-  const [isPreview, setIsPreview] = useState(false);
-  const [selectedFieldId, setSelectedFieldId] = useState(null);
-  const [sectionHighlight, setSectionHighlight] = useState({});
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const isPreview = useUIStore((s) => s.isPreview);
+  const selectedFieldId = useUIStore((s) => s.selectedFieldId);
+  const clearSectionHighlights = useUIStore((s) => s.clearSectionHighlights);
 
   const selectedField = useFormStore(
-    React.useCallback((s) => (selectedFieldId ? s.byId[selectedFieldId] : null), [selectedFieldId])
+    React.useCallback(
+      (s) => (selectedFieldId ? s.byId[selectedFieldId] : null),
+      [selectedFieldId]
+    )
   );
-
-  const getSectionHighlightId = useCallback(
-    (sectionId) => sectionHighlight[sectionId] || null,
-    [sectionHighlight]
-  );
-
-  const setSectionActiveChild = useCallback((sid, cid) => {
-    setSectionHighlight((prev) => (prev[sid] === cid ? prev : { ...prev, [sid]: cid }));
-  }, []);
-
+  
   useEffect(() => {
-    setSectionHighlight({});
-  }, [selectedFieldId, isPreview]);
+    clearSectionHighlights();
+  }, [selectedFieldId, isPreview, clearSectionHighlights]);
 
   return (
     <div className="min-h-screen bg-gray-100 font-titillium">
-      <Header
-        isPreview={isPreview}
-        setIsPreview={setIsPreview}
-        selectedFieldId={selectedFieldId}
-        setSelectedFieldId={setSelectedFieldId}
-      />
-
-      {/* Mobile ToolBar */}
+      <Header />
       <div className="lg:hidden">
-        <MobileToolBar
-          fieldTypes={fieldTypes}
-          isPreview={isPreview}
-          setIsPreview={setIsPreview}
-        />
+        <MobileToolBar />
       </div>
-
-      {/* Desktop / three-panel */}
-      <Layout
-        isPreview={isPreview}
-        setIsPreview={setIsPreview}
-        selectedFieldId={selectedFieldId}
-        setSelectedFieldId={setSelectedFieldId}
-        selectedField={selectedField}
-        getSectionHighlightId={getSectionHighlightId}
-        onActiveChildChange={setSectionActiveChild}
-        isEditModalOpen={isEditModalOpen}
-        setEditModalOpen={setEditModalOpen}
-      />
+      <Layout selectedField={selectedField} />
     </div>
   );
 }

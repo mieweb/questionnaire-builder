@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from "react";
 import fieldTypes from "../fieldTypes-config";
 import { checkFieldVisibility } from "../../utils/visibilityChecker";
 import { TRASHCAN_ICON, PLUSSQUARE_ICON, EDIT_ICON } from "../../assets/icons";
-import { useFormStore, useFieldApi } from "../../state/formStore";
+import { useFormStore } from "../../state/formStore";
+import { useFieldApi } from "../../state/fieldAPI";
 
 function SectionFieldImpl({
   field,
@@ -13,9 +14,9 @@ function SectionFieldImpl({
   setEditModalOpen,
   highlightChildId = null,
 }) {
-  // Hook usage is STATIC: these two are always called in the same order/number.
-  const sectionSelfApi = useFieldApi(field.id);         // update section props
-  const sectionChildrenApi = useFieldApi(field.id, field.id); // add children into this section
+  // Hook usage is STATIC: these two are always called in the same order/number. updateSelfID / add children
+  const sectionSelfApi = useFieldApi(field.id);         
+  const sectionChildrenApi = useFieldApi(field.id, field.id); 
 
   const childRefs = useRef({});
   const children = field.fields || [];
@@ -42,7 +43,7 @@ function SectionFieldImpl({
           label={fieldTypes[child.fieldType]?.label}
           isPreview
           parentType="section"
-          sectionId={field.id}   // child uses its own useFieldApi(childId, sectionId)
+          sectionId={field.id} 
         />
       </div>
     );
@@ -55,7 +56,6 @@ function SectionFieldImpl({
 
     const isHighlighted = highlightChildId === child.id;
 
-    // IMPORTANT: no hooks here. Use store action directly for delete.
     const handleDelete = () =>
       useFormStore.getState().deleteField(child.id, { sectionId: field.id });
 

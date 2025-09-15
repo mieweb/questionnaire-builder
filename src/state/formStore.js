@@ -32,28 +32,57 @@ const normalize = (arr) => {
   return { byId, order };
 };
 
-// Generic helper to update a field either top-level or within a section
-function updateFieldHelper(state, id, sectionId, makeNext) {
+// Generic helper to update a field either top-level or within a section with a 5th arg optional allowing for id updates
+function updateFieldHelper(state, id, sectionId, makeNext, opts = {}) {
+  const { onIdChange, forbidCollision = true } = opts;
+
+  // ────────── Top-level ──────────
   if (!sectionId) {
     const prev = state.byId[id];
     if (!prev) return null;
     const next = makeNext(prev, null);
     if (!next || shallowEqual(prev, next)) return null;
+
+    if (next.id && next.id !== id) {
+      const newId = next.id;
+      if (forbidCollision && state.byId[newId]) return null; // collision guard
+      const { [id]: _omit, ...rest } = state.byId;
+      const byId = { ...rest, [newId]: next };
+      const order = state.order.map((x) => (x === id ? newId : x));
+      onIdChange?.(newId, id);
+      return { byId, order };
+    }
     return { byId: { ...state.byId, [id]: next } };
   }
+
+  // ────────── Child inside a section ──────────
   const section = state.byId[sectionId];
   if (!section || !Array.isArray(section.fields)) return null;
+
   let changed = false;
+  let renamedTo = null;
+
   const newFields = section.fields.map((c) => {
     if (c.id !== id) return c;
     const next = makeNext(c, section);
     if (!next || shallowEqual(c, next)) return c;
+    if (next.id && next.id !== id) {
+      if (forbidCollision && section.fields.some((f) => f.id === next.id && f !== c)) {
+        return c;
+      }
+      renamedTo = next.id;
+    }
     changed = true;
     return next;
   });
+
   if (!changed) return null;
-  return { byId: { ...state.byId, [sectionId]: { ...section, fields: newFields } } };
+
+  const byId = { ...state.byId, [sectionId]: { ...section, fields: newFields } };
+  if (renamedTo) onIdChange?.(renamedTo, id);
+  return { byId };
 }
+
 
 export const useFormStore = create((set, get) => ({
   // ────────── State ──────────
@@ -68,7 +97,7 @@ export const useFormStore = create((set, get) => ({
     set((state) => {
       const { sectionId, initialPatch = {}, index } = options;
       const tpl = fieldTypes[type]?.defaultProps;
-      if (!tpl) return {};
+      if (!tpl) return state;;
       const id = uuidv4();
       const f = initializeField({ ...tpl, id, ...initialPatch });
 
@@ -80,34 +109,40 @@ export const useFormStore = create((set, get) => ({
       }
 
       const section = state.byId[sectionId];
-      if (!section || !Array.isArray(section.fields)) return {};
+      if (!section || !Array.isArray(section.fields)) return state;;
       const fields = insertAt(section.fields, f, index);
       return { byId: { ...state.byId, [sectionId]: { ...section, fields } } };
     }),
 
   updateField: (id, patchOrFn, options = {}) =>
     set((state) => {
-      const { sectionId } = options;
-      const res = updateFieldHelper(state, id, sectionId, (prev) => {
-        const patch = typeof patchOrFn === "function" ? patchOrFn(prev) : patchOrFn;
-        if (!patch) return null;
-        return { ...prev, ...patch };
-      });
-      return res || {};
+      const { sectionId, onIdChange } = options;
+      const res = updateFieldHelper(
+        state,
+        id,
+        sectionId,
+        (prev) => {
+          const patch = typeof patchOrFn === "function" ? patchOrFn(prev) : patchOrFn;
+          return patch ? { ...prev, ...patch } : null;
+        },
+        { onIdChange, forbidCollision: true } 
+      );
+      return res ? res : state;
     }),
+
 
   deleteField: (id, options = {}) =>
     set((state) => {
       const { sectionId } = options;
       if (!sectionId) {
-        if (!state.byId[id]) return {};
+        if (!state.byId[id]) return state;;
         const { [id]: _omit, ...rest } = state.byId;
         return { byId: rest, order: state.order.filter((x) => x !== id) };
       }
       const section = state.byId[sectionId];
-      if (!section || !Array.isArray(section.fields)) return {};
+      if (!section || !Array.isArray(section.fields)) return state;;
       const next = section.fields.filter((c) => c.id !== id);
-      if (next.length === section.fields.length) return {};
+      if (next.length === section.fields.length) return state;;
       return { byId: { ...state.byId, [sectionId]: { ...section, fields: next } } };
     }),
 
@@ -120,7 +155,7 @@ export const useFormStore = create((set, get) => ({
         const next = [...opts, { id: uuidv4(), value }];
         return { ...f, options: next };
       });
-      return res || {};
+      return res ? res : state;;
     }),
 
   updateOption: (fieldId, optId, value, options = {}) =>
@@ -138,7 +173,7 @@ export const useFormStore = create((set, get) => ({
         if (!changed) return null;
         return { ...f, options: next };
       });
-      return res || {};
+      return res ? res : state;;
     }),
 
   deleteOption: (fieldId, optId, options = {}) =>
@@ -157,7 +192,7 @@ export const useFormStore = create((set, get) => ({
         }
         return next;
       });
-      return res || {};
+      return res ? res : state;;
     }),
 
   // ────────── Selection (single / Multi[]) ──────────
@@ -169,7 +204,7 @@ export const useFormStore = create((set, get) => ({
         if (f.selected === nextSel) return null;
         return { ...f, selected: nextSel };
       });
-      return res || {};
+      return res ? res : state;;
     }),
 
   toggleMulti: (fieldId, optId, options = {}) =>
@@ -182,7 +217,7 @@ export const useFormStore = create((set, get) => ({
         if (selected.length === prev.length && present) return null;
         return { ...f, selected };
       });
-      return res || {};
+      return res ? res : state;;
     }),
 }));
 
@@ -209,40 +244,3 @@ export const useFieldsArray = () => {
   return React.useMemo(() => order.map((id) => byId[id]), [order, byId]);
 };
 
-// ────────── Bound API for a field (works for top-level or section child) ──────────
-// Pass: useFieldApi(fieldId) for top-level
-//       useFieldApi(childId, sectionId) for a child inside a section
-//       useFieldApi(sectionId, sectionId) inside a Section component to make `add` add children
-export const useFieldApi = (id, sectionId) => {
-  const addField = useFormStore((s) => s.addField);
-  const updateField = useFormStore((s) => s.updateField);
-  const deleteField = useFormStore((s) => s.deleteField);
-
-  const addOption = useFormStore((s) => s.addOption);
-  const updateOption = useFormStore((s) => s.updateOption);
-  const deleteOption = useFormStore((s) => s.deleteOption);
-
-  const selectSingle = useFormStore((s) => s.selectSingle);
-  const toggleMulti = useFormStore((s) => s.toggleMulti);
-
-  return React.useMemo(
-    () => ({
-      field: {
-        add: (type, initialPatch, index) => addField(type, { sectionId, initialPatch, index }),
-        update: (k, v) => updateField(id, { [k]: v }, { sectionId }),
-        patch: (patchOrFn) => updateField(id, patchOrFn, { sectionId }),
-        remove: () => deleteField(id, { sectionId }),
-      },
-      option: {
-        add: (value = "") => addOption(id, value, { sectionId }),
-        update: (optId, value) => updateOption(id, optId, value, { sectionId }),
-        remove: (optId) => deleteOption(id, optId, { sectionId }),
-      },
-      selection: {
-        single: (optId) => selectSingle(id, optId, { sectionId }),
-        multiToggle: (optId) => toggleMulti(id, optId, { sectionId }),
-      },
-    }),
-    [id, sectionId, addField, updateField, deleteField, addOption, updateOption, deleteOption, selectSingle, toggleMulti]
-  );
-};

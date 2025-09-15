@@ -1,22 +1,21 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import {
-  DATALOG_ICON,
-  EYEEDIT_ICON,
-  EYECLOSED_ICON,
-  PLUSSQUARE_ICON,
-  X_ICON,
-} from "../assets/icons";
+import { DATALOG_ICON, EYEEDIT_ICON, EYECLOSED_ICON, PLUSSQUARE_ICON, X_ICON } from "../assets/icons";
 import { useFormStore, useFieldsArray } from "../state/formStore";
+import { useUIStore } from "../state/uiStore";
+import fieldTypes from "../fields/fieldTypes-config";
 import DataViewer from "./DataViewer";
 
-const MobileToolBar = ({ fieldTypes, isPreview, setIsPreview }) => {
+export default function MobileToolBar() {
   const [isToolBarExpanded, setIsToolBarExpanded] = useState(false);
   const [isLogExpanded, setIsLogExpanded] = useState(false);
   const containerRef = useRef(null);
 
   const addField = useFormStore((s) => s.addField);
   const fieldsArray = useFieldsArray();
+
+  const isPreview = useUIStore((s) => s.isPreview);
+  const togglePreview = useUIStore((s) => s.togglePreview);
 
   const handleToolBarExpanded = () => {
     setIsToolBarExpanded((v) => !v);
@@ -27,7 +26,7 @@ const MobileToolBar = ({ fieldTypes, isPreview, setIsPreview }) => {
     setIsToolBarExpanded(false);
   };
   const handlePreviewMode = () => {
-    setIsPreview(!isPreview);
+    togglePreview();
     setIsToolBarExpanded(false);
     setIsLogExpanded(false);
   };
@@ -63,11 +62,7 @@ const MobileToolBar = ({ fieldTypes, isPreview, setIsPreview }) => {
           }}
           className={`relative cursor-pointer ${!isPreview ? "" : "mx-29"} bg-black/5 rounded-2xl p-3 backdrop-blur-xl`}
         >
-          {!isPreview ? (
-            <EYECLOSED_ICON className="h-12 w-12" />
-          ) : (
-            <EYEEDIT_ICON className="h-12 w-12" />
-          )}
+          {!isPreview ? <EYECLOSED_ICON className="h-12 w-12" /> : <EYEEDIT_ICON className="h-12 w-12" />}
         </motion.button>
 
         {!isPreview && (
@@ -98,7 +93,6 @@ const MobileToolBar = ({ fieldTypes, isPreview, setIsPreview }) => {
         </motion.button>
       </motion.div>
 
-      {/* ────────── JSON Viewer ──────────  */}
       <DataViewer
         open={isLogExpanded}
         onClose={() => setIsLogExpanded(false)}
@@ -108,7 +102,6 @@ const MobileToolBar = ({ fieldTypes, isPreview, setIsPreview }) => {
         contentClassName="custom-scrollbar"
       />
 
-      {/* ────────── Toolbar Modal ──────────  */}
       <motion.div
         ref={containerRef}
         onPointerDown={(e) => e.stopPropagation()}
@@ -131,7 +124,7 @@ const MobileToolBar = ({ fieldTypes, isPreview, setIsPreview }) => {
               key={type}
               className="px-4 pl-6 py-2 text-black text-left rounded hover:bg-slate-50"
               onClick={() => {
-                addField(type); 
+                addField(type);
                 setIsToolBarExpanded(false);
               }}
             >
@@ -142,6 +135,4 @@ const MobileToolBar = ({ fieldTypes, isPreview, setIsPreview }) => {
       </motion.div>
     </div>
   );
-};
-
-export default MobileToolBar;
+}
