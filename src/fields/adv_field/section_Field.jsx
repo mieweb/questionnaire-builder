@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from "react";
 import fieldTypes from "../fieldTypes-config";
 import { checkFieldVisibility } from "../../utils/visibilityChecker";
 import { TRASHCAN_ICON, PLUSSQUARE_ICON, EDIT_ICON } from "../../assets/icons";
-import { useFormStore, useFieldApi } from "../../state/formStore";
+import { useFormStore } from "../../state/formStore";
+import { useFieldApi } from "../../state/fieldAPI";
 
 function SectionFieldImpl({
   field,

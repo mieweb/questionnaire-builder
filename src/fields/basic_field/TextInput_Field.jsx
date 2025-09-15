@@ -1,6 +1,6 @@
 import React from "react";
 import { EDIT_ICON, TRASHCAN_ICON } from "../../assets/icons";
-import { useFieldApi } from "../../state/formStore";
+import { useFieldApi } from "../../state/fieldAPI";
 
 const TextInputField = React.memo(function TextInputField({
   field,

@@ -1,24 +1,27 @@
 import React, { useMemo, useCallback } from "react";
 import fieldTypes from "../fields/fieldTypes-config";
 import { useFieldsArray, useFormStore } from "../state/formStore";
+import { useUIStore } from "../state/uiStore";
 import { checkFieldVisibility } from "../utils/visibilityChecker";
 
-export default function FormBuilderMain({
-  isPreview,
-  selectedFieldId,
-  setSelectedFieldId,
-  getSectionHighlightId,
-  isEditModalOpen,
-  setEditModalOpen,
-}) {
+export default function FormBuilderMain() {
+  const isPreview = useUIStore((s) => s.isPreview);
+  const selectedFieldId = useUIStore((s) => s.selectedFieldId);
+  const selectField = useUIStore((s) => s.selectField);
+
+  const isEditModalOpen = useUIStore((s) => s.isEditModalOpen);
+  const setEditModalOpen = useUIStore((s) => s.setEditModalOpen);
+
+  const getSectionHighlightId = useUIStore((s) => s.getSectionHighlightId);
+
   const fields = useFieldsArray();
   const visibleIds = useMemo(() => {
-    const list = isPreview ? fields.filter(f => checkFieldVisibility(f, fields)) : fields;
-    return list.map(f => f.id);
+    const list = isPreview ? fields.filter((f) => checkFieldVisibility(f, fields)) : fields;
+    return list.map((f) => f.id);
   }, [isPreview, fields]);
 
-  const clearSel = useCallback(() => setSelectedFieldId?.(null), [setSelectedFieldId]);
-  const select = useCallback((id) => setSelectedFieldId?.(id), [setSelectedFieldId]);
+  const clearSel = useCallback(() => selectField(null), [selectField]);
+  const select = useCallback((id) => selectField(id), [selectField]);
 
   const isEmpty = visibleIds.length === 0;
 
@@ -27,19 +30,23 @@ export default function FormBuilderMain({
       className="w-full max-w-4xl mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)] custom-scrollbar px-1"
       onClick={() => !isPreview && clearSel()}
     >
-      {isEmpty ? <EmptyState /> : visibleIds.map((id) => (
-        <FieldRow
-          key={id}
-          id={id}
-          isPreview={isPreview}
-          isSelected={selectedFieldId === id}
-          select={select}
-          clearSelection={clearSel}
-          getSectionHighlightId={getSectionHighlightId}
-          isEditModalOpen={isEditModalOpen}
-          setEditModalOpen={setEditModalOpen}
-        />
-      ))}
+      {isEmpty ? (
+        <EmptyState />
+      ) : (
+        visibleIds.map((id) => (
+          <FieldRow
+            key={id}
+            id={id}
+            isPreview={isPreview}
+            isSelected={selectedFieldId === id}
+            select={select}
+            clearSelection={clearSel}
+            getSectionHighlightId={getSectionHighlightId}
+            isEditModalOpen={isEditModalOpen}
+            setEditModalOpen={setEditModalOpen}
+          />
+        ))
+      )}
     </div>
   );
 }
@@ -54,9 +61,8 @@ const FieldRow = React.memo(function FieldRow({
   isEditModalOpen,
   setEditModalOpen,
 }) {
-  const field = useFormStore(React.useCallback(s => s.byId[id], [id]));
-  const deleteField = useFormStore(s => s.deleteField);
-
+  const field = useFormStore(React.useCallback((s) => s.byId[id], [id]));
+  const deleteField = useFormStore((s) => s.deleteField);
   if (!field) return null;
 
   const FieldComponent = fieldTypes[field.fieldType]?.component;
@@ -68,11 +74,14 @@ const FieldRow = React.memo(function FieldRow({
     if (isSelected) clearSelection?.();
   }, [deleteField, id, isPreview, isSelected, clearSelection]);
 
-  const handleClick = React.useCallback((e) => {
-    if (isPreview) return;
-    e.stopPropagation?.();
-    select?.(id);
-  }, [isPreview, select, id]);
+  const handleClick = React.useCallback(
+    (e) => {
+      if (isPreview) return;
+      e.stopPropagation?.();
+      select?.(id);
+    },
+    [isPreview, select, id]
+  );
 
   const wrapperClass = [
     "rounded-lg bg-white mb-2",
@@ -81,9 +90,7 @@ const FieldRow = React.memo(function FieldRow({
   ].join(" ");
 
   const extraSectionProps =
-    field.fieldType === "section"
-      ? { highlightChildId: getSectionHighlightId?.(id) ?? null }
-      : {};
+    field.fieldType === "section" ? { highlightChildId: getSectionHighlightId?.(id) ?? null } : {};
 
   return (
     <div className={wrapperClass} onClick={handleClick}>

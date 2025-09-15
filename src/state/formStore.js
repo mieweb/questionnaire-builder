@@ -40,24 +40,18 @@ function updateFieldHelper(state, id, sectionId, makeNext, opts = {}) {
   if (!sectionId) {
     const prev = state.byId[id];
     if (!prev) return null;
-
     const next = makeNext(prev, null);
     if (!next || shallowEqual(prev, next)) return null;
 
-    // If id changed, migrate key + order
     if (next.id && next.id !== id) {
       const newId = next.id;
       if (forbidCollision && state.byId[newId]) return null; // collision guard
-
       const { [id]: _omit, ...rest } = state.byId;
       const byId = { ...rest, [newId]: next };
       const order = state.order.map((x) => (x === id ? newId : x));
-
       onIdChange?.(newId, id);
       return { byId, order };
     }
-
-    // Normal patch
     return { byId: { ...state.byId, [id]: next } };
   }
 
@@ -70,17 +64,14 @@ function updateFieldHelper(state, id, sectionId, makeNext, opts = {}) {
 
   const newFields = section.fields.map((c) => {
     if (c.id !== id) return c;
-
     const next = makeNext(c, section);
     if (!next || shallowEqual(c, next)) return c;
-
     if (next.id && next.id !== id) {
       if (forbidCollision && section.fields.some((f) => f.id === next.id && f !== c)) {
-        return c; // abort rename within the same section
+        return c;
       }
       renamedTo = next.id;
     }
-
     changed = true;
     return next;
   });
@@ -253,40 +244,3 @@ export const useFieldsArray = () => {
   return React.useMemo(() => order.map((id) => byId[id]), [order, byId]);
 };
 
-// ────────── Bound API for a field (works for top-level or section child) ──────────
-// Pass: useFieldApi(fieldId) for top-level
-//       useFieldApi(childId, sectionId) for a child inside a section
-//       useFieldApi(sectionId, sectionId) inside a Section component to make `add` add children
-export const useFieldApi = (id, sectionId) => {
-  const addField = useFormStore((s) => s.addField);
-  const updateField = useFormStore((s) => s.updateField);
-  const deleteField = useFormStore((s) => s.deleteField);
-
-  const addOption = useFormStore((s) => s.addOption);
-  const updateOption = useFormStore((s) => s.updateOption);
-  const deleteOption = useFormStore((s) => s.deleteOption);
-
-  const selectSingle = useFormStore((s) => s.selectSingle);
-  const toggleMulti = useFormStore((s) => s.toggleMulti);
-
-  return React.useMemo(
-    () => ({
-      field: {
-        add: (type, initialPatch, index) => addField(type, { sectionId, initialPatch, index }),
-        update: (k, v) => updateField(id, { [k]: v }, { sectionId }),
-        patch: (patchOrFn) => updateField(id, patchOrFn, { sectionId }),
-        remove: () => deleteField(id, { sectionId }),
-      },
-      option: {
-        add: (value = "") => addOption(id, value, { sectionId }),
-        update: (optId, value) => updateOption(id, optId, value, { sectionId }),
-        remove: (optId) => deleteOption(id, optId, { sectionId }),
-      },
-      selection: {
-        single: (optId) => selectSingle(id, optId, { sectionId }),
-        multiToggle: (optId) => toggleMulti(id, optId, { sectionId }),
-      },
-    }),
-    [id, sectionId, addField, updateField, deleteField, addOption, updateOption, deleteOption, selectSingle, toggleMulti]
-  );
-};

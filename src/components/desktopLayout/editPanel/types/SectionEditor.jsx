@@ -2,20 +2,41 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import OptionListEditor from "./OptionListEditor";
 import CommonEditor from "./CommonEditor";
 import fieldTypes from "../../../../fields/fieldTypes-config";
-import { useFormStore, useFieldApi } from "../../../../state/formStore";
+import { useFormStore } from "../../../../state/formStore";
+import { useFieldApi } from "../../../../state/fieldAPI";
 
 function SectionEditor({ section, onActiveChildChange }) {
-  const sectionApi = useFieldApi(section.id); 
+  const sectionApi = useFieldApi(section.id);
 
   const children = Array.isArray(section.fields) ? section.fields : [];
   const [activeChildId, setActiveChildId] = useState(children[0]?.id || null);
 
-  {/* ────────── Reset ONLY when switching to a different section ──────────  */}
+  const [sectionIdDraft, setSectionIdDraft] = useState(section.id);
+  const [secErr, setSecErr] = useState("");
+
+  useEffect(() => {
+    setSectionIdDraft(section.id);
+    setSecErr("");
+  }, [section.id]);
+
+  const commitSectionId = useCallback(() => {
+    const next = String(sectionIdDraft ?? "").trim();
+    if (!next) {
+      setSecErr("ID cannot be empty.");
+      setSectionIdDraft(section.id);
+      return;
+    }
+    if (next === section.id) return;
+    // rename with id-migration (UI store/onIdChange wired inside your useFieldApi)
+    sectionApi.field.renameId(next);
+  }, [sectionIdDraft, section.id, sectionApi.field]);
+
+  {/* ────────── Reset ONLY when switching to a different section ──────────  */ }
   useEffect(() => {
     setActiveChildId(children[0]?.id || null);
   }, [section.id]);
 
-  {/* ────────── If children change, keep current active if it still exists; else fallback ──────────  */}
+  {/* ────────── If children change, keep current active if it still exists; else fallback ──────────  */ }
   useEffect(() => {
     if (!children.length) {
       if (activeChildId !== null) setActiveChildId(null);
@@ -25,12 +46,12 @@ function SectionEditor({ section, onActiveChildChange }) {
     if (!stillExists) setActiveChildId(children[0].id);
   }, [children, activeChildId]);
 
-  {/* ────────── Keep parent informed ──────────  */}
+  {/* ────────── Keep parent informed ──────────  */ }
   useEffect(() => {
     onActiveChildChange?.(section.id, activeChildId || null);
   }, [section.id, activeChildId, onActiveChildChange]);
 
-  {/* ────────── update section-level props ──────────  */}
+  {/* ────────── update section-level props ──────────  */ }
   const onUpdateSection = useCallback(
     (key, value) => sectionApi.field.update(key, value),
     [sectionApi]
@@ -41,21 +62,36 @@ function SectionEditor({ section, onActiveChildChange }) {
     [children, activeChildId]
   );
 
-  {/* ────────── update active child prop (unified store) ──────────  */}
+  {/* ────────── update active child prop (unified store) ──────────  */ }
   const onUpdateChild = useCallback(
     (key, value) => {
       if (!activeChild) return;
+      if (key === "id") {
+        const next = String(value ?? "").trim();
+        if (!next) return;
+
+        useFormStore.getState().updateField(
+          activeChild.id,
+          { id: next },
+          {
+            sectionId: section.id,
+            onIdChange: (newId, oldId) => {
+              setActiveChildId((curr) => (curr === oldId ? newId : curr));
+            },
+          }
+        );
+        return;
+      }
+
       useFormStore.getState().updateField(
         activeChild.id,
         { [key]: value },
         { sectionId: section.id }
       );
-      if (key === "id" && value) setActiveChildId(value);
     },
     [activeChild, section.id]
   );
-
-  {/* ────────── delete active child (unified store) ──────────  */}
+  {/* ────────── delete active child (unified store) ──────────  */ }
   const onDeleteChild = useCallback(() => {
     if (!activeChild) return;
     useFormStore.getState().deleteField(activeChild.id, { sectionId: section.id });
@@ -72,14 +108,22 @@ function SectionEditor({ section, onActiveChildChange }) {
 
       {/* ────────── Section Control ──────────  */}
       <div className="space-y-3">
-        <div>
-          <label className="block text-sm mb-1">Section ID</label>
-          <input
-            className="w-full px-3 py-2 border border-black/20 rounded"
-            value={section.id}
-            onChange={(e) => onUpdateSection("id", e.target.value)}
-          />
-        </div>
+        <input
+          className="w-full px-3 py-2 border border-black/20 rounded"
+          value={sectionIdDraft}
+          onChange={(e) => {
+            if (secErr) setSecErr("");
+            setSectionIdDraft(e.target.value);
+          }}
+          onBlur={commitSectionId}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              commitSectionId();
+            }
+          }}
+        />
+        {secErr ? <p className="text-xs text-red-600 mt-1">{secErr}</p> : null}
         <div>
           <label className="block text-sm mb-1">Section Title</label>
           <input
