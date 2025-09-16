@@ -1,97 +1,97 @@
 import React from "react";
-import { ARROWDOWN_ICON, EDIT_ICON, PLUSOPTION_ICON, TRASHCAN_ICON, TRASHCANTWO_ICON } from "../../assets/icons";
-import { useFieldApi } from "../../state/fieldAPI";
+import { ARROWDOWN_ICON, TRASHCANTWO_ICON, PLUSOPTION_ICON } from "../../assets/icons";
+import FieldWrapper from "../shared/FieldWrapper";
+import { useFieldController } from "../shared/useFieldController";
 
-const DropDownField = React.memo(function DropDownField({
-  field,
-  label,
-  onDelete,
-  isPreview,
-  parentType,
-  isEditModalOpen,
-  setEditModalOpen,
-  sectionId,
-}) {
-  const insideSection = parentType === "section";
-  const api = useFieldApi(field.id, insideSection ? sectionId : undefined);
-  const toggleEdit = () => setEditModalOpen?.(!isEditModalOpen);
+const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
+  const ctrl = useFieldController(field, sectionId);
 
-  {/* ────────── Preview UI ──────────  */ }
-  if (isPreview) {
-    return (
-      <div className={`p-4 bg-white ${insideSection ? "border-0" : "border-1 border-gray-300 rounded-lg"}`}>
-        <div className={`bg-white ${insideSection ? "border-b-1 border-gray-300" : "border-0"} grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4`}>
-          <div className="font-light">{field.question || "Question"}</div>
-          <div className="relative">
-            <select
-              className="w-full px-4 shadow border border-black/10 rounded-lg h-10 appearance-none"
-              value={field.selected || ""}
-              onChange={(e) => api.selection.single(e.target.value)}
-            >
-              <option value="">Select an option</option>
-              {(field.options || []).map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.value}
-                </option>
-              ))}
-            </select>
-            <ARROWDOWN_ICON className="absolute top-2 bottom-0 right-2" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  {/* ────────── Edit UI ──────────  */ }
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
-      <div className="flex justify-between mb-2 ml-1">
-        {label}
-        <div className="flex items-center gap-2 ml-2">
-          <button onClick={toggleEdit} className={`block lg:hidden ${insideSection ? "hidden" : ""}`}><EDIT_ICON /></button>
-          <button onClick={onDelete}><TRASHCAN_ICON /></button>
-        </div>
-      </div>
+    <FieldWrapper ctrl={ctrl}>
+      {({ api, isPreview, insideSection }) => {
+        // ────────── Outer shell (shared) ──────────
+        const outerClass = [
+          "p-4",
+          isPreview && !insideSection ? "border border-gray-300 rounded-lg" : "",
+        ].join(" ");
 
-      <input
-        className="px-3 py-2 w-full border border-black/40 rounded"
-        type="text"
-        value={field.question || ""}
-        onChange={(e) => api.field.update("question", e.target.value)}
-        placeholder="Enter question"
-      />
+        // ────────── Shared option nodes for <select> ──────────
+        const optionNodes = (field.options || []).map((o) => (
+          <option key={o.id} value={o.id}>{o.value}</option>
+        ));
 
-      <div className="relative">
-        <select className="w-full px-4 pr-10 mt-2 shadow border border-black/10 rounded-lg h-10 appearance-none" disabled>
-          <option value="">Select an option</option>
-          {(field.options || []).map((option) => (
-            <option key={option.id} value={option.id}>
-              {option.value}
-            </option>
-          ))}
-        </select>
-        <ARROWDOWN_ICON className="absolute top-4 bottom-0 right-2" />
-      </div>
+        // ────────── Shared select classes / icon position ──────────
+        const selectClass = [
+          "w-full",
+          "px-4",
+          "shadow",
+          "border border-black/10",
+          "rounded-lg",
+          "h-10",
+          "appearance-none",
+          !isPreview ? "pr-10 mt-2" : "",
+        ].join(" ");
+        const arrowClass = `absolute ${isPreview ? "top-2" : "top-4"} bottom-0 right-2`;
 
-      {(field.options || []).map((option) => (
-        <div key={option.id} className="flex items-center px-3 my-1.5 shadow border border-black/10 rounded-lg h-10">
-          <input
-            type="text"
-            value={option.value}
-            onChange={(e) => api.option.update(option.id, e.target.value)}
-            placeholder="Option text"
-            className="w-full"
-          />
-          <button onClick={() => api.option.remove(option.id)}>
-            <TRASHCANTWO_ICON className="h-5 w-5" />
-          </button>
-        </div>
-      ))}
+        return (
+          <div className={outerClass}>
+            {isPreview ? (
+              // ────────── Preview ──────────
+              <div className={`grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4 ${insideSection ? "border-b border-gray-300" : ""}`}>
+                <div className="font-light">{field.question || "Question"}</div>
+                <div className="relative">
+                  <select
+                    className={selectClass}
+                    value={field.selected || ""}
+                    onChange={(e) => api.selection.single(e.target.value)}
+                  >
+                    <option value="">Select an option</option>
+                    {optionNodes}
+                  </select>
+                  <ARROWDOWN_ICON className={arrowClass} />
+                </div>
+              </div>
+            ) : (
+              // ────────── Edit ──────────
+              <>
+                <input
+                  className="px-3 py-2 w-full border border-black/40 rounded"
+                  value={field.question || ""}
+                  onChange={(e) => api.field.update("question", e.target.value)}
+                  placeholder="Enter question"
+                />
 
-      <button onClick={() => api.option.add()} className="mt-2 ml-2 flex gap-3 justify-center">
-        <PLUSOPTION_ICON className="h-6 w-6" /> Add Option
-      </button>
-    </div>
+                <div className="relative">
+                  <select className={selectClass} disabled>
+                    <option value="">Select an option</option>
+                    {optionNodes}
+                  </select>
+                  <ARROWDOWN_ICON className={arrowClass} />
+                </div>
+
+                {(field.options || []).map((o) => (
+                  <div key={o.id} className="flex items-center px-3 my-1.5 shadow border border-black/10 rounded-lg h-10">
+                    <input
+                      className="w-full"
+                      value={o.value}
+                      onChange={(e) => api.option.update(o.id, e.target.value)}
+                      placeholder="Option text"
+                    />
+                    <button onClick={() => api.option.remove(o.id)}>
+                      <TRASHCANTWO_ICON className="h-5 w-5" />
+                    </button>
+                  </div>
+                ))}
+
+                <button onClick={() => api.option.add()} className="mt-2 ml-2 flex gap-3 justify-center">
+                  <PLUSOPTION_ICON className="h-6 w-6" /> Add Option
+                </button>
+              </>
+            )}
+          </div>
+        );
+      }}
+    </FieldWrapper>
   );
 });
 

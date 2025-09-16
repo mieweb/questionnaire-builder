@@ -3,7 +3,7 @@ import OptionListEditor from "./OptionListEditor";
 import CommonEditor from "./CommonEditor";
 import fieldTypes from "../../../../fields/fieldTypes-config";
 import { useFormStore } from "../../../../state/formStore";
-import { useFieldApi } from "../../../../state/fieldAPI";
+import { useFieldApi } from "../../../../state/fieldApi";
 
 function SectionEditor({ section, onActiveChildChange }) {
   const sectionApi = useFieldApi(section.id);
