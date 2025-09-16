@@ -10,10 +10,11 @@ export const useUIStore = create((set, get) => ({
   selectedFieldId: null,
   panelResetKey: 0,
   selectField: (id) =>
-    set((s) => ({
-      selectedFieldId: id ?? null,
-      panelResetKey: s.panelResetKey + 1, // remount EditPanel on a *different* selection
-    })),
+    set((s) => {
+      const next = id ?? null;
+      if (s.selectedFieldId === next) return {}; // ────────── no-op if same id ──────────
+      return { selectedFieldId: next, panelResetKey: s.panelResetKey + 1 };
+    }),
 
   // ────────── When renaming the selected field's id, do NOT bump the reset key ──────────
   //            (so EditPanel stays mounted while you type a new id).
@@ -21,7 +22,10 @@ export const useUIStore = create((set, get) => ({
 
   // ────────── Edit modal (mobile) ──────────
   isEditModalOpen: false,
-  setEditModalOpen: (v) => set({ isEditModalOpen: !!v }),
+  setEditModalOpen: (v) =>
+    set((s) => ({
+      isEditModalOpen: typeof v === "function" ? !!v(s.isEditModalOpen) : !!v,
+    })),
 
   // ────────── Section highlight map { [sectionId]: childId } ──────────
   sectionHighlight: {},

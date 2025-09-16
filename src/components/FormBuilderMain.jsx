@@ -1,112 +1,36 @@
 import React, { useMemo, useCallback } from "react";
 import fieldTypes from "../fields/fieldTypes-config";
 import { useFieldsArray, useFormStore } from "../state/formStore";
-import { useUIStore } from "../state/uiStore";
+import { useUIApi } from "../state/uiApi";
 import { checkFieldVisibility } from "../utils/visibilityChecker";
 
 export default function FormBuilderMain() {
-  const isPreview = useUIStore((s) => s.isPreview);
-  const selectedFieldId = useUIStore((s) => s.selectedFieldId);
-  const selectField = useUIStore((s) => s.selectField);
-
-  const isEditModalOpen = useUIStore((s) => s.isEditModalOpen);
-  const setEditModalOpen = useUIStore((s) => s.setEditModalOpen);
-
-  const getSectionHighlightId = useUIStore((s) => s.getSectionHighlightId);
-
+  const ui = useUIApi();
   const fields = useFieldsArray();
+
   const visibleIds = useMemo(() => {
-    const list = isPreview ? fields.filter((f) => checkFieldVisibility(f, fields)) : fields;
+    const list = ui.state.isPreview ? fields.filter((f) => checkFieldVisibility(f, fields)) : fields;
     return list.map((f) => f.id);
-  }, [isPreview, fields]);
-
-  const clearSel = useCallback(() => selectField(null), [selectField]);
-  const select = useCallback((id) => selectField(id), [selectField]);
-
-  const isEmpty = visibleIds.length === 0;
+  }, [ui.state.isPreview, fields]);
 
   return (
     <div
-      className="w-full max-w-4xl mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)] custom-scrollbar px-1"
-      onClick={() => !isPreview && clearSel()}
+      className="w-full max-w-4xl mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)] custom-scrollbar pr-2"
+      onClick={() => !ui.state.isPreview && ui.selection.clear()}
     >
-      {isEmpty ? (
-        <EmptyState />
-      ) : (
-        visibleIds.map((id) => (
-          <FieldRow
-            key={id}
-            id={id}
-            isPreview={isPreview}
-            isSelected={selectedFieldId === id}
-            select={select}
-            clearSelection={clearSel}
-            getSectionHighlightId={getSectionHighlightId}
-            isEditModalOpen={isEditModalOpen}
-            setEditModalOpen={setEditModalOpen}
-          />
-        ))
-      )}
+      {visibleIds.length === 0
+        ? <EmptyState />
+        : visibleIds.map((id) => <FieldRow key={id} id={id} />)}
     </div>
   );
 }
 
-const FieldRow = React.memo(function FieldRow({
-  id,
-  isPreview,
-  isSelected,
-  select,
-  clearSelection,
-  getSectionHighlightId,
-  isEditModalOpen,
-  setEditModalOpen,
-}) {
+const FieldRow = React.memo(function FieldRow({ id }) {
   const field = useFormStore(React.useCallback((s) => s.byId[id], [id]));
-  const deleteField = useFormStore((s) => s.deleteField);
   if (!field) return null;
 
   const FieldComponent = fieldTypes[field.fieldType]?.component;
-  const label = fieldTypes[field.fieldType]?.label;
-
-  const onDelete = React.useCallback(() => {
-    if (isPreview) return;
-    deleteField(id);
-    if (isSelected) clearSelection?.();
-  }, [deleteField, id, isPreview, isSelected, clearSelection]);
-
-  const handleClick = React.useCallback(
-    (e) => {
-      if (isPreview) return;
-      e.stopPropagation?.();
-      select?.(id);
-    },
-    [isPreview, select, id]
-  );
-
-  const wrapperClass = [
-    "rounded-lg bg-white mb-2",
-    isPreview ? "" : "border",
-    isSelected ? "border-blue-300 border-2 border-dashed" : "border-gray-200",
-  ].join(" ");
-
-  const extraSectionProps =
-    field.fieldType === "section" ? { highlightChildId: getSectionHighlightId?.(id) ?? null } : {};
-
-  return (
-    <div className={wrapperClass} onClick={handleClick}>
-      {FieldComponent ? (
-        <FieldComponent
-          field={field}
-          label={label}
-          onDelete={!isPreview ? onDelete : undefined}
-          isPreview={isPreview}
-          isEditModalOpen={isEditModalOpen}
-          setEditModalOpen={setEditModalOpen}
-          {...extraSectionProps}
-        />
-      ) : null}
-    </div>
-  );
+  return <div className="mb-1.5">{FieldComponent ? <FieldComponent field={field} /> : null}</div>;
 });
 
 function EmptyState() {
