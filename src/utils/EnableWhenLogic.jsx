@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react"
 import { X_ICON } from "../assets/icons"
 
+//fixes inc
+
 const DEFAULT_CONDITION = {
   fieldId: "",
   operator: "equals",
