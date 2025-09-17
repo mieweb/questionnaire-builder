@@ -2,8 +2,8 @@ name: deployment
 
 on:
   push:
-  delete:
   create:
+  delete:
 
 jobs:
   setup-runner:
