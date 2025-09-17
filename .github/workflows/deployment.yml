@@ -2,7 +2,8 @@ name: deployment
 
 on:
   push:
-    branches: [ main ]
+  delete:
+  create:
 
 jobs:
   setup-runner:
