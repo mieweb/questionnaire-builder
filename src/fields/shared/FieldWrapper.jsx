@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { EDIT_ICON, TRASHCAN_ICON } from "../../assets/icons";
 
 export default function FieldWrapper({ ctrl, children }) {
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!ctrl.isPreview && ctrl.selected) setOpen(true);
+    else if (!ctrl.selected) setOpen(false);
+  }, [ctrl.isPreview, ctrl.selected]);
+
   const onEditClick = (e) => {
     e.stopPropagation();
     ctrl.toggleEdit();
@@ -12,39 +19,25 @@ export default function FieldWrapper({ ctrl, children }) {
     ctrl.remove();
   };
 
-  return (
-    <div
-      className={ctrl.wrapperClass}
-      // ────────── Disable row click when inside a section ──────────
-      onClick={!ctrl.insideSection ? ctrl.onRowClick : undefined}
-      data-field-id={ctrl.field?.id}
-      data-inside-section={ctrl.insideSection ? "true" : "false"}
-      data-selected={ctrl.selected ? "true" : "false"}
-      aria-selected={ctrl.selected || undefined}
-      tabIndex={-1}
-    >
-      {/* Header only in edit mode */}
-      {!ctrl.isPreview && (
-        <div className="flex justify-between p-4 pb-0">
-          {ctrl.label}
-          <div className="flex items-center gap-2 ml-2">
-            <button
-              onClick={onEditClick}
-              className={`block lg:hidden ${ctrl.insideSection ? "hidden" : ""}`}
-              title="Edit"
-            >
-              <EDIT_ICON className="h-6 w-6" />
-            </button>
-            <button onClick={onRemoveClick} title="Delete">
-              <TRASHCAN_ICON className="h-6 w-6" />
-            </button>
-          </div>
-        </div>
-      )}
+  const onRowClick = (e) => {
+    if (!ctrl.insideSection) ctrl.onRowClick?.(e);
+    if (!open) setOpen(true);
+  };
 
-      {/* Field body */}
-      {typeof children === "function"
-        ? children({
+  // ────────── PREVIEW: no collapsible ──────────
+  if (ctrl.isPreview) {
+    return (
+      <div
+        className={ctrl.wrapperClass}
+        onClick={!ctrl.insideSection ? ctrl.onRowClick : undefined}
+        data-field-id={ctrl.field?.id}
+        data-inside-section={ctrl.insideSection ? "true" : "false"}
+        data-selected={ctrl.selected ? "true" : "false"}
+        aria-selected={ctrl.selected || undefined}
+        tabIndex={-1}
+      >
+        {typeof children === "function"
+          ? children({
             api: ctrl.api,
             isPreview: ctrl.isPreview,
             field: ctrl.field,
@@ -52,7 +45,63 @@ export default function FieldWrapper({ ctrl, children }) {
             sectionId: ctrl.sectionId,
             selected: ctrl.selected,
           })
-        : children}
+          : children}
+      </div>
+    );
+  }
+
+  // ────────── EDIT: collapsible  ──────────
+  return (
+    <div
+      className={ctrl.wrapperClass + " group"}
+      onClick={onRowClick}
+      data-field-id={ctrl.field?.id}
+      data-inside-section={ctrl.insideSection ? "true" : "false"}
+      data-selected={ctrl.selected ? "true" : "false"}
+      aria-selected={ctrl.selected || undefined}
+      tabIndex={-1}
+    >
+      {/* ────────── Header (button toggles; also selects) ────────── */}
+      <div className="flex justify-between pb-2.5">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!ctrl.insideSection) ctrl.onRowClick?.(e);
+            setOpen((v) => !v);
+          }}
+          aria-expanded={open}
+          aria-controls={`fw-body-${ctrl.field?.id}`}
+          className="text-left w-full cursor-pointer select-none"
+        >
+          {ctrl.label}
+        </button>
+
+        <div className={`flex items-center gap-2 ml-2 ${ctrl.insideSection ? "hidden" : ""}`}>
+          <button onClick={onEditClick} className="block lg:hidden" title="Edit" aria-label="Edit field">
+            <EDIT_ICON className="h-6 w-6" />
+          </button>
+          <button onClick={onRemoveClick} title="Delete" aria-label="Delete field">
+            <TRASHCAN_ICON className="h-6 w-6" />
+          </button>
+        </div>
+      </div>
+
+      {/* ────────── Body (collapsible) ────────── */}
+      {open && (
+        <div id={`fw-body-${ctrl.field?.id}`}>
+          {typeof children === "function"
+            ? children({
+              api: ctrl.api,
+              isPreview: ctrl.isPreview,
+              field: ctrl.field,
+              insideSection: ctrl.insideSection,
+              sectionId: ctrl.sectionId,
+              selected: ctrl.selected,
+            })
+            : children}
+        </div>
+      )}
     </div>
   );
 }

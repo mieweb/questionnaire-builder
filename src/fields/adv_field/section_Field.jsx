@@ -15,7 +15,6 @@ const SectionField = React.memo(function SectionField({ field }) {
   const highlightChildId = useUIStore((s) => s.getSectionHighlightId(field.id));
 
   const childRefs = useRef({});
-  const children = Array.isArray(field.fields) ? field.fields : [];
 
   // ────────── Autoscroll to highlighted child in EDIT mode ──────────
   useEffect(() => {
@@ -25,23 +24,22 @@ const SectionField = React.memo(function SectionField({ field }) {
   }, [highlightChildId, ctrl.isPreview]);
 
   // ────────── Child PREVIEW renderer ──────────
-  const renderChildPreview = (child) => {
+  const renderChildPreview = (child, siblings, sectionId) => {
     const Comp = fieldTypes[child.fieldType]?.component;
     if (!Comp) return null;
 
-    // ────────── Evaluate conditional visibility against siblings ──────────
-    const visible = checkFieldVisibility(child, children);
+    const visible = checkFieldVisibility(child, siblings);
     if (!visible) return null;
 
     return (
       <div key={child.id} ref={(el) => el && (childRefs.current[child.id] = el)}>
-        <Comp field={child} sectionId={field.id} />
+        <Comp field={child} sectionId={sectionId} />
       </div>
     );
   };
 
   // ────────── Child EDIT renderer ──────────
-  const renderChildEdit = (child) => {
+  const renderChildEdit = (child, sectionId) => {
     const ChildField = fieldTypes[child.fieldType]?.component;
     if (!ChildField) return null;
 
@@ -56,42 +54,46 @@ const SectionField = React.memo(function SectionField({ field }) {
           isHighlighted ? "border-2 border-blue-400 border-dashed" : "border border-transparent",
         ].join(" ")}
       >
-        <ChildField field={child} sectionId={field.id} />
+        <ChildField field={child} sectionId={sectionId} />
       </div>
     );
   };
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview }) =>
-        isPreview ? (
-          // ────────── Preview UI ──────────
-          <section>
-            <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
-              {field.title || "Section"}
-            </div>
-            <div className="p-4 bg-white border border-gray-300 rounded-b-lg">
-              {children.map(renderChildPreview)}
-            </div>
-          </section>
-        ) : (
-          // ────────── Edit UI ──────────
-          <div className="p-4 bg-white rounded-lg shadow-md">
+      {({ api, isPreview, insideSection, field: f }) => {
+        // ────────── Always derive from latest field snapshot ──────────
+        const children = Array.isArray(f.fields) ? f.fields : [];
+
+        // ────────── Preview (early return) ──────────
+        if (isPreview) {
+          return (
+            <section className={insideSection ? "border-b border-gray-200" : "border-0"}>
+              <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
+                {f.title || "Section"}
+              </div>
+              {children.map((c) => renderChildPreview(c, children, f.id))}
+            </section>
+          );
+        }
+
+        // ────────── Edit (early return) ──────────
+        return (
+          <div>
             <div className="flex justify-between items-center mb-3 gap-2">
               <div className="flex-1">
                 <input
                   type="text"
                   className="w-full px-3 py-2 border border-gray-200 rounded-md"
-                  value={field.title || ""}
+                  value={f.title || ""}
                   onChange={(e) => api.field.update("title", e.target.value)}
                   placeholder="Section title (e.g., Data Consent)"
                 />
               </div>
-              {/* ────────── Delete/Edit buttons come from FieldWrapper header; no duplicates here ────────── */}
             </div>
 
             {/* ────────── Child Fields ────────── */}
-            <div>{children.map(renderChildEdit)}</div>
+            <div>{children.map((c) => renderChildEdit(c, f.id))}</div>
 
             {/* ────────── Toolbar to Add Child ────────── */}
             <div className="mb-3">
@@ -116,8 +118,8 @@ const SectionField = React.memo(function SectionField({ field }) {
               </div>
             </div>
           </div>
-        )
-      }
+        );
+      }}
     </FieldWrapper>
   );
 });
