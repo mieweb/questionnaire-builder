@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EDIT_ICON, TRASHCAN_ICON } from "../../assets/icons";
 
 export default function FieldWrapper({ ctrl, children }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!ctrl.isPreview && ctrl.selected) setOpen(true);
+    else if (!ctrl.selected) setOpen(false);
+  }, [ctrl.isPreview, ctrl.selected]);
 
   const onEditClick = (e) => {
     e.stopPropagation();
@@ -14,7 +19,12 @@ export default function FieldWrapper({ ctrl, children }) {
     ctrl.remove();
   };
 
-  // ────────── Preview: no <details>, no <summary> ──────────
+  const onRowClick = (e) => {
+    if (!ctrl.insideSection) ctrl.onRowClick?.(e);
+    if (!open) setOpen(true);
+  };
+
+  // ────────── PREVIEW: no collapsible ──────────
   if (ctrl.isPreview) {
     return (
       <div
@@ -28,50 +38,6 @@ export default function FieldWrapper({ ctrl, children }) {
       >
         {typeof children === "function"
           ? children({
-              api: ctrl.api,
-              isPreview: ctrl.isPreview,
-              field: ctrl.field,
-              insideSection: ctrl.insideSection,
-              sectionId: ctrl.sectionId,
-              selected: ctrl.selected,
-            })
-          : children}
-      </div>
-    );
-  }
-
-  // ────────── Edit: collapsible with <details>/<summary> ──────────
-  return (
-    <details
-      className={ctrl.wrapperClass + " group"}
-      onClick={!ctrl.insideSection ? ctrl.onRowClick : undefined}
-      data-field-id={ctrl.field?.id}
-      data-inside-section={ctrl.insideSection ? "true" : "false"}
-      data-selected={ctrl.selected ? "true" : "false"}
-      aria-selected={ctrl.selected || undefined}
-      tabIndex={-1}
-      open={isOpen}
-    >
-      <summary className="flex justify-between group-open:pb-2.5 select-none">
-        {ctrl.label}
-        <div className="flex items-center gap-2 ml-2">
-          <button
-            onClick={onEditClick}
-            className={`block lg:hidden ${ctrl.insideSection ? "hidden" : ""}`}
-            title="Edit"
-          >
-            {/* ────────── Edit ────────── */}
-            <EDIT_ICON className="h-6 w-6" />
-          </button>
-          <button onClick={onRemoveClick} title="Delete" aria-label="Delete field">
-            {/* ────────── Delete ────────── */}
-            <TRASHCAN_ICON className="h-6 w-6" />
-          </button>
-        </div>
-      </summary>
-
-      {typeof children === "function"
-        ? children({
             api: ctrl.api,
             isPreview: ctrl.isPreview,
             field: ctrl.field,
@@ -79,7 +45,63 @@ export default function FieldWrapper({ ctrl, children }) {
             sectionId: ctrl.sectionId,
             selected: ctrl.selected,
           })
-        : children}
-    </details>
+          : children}
+      </div>
+    );
+  }
+
+  // ────────── EDIT: collapsible  ──────────
+  return (
+    <div
+      className={ctrl.wrapperClass + " group"}
+      onClick={onRowClick}
+      data-field-id={ctrl.field?.id}
+      data-inside-section={ctrl.insideSection ? "true" : "false"}
+      data-selected={ctrl.selected ? "true" : "false"}
+      aria-selected={ctrl.selected || undefined}
+      tabIndex={-1}
+    >
+      {/* ────────── Header (button toggles; also selects) ────────── */}
+      <div className="flex justify-between pb-2.5">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!ctrl.insideSection) ctrl.onRowClick?.(e);
+            setOpen((v) => !v);
+          }}
+          aria-expanded={open}
+          aria-controls={`fw-body-${ctrl.field?.id}`}
+          className="text-left w-full cursor-pointer select-none"
+        >
+          {ctrl.label}
+        </button>
+
+        <div className={`flex items-center gap-2 ml-2 ${ctrl.insideSection ? "hidden" : ""}`}>
+          <button onClick={onEditClick} className="block lg:hidden" title="Edit" aria-label="Edit field">
+            <EDIT_ICON className="h-6 w-6" />
+          </button>
+          <button onClick={onRemoveClick} title="Delete" aria-label="Delete field">
+            <TRASHCAN_ICON className="h-6 w-6" />
+          </button>
+        </div>
+      </div>
+
+      {/* ────────── Body (collapsible) ────────── */}
+      {open && (
+        <div id={`fw-body-${ctrl.field?.id}`}>
+          {typeof children === "function"
+            ? children({
+              api: ctrl.api,
+              isPreview: ctrl.isPreview,
+              field: ctrl.field,
+              insideSection: ctrl.insideSection,
+              sectionId: ctrl.sectionId,
+              selected: ctrl.selected,
+            })
+            : children}
+        </div>
+      )}
+    </div>
   );
 }

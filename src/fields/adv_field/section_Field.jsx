@@ -79,7 +79,7 @@ const SectionField = React.memo(function SectionField({ field }) {
 
         // ────────── Edit (early return) ──────────
         return (
-          <>
+          <div>
             <div className="flex justify-between items-center mb-3 gap-2">
               <div className="flex-1">
                 <input
@@ -117,7 +117,7 @@ const SectionField = React.memo(function SectionField({ field }) {
                   ))}
               </div>
             </div>
-          </>
+          </div>
         );
       }}
     </FieldWrapper>

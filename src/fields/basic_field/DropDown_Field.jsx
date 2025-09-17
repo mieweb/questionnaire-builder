@@ -36,7 +36,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
 
         // ────────── Edit Mode ──────────
         return (
-          <>
+          <div>
             <input
               className="px-3 py-2 w-full border border-black/40 rounded"
               type="text"
@@ -79,7 +79,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
             <button onClick={() => api.option.add()} className="mt-2 ml-2 flex gap-3 justify-center">
               <PLUSOPTION_ICON className="h-6 w-6" /> Add Option
             </button>
-          </>
+          </div>
         );
       }}
     </FieldWrapper>

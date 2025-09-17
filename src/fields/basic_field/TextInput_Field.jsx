@@ -27,7 +27,7 @@ const TextInputField = React.memo(function TextInputField({ field, sectionId }) 
 
         // ────────── Edit Mode ──────────
         return (
-          <>
+          <div>
             <input
               className="px-3 py-2 w-full border border-black/40 rounded"
               type="text"
@@ -43,7 +43,7 @@ const TextInputField = React.memo(function TextInputField({ field, sectionId }) 
               className="px-3 my-1.5 w-full border border-black/10 shadow-2xs rounded h-10"
               disabled
             />
-          </>
+          </div>
         );
       }}
     </FieldWrapper>
