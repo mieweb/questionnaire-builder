@@ -72,9 +72,7 @@ const SectionField = React.memo(function SectionField({ field }) {
               <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
                 {f.title || "Section"}
               </div>
-              <div className="p-4 bg-white border border-gray-300 rounded-b-lg">
-                {children.map((c) => renderChildPreview(c, children, f.id))}
-              </div>
+              {children.map((c) => renderChildPreview(c, children, f.id))}
             </section>
           );
         }
