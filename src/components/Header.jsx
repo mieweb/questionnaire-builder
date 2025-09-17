@@ -35,7 +35,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-transparent mx-auto">
       <div className="py-6 text-center">
-        <h1 className="text-3xl sm:text-4xl tracking-tight">Questionnaire Builder</h1>
+        <h1 className="text-3xl sm:text-4xl tracking-tight">Questionnaire Builder - TEST</h1>
         <p className="mt-1 text-sm text-black/60">
           Build dynamic questionnaires with JSON config and FHIR export
         </p>
