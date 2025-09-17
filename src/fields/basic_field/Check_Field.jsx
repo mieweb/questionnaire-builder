@@ -8,10 +8,10 @@ const CheckField = React.memo(function CheckField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f}) => {
+      {({ api, isPreview, insideSection, field: f }) => {
         if (isPreview) {
           return (
-            <div className={ insideSection ? "border-b border-gray-200" : "border-0"}>
+            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
                 <div className="font-light">{f.question || "Question"}</div>
                 <div>
@@ -28,12 +28,12 @@ const CheckField = React.memo(function CheckField({ field, sectionId }) {
                   ))}
                 </div>
               </div>
-            </div> 
+            </div>
           );
         }
 
         return (
-          <div className="p-4">
+          <>
             <input
               className="px-3 py-2 w-full border border-black/40 rounded"
               type="text"
@@ -60,7 +60,7 @@ const CheckField = React.memo(function CheckField({ field, sectionId }) {
             <button onClick={() => api.option.add()} className="mt-2 ml-2 flex gap-3 justify-center">
               <PLUSOPTION_ICON className="h-6 w-6" /> Add Option
             </button>
-          </div>
+          </>
         );
       }}
     </FieldWrapper>

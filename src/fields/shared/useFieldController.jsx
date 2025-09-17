@@ -24,7 +24,7 @@ export function useFieldController(field, sectionId) {
   }, [api, selected, ui]);
 
   const wrapperClass = [
-    "rounded-lg bg-white mb-2",
+    "rounded-lg bg-white p-4",
     ui.state.isPreview ? "" : "border",
     selected ? "border-blue-300 border-2 border-dashed" : "border-gray-200",
   ].join(" ");

@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState }from "react";
 import { EDIT_ICON, TRASHCAN_ICON } from "../../assets/icons";
 
 export default function FieldWrapper({ ctrl, children }) {
+
+  const [isOpen, setIsOpen] = useState(false);
   const onEditClick = (e) => {
     e.stopPropagation();
     ctrl.toggleEdit();
@@ -13,8 +15,8 @@ export default function FieldWrapper({ ctrl, children }) {
   };
 
   return (
-    <div
-      className={ctrl.wrapperClass}
+    <details
+      className={ctrl.wrapperClass + " group"}
       // ────────── Disable row click when inside a section ──────────
       onClick={!ctrl.insideSection ? ctrl.onRowClick : undefined}
       data-field-id={ctrl.field?.id}
@@ -22,10 +24,11 @@ export default function FieldWrapper({ ctrl, children }) {
       data-selected={ctrl.selected ? "true" : "false"}
       aria-selected={ctrl.selected || undefined}
       tabIndex={-1}
+      open={isOpen}
     >
       {/* Header only in edit mode */}
       {!ctrl.isPreview && (
-        <div className="flex justify-between p-4 pb-0">
+        <summary className="flex justify-between group-open:pb-2.5 select-none">
           {ctrl.label}
           <div className="flex items-center gap-2 ml-2">
             <button
@@ -39,20 +42,20 @@ export default function FieldWrapper({ ctrl, children }) {
               <TRASHCAN_ICON className="h-6 w-6" />
             </button>
           </div>
-        </div>
+        </summary>
       )}
 
       {/* Field body */}
       {typeof children === "function"
         ? children({
-            api: ctrl.api,
-            isPreview: ctrl.isPreview,
-            field: ctrl.field,
-            insideSection: ctrl.insideSection,
-            sectionId: ctrl.sectionId,
-            selected: ctrl.selected,
-          })
+          api: ctrl.api,
+          isPreview: ctrl.isPreview,
+          field: ctrl.field,
+          insideSection: ctrl.insideSection,
+          sectionId: ctrl.sectionId,
+          selected: ctrl.selected,
+        })
         : children}
-    </div>
+    </details>
   );
 }
