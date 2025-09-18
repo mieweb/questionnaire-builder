@@ -1,26 +1,30 @@
 import React from "react";
 import NonSectionEditor from "./types/NonSectionEditor";
 import SectionEditor from "./types/SectionEditor";
-import EnableWhenLogic from "../../../utils/EnableWhenLogic"
-import { useUIStore } from "../../../state/uiStore";
+import LogicEditor from "./types/LogicEditor";
+import { useUIApi } from "../../../state/uiApi";
 import { useFormStore } from "../../../state/formStore";
 
 export default function EditPanel() {
-  const isPreview = useUIStore((s) => s.isPreview);
-  const selectedFieldId = useUIStore((s) => s.selectedFieldId);
-  const setSectionActiveChild = useUIStore((s) => s.setSectionActiveChild);
+  const ui = useUIApi();
 
   const selectedField = useFormStore(
     React.useCallback(
-      (s) => (selectedFieldId ? s.byId[selectedFieldId] : null),
-      [selectedFieldId]
+      (s) => (ui.selectedFieldId.value ? s.byId[ui.selectedFieldId.value] : null),
+      [ui.selectedFieldId.value]
     )
   );
 
-  // ────────── Local tab state ──────────
   const [tab, setTab] = React.useState("EDIT");
 
-  if (isPreview) return null;
+  const handleActiveChildChange = React.useCallback(
+    (sectionId, childId) => {
+      ui.selectedChildId.set(sectionId, childId);
+    },
+    [ui.selectedChildId.set]
+  );
+
+  if (ui.state.isPreview) return null;
 
   const isNone = !selectedField;
   const isSection = selectedField?.fieldType === "section";
@@ -63,13 +67,17 @@ export default function EditPanel() {
         <>
           {!isSection && <NonSectionEditor f={selectedField} />}
           {isSection && (
-            <SectionEditor section={selectedField} onActiveChildChange={setSectionActiveChild} />
+            <SectionEditor
+              section={selectedField}
+              // ────────── Stable callback ──────────
+              onActiveChildChange={handleActiveChildChange}
+            />
           )}
         </>
       )}
 
       {/* ────────── LOGIC Tab ────────── */}
-      {!isNone && tab === "LOGIC" && <EnableWhenLogic />}
+      {!isNone && tab === "LOGIC" && <LogicEditor />}
     </div>
   );
 }

@@ -5,14 +5,13 @@ import { PLUSSQUARE_ICON } from "../../assets/icons";
 
 import FieldWrapper from "../shared/FieldWrapper";
 import { useFieldController } from "../shared/useFieldController";
-import { useUIStore } from "../../state/uiStore";
+import { useUIApi } from "../../state/uiApi";
 
 const SectionField = React.memo(function SectionField({ field }) {
-  // ────────── Controller for this section (top-level; no parent sectionId) ──────────
   const ctrl = useFieldController(field);
-
-  // ────────── Read highlight for this section from UI store (no prop drilling) ──────────
-  const highlightChildId = useUIStore((s) => s.getSectionHighlightId(field.id));
+  const ui = useUIApi();
+  const { parentId, childId } = ui.selectedChildId.value || { parentId: null, childId: null };
+  const highlightChildId = parentId === field.id ? childId : null;
 
   const childRefs = useRef({});
 
@@ -62,7 +61,6 @@ const SectionField = React.memo(function SectionField({ field }) {
   return (
     <FieldWrapper ctrl={ctrl}>
       {({ api, isPreview, insideSection, field: f }) => {
-        // ────────── Always derive from latest field snapshot ──────────
         const children = Array.isArray(f.fields) ? f.fields : [];
 
         // ────────── Preview (early return) ──────────

@@ -20,7 +20,7 @@ export default function FieldWrapper({ ctrl, children }) {
   };
 
   // ────────── PREVIEW: no collapsible ──────────
-  if (ctrl.isPreview) {
+  if (ctrl.isPreview || ctrl.insideSection) {
     return (
       <div
         className={ctrl.wrapperClass}
@@ -31,6 +31,15 @@ export default function FieldWrapper({ ctrl, children }) {
         aria-selected={ctrl.selected || undefined}
         tabIndex={-1}
       >
+
+        {ctrl.isPreview ? null
+          : (
+            <div>
+              {ctrl.insideSection ? (`${ctrl.label}`) : (`(${ctrl.label})  ${ctrl.field.title}`)}
+            </div>
+          )}
+
+
         {typeof children === "function"
           ? children({
             api: ctrl.api,
@@ -69,7 +78,7 @@ export default function FieldWrapper({ ctrl, children }) {
           aria-controls={`fw-body-${ctrl.field?.id}`}
           className="text-left w-full cursor-pointer select-none"
         >
-          {ctrl.insideSection ? (`${ctrl.label}`) : ( `(${ctrl.label})  ${ctrl.field.title}`)}
+          {ctrl.insideSection ? (`${ctrl.label}`) : (`(${ctrl.label})  ${ctrl.field.title}`)}
         </button>
 
         <div className={`flex items-center gap-2 ml-2 ${ctrl.insideSection ? "hidden" : ""}`}>

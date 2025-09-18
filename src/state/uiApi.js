@@ -2,47 +2,63 @@ import React from "react";
 import { useUIStore } from "./uiStore";
 
 export const useUIApi = () => {
-  // state
-  const isPreview       = useUIStore((s) => s.isPreview);
-  const selectedFieldId = useUIStore((s) => s.selectedFieldId);
+  // ────────── Base state ──────────
+  const isPreview = useUIStore((s) => s.isPreview);
+  const selectedFieldVal = useUIStore((s) => s.selectedFieldId);
   const isEditModalOpen = useUIStore((s) => s.isEditModalOpen);
 
-  // actions
-  const setPreview            = useUIStore((s) => s.setPreview);
-  const togglePreview         = useUIStore((s) => s.togglePreview);
+  // ────────── Base actions ──────────
+  const setPreview = useUIStore((s) => s.setPreview);
+  const togglePreview = useUIStore((s) => s.togglePreview);
 
-  const selectField           = useUIStore((s) => s.selectField);
+  const setSelectField = useUIStore((s) => s.setSelectField);
+  const clearSelectedField = useUIStore((s) => s.clearSelectedField);
   const renameSelectedFieldId = useUIStore((s) => s.renameSelectedFieldId);
 
-  const setEditModalOpen      = useUIStore((s) => s.setEditModalOpen);
+  const setEditModalOpen = useUIStore((s) => s.setEditModalOpen);
 
-  const getSectionHighlightId      = useUIStore((s) => s.getSectionHighlightId);
-  const setSectionActiveChild      = useUIStore((s) => s.setSectionActiveChild);
-  const clearSectionHighlights     = useUIStore((s) => s.clearSectionHighlights);
-  const renameSectionIdInHighlight = useUIStore((s) => s.renameSectionIdInHighlight);
+  // ────────── selectedChildId: reactive value + actions ──────────
+  const selectedChildValue = useUIStore((s) => s.selectedChildId); // { parentId, childId }
+  const setSelectedChildId = useUIStore((s) => s.setSelectedChildId);
+  const clearSelectedChildId = useUIStore((s) => s.clearSelectedChildId);
+  const renameSelectedChildParentId = useUIStore((s) => s.renameSelectedChildParentId);
+  const renameSelectedChildId = useUIStore((s) => s.renameSelectedChildId);
 
-  // conveniences
-  const openEdit   = React.useCallback(() => setEditModalOpen(true),  [setEditModalOpen]);
-  const closeEdit  = React.useCallback(() => setEditModalOpen(false), [setEditModalOpen]);
+  // ────────── Conveniences ──────────
+  const openEdit = React.useCallback(() => setEditModalOpen(true), [setEditModalOpen]);
+  const closeEdit = React.useCallback(() => setEditModalOpen(false), [setEditModalOpen]);
   const toggleEdit = React.useCallback(() => setEditModalOpen((v) => !v), [setEditModalOpen]);
-  const clearSel   = React.useCallback(() => selectField(null), [selectField]);
 
   return React.useMemo(() => ({
-    state: { isPreview, selectedFieldId, isEditModalOpen },
+    state: { isPreview, isEditModalOpen },
+
     preview: { set: setPreview, toggle: togglePreview },
-    selection: { select: selectField, clear: clearSel, renameSelectedFieldId },
+
+    // ────────── selectedFieldId ──────────
+    selectedFieldId: {
+      value: selectedFieldVal,
+      set: setSelectField,            
+      clear: clearSelectedField,      
+      rename: renameSelectedFieldId,  
+    },
+
     modal: { set: setEditModalOpen, open: openEdit, close: closeEdit, toggle: toggleEdit },
-    section: {
-      getHighlightId: getSectionHighlightId,
-      setActiveChild: setSectionActiveChild,
-      clearHighlights: clearSectionHighlights,
-      renameSectionIdInHighlight,
+
+    // ────────── selectedChildId ──────────
+    selectedChildId: {
+      value: selectedChildValue,
+      set: setSelectedChildId,
+      clear: clearSelectedChildId,
+      renameParentId: renameSelectedChildParentId,
+      renameChildId: renameSelectedChildId,
     },
   }), [
-    isPreview, selectedFieldId, isEditModalOpen,
+    isPreview, isEditModalOpen,
     setPreview, togglePreview,
-    selectField, clearSel, renameSelectedFieldId,
+    selectedFieldVal, setSelectField, clearSelectedField, renameSelectedFieldId,
     setEditModalOpen, openEdit, closeEdit, toggleEdit,
-    getSectionHighlightId, setSectionActiveChild, clearSectionHighlights, renameSectionIdInHighlight,
+    selectedChildValue, setSelectedChildId, clearSelectedChildId,
+    renameSelectedChildParentId, renameSelectedChildId,
   ]);
+
 };
