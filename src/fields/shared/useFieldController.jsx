@@ -1,11 +1,11 @@
 import React from "react";
 import fieldTypes from "../fieldTypes-config";
-import { useFieldApi } from "../../state/fieldApi";
+import { useFormApi } from "../../state/formApi";
 import { useUIApi } from "../../state/uiApi";
 
 export function useFieldController(field, sectionId) {
   const ui = useUIApi();
-  const api = useFieldApi(field.id, sectionId);
+  const api = useFormApi(field.id, sectionId);
 
   const label = fieldTypes[field.fieldType]?.label ?? "Field";
   const insideSection = !!sectionId;
