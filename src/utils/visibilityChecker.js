@@ -1,131 +1,68 @@
-/**
- * Checks whether a given field is visible based on its "enableWhen" logic.
- * @param {Object} field - The field whose visibility we're checking.
- * @param {Array} formData - The array of all fields in the form.
- * @returns {boolean} - True if the field should be visible, false otherwise.
- */
-export function checkFieldVisibility(field, formData) {
-  // 1. If there's no enableWhen defined, always show the field.
-  if (!field.enableWhen) return true
-
-  const { logic = "AND", conditions = [] } = field.enableWhen
-  // 2. If there are no conditions, default to visible.
-  if (!conditions.length) return true
-
-  // 3. Evaluate each condition => array of booleans.
-  const results = conditions.map((cond) => evaluateCondition(cond, formData))
-
-  // 4. Combine them with AND or OR logic.
-  return logic === "AND"
-    ? results.every(Boolean)
-    : results.some(Boolean)
-}
-
-/**
- * Evaluates a single condition. For example:
- *   { fieldId, operator, value } = { "abcd-1234", "contains", "hello" }
- * @param {Object} condition - The condition to evaluate.
- * @param {Array} formData - All fields in the form.
- * @returns {boolean} - True if the condition passes, false if it fails.
- */
-function evaluateCondition(condition, formData) {
-  const { fieldId, operator, value } = condition
-
-  // 1. Find the triggering field that this condition depends on.
-  const triggerField = formData.find((f) => f.id === fieldId)
-  if (!triggerField) return false // If no field found, condition fails.
-
-  // 2. Get the current "actual" value from that trigger field,
-  //    depending on fieldType.
-  const actualValue = getCurrentValue(triggerField)
-
-  // 3. Apply the operator-specific comparison.
-  return applyOperator(operator, actualValue, value)
-}
-
-/**
- * Retrieves the "current value" of a field based on its fieldType.
- * This is the data we'll compare against the condition's "value".
- */
-function getCurrentValue(field) {
-  switch (field.fieldType) {
+// ────────── Get the current value of a field for comparisons ──────────
+function getFieldValue(f) {
+  switch (f?.fieldType) {
     case "input":
-      // Text typed by the user.
-      return (field.answer ?? "").toString()
-
+      return f.answer ?? "";
     case "radio":
     case "selection":
-      // Single selected option ID (string or null).
-      return field.selected ?? ""
-
+      return f.selected ?? null;
     case "check":
-      // Array of selected IDs.
-      return field.selected ?? []
-
+      // Prefer explicit selected array; else derive from options
+      if (Array.isArray(f.selected)) return f.selected;
+      return Array.isArray(f.options)
+        ? f.options.filter(o => o?.selected).map(o => o.id ?? o.value)
+        : [];
     default:
-      // Fallback (unknown type).
-      return null
+      return null;
   }
 }
 
-/**
- * Applies the chosen operator ("equals", "contains", "includes", "regex")
- * to the actualValue from the field vs. the 'value' from the condition.
- * 
- * Note: 
- *  - For text we do case-insensitive matches ("equals", "contains", "regex").
- *  - For checkboxes ("check"), "includes" checks if the condition's 'value'
- *    is in the array of selected IDs.
- */
-function applyOperator(operator, actualValue, conditionValue) {
-  switch (operator) {
+// ────────── Build an id -> field index (includes children inside sections) ──────────
+function indexFields(all) {
+  const map = {};
+  (all || []).forEach(f => {
+    if (!f?.id) return;
+    map[f.id] = f;
+    if (f.fieldType === "section" && Array.isArray(f.fields)) {
+      f.fields.forEach(ch => {
+        if (ch?.id) map[ch.id] = ch;
+      });
+    }
+  });
+  return map;
+}
+
+// ────────── Evaluate a single condition against the current state ──────────
+function evalCondition(cond, byId) {
+  const target = byId[cond?.targetId];
+  if (!target) return false;
+
+  const actual = getFieldValue(target);
+  const expected = cond?.value;
+
+  switch (cond?.operator) {
     case "equals":
-      if (Array.isArray(actualValue)) {
-        // If the field is a checkbox array, "equals" doesn't really apply 
-        // unless you implement exact array matching. For now, return false:
-        return false
-      }
-      // Case-insensitive string compare (for text or radio).
-      return actualValue.toLowerCase?.() === conditionValue.toLowerCase?.()
-
+      if (Array.isArray(actual)) return false;
+      return String(actual ?? "") === String(expected ?? "");
     case "contains":
-      // For text input, case-insensitive substring
-      if (typeof actualValue === "string") {
-        return actualValue.toLowerCase().includes((conditionValue || "").toLowerCase())
-      }
-      return false
-
+      return String(actual ?? "").toLowerCase().includes(String(expected ?? "").toLowerCase());
     case "includes":
-      // For checkboxes => actualValue is an array of selected IDs
-      if (Array.isArray(actualValue)) {
-        if (Array.isArray(conditionValue)) {
-          // If conditionValue is also an array, decide if you want:
-          // - ANY overlap => use .some(...)
-          // - ALL overlap => use .every(...)
-          return conditionValue.some((val) => actualValue.includes(val))
-          // If you wanted "must include ALL", do:
-          // return conditionValue.every((val) => actualValue.includes(val))
-        } else {
-          // conditionValue is a single ID => check membership
-          return actualValue.includes(conditionValue)
-        }
-      }
-      return false
-
-    case "regex":
-      // Case-insensitive regex for text input
-      if (typeof actualValue === "string") {
-        try {
-          const re = new RegExp(conditionValue, "i")
-          return re.test(actualValue)
-        } catch {
-          return false
-        }
-      }
-      return false
-
+      if (!Array.isArray(actual)) return false;
+      return actual.map(String).includes(String(expected));
     default:
-      // Unknown operator => fail condition
-      return false
+      return false;
   }
+}
+
+// ────────── Public API used by FormBuilderMain ──────────
+export function checkFieldVisibility(field, allFields) {
+  const ew = field?.enableWhen;
+  // No logic => visible
+  if (!ew || !Array.isArray(ew.conditions) || ew.conditions.length === 0) return true;
+
+  const byId = indexFields(allFields);
+  const results = ew.conditions.map(c => evalCondition(c, byId));
+  const mode = (ew.logic || "AND").toUpperCase();
+
+  return mode === "AND" ? results.every(Boolean) : results.some(Boolean);
 }

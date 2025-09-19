@@ -1,10 +1,10 @@
 import React, { useCallback, useMemo } from "react";
 import CommonEditor from "./CommonEditor";
 import OptionListEditor from "./OptionListEditor";
-import { useFieldApi } from "../../../../state/fieldApi";
+import { useFormApi } from "../../../../state/formApi";
 
 function NonSectionEditor({ f }) {
-  const api = useFieldApi(f.id);
+  const api = useFormApi(f.id);
 
   {/* ────────── update top-level field props ──────────  */}
   const onUpdateField = useCallback(
