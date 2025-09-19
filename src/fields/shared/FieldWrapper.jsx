@@ -78,7 +78,9 @@ export default function FieldWrapper({ ctrl, children }) {
           aria-controls={`fw-body-${ctrl.field?.id}`}
           className="text-left w-full cursor-pointer select-none"
         >
-          {ctrl.insideSection ? (`${ctrl.label}`) : (`(${ctrl.label})  ${ctrl.field.title}`)}
+
+          {ctrl.insideSection ? (`${ctrl.label}`) :
+            (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title}`) : (`${ctrl.label} ${ctrl.field.question}`))}
         </button>
 
         <div className={`flex items-center gap-2 ml-2 ${ctrl.insideSection ? "hidden" : ""}`}>

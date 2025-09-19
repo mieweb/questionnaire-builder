@@ -2,18 +2,28 @@ import React, { useMemo } from "react";
 import fieldTypes from "../fields/fieldTypes-config";
 import { useFieldsArray, useFormStore } from "../state/formStore";
 import { useUIApi } from "../state/uiApi";
-import { checkFieldVisibility } from "../utils/visibilityChecker";
+import { isVisible } from "../utils/logicVisibility";
 
 export default function FormBuilderMain() {
   const ui = useUIApi();
   const fields = useFieldsArray();
 
+  // ────────── Build a flat array including children ──────────
+  const allFlat = useMemo(() => {
+    const out = [];
+    (fields || []).forEach(f => {
+      out.push(f);
+      if (f?.fieldType === "section" && Array.isArray(f.fields)) out.push(...f.fields);
+    });
+    return out;
+  }, [fields]);
+
   const visibleIds = useMemo(() => {
     const list = ui.state.isPreview
-      ? fields.filter((f) => checkFieldVisibility(f, fields))
+      ? fields.filter((f) => isVisible(f, allFlat))
       : fields;
     return list.map((f) => f.id);
-  }, [ui.state.isPreview, fields]);
+  }, [ui.state.isPreview, fields, allFlat]);
 
   return (
     <div

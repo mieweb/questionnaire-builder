@@ -24,6 +24,11 @@ export default function EditPanel() {
     [ui.selectedChildId.set]
   );
 
+  React.useEffect(() => {
+    ui.selectedChildId.set(null, null);
+    setTab("EDIT");
+  }, [ui.selectedFieldId.value]);
+
   if (ui.state.isPreview) return null;
 
   const isNone = !selectedField;
@@ -34,6 +39,18 @@ export default function EditPanel() {
       className={`p-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar 
         ${selectedField ? "" : "max-h-32"} max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)]`}
     >
+      {/* Tabs always visible */}
+      <div className="mb-4 inline-flex rounded-md border border-gray-200 overflow-hidden" role="tablist">
+        <button type="button" onClick={() => setTab("EDIT")} aria-selected={tab === "EDIT"}
+          className={`px-3 py-1 text-sm ${tab === "EDIT" ? "bg-gray-100 font-semibold" : "bg-white"}`}>
+          EDIT
+        </button>
+        <button type="button" onClick={() => setTab("LOGIC")} aria-selected={tab === "LOGIC"}
+          className={`px-3 py-1 text-sm border-l border-gray-200 ${tab === "LOGIC" ? "bg-gray-100 font-semibold" : "bg-white"}`}>
+          LOGIC
+        </button>
+      </div>
+
       {/* ────────── Place holder ────────── */}
       {isNone && (
         <div className="text-gray-600">
@@ -42,41 +59,20 @@ export default function EditPanel() {
         </div>
       )}
 
-      {/* ────────── Tabs ────────── */}
-      {!isNone && (
-        <div className="mb-4">
-          <div className="inline-flex rounded-md border border-gray-200 overflow-hidden">
-            <button
-              onClick={() => setTab("EDIT")}
-              className={`px-3 py-1 text-sm ${tab === "EDIT" ? "bg-gray-100 font-semibold" : "bg-white"}`}
-            >
-              EDIT
-            </button>
-            <button
-              onClick={() => setTab("LOGIC")}
-              className={`px-3 py-1 text-sm border-l border-gray-200 ${tab === "LOGIC" ? "bg-gray-100 font-semibold" : "bg-white"}`}
-            >
-              LOGIC
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ────────── EDIT Tab ────────── */}
+      {/* ────────── Edit Tab ────────── */}
       {!isNone && tab === "EDIT" && (
         <>
           {!isSection && <NonSectionEditor f={selectedField} />}
           {isSection && (
             <SectionEditor
               section={selectedField}
-              // ────────── Stable callback ──────────
               onActiveChildChange={handleActiveChildChange}
             />
           )}
         </>
       )}
-
-      {/* ────────── LOGIC Tab ────────── */}
+      
+      {/* ────────── Edit Tab ────────── */}
       {!isNone && tab === "LOGIC" && <LogicEditor />}
     </div>
   );

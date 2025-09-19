@@ -108,7 +108,7 @@ export const useFormStore = create((set, get) => ({
     return { byId, order };
   }),
 
-  setEnableWhen: (id, enableWhen /* or null to clear */) =>
+  setEnableWhen: (id, enableWhen) =>
     set((s) => {
       const f = s.byId[id];
       if (!f) return s;

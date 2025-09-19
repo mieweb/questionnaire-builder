@@ -18,13 +18,13 @@ function getValueOf(field) {
 
 // ────────── Evaluate a single condition ──────────
 function evaluate(cond, byId) {
-  const target = byId[cond.targetId];
+  const target = byId?.[cond?.targetId];
   if (!target) return false;
 
   const actual = getValueOf(target);
-  const expected = cond.value;
+  const expected = cond?.value;
 
-  switch (cond.operator) {
+  switch (cond?.operator) {
     case "equals":
       if (Array.isArray(actual)) return false;
       return String(actual ?? "") === String(expected ?? "");
@@ -43,9 +43,9 @@ export function isVisible(field, all) {
   const ew = field?.enableWhen;
   if (!ew || !Array.isArray(ew.conditions) || ew.conditions.length === 0) return true;
 
-  // Accept array or map
+  // Accept array or map. If array, reduce to a map.
   const byId = Array.isArray(all)
-    ? all.reduce((m, f) => ((m[f.id] = f), m), {})
+    ? all.reduce((m, f) => { if (f?.id) m[f.id] = f; return m; }, {})
     : all;
 
   const results = ew.conditions.map(c => evaluate(c, byId));
