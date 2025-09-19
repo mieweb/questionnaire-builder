@@ -10,17 +10,20 @@ import { useUIApi } from "../../state/uiApi";
 const SectionField = React.memo(function SectionField({ field }) {
   const ctrl = useFieldController(field);
   const ui = useUIApi();
-  const { parentId, childId } = ui.selectedChildId.value || { parentId: null, childId: null };
-  const highlightChildId = parentId === field.id ? childId : null;
+
+  const parentId = ui.selectedChildId.ParentId;
+  const childId  = ui.selectedChildId.ChildId;
+
+  const selectedChildId = parentId === field.id ? childId : null;
 
   const childRefs = useRef({});
 
-  // ────────── Autoscroll to highlighted child in EDIT mode ──────────
+  // ────────── Autoscroll to selected child in EDIT mode ──────────
   useEffect(() => {
-    if (ctrl.isPreview || !highlightChildId) return;
-    const el = childRefs.current[highlightChildId];
+    if (ctrl.isPreview || !selectedChildId) return;
+    const el = childRefs.current[selectedChildId];
     el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
-  }, [highlightChildId, ctrl.isPreview]);
+  }, [selectedChildId, ctrl.isPreview]);
 
   // ────────── Child PREVIEW renderer ──────────
   const renderChildPreview = (child, siblings, sectionId) => {
@@ -42,7 +45,7 @@ const SectionField = React.memo(function SectionField({ field }) {
     const ChildField = fieldTypes[child.fieldType]?.component;
     if (!ChildField) return null;
 
-    const isHighlighted = highlightChildId === child.id;
+    const isHighlighted = selectedChildId === child.id;
 
     return (
       <div
