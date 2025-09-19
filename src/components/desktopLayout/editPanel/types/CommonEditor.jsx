@@ -4,7 +4,7 @@ import DraftIdEditor from "../types/DraftIdEditor"
 function CommonEditor({ f, onUpdateField }) {
   return (
     <div className="space-y-3">
-      {/* ────────── ID editor (replaces local draft logic) ────────── */}
+      {/* ────────── ID editor ────────── */}
       <DraftIdEditor
         id={f.id ?? ""}
         onCommit={(next) => onUpdateField?.("id", next)}
