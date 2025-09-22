@@ -16,6 +16,9 @@ function getValueOf(field) {
   }
 }
 
+// ────────── <Comment> escape regex special chars ──────────
+function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+
 // ────────── Evaluate a single condition ──────────
 function evaluate(cond, byId) {
   const target = byId?.[cond?.targetId];
@@ -28,8 +31,27 @@ function evaluate(cond, byId) {
     case "equals":
       if (Array.isArray(actual)) return false;
       return String(actual ?? "") === String(expected ?? "");
-    case "contains":
-      return String(actual ?? "").toLowerCase().includes(String(expected ?? "").toLowerCase());
+    case "contains": {
+      const norm = (s) =>
+        String(s ?? "")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "") // strip diacritics
+          .toLowerCase();
+
+      const hay = norm(actual).replace(/[^a-z0-9]+/g, " ").trim();   // wordize
+      const needle = norm(expected).trim();
+      if (!needle) return false;
+
+      const parts = needle.split(/\s+/); // phrase support
+      // build word-boundary style regex over normalized words
+      const pattern =
+        parts.length === 1
+          ? new RegExp(`(?:^|\\s)${esc(parts[0])}(?:\\s|$)`)
+          : new RegExp(`(?:^|\\s)${parts.map((w) => esc(w)).join("\\s+")}(?:\\s|$)`);
+
+      return pattern.test(hay);
+    }
+
     case "includes":
       if (!Array.isArray(actual)) return false;
       return actual.map(String).includes(String(expected));
