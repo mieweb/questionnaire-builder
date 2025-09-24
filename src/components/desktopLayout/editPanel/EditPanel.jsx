@@ -39,8 +39,11 @@ export default function EditPanel() {
       className={`p-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar 
         ${selectedField ? "" : "max-h-32"} max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)]`}
     >
-      {/* Tabs always visible */}
-      <div className="mb-4 inline-flex rounded-md border border-gray-200 overflow-hidden" role="tablist">
+      {/* Tabs always visible (sticky so they stay on top like the X button) */}
+      <div
+        className="sticky top-0 z-30 mb-4 inline-flex rounded-md border border-gray-200 overflow-hidden bg-white"
+        role="tablist"
+      >
         <button type="button" onClick={() => setTab("EDIT")} aria-selected={tab === "EDIT"}
           className={`px-3 py-1 text-sm ${tab === "EDIT" ? "bg-gray-100 font-semibold" : "bg-white"}`}>
           EDIT

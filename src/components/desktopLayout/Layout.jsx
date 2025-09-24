@@ -43,7 +43,7 @@ export default function Layout({ selectedField }) {
                 onClick={() => ui.modal.set(false)} 
               >
                 <div
-                  className="w-full max-w-md mx-auto relative"
+                  className="w-full max-w-md mx-auto relative bg-white rounded-lg overflow-hidden"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <button

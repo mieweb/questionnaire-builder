@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { EDIT_ICON, TRASHCAN_ICON } from "../../assets/icons";
+import { EDIT_ICON, TRASHCAN_ICON, VIEWSMALL_ICON, VIEWBIG_ICON } from "../../assets/icons";
 
 export default function FieldWrapper({ ctrl, children }) {
   const [open, setOpen] = useState(true);
 
   const onEditClick = (e) => {
     e.stopPropagation();
+    if (!ctrl.selected) ctrl.onRowClick?.(e);
     ctrl.toggleEdit();
   };
 
@@ -16,7 +17,6 @@ export default function FieldWrapper({ ctrl, children }) {
 
   const onRowClick = (e) => {
     if (!ctrl.insideSection) ctrl.onRowClick?.(e);
-    if (!open) setOpen(true);
   };
 
   // ────────── PREVIEW: no collapsible ──────────
@@ -65,28 +65,35 @@ export default function FieldWrapper({ ctrl, children }) {
       aria-selected={ctrl.selected || undefined}
       tabIndex={-1}
     >
-      {/* ────────── Header (button toggles; also selects) ────────── */}
-      <div className="flex justify-between pb-2.5">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!ctrl.insideSection) ctrl.onRowClick?.(e);
-            setOpen((v) => !v);
-          }}
-          aria-expanded={open}
-          aria-controls={`fw-body-${ctrl.field?.id}`}
-          className="text-left w-full cursor-pointer select-none"
-        >
-
+      {/* ────────── Header (label + action icons) ────────── */}
+      <div className={`flex justify-between items-center ${open ? "pb-2.5" : ""}`}>
+        {/* label (clicking row selects but does not toggle collapse) */}
+        <div className="text-left w-full select-none">
           {ctrl.insideSection ? (`${ctrl.label}`) :
             (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title}`) : (`${ctrl.label} ${ctrl.field.question}`))}
-        </button>
+        </div>
 
+        {/* actions: Edit (mobile), Toggle (small/big view), Delete */}
         <div className={`flex items-center gap-2 ml-2 ${ctrl.insideSection ? "hidden" : ""}`}>
           <button onClick={onEditClick} className="block lg:hidden" title="Edit" aria-label="Edit field">
             <EDIT_ICON className="h-6 w-6" />
           </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen((v) => !v);
+            }}
+            aria-expanded={open}
+            aria-controls={`fw-body-${ctrl.field?.id}`}
+            title={open ? "Collapse" : "Expand"}
+            aria-label={open ? "Collapse field" : "Expand field"}
+            className="p-1"
+          >
+            {open ? <VIEWSMALL_ICON className="h-5 w-5" /> : <VIEWBIG_ICON className="h-5 w-5" />}
+          </button>
+
           <button onClick={onRemoveClick} title="Delete" aria-label="Delete field">
             <TRASHCAN_ICON className="h-6 w-6" />
           </button>
