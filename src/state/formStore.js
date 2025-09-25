@@ -89,6 +89,79 @@ export const useFormStore = create((set, get) => ({
   byId: {},
   order: [],
 
+  // ────────── Minimal init API ──────────
+  ingest: (arr = []) => set(() => {
+    const byId = {};
+    const order = [];
+    arr.forEach(raw => {
+      const id = raw.id;
+      const f = initializeField(raw);
+      byId[id] = f;
+      order.push(id);
+      // If you have sections with children, insert children into byId too
+      if (f.fieldType === "section" && Array.isArray(f.fields)) {
+        f.fields.forEach(child => {
+          byId[child.id] = initializeField(child);
+        });
+      }
+    });
+    return { byId, order };
+  }),
+
+  setEnableWhen: (id, enableWhen) =>
+    set((s) => {
+      const f = s.byId[id];
+      if (!f) return s;
+      const ew = enableWhen && Array.isArray(enableWhen.conditions)
+        ? { logic: enableWhen.logic || "AND", conditions: enableWhen.conditions }
+        : undefined; // undefined => remove key (no logic)
+      return { byId: { ...s.byId, [id]: { ...f, ...(ew ? { enableWhen: ew } : { enableWhen: undefined }) } } };
+    }),
+
+  getEnableWhen: (id) => {
+    const f = get().byId[id];
+    return f?.enableWhen ?? { logic: "AND", conditions: [] };
+  },
+
+  // ────────── Flat/read helpers ──────────
+  flatArray: () => {
+    const { byId, order } = get();
+    const out = [];
+    const seen = new Set();
+
+    // top-level first
+    order.forEach(id => {
+      const f = byId[id];
+      if (!f) return;
+      if (!seen.has(f.id)) { out.push(f); seen.add(f.id); }
+      if (f.fieldType === "section" && Array.isArray(f.fields)) {
+        f.fields.forEach(ch => {
+          const child = byId[ch.id] || ch;
+          if (child && !seen.has(child.id)) { out.push(child); seen.add(child.id); }
+        });
+      }
+    });
+
+    // any stragglers
+    Object.values(byId).forEach(f => {
+      if (!seen.has(f.id)) { out.push(f); seen.add(f.id); }
+    });
+
+    return out;
+  },
+
+  flatMap: () => {
+    const arr = get().flatArray();
+    return arr.reduce((m, f) => ((m[f.id] = f), m), {});
+  },
+
+  // ────────── Preview helper ──────────
+  visibleIds: (isPreview) => {
+    const arr = get().flatArray();
+    if (!isPreview) return arr.map(f => f.id);
+    const byId = arr.reduce((m, f) => ((m[f.id] = f), m), {});
+    return arr.filter(f => isVisible(f, byId)).map(f => f.id);
+  },
   // ────────── Action: Replaces All ──────────
   replaceAll: (fields) => set(() => normalize(fields)),
 
@@ -125,7 +198,7 @@ export const useFormStore = create((set, get) => ({
           const patch = typeof patchOrFn === "function" ? patchOrFn(prev) : patchOrFn;
           return patch ? { ...prev, ...patch } : null;
         },
-        { onIdChange, forbidCollision: true } 
+        { onIdChange, forbidCollision: true }
       );
       return res ? res : state;
     }),

@@ -4,23 +4,23 @@ import Header from "./components/Header";
 import MobileToolBar from "./components/MobileToolBar";
 import Layout from "./components/desktopLayout/Layout.jsx";
 import { useFormStore } from "./state/formStore";
-import { useUIStore } from "./state/uiStore";
+import { useUIApi } from "./state/uiApi"; // ────────── use the API
 
 export default function App() {
-  const isPreview = useUIStore((s) => s.isPreview);
-  const selectedFieldId = useUIStore((s) => s.selectedFieldId);
-  const clearSectionHighlights = useUIStore((s) => s.clearSectionHighlights);
+  const ui = useUIApi();
 
+  // ────────── Resolve selected field from form store ──────────
   const selectedField = useFormStore(
     React.useCallback(
-      (s) => (selectedFieldId ? s.byId[selectedFieldId] : null),
-      [selectedFieldId]
+      (s) => (ui.selectedFieldId.value ? s.byId[ui.selectedFieldId.value] : null),
+      [ui.selectedFieldId.value]
     )
   );
-  
+
+  // ────────── Clear active child pair whenever mode/selection changes ──────────
   useEffect(() => {
-    clearSectionHighlights();
-  }, [selectedFieldId, isPreview, clearSectionHighlights]);
+    ui.selectedChildId.clear();
+  }, [ui.selectedFieldId.value, ui.state.isPreview, ui.selectedChildId.clear]);
 
   return (
     <div className="min-h-screen bg-gray-100 font-titillium">

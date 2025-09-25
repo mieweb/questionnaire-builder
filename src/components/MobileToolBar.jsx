@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { DATALOG_ICON, EYEEDIT_ICON, EYECLOSED_ICON, PLUSSQUARE_ICON, X_ICON } from "../assets/icons";
 import { useFormStore, useFieldsArray } from "../state/formStore";
-import { useUIStore } from "../state/uiStore";
+import { useUIApi } from "../state/uiApi"; 
 import fieldTypes from "../fields/fieldTypes-config";
 import DataViewer from "./DataViewer";
 
@@ -14,8 +14,9 @@ export default function MobileToolBar() {
   const addField = useFormStore((s) => s.addField);
   const fieldsArray = useFieldsArray();
 
-  const isPreview = useUIStore((s) => s.isPreview);
-  const togglePreview = useUIStore((s) => s.togglePreview);
+  
+  const ui = useUIApi();
+  const isPreview = ui.state.isPreview;
 
   const handleToolBarExpanded = () => {
     setIsToolBarExpanded((v) => !v);
@@ -26,7 +27,7 @@ export default function MobileToolBar() {
     setIsToolBarExpanded(false);
   };
   const handlePreviewMode = () => {
-    togglePreview();
+    ui.preview.toggle(); 
     setIsToolBarExpanded(false);
     setIsLogExpanded(false);
   };

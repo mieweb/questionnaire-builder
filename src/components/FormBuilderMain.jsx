@@ -1,22 +1,34 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo } from "react";
 import fieldTypes from "../fields/fieldTypes-config";
 import { useFieldsArray, useFormStore } from "../state/formStore";
 import { useUIApi } from "../state/uiApi";
-import { checkFieldVisibility } from "../utils/visibilityChecker";
+import { isVisible } from "../utils/logicVisibility";
 
 export default function FormBuilderMain() {
   const ui = useUIApi();
   const fields = useFieldsArray();
 
+  // ────────── Build a flat array including children ──────────
+  const allFlat = useMemo(() => {
+    const out = [];
+    (fields || []).forEach(f => {
+      out.push(f);
+      if (f?.fieldType === "section" && Array.isArray(f.fields)) out.push(...f.fields);
+    });
+    return out;
+  }, [fields]);
+
   const visibleIds = useMemo(() => {
-    const list = ui.state.isPreview ? fields.filter((f) => checkFieldVisibility(f, fields)) : fields;
+    const list = ui.state.isPreview
+      ? fields.filter((f) => isVisible(f, allFlat))
+      : fields;
     return list.map((f) => f.id);
-  }, [ui.state.isPreview, fields]);
+  }, [ui.state.isPreview, fields, allFlat]);
 
   return (
     <div
       className="w-full max-w-4xl mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)] custom-scrollbar pr-2"
-      onClick={() => !ui.state.isPreview && ui.selection.clear()}
+      onClick={() => !ui.state.isPreview && ui.selectedFieldId.clear()}
     >
       {visibleIds.length === 0
         ? <EmptyState />
@@ -30,7 +42,11 @@ const FieldRow = React.memo(function FieldRow({ id }) {
   if (!field) return null;
 
   const FieldComponent = fieldTypes[field.fieldType]?.component;
-  return <div className="mb-1.5">{FieldComponent ? <FieldComponent field={field} /> : null}</div>;
+  return (
+    <div className="mb-1.5">
+      {FieldComponent ? <FieldComponent field={field} /> : null}
+    </div>
+  );
 });
 
 function EmptyState() {

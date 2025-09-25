@@ -1,34 +1,50 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useMemo } from "react";
 import fieldTypes from "../fieldTypes-config";
-import { checkFieldVisibility } from "../../utils/visibilityChecker";
+import { isVisible } from "../../utils/logicVisibility";
 import { PLUSSQUARE_ICON } from "../../assets/icons";
 
 import FieldWrapper from "../shared/FieldWrapper";
 import { useFieldController } from "../shared/useFieldController";
-import { useUIStore } from "../../state/uiStore";
+import { useUIApi } from "../../state/uiApi";
+import { useFormStore } from "../../state/formStore";
 
 const SectionField = React.memo(function SectionField({ field }) {
-  // ────────── Controller for this section (top-level; no parent sectionId) ──────────
   const ctrl = useFieldController(field);
+  const ui = useUIApi();
 
-  // ────────── Read highlight for this section from UI store (no prop drilling) ──────────
-  const highlightChildId = useUIStore((s) => s.getSectionHighlightId(field.id));
+  const parentId = ui.selectedChildId.ParentId;
+  const childId  = ui.selectedChildId.ChildId;
+
+  const selectedChildId = parentId === field.id ? childId : null;
 
   const childRefs = useRef({});
 
-  // ────────── Autoscroll to highlighted child in EDIT mode ──────────
+  // ────────── All fields (flat) for visibility evaluation ──────────
+  const byId = useFormStore((s) => s.byId);
+  const allFlat = useMemo(() => {
+    const arr = Object.values(byId);
+    const out = [];
+    arr.forEach(f => {
+      if (!f) return;
+      out.push(f);
+      if (f.fieldType === "section" && Array.isArray(f.fields)) out.push(...f.fields);
+    });
+    return out;
+  }, [byId]);
+
+  // ────────── Autoscroll to selected child in EDIT mode ──────────
   useEffect(() => {
-    if (ctrl.isPreview || !highlightChildId) return;
-    const el = childRefs.current[highlightChildId];
+    if (ctrl.isPreview || !selectedChildId) return;
+    const el = childRefs.current[selectedChildId];
     el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
-  }, [highlightChildId, ctrl.isPreview]);
+  }, [selectedChildId, ctrl.isPreview]);
 
   // ────────── Child PREVIEW renderer ──────────
-  const renderChildPreview = (child, siblings, sectionId) => {
+  const renderChildPreview = (child, sectionId) => {
     const Comp = fieldTypes[child.fieldType]?.component;
     if (!Comp) return null;
 
-    const visible = checkFieldVisibility(child, siblings);
+    const visible = isVisible(child, allFlat);
     if (!visible) return null;
 
     return (
@@ -43,7 +59,7 @@ const SectionField = React.memo(function SectionField({ field }) {
     const ChildField = fieldTypes[child.fieldType]?.component;
     if (!ChildField) return null;
 
-    const isHighlighted = highlightChildId === child.id;
+    const isHighlighted = selectedChildId === child.id;
 
     return (
       <div
@@ -62,22 +78,19 @@ const SectionField = React.memo(function SectionField({ field }) {
   return (
     <FieldWrapper ctrl={ctrl}>
       {({ api, isPreview, insideSection, field: f }) => {
-        // ────────── Always derive from latest field snapshot ──────────
         const children = Array.isArray(f.fields) ? f.fields : [];
 
-        // ────────── Preview (early return) ──────────
         if (isPreview) {
           return (
             <section className={insideSection ? "border-b border-gray-200" : "border-0"}>
               <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
                 {f.title || "Section"}
               </div>
-              {children.map((c) => renderChildPreview(c, children, f.id))}
+              {children.map((c) => renderChildPreview(c, f.id))}
             </section>
           );
         }
 
-        // ────────── Edit (early return) ──────────
         return (
           <div>
             <div className="flex justify-between items-center mb-3 gap-2">
@@ -92,10 +105,8 @@ const SectionField = React.memo(function SectionField({ field }) {
               </div>
             </div>
 
-            {/* ────────── Child Fields ────────── */}
             <div>{children.map((c) => renderChildEdit(c, f.id))}</div>
 
-            {/* ────────── Toolbar to Add Child ────────── */}
             <div className="mb-3">
               <div className="text-sm font-medium text-gray-700 mb-2">Add a field</div>
               <div className="flex flex-wrap gap-2">

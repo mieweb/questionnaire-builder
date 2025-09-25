@@ -8,7 +8,7 @@ import { useUIStore } from "./uiStore";
 //       useFieldApi(sectionId, sectionId) inside a Section component to make `add` add children
 // state/useFieldApi.js (or inline in formStore as you had)
 
-export const useFieldApi = (id, sectionId) => {
+export const useFormApi = (id, sectionId) => {
   const addField     = useFormStore((s) => s.addField);
   const updateField  = useFormStore((s) => s.updateField);
   const deleteField  = useFormStore((s) => s.deleteField);

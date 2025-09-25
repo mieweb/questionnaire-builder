@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useFormStore, useFieldsArray } from "../state/formStore";
-import { useUIStore } from "../state/uiStore";
+import { useUIApi } from "../state/uiApi";
 import DataViewer from "./DataViewer";
 
 export default function Header() {
@@ -8,10 +8,10 @@ export default function Header() {
   const replaceAll = useFormStore((s) => s.replaceAll);
   const fieldsArray = useFieldsArray();
 
-  const isPreview = useUIStore((s) => s.isPreview);
-  const setPreview = useUIStore((s) => s.setPreview);
-  const selectField = useUIStore((s) => s.selectField);
+  const ui = useUIApi();
+  const isPreview = ui.state.isPreview;
 
+  // ────────── Import handler ──────────
   const importData = (data) => {
     try {
       const text = String(data).replace(/^\uFEFF/, "").trim();
@@ -19,18 +19,19 @@ export default function Header() {
       const arr = Array.isArray(parsed) ? parsed : parsed?.fields;
       if (!Array.isArray(arr)) throw new Error("Expected [] or { fields: [] }");
       replaceAll(arr);
-      selectField(null);
-      setPreview(false);
+      ui.selectedFieldId.clear();
+      ui.preview.set(false);
     } catch (err) {
       alert(err?.message || "Invalid JSON format");
     }
   };
 
+  // ────────── Preview/Edit toggles ──────────
   const onPreview = () => {
-    setPreview(true);
-    selectField(null);
+    ui.preview.set(true);
+    ui.selectedFieldId.clear();
   };
-  const onEdit = () => setPreview(false);
+  const onEdit = () => ui.preview.set(false);
 
   return (
     <header className="sticky top-0 z-50 bg-transparent mx-auto">
