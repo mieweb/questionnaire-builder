@@ -30,11 +30,8 @@ build
 *.sln
 *.sw?
 
-# NX
-.nx/cache
-.nx/workspace-data
-
-# Temporary and testing files
-*.tmp
-*.temp
+# TESTING FILES
 TEMP
+
+# Nx workspace/cache
+.nx
