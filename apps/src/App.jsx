@@ -16,6 +16,106 @@ export default function App() {
     useFieldsArray
   };
 
+  // Load sample form data when component mounts
+  useEffect(() => {
+    const sampleFormData = [
+      // Demographics section
+      {
+        id: "demographics-section",
+        fieldType: "section",
+        title: "Demographics",
+        fields: [
+          { id: "age", fieldType: "input", question: "Age", answer: "", required: true },
+          {
+            id: "sex",
+            fieldType: "selection",
+            question: "Sex assigned at birth",
+            selected: "",
+            required: true,
+            options: [
+              { id: "male", value: "Male" },
+              { id: "female", value: "Female" },
+              { id: "other", value: "Other" }
+            ]
+          },
+          {
+            id: "pregnant",
+            fieldType: "radio",
+            question: "Are you currently pregnant?",
+            selected: "",
+            options: [ { id: "yes", value: "Yes" }, { id: "no", value: "No" } ],
+            // Only relevant for people assigned female at birth
+            enableWhen: { logic: "AND", conditions: [ { targetId: "sex", operator: "equals", value: "female" } ] }
+          },
+          { id: "due_date", fieldType: "input", question: "If pregnant, estimated due date (YYYY-MM-DD)", answer: "", enableWhen: { logic: "AND", conditions: [ { targetId: "pregnant", operator: "equals", value: "yes" } ] } }
+        ]
+      },
+
+      // Screening section
+      {
+        id: "screening-section",
+        fieldType: "section",
+        title: "Symptom Screening",
+        fields: [
+          {
+            id: "symptoms_present",
+            fieldType: "radio",
+            question: "Do you currently have any of the following symptoms?",
+            selected: "",
+            options: [ { id: "yes", value: "Yes" }, { id: "no", value: "No" } ],
+            required: true
+          },
+          {
+            id: "symptoms_list",
+            fieldType: "selection",
+            question: "Select symptoms",
+            selected: "",
+            options: [
+              { id: "fever", value: "Fever" },
+              { id: "cough", value: "Cough" },
+              { id: "sore_throat", value: "Sore throat" },
+              { id: "shortness_breath", value: "Shortness of breath" }
+            ],
+            // Only show symptom options when symptoms_present === yes
+            enableWhen: { logic: "AND", conditions: [ { targetId: "symptoms_present", operator: "equals", value: "yes" } ] }
+          },
+          { id: "symptom_onset", fieldType: "input", question: "Symptom onset date", answer: "", enableWhen: { logic: "AND", conditions: [ { targetId: "symptoms_present", operator: "equals", value: "yes" } ] } }
+        ]
+      },
+
+      // Exposure section
+      {
+        id: "exposure-section",
+        fieldType: "section",
+        title: "Exposure & Travel",
+        fields: [
+          { id: "recent_travel", fieldType: "radio", question: "Recent international travel in last 14 days?", selected: "", options: [ { id: "yes", value: "Yes" }, { id: "no", value: "No" } ] },
+          { id: "travel_countries", fieldType: "input", question: "If yes, list countries visited", answer: "", enableWhen: { logic: "AND", conditions: [ { targetId: "recent_travel", operator: "equals", value: "yes" } ] } },
+          { id: "contact_case", fieldType: "radio", question: "Close contact with a confirmed case?", selected: "", options: [ { id: "yes", value: "Yes" }, { id: "no", value: "No" } ] },
+          { id: "contact_date", fieldType: "input", question: "If yes, date of last contact", answer: "", enableWhen: { logic: "AND", conditions: [ { targetId: "contact_case", operator: "equals", value: "yes" } ] } }
+        ]
+      },
+
+      // Medical history section
+      {
+        id: "medical-history",
+        fieldType: "section",
+        title: "Medical History",
+        fields: [
+          { id: "chronic_conditions", fieldType: "radio", question: "Do you have any chronic conditions?", selected: "", options: [ { id: "yes", value: "Yes" }, { id: "no", value: "No" } ] },
+          { id: "conditions_list", fieldType: "input", question: "If yes, please list", answer: "", enableWhen: { logic: "AND", conditions: [ { targetId: "chronic_conditions", operator: "equals", value: "yes" } ] } }
+        ]
+      },
+
+      // Consent / submit
+  { id: "consent", fieldType: "radio", question: "I consent to data collection for screening purposes", selected: "", options: [ { id: "agree", value: "I agree" }, { id: "decline", value: "I decline" } ], required: true }
+    ];
+
+    // Load sample data into the form store
+    const replaceAll = hooks.useFormStore.getState().replaceAll;
+    replaceAll(sampleFormData);
+  }, [hooks]);
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape' && isFullscreen) {
@@ -49,13 +149,13 @@ export default function App() {
       id: 'editor',
       label: 'Form Editor',
       description: 'Build forms with drag-and-drop interface',
-      icon: '🛠️'
+      icon: '📝'
     },
     {
       id: 'renderer',
       label: 'Form Renderer',
       description: 'Fill out forms like an end-user',
-      icon: '📝'
+      icon: '📄'
     }
   ];
 
@@ -78,25 +178,45 @@ export default function App() {
         <div className="h-screen">
           {activeDemo === 'editor' && <FormEditor />}
           {activeDemo === 'renderer' && (
-            <div className="h-full overflow-auto p-8">
-              <div className="max-w-4xl mx-auto">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <FormRenderer 
-                    hooks={hooks}
-                    isVisible={isVisible}
-                    onSubmit={handleFormSubmit}
-                    showSubmitButton={true}
-                    submitButtonText="Submit Form"
-                  />
+            <div className="h-full flex p-8">
+              <div className="max-w-7xl mx-auto flex-1 flex flex-col">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 items-start">
+                  {/* Form Renderer */}
+                  <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-fit">
+                    <FormRenderer 
+                      hooks={hooks}
+                      isVisible={isVisible}
+                      onSubmit={handleFormSubmit}
+                      showSubmitButton={false}
+                      submitButtonText="Submit Form"
+                    />
+                  </div>
                   
-                  {submittedData && (
-                    <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                      <h3 className="font-medium text-green-800 mb-2">Last Submission:</h3>
-                      <pre className="text-xs text-green-700 overflow-auto">
-                        {JSON.stringify(submittedData, null, 2)}
-                      </pre>
-                    </div>
-                  )}
+                  {/* Submitted Data Panel - Match Form Height */}
+                  <div className="bg-white rounded-lg border border-gray-200 p-4 flex flex-col max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)] overflow-hidden">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-3">Form Data</h3>
+                    <h4 className="text-xs font-medium text-green-800 mb-2">Last Submission:</h4>
+                    <pre className="text-xs text-gray-700 overflow-y-auto flex-1 bg-gray-50 p-3 rounded text-[10px] leading-tight whitespace-pre-wrap custom-scrollbar">
+                      {submittedData ? JSON.stringify(submittedData, null, 2) : ''}
+                    </pre>
+                  </div>
+                </div>
+                
+                {/* Submit Button - Always visible at bottom */}
+                <div className="mt-4 flex justify-center">
+                  <button
+                    onClick={() => {
+                      // Trigger form submission
+                      const form = document.querySelector('form');
+                      if (form) {
+                        const event = new Event('submit', { bubbles: true, cancelable: true });
+                        form.dispatchEvent(event);
+                      }
+                    }}
+                    className="w-32 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-lg"
+                  >
+                    Submit Form
+                  </button>
                 </div>
               </div>
             </div>

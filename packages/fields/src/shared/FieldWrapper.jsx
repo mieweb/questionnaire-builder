@@ -34,8 +34,15 @@ export default function FieldWrapper({ ctrl, children }) {
 
         {ctrl.isPreview ? null
           : (
-            <div>
-              {ctrl.insideSection ? (`${ctrl.label}`) : (`(${ctrl.label})  ${ctrl.field.title}`)}
+            <div className="flex items-center gap-2">
+              <div>
+                {ctrl.insideSection ? (`${ctrl.label}`) : (`(${ctrl.label})  ${ctrl.field.title}`)}
+              </div>
+              {ctrl.field?.required ? (
+                <span className="inline-block text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded">
+                  Required
+                </span>
+              ) : null}
             </div>
           )}
 
@@ -69,8 +76,17 @@ export default function FieldWrapper({ ctrl, children }) {
       <div className={`flex justify-between items-center ${open ? "pb-2.5" : ""}`}>
         {/* label (clicking row selects but does not toggle collapse) */}
         <div className="text-left w-full select-none">
-          {ctrl.insideSection ? (`${ctrl.label}`) :
-            (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title}`) : (`${ctrl.label} ${ctrl.field.question}`))}
+          <div className="flex items-center justify-between w-full">
+            <div>
+              {ctrl.insideSection ? (`${ctrl.label}`) :
+                (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title}`) : (`${ctrl.label} ${ctrl.field.question}`))}
+            </div>
+            {ctrl.field?.required ? (
+              <span className="ml-3 inline-block text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded">
+                Required
+              </span>
+            ) : null}
+          </div>
         </div>
 
         {/* actions: Edit (mobile), Toggle (small/big view), Delete */}

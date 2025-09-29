@@ -87,16 +87,9 @@ function updateFieldHelper(state, id, sectionId, makeNext, opts = {}) {
 
 export const useFormStore = create((set, get) => ({
   // ────────── State ──────────
-  // Start with some sample data for testing the UI
-  byId: {
-    "sample-input": {
-      id: "sample-input",
-      fieldType: "input",
-      question: "What is your name?",
-      answer: "",
-    }
-  },
-  order: ["sample-input"],
+  // Start with comprehensive sample data for testing the UI
+  byId: {},
+  order: [],
 
   // ────────── Minimal init API ──────────
   ingest: (arr = []) => set(() => {
