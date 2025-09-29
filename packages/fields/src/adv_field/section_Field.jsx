@@ -85,6 +85,7 @@ const SectionField = React.memo(function SectionField({ field, hooks }) {
             <section className={`mb-6 ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
                 {f.title || "Section"}
+                {f.required && <span className="text-red-300 ml-1">*</span>}
               </div>
               <div className=" border-gray-200 rounded-b-lg">
                 <div className="p-4 space-y-4">

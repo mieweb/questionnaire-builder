@@ -13,7 +13,10 @@ const RadioField = React.memo(function RadioField({ field, sectionId, hooks }) {
           return (
             <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light">
+                  {f.question || "Question"}
+                  {f.required && <span className="text-red-500 ml-1">*</span>}
+                </div>
                 <div>
                   {(f.options || []).map((option) => (
                     <label key={option.id} className="flex items-center px-3 py-1 my-2">
@@ -23,6 +26,7 @@ const RadioField = React.memo(function RadioField({ field, sectionId, hooks }) {
                         className="mr-2 h-9 w-9 flex-shrink-0"
                         checked={f.selected === option.id}
                         onChange={() => api.selection.single(option.id)}
+                        required={f.required}
                       />
                       {option.value}
                     </label>

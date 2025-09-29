@@ -13,13 +13,17 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId, hook
           return (
             <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light">
+                  {f.question || "Question"}
+                  {f.required && <span className="text-red-500 ml-1">*</span>}
+                </div>
                 <div>
                   {/* ────────── Preview Select ────────── */}
                   <select
                     className="w-full px-4 shadow border border-black/10 rounded-lg h-10"
                     value={f.selected || ""}
                     onChange={(e) => api.selection.single(e.target.value)}
+                    required={f.required}
                   >
                     <option value="">Select an option</option>
                     {(f.options || []).map((option) => (

@@ -1,29 +1,41 @@
-// Demo Application - Shows how to integrate both Editor and Forms packages
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormEditor } from "@questionnaire-builder/editor";
 import { FormRenderer } from "@questionnaire-builder/forms";
 import { useFormStore, useUIApi, useFormApi, useFieldsArray } from "@questionnaire-builder/editor";
 import { isVisible } from "@questionnaire-builder/editor";
 
-/**
- * Demo Application
- * 
- * This demonstrates the complete workflow:
- * 1. Editor Package: Build forms with drag-and-drop interface
- * 2. Forms Package: Render forms for end-users to fill out
- * 
- * Perfect for understanding how both packages work together!
- */
 export default function App() {
   const [activeDemo, setActiveDemo] = useState('editor');
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [submittedData, setSubmittedData] = useState(null);
 
-  // Create hooks object for forms package
   const hooks = {
     useFormStore,
     useUIApi,
     useFormApi,
     useFieldsArray
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape' && isFullscreen) {
+        setIsFullscreen(false);
+      }
+    };
+
+    if (isFullscreen) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isFullscreen]);
+
+  const enterFullscreen = (demoType) => {
+    setActiveDemo(demoType);
+    setIsFullscreen(true);
+  };
+
+  const exitFullscreen = () => {
+    setIsFullscreen(false);
   };
 
   const handleFormSubmit = (formData) => {
@@ -47,158 +59,86 @@ export default function App() {
     }
   ];
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Demo Navigation Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-6">
-            <div className="mb-4 sm:mb-0">
-              <h1 className="text-2xl font-bold text-gray-900">
-                Questionnaire Builder Demo
-              </h1>
-              <p className="text-sm text-gray-600 mt-1">
-                Experience both form building and form filling
-              </p>
+  if (isFullscreen) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Fullscreen Exit Button */}
+        <div className="absolute top-4 right-4 z-50">
+          <button
+            onClick={exitFullscreen}
+            className="flex items-center space-x-2 px-4 py-2 bg-red-100 text-red-700 hover:bg-red-200 rounded-lg transition-all duration-200 shadow-lg"
+          >
+            <span>←</span>
+            <span>Exit</span>
+            <kbd className="ml-2 px-1.5 py-0.5 text-xs bg-red-200 rounded border">ESC</kbd>
+          </button>
+        </div>
+
+        {/* Fullscreen Content */}
+        <div className="h-screen">
+          {activeDemo === 'editor' && <FormEditor />}
+          {activeDemo === 'renderer' && (
+            <div className="h-full overflow-auto p-8">
+              <div className="max-w-4xl mx-auto">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                  <FormRenderer 
+                    hooks={hooks}
+                    isVisible={isVisible}
+                    onSubmit={handleFormSubmit}
+                    showSubmitButton={true}
+                    submitButtonText="Submit Form"
+                  />
+                  
+                  {submittedData && (
+                    <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                      <h3 className="font-medium text-green-800 mb-2">Last Submission:</h3>
+                      <pre className="text-xs text-green-700 overflow-auto">
+                        {JSON.stringify(submittedData, null, 2)}
+                      </pre>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-            
-            {/* Demo Mode Switcher */}
-            <div className="flex bg-gray-100 rounded-lg p-1">
-              {menuItems.map((item) => (
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="max-w-4xl mx-auto px-4 py-12 text-center">
+        <div className="bg-white rounded-2xl shadow-xl p-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            Welcome to Questionnaire Builder
+          </h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Choose a demo above to explore our packages in fullscreen mode
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            {menuItems.map((item) => (
+              <div key={item.id} className="text-center">
+                <div className="text-6xl mb-4">{item.icon}</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.label}</h3>
+                <p className="text-gray-600 mb-4">{item.description}</p>
                 <button
-                  key={item.id}
-                  onClick={() => setActiveDemo(item.id)}
-                  className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
-                    activeDemo === item.id
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
-                  }`}
+                  onClick={() => enterFullscreen(item.id)}
+                  className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
                 >
-                  <span>{item.icon}</span>
-                  <span>{item.label}</span>
+                  Launch {item.label}
+                  <span className="ml-2">⛶</span>
                 </button>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
           
-          {/* Current Mode Description */}
-          <div className="pb-4">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <div className="flex items-start space-x-3">
-                <span className="text-2xl">
-                  {menuItems.find(item => item.id === activeDemo)?.icon}
-                </span>
-                <div>
-                  <h3 className="font-semibold text-blue-900">
-                    {menuItems.find(item => item.id === activeDemo)?.label}
-                  </h3>
-                  <p className="text-blue-700 text-sm mt-1">
-                    {menuItems.find(item => item.id === activeDemo)?.description}
-                  </p>
-                  {activeDemo === 'editor' && (
-                    <p className="text-xs text-blue-600 mt-2">
-                      💡 Create your form here, then switch to "Form Renderer" to see how users interact with it
-                    </p>
-                  )}
-                  {activeDemo === 'renderer' && (
-                    <p className="text-xs text-blue-600 mt-2">
-                      💡 This shows how end-users would fill out the form you built in the editor
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
+          <div className="mt-12 text-sm text-gray-500">
+            <p>💡 Use <kbd className="px-2 py-1 bg-gray-200 rounded">ESC</kbd> key to return to this screen anytime</p>
           </div>
         </div>
-      </header>
-
-      {/* Demo Content */}
-      <main className="relative">
-        {activeDemo === 'editor' && (
-          <div className="transition-opacity duration-300 ease-in-out">
-            <FormEditor />
-          </div>
-        )}
-
-        {activeDemo === 'renderer' && (
-          <div className="transition-opacity duration-300 ease-in-out">
-            <div className="max-w-4xl mx-auto px-4 py-8">
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                    Form Submission Demo
-                  </h2>
-                  <p className="text-gray-600 text-sm">
-                    Fill out the form below as an end-user would. This demonstrates the FormRenderer component.
-                  </p>
-                </div>
-                
-                <FormRenderer 
-                  hooks={hooks}
-                  isVisible={isVisible}
-                  onSubmit={handleFormSubmit}
-                  showSubmitButton={true}
-                  submitButtonText="Submit Form"
-                />
-                
-                {submittedData && (
-                  <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <h3 className="font-medium text-green-800 mb-2">Last Submission:</h3>
-                    <pre className="text-xs text-green-700 overflow-auto">
-                      {JSON.stringify(submittedData, null, 2)}
-                    </pre>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </main>
-
-      {/* Integration Code Examples */}
-      <footer className="bg-white border-t border-gray-200 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Integration Examples
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Editor Integration */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h4 className="font-medium text-gray-900 mb-2 flex items-center">
-                🛠️ Form Editor Integration
-              </h4>
-              <pre className="text-xs text-gray-700 overflow-auto bg-white p-3 rounded border">
-{`import { FormEditor } from '@questionnaire-builder/editor';
-
-function AdminPanel() {
-  return <FormEditor />;
-}`}
-              </pre>
-            </div>
-
-            {/* Renderer Integration */}
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h4 className="font-medium text-gray-900 mb-2 flex items-center">
-                📝 Form Renderer Integration
-              </h4>
-              <pre className="text-xs text-gray-700 overflow-auto bg-white p-3 rounded border">
-{`import { FormRenderer, useFormStore, /* ... */ } from '@questionnaire-builder/editor';
-
-function UserFacingForm() {
-  const hooks = { useFormStore, /* ... */ };
-  return (
-    <FormRenderer 
-      hooks={hooks}
-      onSubmit={handleSubmit}
-    />
-  );
-}`}
-              </pre>
-            </div>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }

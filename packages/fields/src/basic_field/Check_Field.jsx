@@ -13,7 +13,10 @@ const CheckField = React.memo(function CheckField({ field, sectionId, hooks }) {
           return (
             <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light">
+                  {f.question || "Question"}
+                  {f.required && <span className="text-red-500 ml-1">*</span>}
+                </div>
                 <div>
                   {(f.options || []).map((option) => (
                     <label key={option.id} className="flex items-center px-3 py-1 my-2">
@@ -22,6 +25,7 @@ const CheckField = React.memo(function CheckField({ field, sectionId, hooks }) {
                         className="mr-2 w-9 h-9"
                         checked={Array.isArray(f.selected) && f.selected.includes(option.id)}
                         onChange={() => api.selection.multiToggle(option.id)}
+                        required={f.required && (!Array.isArray(f.selected) || f.selected.length === 0)}
                       />
                       {option.value}
                     </label>
