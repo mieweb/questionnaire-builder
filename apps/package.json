@@ -1,0 +1,36 @@
+{
+  "name": "@questionnaire-builder/app",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Main application demonstrating questionnaire builder integration",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@questionnaire-builder/editor": "*",
+    "@questionnaire-builder/forms": "*"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.0.6",
+    "vite": "^6.3.6"
+  },
+  "nx": {
+    "projectType": "application",
+    "sourceRoot": "apps/src",
+    "targets": {
+      "build": {
+        "dependsOn": ["^build"],
+        "outputs": ["{projectRoot}/dist"]
+      },
+      "preview": {
+        "dependsOn": ["build"]
+      }
+    }
+  }
+}

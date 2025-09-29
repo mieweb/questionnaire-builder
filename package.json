@@ -3,11 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": [
+    "apps",
+    "packages/fields",
+    "packages/editor", 
+    "packages/forms",
+    "packages/icons"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "npm run dev --workspace=@questionnaire-builder/app",
+    "build": "npm run build --workspace=@questionnaire-builder/app",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "npm run preview --workspace=@questionnaire-builder/app",
+    "dev:app": "npm run dev --workspace=@questionnaire-builder/app",
+    "build:all": "nx run-many --target=build --all",
+    "lint:all": "nx run-many --target=lint --all"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
@@ -34,6 +44,8 @@
     "postcss": "^8.4.49",
     "tailwind-scrollbar": "^4.0.0",
     "tailwindcss": "^4.0.6",
-    "vite": "^6.3.6"
-  }
+    "vite": "^6.3.6",
+    "nx": "21.5.3"
+  },
+  "nx": {}
 }

@@ -7,9 +7,16 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies - only root node_modules allowed in monorepo
 node_modules
+# Prevent individual package node_modules
+apps/*/node_modules
+packages/*/node_modules
+
+# Build outputs
 dist
 dist-ssr
+build
 *.local
 
 # Editor directories and files
@@ -23,5 +30,11 @@ dist-ssr
 *.sln
 *.sw?
 
-# TESTING FILES
+# NX
+.nx/cache
+.nx/workspace-data
+
+# Temporary and testing files
+*.tmp
+*.temp
 TEMP

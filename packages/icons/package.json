@@ -1,0 +1,16 @@
+{
+  "name": "@questionnaire-builder/icons",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.jsx",
+  "exports": {
+    ".": "./src/index.jsx"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1"
+  },
+  "nx": {
+    "projectType": "library",
+    "sourceRoot": "packages/icons/src"
+  }
+}

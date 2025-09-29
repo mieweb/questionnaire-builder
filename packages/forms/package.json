@@ -1,0 +1,30 @@
+{
+  "name": "@questionnaire-builder/forms",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./components/*": "./src/components/*"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.2",
+    "@questionnaire-builder/fields": "*"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "nx": {
+    "projectType": "library",
+    "sourceRoot": "packages/forms/src",
+    "targets": {
+      "build": {
+        "dependsOn": ["@questionnaire-builder/fields:build"]
+      }
+    }
+  }
+}

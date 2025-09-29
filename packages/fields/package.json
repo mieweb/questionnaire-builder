@@ -1,0 +1,27 @@
+{
+  "name": "@questionnaire-builder/fields",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./config": "./src/fieldTypes-config.jsx",
+    "./basic/*": "./src/basic_field/*",
+    "./advanced/*": "./src/adv_field/*",
+    "./shared/*": "./src/shared/*"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@questionnaire-builder/icons": "*"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "nx": {
+    "projectType": "library",
+    "sourceRoot": "packages/fields/src"
+  }
+}
