@@ -35,14 +35,14 @@ function evaluate(cond, byId) {
       const norm = (s) =>
         String(s ?? "")
           .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "") // strip diacritics
+          .replace(/[\u0300-\u036f]/g, "") 
           .toLowerCase();
 
-      const hay = norm(actual).replace(/[^a-z0-9]+/g, " ").trim();   // wordize
+      const hay = norm(actual).replace(/[^a-z0-9]+/g, " ").trim(); 
       const needle = norm(expected).trim();
       if (!needle) return false;
 
-      const parts = needle.split(/\s+/); // phrase support
+      const parts = needle.split(/\s+/);
       // build word-boundary style regex over normalized words
       const pattern =
         parts.length === 1

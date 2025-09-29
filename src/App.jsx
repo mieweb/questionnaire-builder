@@ -1,10 +1,9 @@
-// App.jsx
 import React, { useEffect } from "react";
 import Header from "./components/Header";
 import MobileToolBar from "./components/MobileToolBar";
 import Layout from "./components/desktopLayout/Layout.jsx";
 import { useFormStore } from "./state/formStore";
-import { useUIApi } from "./state/uiApi"; // ────────── use the API
+import { useUIApi } from "./state/uiApi"; 
 
 export default function App() {
   const ui = useUIApi();
