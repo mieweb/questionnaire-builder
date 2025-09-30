@@ -1,0 +1,24 @@
+{
+	"name": "@mieweb/forms-editor",
+	"version": "0.1.0",
+	"description": "Embeddable questionnaire form editor component",
+	"type": "module",
+	"main": "./index.js",
+	"module": "./index.js",
+	"exports": {
+		".": {
+			"import": "./index.js"
+		},
+		"./package.json": "./package.json"
+	},
+	"files": ["index.js", "src", "README.md"],
+	"peerDependencies": {
+		"react": ">=18.0.0",
+		"react-dom": ">=18.0.0"
+	},
+	"dependencies": {
+		"@mieweb/forms-engine": "0.1.0",
+		"framer-motion": "^12.4.2",
+		"js-yaml": "^4.1.0"
+	}
+}

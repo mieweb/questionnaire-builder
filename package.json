@@ -8,44 +8,24 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "nx serve",
-    "build": "nx vite:build",
-    "lint": "eslint .",
-    "preview": "nx vite:preview"
-  },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.0.6",
-    "framer-motion": "^12.4.2",
-    "js-yaml": "^4.1.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-hook-form": "^7.53.2",
-    "uuid": "^11.0.4",
-    "zustand": "^5.0.8"
+    "dev": "vite --config apps/web-editor/vite.config.ts",
+    "preview": "vite preview --config apps/web-editor/vite.config.ts",
+    "build": "npm run build:packages && vite build --config apps/web-editor/vite.config.ts",
+    "build:packages": "npm run build:forms-engine && npm run build:forms-editor",
+    "build:forms-engine": "echo build forms-engine (add bundler later)",
+    "build:forms-editor": "echo build forms-editor (add bundler later)",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
-    "@nx/eslint": "21.6.2",
-    "@nx/vite": "21.6.2",
-    "@nx/web": "21.6.2",
-    "@tailwindcss/postcss": "^4.0.6",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@tailwindcss/vite": "^4.0.6",
     "@vitejs/plugin-react": "^4.3.3",
-    "@vitest/ui": "^3.0.0",
-    "autoprefixer": "^10.4.20",
+    "vite": "^6.3.6",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
-    "globals": "^15.11.0",
-    "jiti": "2.4.2",
-    "nx": "21.6.2",
-    "postcss": "^8.4.49",
-    "tailwind-scrollbar": "^4.0.0",
-    "tailwindcss": "^4.0.6",
-    "vite": "^6.3.6",
-    "vitest": "^3.0.0"
+    "globals": "^15.11.0"
   },
   "nx": {}
 }
