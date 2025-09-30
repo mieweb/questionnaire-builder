@@ -3,11 +3,15 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "nx serve",
+    "build": "nx vite:build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "nx vite:preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.6",
@@ -21,19 +25,27 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@nx/eslint": "21.6.2",
+    "@nx/vite": "21.6.2",
+    "@nx/web": "21.6.2",
     "@tailwindcss/postcss": "^4.0.6",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.3",
+    "@vitest/ui": "^3.0.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
+    "jiti": "2.4.2",
+    "nx": "21.6.2",
     "postcss": "^8.4.49",
     "tailwind-scrollbar": "^4.0.0",
     "tailwindcss": "^4.0.6",
-    "vite": "^6.3.6"
-  }
+    "vite": "^6.3.6",
+    "vitest": "^3.0.0"
+  },
+  "nx": {}
 }

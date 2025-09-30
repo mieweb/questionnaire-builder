@@ -3,8 +3,8 @@ import fieldTypes from "../fieldTypes-config";
 import { isVisible } from "../../utils/logicVisibility";
 import { PLUSSQUARE_ICON } from "../../assets/icons";
 
-import FieldWrapper from "../shared/FieldWrapper";
-import { useFieldController } from "../shared/useFieldController";
+import FieldWrapper from "../fields/shared/FieldWrapper";
+import { useFieldController } from "../fields/shared/useFieldController";
 import { useUIApi } from "../../state/uiApi";
 import { useFormStore } from "../../state/formStore";
 
