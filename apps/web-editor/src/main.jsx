@@ -1,10 +1,4 @@
 import React from 'react';
-// ENTRY DIAGNOSTIC
-if (typeof window !== 'undefined' && !window.__QB_MAIN_LOGGED) {
-  window.__QB_MAIN_LOGGED = true;
-  // eslint-disable-next-line no-console
-  console.log('[QB] main.jsx loaded', new Date().toISOString());
-}
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import { QuestionnaireEditor } from '@mieweb/forms-editor';

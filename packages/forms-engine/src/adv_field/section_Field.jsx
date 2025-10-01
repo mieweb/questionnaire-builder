@@ -9,11 +9,6 @@ import { useUIApi } from "../state/uiApi.js";
 import { useFormStore } from "../state/formStore.js";
 
 const SectionField = React.memo(function SectionField({ field }) {
-  if (typeof window !== 'undefined' && !window.__qb_logged_section_once) {
-    window.__qb_logged_section_once = true;
-    // eslint-disable-next-line no-console
-    console.log('[QB] SectionField component loaded');
-  }
   const ctrl = useFieldController(field);
   const ui = useUIApi();
 

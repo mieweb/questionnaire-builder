@@ -9,9 +9,14 @@
 		".": {
 			"import": "./index.js"
 		},
+		"./styles.css": "./src/index.css",
 		"./package.json": "./package.json"
 	},
 	"files": ["index.js", "src", "README.md"],
+	"sideEffects": [
+		"*.css",
+		"src/index.css"
+	],
 	"peerDependencies": {
 		"react": ">=18.0.0",
 		"react-dom": ">=18.0.0"
@@ -20,5 +25,8 @@
 		"@mieweb/forms-engine": "0.1.0",
 		"framer-motion": "^12.4.2",
 		"js-yaml": "^4.1.0"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }

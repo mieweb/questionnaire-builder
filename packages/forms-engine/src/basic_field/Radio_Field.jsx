@@ -33,7 +33,6 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
           );
         }
 
-        // ────────── Edit Mode ──────────
         return (
           <div>
             <input

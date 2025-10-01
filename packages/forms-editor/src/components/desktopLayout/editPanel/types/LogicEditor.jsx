@@ -1,7 +1,7 @@
 import React from "react";
 import { useUIApi, useFormStore } from "@mieweb/forms-engine";
 
-// ────────── <Comment> Operators by field type ──────────
+// ────────── Operators by field type ──────────
 function getOperatorsForFieldType(fieldType) {
   switch (fieldType) {
     case "input": return ["equals", "contains"];
@@ -12,7 +12,7 @@ function getOperatorsForFieldType(fieldType) {
   }
 }
 
-// ────────── <Comment> Normalize options ──────────
+// ────────── Normalize options ──────────
 function normOption(opt) {
   if (opt && typeof opt === "object") {
     const id = opt.id ?? String(opt.value ?? "");

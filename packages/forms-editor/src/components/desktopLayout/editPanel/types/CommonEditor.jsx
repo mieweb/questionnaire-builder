@@ -4,13 +4,11 @@ import DraftIdEditor from "./DraftIdEditor"
 function CommonEditor({ f, onUpdateField }) {
   return (
     <div className="space-y-3">
-      {/* ────────── ID editor ────────── */}
       <DraftIdEditor
         id={f.id ?? ""}
         onCommit={(next) => onUpdateField?.("id", next)}
       />
 
-      {/* ────────── Label / Question ────────── */}
       <div>
         <label className="block text-sm mb-1">Label / Question</label>
         <input
@@ -21,7 +19,6 @@ function CommonEditor({ f, onUpdateField }) {
         />
       </div>
 
-      {/* ────────── Required ────────── */}
       <div>
         <label className="inline-flex items-center gap-2 text-sm">
           <input
@@ -33,7 +30,6 @@ function CommonEditor({ f, onUpdateField }) {
         </label>
       </div>
 
-      {/* ────────── Sublabel ────────── */}
       <div>
         <label className="block text-sm mb-1">Sublabel (optional)</label>
         <textarea

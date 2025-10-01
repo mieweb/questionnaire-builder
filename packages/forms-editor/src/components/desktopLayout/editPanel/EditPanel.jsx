@@ -38,7 +38,6 @@ export default function EditPanel() {
       className={`p-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar 
         ${selectedField ? "" : "max-h-32"} max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)]`}
     >
-      {/* Tabs always visible (sticky so they stay on top like the X button) */}
       <div
         className="sticky top-0 z-30 mb-4 inline-flex rounded-md border border-gray-200 overflow-hidden bg-white"
         role="tablist"
@@ -53,7 +52,6 @@ export default function EditPanel() {
         </button>
       </div>
 
-      {/* ────────── Place holder ────────── */}
       {isNone && (
         <div className="text-gray-600">
           <h3 className="text-lg font-semibold mb-2">Edit</h3>
@@ -61,7 +59,6 @@ export default function EditPanel() {
         </div>
       )}
 
-      {/* ────────── Edit Tab ────────── */}
       {!isNone && tab === "EDIT" && (
         <>
           {!isSection && <NonSectionEditor f={selectedField} />}
@@ -73,8 +70,9 @@ export default function EditPanel() {
           )}
         </>
       )}
-      
+
       {/* ────────── Edit Tab ────────── */}
+            
       {!isNone && tab === "LOGIC" && <LogicEditor />}
     </div>
   );

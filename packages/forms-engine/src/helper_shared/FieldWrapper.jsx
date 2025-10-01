@@ -65,9 +65,7 @@ export default function FieldWrapper({ ctrl, children }) {
       aria-selected={ctrl.selected || undefined}
       tabIndex={-1}
     >
-      {/* ────────── Header (label + action icons) ────────── */}
       <div className={`flex justify-between items-center ${open ? "pb-2.5" : ""}`}>
-        {/* label (clicking row selects but does not toggle collapse) */}
         <div className="text-left w-full select-none">
           {ctrl.insideSection ? (`${ctrl.label}`) :
             (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title}`) : (`${ctrl.label} ${ctrl.field.question}`))}
@@ -100,7 +98,6 @@ export default function FieldWrapper({ ctrl, children }) {
         </div>
       </div>
 
-      {/* ────────── Body (collapsible) ────────── */}
       {open && (
         <div id={`fw-body-${ctrl.field?.id}`}>
           {typeof children === "function"

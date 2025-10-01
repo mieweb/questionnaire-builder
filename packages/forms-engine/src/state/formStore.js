@@ -5,7 +5,7 @@ import fieldTypes from "../helper_shared/fieldTypes-config";
 import { initializeField } from "../helper_shared/initializedField";
 import { isVisible } from "../helper_shared/logicVisibility";
 
-// --- tiny helpers ---
+// ────────── Helpers ──────────
 const shallowEqual = (a, b) => {
   if (a === b) return true;
   if (!a || !b) return false;
@@ -20,7 +20,6 @@ const insertAt = (arr, item, index) => {
   return [...arr.slice(0, index), item, ...arr.slice(index)];
 };
 
-// Normalize array of fields -> {byId, order}
 const normalize = (arr) => {
   const byId = {};
   const order = [];
@@ -33,7 +32,6 @@ const normalize = (arr) => {
   return { byId, order };
 };
 
-// Generic helper to update a field either top-level or within a section with a 5th arg optional allowing for id updates
 function updateFieldHelper(state, id, sectionId, makeNext, opts = {}) {
   const { onIdChange, forbidCollision = true } = opts;
 
@@ -46,7 +44,7 @@ function updateFieldHelper(state, id, sectionId, makeNext, opts = {}) {
 
     if (next.id && next.id !== id) {
       const newId = next.id;
-      if (forbidCollision && state.byId[newId]) return null; // collision guard
+      if (forbidCollision && state.byId[newId]) return null;
       const { [id]: _omit, ...rest } = state.byId;
       const byId = { ...rest, [newId]: next };
       const order = state.order.map((x) => (x === id ? newId : x));
@@ -99,7 +97,6 @@ export const useFormStore = create((set, get) => ({
       const f = initializeField(raw);
       byId[id] = f;
       order.push(id);
-      // If you have sections with children, insert children into byId too
       if (f.fieldType === "section" && Array.isArray(f.fields)) {
         f.fields.forEach(child => {
           byId[child.id] = initializeField(child);
@@ -297,7 +294,6 @@ export const useFormStore = create((set, get) => ({
 
 // ────────── Selectors / Hooks ──────────
 
-// One top-level field by id (re-renders ONLY when this object changes)
 export const useField = (id) =>
   useFormStore(React.useCallback((s) => s.byId[id], [id]));
 

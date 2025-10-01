@@ -16,7 +16,6 @@ export default function DataViewer({
   const isCenter = placement === "center";
   const [mode, setMode] = React.useState(defaultMode === "yaml" ? "yaml" : "json");
 
-  {/* ────────── Memoize text based on mode (js-yaml) ──────────  */ }
   const viewerText = React.useMemo(() => {
     const indent = Math.max(2, pretty | 0);
     try {
@@ -35,7 +34,6 @@ export default function DataViewer({
     }
   }, [data, mode, pretty]);
 
-  {/* ────────── Actions ──────────  */ }
   const stop = (e) => e.stopPropagation();
 
   const download = (e) => {
@@ -80,7 +78,6 @@ export default function DataViewer({
                   : "w-full mx-auto bg-black/5 border border-black/15 px-6 py-4 rounded-2xl backdrop-blur-xl overflow-hidden"
               }
             >
-              {/* ────────── Header ──────────  */}
               <div className={`flex items-center justify-between ${isCenter ? "px-4 py-3 border-b border-black/10" : ""}`}>
                 <h3 className="font-semibold">
                   {title} ({mode.toUpperCase()})

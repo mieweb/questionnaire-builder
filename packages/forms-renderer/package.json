@@ -1,0 +1,21 @@
+{
+  "name": "@mieweb/forms-renderer",
+  "version": "0.1.0",
+  "description": "Read-only questionnaire form renderer producing FHIR QuestionnaireResponse",
+  "type": "module",
+  "main": "./index.js",
+  "module": "./index.js",
+  "exports": {
+    ".": { "import": "./index.js" }
+  },
+  "files": ["index.js", "src", "README.md"],
+  "sideEffects": false,
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {
+    "@mieweb/forms-engine": "0.1.0"
+  },
+  "publishConfig": { "access": "public" }
+}

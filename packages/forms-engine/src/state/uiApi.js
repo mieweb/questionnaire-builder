@@ -33,10 +33,8 @@ export const useUIApi = () => {
   const toggleEdit = React.useCallback(() => setEditModalOpen((v) => !v), [setEditModalOpen]);
 
   return React.useMemo(() => ({
-    // state bag stays stable only when its members change
     state: { isPreview, isEditModalOpen, panelResetKey },
 
-    // convenience direct alias (some components were trying ui.isPreview)
     isPreview,
 
     preview: { set: setPreview, toggle: togglePreview },

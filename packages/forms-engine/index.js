@@ -1,8 +1,3 @@
-if (typeof globalThis !== 'undefined' && !globalThis.__QB_ENGINE_INDEX_LOGGED) {
-	globalThis.__QB_ENGINE_INDEX_LOGGED = true;
-	// eslint-disable-next-line no-console
-	console.log('[QB] forms-engine index loaded', new Date().toISOString());
-}
 // advanced fields
 export { default as Section_Field } from './src/adv_field/section_Field.jsx';
 

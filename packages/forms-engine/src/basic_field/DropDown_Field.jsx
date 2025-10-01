@@ -15,7 +15,6 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
                 <div className="font-light">{f.question || "Question"}</div>
                 <div>
-                  {/* ────────── Preview Select ────────── */}
                   <select
                     className="w-full px-4 shadow border border-black/10 rounded-lg h-10"
                     value={f.selected || ""}
@@ -45,7 +44,6 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
               placeholder="Enter question"
             />
 
-            {/* ────────── Disabled preview of select ────────── */}
             <div className="mt-2">
               <select className="w-full px-4 shadow border border-black/10 rounded-lg h-10" disabled>
                 <option value="">Select an option</option>
@@ -57,7 +55,6 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
               </select>
             </div>
 
-            {/* ────────── Options Editor ────────── */}
             {(f.options || []).map((option) => (
               <div
                 key={option.id}

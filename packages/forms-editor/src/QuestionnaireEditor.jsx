@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Header from './components/Header.jsx';
 import MobileToolBar from './components/MobileToolBar.jsx';
 import Layout from './components/desktopLayout/Layout.jsx';
-// Consume engine stores & APIs from forms-engine
+
 import {
   useFormStore,
   useFormApi,

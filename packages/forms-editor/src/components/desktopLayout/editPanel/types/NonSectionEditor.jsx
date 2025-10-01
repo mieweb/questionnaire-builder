@@ -6,7 +6,6 @@ import { useFormApi } from "@mieweb/forms-engine";
 function NonSectionEditor({ f }) {
   const api = useFormApi(f.id);
 
-  {/* ────────── update top-level field props ──────────  */}
   const onUpdateField = useCallback(
     (key, value) => api.field.update(key, value),
     [api]

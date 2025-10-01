@@ -27,20 +27,11 @@ export default function Header() {
 
   // ────────── Preview/Edit toggles ──────────
   const onPreview = () => {
-    console.log("[Header] PREVIEW click (before)", ui.state.isPreview);
     ui.preview.set(true);
     ui.selectedFieldId.clear();
-    // log after state flush
-    setTimeout(() => {
-      console.log("[Header] PREVIEW (after)", useUIStore.getState().isPreview);
-    }, 0);
   };
   const onEdit = () => {
-    console.log("[Header] BUILDER click (before)", ui.state.isPreview);
     ui.preview.set(false);
-    setTimeout(() => {
-      console.log("[Header] BUILDER (after)", useUIStore.getState().isPreview);
-    }, 0);
   };
 
   return (

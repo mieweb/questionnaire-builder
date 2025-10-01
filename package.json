@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "dev": "vite --config apps/web-editor/vite.config.ts",
+    "dev:demos": "vite --config apps/web-demo-packages/vite.config.ts",
     "preview": "vite preview --config apps/web-editor/vite.config.ts",
     "build": "npm run build:packages && vite build --config apps/web-editor/vite.config.ts",
     "build:packages": "npm run build:forms-engine && npm run build:forms-editor",

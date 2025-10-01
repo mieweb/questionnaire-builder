@@ -25,7 +25,6 @@ const TextInputField = React.memo(function TextInputField({ field, sectionId }) 
           );
         }
 
-        // ────────── Edit Mode ──────────
         return (
           <div>
             <input

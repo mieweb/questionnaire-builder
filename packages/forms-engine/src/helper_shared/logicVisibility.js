@@ -16,7 +16,6 @@ function getValueOf(field) {
   }
 }
 
-// ────────── <Comment> escape regex special chars ──────────
 function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
 
 // ────────── Evaluate a single condition ──────────
@@ -35,15 +34,14 @@ function evaluate(cond, byId) {
       const norm = (s) =>
         String(s ?? "")
           .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "") // strip diacritics
+          .replace(/[\u0300-\u036f]/g, "")
           .toLowerCase();
 
-      const hay = norm(actual).replace(/[^a-z0-9]+/g, " ").trim();   // wordize
+      const hay = norm(actual).replace(/[^a-z0-9]+/g, " ").trim();
       const needle = norm(expected).trim();
       if (!needle) return false;
 
-      const parts = needle.split(/\s+/); // phrase support
-      // build word-boundary style regex over normalized words
+      const parts = needle.split(/\s+/);
       const pattern =
         parts.length === 1
           ? new RegExp(`(?:^|\\s)${esc(parts[0])}(?:\\s|$)`)
@@ -65,7 +63,6 @@ export function isVisible(field, all) {
   const ew = field?.enableWhen;
   if (!ew || !Array.isArray(ew.conditions) || ew.conditions.length === 0) return true;
 
-  // Accept array or map. If array, reduce to a map.
   const byId = Array.isArray(all)
     ? all.reduce((m, f) => { if (f?.id) m[f.id] = f; return m; }, {})
     : all;

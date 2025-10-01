@@ -9,12 +9,17 @@
     ".": {
       "import": "./index.js"
     },
+    "./styles.css": "./src/styles.css",
     "./package.json": "./package.json"
   },
   "files": [
     "index.js",
     "src",
     "README.md"
+  ],
+  "sideEffects": [
+    "*.css",
+    "src/styles.css"
   ],
   "dependencies": {
     "uuid": "^11.0.4",

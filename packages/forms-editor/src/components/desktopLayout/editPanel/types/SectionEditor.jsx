@@ -85,13 +85,11 @@ function SectionEditor({ section, onActiveChildChange }) {
     <>
       <h3 className="text-lg font-semibold mb-3">Edit Section</h3>
 
-      {/* ────────── Section ID (DRY) ────────── */}
       <DraftIdEditor
         id={section.id}
         onCommit={(next) => sectionApi.field.renameId(next)}
       />
 
-      {/* ────────── Section Title ────────── */}
       <div className="mt-3">
         <label className="block text-sm mb-1">Section Title</label>
         <input
@@ -102,7 +100,6 @@ function SectionEditor({ section, onActiveChildChange }) {
         />
       </div>
 
-      {/* ────────── Child tabs ────────── */}
       <div className="mt-6">
         <div className="text-sm font-semibold mb-2">Fields in this section</div>
         {children.length === 0 ? (
