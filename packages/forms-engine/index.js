@@ -1,4 +1,8 @@
-
+if (typeof globalThis !== 'undefined' && !globalThis.__QB_ENGINE_INDEX_LOGGED) {
+	globalThis.__QB_ENGINE_INDEX_LOGGED = true;
+	// eslint-disable-next-line no-console
+	console.log('[QB] forms-engine index loaded', new Date().toISOString());
+}
 // advanced fields
 export { default as Section_Field } from './src/adv_field/section_Field.jsx';
 
@@ -11,7 +15,7 @@ export { default as TextInput_Field } from './src/basic_field/TextInput_Field.js
 // shared helper components and hooks
 export { default as FieldWrapper } from './src/helper_shared/FieldWrapper.jsx';
 export { default as useFieldController } from './src/helper_shared/useFieldController.jsx';
-export { default as fieldTypes} from './src/helper_shared/fieldTypes-config.js';
+export { default as fieldTypes, getFieldComponent, registerFieldComponent } from './src/helper_shared/fieldTypes-config.js';
 export { initializeField, initializeFieldOptions } from './src/helper_shared/initializedField.js';
 export { isVisible } from './src/helper_shared/logicVisibility.js';
 

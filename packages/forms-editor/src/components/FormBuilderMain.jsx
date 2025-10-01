@@ -1,7 +1,22 @@
 import React, { useMemo } from "react";
-import { fieldTypes, useFieldsArray, useFormStore, useUIApi, isVisible } from "@mieweb/forms-engine";
+import { fieldTypes, getFieldComponent, useFieldsArray, useFormStore, useUIApi, isVisible } from "@mieweb/forms-engine";
+
+// Debug helper (one-time) to inspect registry
+if (typeof window !== 'undefined' && !window.__qb_registry_logged) {
+  window.__qb_registry_logged = true;
+  try {
+    // Log only keys to keep noise low
+    // eslint-disable-next-line no-console
+    console.log('[QB] fieldTypes keys:', Object.keys(fieldTypes));
+  } catch {}
+}
 
 export default function FormBuilderMain() {
+  if (typeof window !== 'undefined') {
+    window.__qb_fbm_renders = (window.__qb_fbm_renders || 0) + 1;
+    // eslint-disable-next-line no-console
+    console.log('[QB] FormBuilderMain render count:', window.__qb_fbm_renders);
+  }
   const ui = useUIApi();
   const fields = useFieldsArray();
 
@@ -38,10 +53,21 @@ const FieldRow = React.memo(function FieldRow({ id }) {
   const field = useFormStore(React.useCallback((s) => s.byId[id], [id]));
   if (!field) return null;
 
-  const FieldComponent = fieldTypes[field.fieldType]?.component;
+  const FieldComponent = getFieldComponent(field.fieldType);
+
+  if (!FieldComponent) {
+    // eslint-disable-next-line no-console
+    console.warn('[QB] Missing component for type:', field.fieldType, 'id:', field.id, 'known keys:', Object.keys(fieldTypes));
+    return (
+      <div className="mb-1.5 border border-red-300 bg-red-50 text-xs p-2 rounded">
+        Missing component for fieldType "{field.fieldType}" (id {field.id})
+      </div>
+    );
+  }
+
   return (
-    <div className="mb-1.5">
-      {FieldComponent ? <FieldComponent field={field} /> : null}
+    <div className="mb-1.5" data-field-type={field.fieldType} data-field-id={field.id}>
+      <FieldComponent field={field} />
     </div>
   );
 });

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useMemo } from "react";
-import fieldTypes from "../helper_shared/fieldTypes-config.js";
+import fieldTypes, { registerFieldComponent, getFieldComponent } from "../helper_shared/fieldTypes-config.js";
 import { isVisible } from "../helper_shared/logicVisibility.js";
 import { PLUSSQUARE_ICON } from "../helper_shared/icons.jsx";
 
@@ -9,6 +9,11 @@ import { useUIApi } from "../state/uiApi.js";
 import { useFormStore } from "../state/formStore.js";
 
 const SectionField = React.memo(function SectionField({ field }) {
+  if (typeof window !== 'undefined' && !window.__qb_logged_section_once) {
+    window.__qb_logged_section_once = true;
+    // eslint-disable-next-line no-console
+    console.log('[QB] SectionField component loaded');
+  }
   const ctrl = useFieldController(field);
   const ui = useUIApi();
 
@@ -41,7 +46,7 @@ const SectionField = React.memo(function SectionField({ field }) {
 
   // ────────── Child PREVIEW renderer ──────────
   const renderChildPreview = (child, sectionId) => {
-    const Comp = fieldTypes[child.fieldType]?.component;
+    const Comp = getFieldComponent(child.fieldType);
     if (!Comp) return null;
 
     const visible = isVisible(child, allFlat);
@@ -56,7 +61,7 @@ const SectionField = React.memo(function SectionField({ field }) {
 
   // ────────── Child EDIT renderer ──────────
   const renderChildEdit = (child, sectionId) => {
-    const ChildField = fieldTypes[child.fieldType]?.component;
+    const ChildField = getFieldComponent(child.fieldType);
     if (!ChildField) return null;
 
     const isHighlighted = selectedChildId === child.id;
@@ -134,5 +139,8 @@ const SectionField = React.memo(function SectionField({ field }) {
     </FieldWrapper>
   );
 });
+
+// Register component via helper (avoids direct mutation patterns elsewhere)
+registerFieldComponent('section', SectionField);
 
 export default SectionField;
