@@ -11,21 +11,26 @@
     "dev": "vite --config apps/web-editor/vite.config.ts",
     "dev:demos": "vite --config apps/web-demo-packages/vite.config.ts",
     "preview": "vite preview --config apps/web-editor/vite.config.ts",
-    "build": "npm run build:packages && vite build --config apps/web-editor/vite.config.ts",
-    "build:packages": "npm run build:forms-engine && npm run build:forms-editor",
-    "build:forms-engine": "echo build forms-engine (add bundler later)",
-    "build:forms-editor": "echo build forms-editor (add bundler later)",
+    "build:packages": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "publish:packages": "cd packages/forms-engine && npm publish && cd ../forms-editor && npm publish && cd ../forms-renderer && npm publish && cd ../..",
+    "version:patch": "npm version patch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "version:minor": "npm version minor --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "version:major": "npm version major --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "release:patch": "npm run build:packages && npm run version:patch && npm run publish:packages",
+    "release:minor": "npm run build:packages && npm run version:minor && npm run publish:packages",
+    "release:major": "npm run build:packages && npm run version:major && npm run publish:packages",
     "lint": "eslint ."
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
     "@tailwindcss/vite": "^4.0.6",
     "@vitejs/plugin-react": "^4.3.3",
-    "vite": "^6.3.6",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
-    "globals": "^15.11.0"
+    "globals": "^15.11.0",
+    "tsup": "^8.5.0",
+    "vite": "^6.3.6"
   }
 }

@@ -3,20 +3,24 @@
   "version": "0.1.0",
   "description": "Field components and utilities for questionnaire builder",
   "type": "module",
-  "main": "./index.js",
-  "module": "./index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": "./index.js"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./styles.css": "./src/styles.css",
     "./package.json": "./package.json"
   },
   "files": [
-    "index.js",
-    "src",
+    "dist",
+    "src/styles.css",
     "README.md"
   ],
+  "scripts": {
+    "build": "tsup index.js --format esm --external react --external react-dom --external zustand --external uuid"
+  },
   "sideEffects": [
     "*.css",
     "src/styles.css"
