@@ -10,7 +10,6 @@
   "scripts": {
     "dev": "concurrently \"npm run dev:packages\" \"vite --config apps/web-editor/vite.config.ts\"",
     "dev:demos": "concurrently \"npm run dev:packages\" \"vite --config apps/web-demo-packages/vite.config.ts\"",
-    "dev:test-link": "npm run dev --workspace=apps/test-link",
     "dev:packages": "npm run build:watch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
     "preview": "vite preview --config apps/web-editor/vite.config.ts",
     "build": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
@@ -23,10 +22,6 @@
     "release:renderer": "npm run build && npm run version:renderer && npm publish --workspace=packages/forms-renderer",
     "release:all": "npm run build && npm run version:all && npm run publish:packages",
     "publish:packages": "npm publish --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
-    "test:setup-links": "npm run build && npm run test:create-links && npm run test:link-packages",
-    "test:create-links": "npm link --workspace=packages/forms-engine && npm link --workspace=packages/forms-editor && npm link --workspace=packages/forms-renderer",
-    "test:link-packages": "npm link @mieweb/forms-engine @mieweb/forms-editor @mieweb/forms-renderer --workspace=apps/test-link",
-    "test:cleanup-links": "npm unlink @mieweb/forms-engine @mieweb/forms-editor @mieweb/forms-renderer --workspace=apps/test-link",
     "lint": "eslint ."
   },
   "devDependencies": {
@@ -39,7 +34,6 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
-    "tsup": "^8.5.0",
     "vite": "^6.3.6",
     "vite-plugin-lib-inject-css": "^2.2.2"
   }
