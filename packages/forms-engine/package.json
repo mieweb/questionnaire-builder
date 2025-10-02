@@ -16,11 +16,13 @@
     "dist",
     "README.md"
   ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "build": "vite build",
     "build:watch": "vite build --watch"
   },
-  "sideEffects": false,
   "dependencies": {
     "uuid": "^11.0.4",
     "zustand": "^5.0.8"

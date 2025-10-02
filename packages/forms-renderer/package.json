@@ -15,11 +15,13 @@
     "dist",
     "README.md"
   ],
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "build": "vite build",
     "build:watch": "vite build --watch"
   },
-  "sideEffects": false,
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"

@@ -123,7 +123,6 @@ npm run dev:demos        # Demo app with package watch mode
 ```bash
 npm run dev              # Web-editor + package watch mode (http://localhost:5173)
 npm run dev:demos        # Demo app + package watch mode (http://localhost:5174)
-npm run dev:test-link    # Test link app for external testing
 ```
 
 **Package Development:**
@@ -249,30 +248,30 @@ function App({ fields }) {
 
 ## 🧪 Testing
 
-### Testing with npm link
-
-Test packages locally before publishing:
-
-```bash
-# Set up npm links for local testing
-npm run test:setup-links
-
-# Run test app to verify packages work externally
-npm run dev:test-link    # http://localhost:5173
-
-# Clean up when done
-npm run test:cleanup-links
-```
-
 ### Manual Testing
 
 ```bash
-# Build and test individual packages
+# Build and test packages in demo apps
 npm run build
 npm run dev:demos        # Test in demo app
-
-# Or test the full editor
 npm run dev              # Test in web-editor app
+```
+
+### External Testing
+
+To test packages in external projects:
+
+```bash
+# Build packages
+npm run build
+
+# In external project, use file:// protocol
+# package.json:
+# {
+#   "dependencies": {
+#     "@mieweb/forms-engine": "file:../questionnaire-builder/packages/forms-engine"
+#   }
+# }
 ```
 
 ---

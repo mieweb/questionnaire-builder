@@ -29,7 +29,7 @@ export default defineConfig({
         }
       }
     },
-    cssCodeSplit: false,
+    cssCodeSplit: true,  // Required for vite-plugin-lib-inject-css
     sourcemap: true
   }
 });

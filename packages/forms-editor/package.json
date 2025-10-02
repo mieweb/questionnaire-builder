@@ -20,7 +20,9 @@
 		"build": "vite build",
 		"build:watch": "vite build --watch"
 	},
-	"sideEffects": false,
+	"sideEffects": [
+		"**/*.css"
+	],
 	"peerDependencies": {
 		"react": ">=18.0.0",
 		"react-dom": ">=18.0.0"
