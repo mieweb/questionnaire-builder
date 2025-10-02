@@ -1,6 +1,6 @@
 {
 	"name": "@mieweb/forms-editor",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Embeddable questionnaire form editor component",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -17,7 +17,8 @@
 		"README.md"
 	],
 	"scripts": {
-		"build": "vite build"
+		"build": "vite build",
+		"build:watch": "vite build --watch"
 	},
 	"sideEffects": false,
 	"peerDependencies": {

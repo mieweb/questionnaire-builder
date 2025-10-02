@@ -1,6 +1,6 @@
 {
   "name": "@mieweb/forms-engine",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Field components and utilities for questionnaire builder",
   "type": "module",
   "main": "./dist/index.js",
@@ -17,7 +17,8 @@
     "README.md"
   ],
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "build:watch": "vite build --watch"
   },
   "sideEffects": false,
   "dependencies": {

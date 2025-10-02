@@ -46,13 +46,13 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-2 rounded-xl border border-black/10 bg-white shadow-sm">
           <button
-            className={`py-3 rounded-xl text-sm font-medium ${!isPreview ? "bg-black/5" : ""}`}
+            className={`py-3 rounded-xl text-sm font-medium ${!isPreview ? "bg-black/10" : ""}`}
             onClick={onEdit}
           >
             Builder
           </button>
           <button
-            className={`py-3 rounded-xl text-sm font-medium ${isPreview ? "bg-black/5" : ""}`}
+            className={`py-3 rounded-xl text-sm font-medium ${isPreview ? "bg-black/10" : ""}`}
             onClick={onPreview}
           >
             Preview

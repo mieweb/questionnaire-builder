@@ -26,13 +26,6 @@ export default defineConfig({
           '@mieweb/forms-engine': 'FormsEngine',
           'framer-motion': 'FramerMotion',
           'js-yaml': 'jsyaml'
-        },
-        assetFileNames: (assetInfo) => {
-          // Don't generate separate CSS files since CSS is injected into JS
-          if (assetInfo.name.endsWith('.css')) {
-            return 'temp.css'; // Will be removed by plugin
-          }
-          return assetInfo.name;
         }
       }
     },
