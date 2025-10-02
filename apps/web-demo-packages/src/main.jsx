@@ -42,7 +42,7 @@ function App() {
       <div className="w-full h-dvh relative bg-slate-100">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingFooter />
-        <div className="absolute inset-0 overflow-auto p-4 max-w-[900px] mx-auto w-full">
+        <div className="absolute inset-0 overflow-auto p-4 max-w-4xl mx-auto w-full">
           <QuestionnaireRenderer
             questionnaireId="demo-1"
             fields={fields}
@@ -59,17 +59,17 @@ function App() {
   // Landing
   return (
     <div className="min-h-dvh px-6 md:px-12 py-16 bg-gradient-to-b from-white to-slate-50 text-slate-900 font-sans">
-      <div className="max-w-[1080px] mx-auto">
+      <div className="max-w-5xl mx-auto">
         <div className="text-center mb-14">
           <h1 className="m-0 mb-4 text-4xl md:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
             Questionnaire Builder
           </h1>
-          <p className="mx-auto max-w-[620px] leading-relaxed text-[1.05rem] text-slate-500">
+          <p className="mx-auto max-w-xl leading-relaxed text-lg text-slate-500">
             Professional form builder with FHIR <code className="bg-indigo-100 px-2 py-1 rounded-md text-sm font-medium text-indigo-700">QuestionnaireResponse</code> output
           </p>
         </div>
 
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-5 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
           <DemoCard title="Editor" desc="Build & modify questionnaire structure." onClick={() => setView('editor')} />
           <DemoCard title="Renderer" desc="Fill out the questionnaire & submit." onClick={() => setView('renderer')} />
         </div>
@@ -88,14 +88,14 @@ function App() {
 
 function FloatingBack({ onExit }) {
   return (
-    <div className="fixed top-5 right-5 z-[9999]">
+    <div className="fixed top-5 right-5 z-50">
       <motion.button
         onClick={onExit}
         title="Back to landing (Esc)"
         aria-label="Back to landing"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="inline-flex items-center gap-2.5 bg-white/70 backdrop-blur-xl backdrop-saturate-[180%] text-slate-900 border border-white/30 px-4 py-3 text-sm tracking-tight rounded-[14px] cursor-pointer font-medium shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.6)] font-sans"
+        className="inline-flex items-center gap-2.5 bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-3 text-sm tracking-tight rounded-2xl cursor-pointer font-medium shadow-lg font-sans"
         whileHover={{
           background: 'rgba(255, 255, 255, 0.85)',
           borderColor: 'rgba(255, 255, 255, 0.5)',
@@ -108,7 +108,7 @@ function FloatingBack({ onExit }) {
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
         <span className="font-medium">Back</span>
-        <span className="bg-slate-100/60 px-2 py-1 rounded-md text-[0.7rem] font-semibold text-slate-500 border border-slate-200/60 font-mono">ESC</span>
+        <span className="bg-slate-100/60 px-2 py-1 rounded-md text-xs font-semibold text-slate-500 border border-slate-200/60 font-mono">ESC</span>
       </motion.button>
     </div>
   );
@@ -116,11 +116,11 @@ function FloatingBack({ onExit }) {
 
 function FloatingFooter() {
   return (
-    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[9999]">
+    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="inline-flex items-center gap-2 bg-white/70 backdrop-blur-xl backdrop-saturate-[180%] text-slate-900 border border-white/30 px-4 py-2.5 text-xs tracking-tight rounded-[14px] font-medium shadow-[0_8px_32px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.6)] font-sans"
+        className="inline-flex items-center gap-2 bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-2.5 text-xs tracking-tight rounded-2xl font-medium shadow-lg font-sans"
         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       >
         <span className="text-slate-500">Press</span>
@@ -135,7 +135,7 @@ function DemoCard({ title, desc, onClick }) {
   return (
     <motion.div
       onClick={onClick}
-      className="cursor-pointer rounded-[18px] p-7 px-6 bg-white/75 backdrop-blur-2xl backdrop-saturate-[180%] border border-white/40 shadow-[0_4px_16px_rgba(0,0,0,0.06),0_1px_4px_rgba(0,0,0,0.03),inset_0_1px_0_rgba(255,255,255,0.8)] relative overflow-hidden"
+      className="cursor-pointer rounded-3xl p-7 px-6 bg-white/75 backdrop-blur-2xl backdrop-saturate-150 border border-white/40 shadow-xl relative overflow-hidden"
       whileHover={{
         y: -4,
         background: 'rgba(255, 255, 255, 0.9)',
@@ -146,7 +146,7 @@ function DemoCard({ title, desc, onClick }) {
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >
       <h3 className="m-0 mb-2.5 text-xl font-semibold tracking-tight text-slate-900">{title}</h3>
-      <p className="m-0 text-[0.95rem] leading-relaxed text-slate-500">{desc}</p>
+      <p className="m-0 text-base leading-relaxed text-slate-500">{desc}</p>
       <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-500">
         <span>Explore</span>
         <motion.svg 
@@ -173,7 +173,7 @@ function Landing() {
   return (
     <div className="mt-8">
       <h2 className="m-0 mb-5 text-lg font-semibold text-slate-900 tracking-tight">Packages</h2>
-      <div className="grid gap-4 max-w-[720px]">
+      <div className="grid gap-4 max-w-3xl">
         <InfoRow name="@mieweb/forms-engine" desc="Core state, field primitives & logic utilities." />
         <InfoRow name="@mieweb/forms-editor" desc="Embeddable builder (edit + preview)." />
         <InfoRow name="@mieweb/forms-renderer" desc="Read‑only renderer producing FHIR QuestionnaireResponse." />
@@ -185,7 +185,7 @@ function Landing() {
 function InfoRow({ name, desc }) {
   return (
     <motion.div 
-      className="flex flex-wrap gap-3 items-center p-4 px-5 bg-slate-50/60 backdrop-blur-xl backdrop-saturate-[150%] border border-slate-100/80 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.03),inset_0_1px_0_rgba(255,255,255,0.7)]"
+      className="flex flex-wrap gap-3 items-center p-4 px-5 bg-slate-50/60 backdrop-blur-xl backdrop-saturate-150 border border-slate-100/80 rounded-xl shadow-md"
       whileHover={{
         background: 'rgba(255, 255, 255, 0.8)',
         borderColor: 'rgba(203, 213, 225, 0.6)',
@@ -194,7 +194,7 @@ function InfoRow({ name, desc }) {
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
     >
       <code className="bg-blue-100/70 backdrop-blur-lg px-3 py-2 rounded-lg text-xs tracking-wide font-semibold text-blue-800 border border-blue-200/60 shadow-sm">{name}</code>
-      <span className="flex-1 min-w-[200px] text-sm text-slate-500 leading-relaxed">{desc}</span>
+      <span className="flex-1 min-w-fit text-sm text-slate-500 leading-relaxed">{desc}</span>
     </motion.div>
   );
 }
