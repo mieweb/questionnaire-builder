@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFormStore, useUIApi, useFieldsArray, getFieldComponent, isVisible } from '@mieweb/forms-engine';
-import '@mieweb/forms-engine/styles.css';
 
 /**
  * QuestionnaireRenderer

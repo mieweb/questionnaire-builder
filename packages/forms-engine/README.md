@@ -27,13 +27,7 @@ This package provides the **foundation** for building questionnaires:
 
 ## 🚀 Quick Start
 
-### 1. Import CSS Styles
-
-```jsx
-import '@mieweb/forms-engine/styles.css';
-```
-
-### 2. Use Field Components
+### 1. Use Field Components
 
 ```jsx
 import { TextInput_Field, Radio_Field, useFormStore } from '@mieweb/forms-engine';
@@ -217,9 +211,9 @@ const { field, updateField, removeField } = useFieldController(fieldId);
 
 ## 🎨 Styling
 
-The package includes base styles at `@mieweb/forms-engine/styles.css`. Import this in your app's entry point.
+**CSS is automatically included** when you import the package! The Tailwind CSS styles are bundled directly into the JavaScript.
 
-You can override styles using Tailwind classes or custom CSS.
+You can override styles by adding your own CSS classes or custom styles after importing the package.
 
 ## 📦 Bundle Size
 

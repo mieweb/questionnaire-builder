@@ -28,7 +28,6 @@ The following is installed automatically:
 
 ```jsx
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
-import '@mieweb/forms-engine/styles.css'; // Import styles
 
 function App({ fields }) {
   const handleChange = (updatedFields) => {
@@ -325,11 +324,7 @@ Fields use the same structure as `@mieweb/forms-editor`:
 
 ## 🎨 Styling
 
-Import the base styles from `forms-engine`:
-
-```jsx
-import '@mieweb/forms-engine/styles.css';
-```
+**CSS is automatically included** when you import the package! The styles come bundled via the `@mieweb/forms-engine` dependency.
 
 Override with custom CSS:
 

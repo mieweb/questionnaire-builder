@@ -1,6 +1,6 @@
 {
 	"name": "@mieweb/forms-editor",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Embeddable questionnaire form editor component",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -10,17 +10,16 @@
 			"import": "./dist/index.js",
 			"types": "./dist/index.d.ts"
 		},
-		"./styles.css": "./src/index.css",
 		"./package.json": "./package.json"
 	},
-	"files": ["dist", "src/index.css", "README.md"],
-	"scripts": {
-		"build": "tsup index.js --format esm --external react --external react-dom --external @mieweb/forms-engine --external framer-motion --external js-yaml --external tailwindcss"
-	},
-	"sideEffects": [
-		"*.css",
-		"src/index.css"
+	"files": [
+		"dist",
+		"README.md"
 	],
+	"scripts": {
+		"build": "vite build"
+	},
+	"sideEffects": false,
 	"peerDependencies": {
 		"react": ">=18.0.0",
 		"react-dom": ">=18.0.0"

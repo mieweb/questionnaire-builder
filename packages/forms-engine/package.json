@@ -1,6 +1,6 @@
 {
   "name": "@mieweb/forms-engine",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Field components and utilities for questionnaire builder",
   "type": "module",
   "main": "./dist/index.js",
@@ -10,21 +10,16 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./styles.css": "./src/styles.css",
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
-    "src/styles.css",
     "README.md"
   ],
   "scripts": {
-    "build": "tsup index.js --format esm --external react --external react-dom --external zustand --external uuid"
+    "build": "vite build"
   },
-  "sideEffects": [
-    "*.css",
-    "src/styles.css"
-  ],
+  "sideEffects": false,
   "dependencies": {
     "uuid": "^11.0.4",
     "zustand": "^5.0.8"

@@ -26,13 +26,7 @@ The following are installed automatically:
 
 ## 🚀 Quick Start
 
-### 1. Import Styles
-
-```jsx
-import '@mieweb/forms-editor/styles.css';
-```
-
-### 2. Basic Usage
+### 1. Basic Usage
 
 ```jsx
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
@@ -239,10 +233,12 @@ Each field follows this structure:
 
 ## 🎨 Theming
 
-The editor uses Tailwind CSS under the hood. Import your own Tailwind config or override classes:
+**CSS is automatically included** when you import the package! The Tailwind CSS styles are bundled directly into the JavaScript.
+
+Override styles by importing your custom CSS after the component:
 
 ```jsx
-import '@mieweb/forms-editor/styles.css';
+import { QuestionnaireEditor } from '@mieweb/forms-editor';
 import './my-overrides.css'; // Your custom styles
 ```
 
