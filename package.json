@@ -3,37 +3,41 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.0.6",
-    "framer-motion": "^12.4.2",
-    "js-yaml": "^4.1.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-hook-form": "^7.53.2",
-    "uuid": "^11.0.4",
-    "zustand": "^5.0.8"
+    "dev": "concurrently \"npm run dev:packages\" \"vite --config apps/web-editor/vite.config.ts\"",
+    "dev:demos": "concurrently \"npm run dev:packages\" \"vite --config apps/web-demo-packages/vite.config.ts\"",
+    "dev:packages": "npm run build:watch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "preview": "vite preview --config apps/web-editor/vite.config.ts",
+    "build": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "version:engine": "npm version patch --workspace=packages/forms-engine",
+    "version:editor": "npm version patch --workspace=packages/forms-editor",
+    "version:renderer": "npm version patch --workspace=packages/forms-renderer",
+    "version:all": "npm run version:engine && npm run version:editor && npm run version:renderer",
+    "sync-deps": "npm run sync-deps:editor && npm run sync-deps:renderer",
+    "sync-deps:editor": "node scripts/sync-deps.js forms-editor forms-engine",
+    "sync-deps:renderer": "node scripts/sync-deps.js forms-renderer forms-engine",
+    "release:engine": "npm run build && npm run version:engine && npm run sync-deps && npm publish --workspace=packages/forms-engine",
+    "release:editor": "npm run build && npm run version:editor && npm publish --workspace=packages/forms-editor",
+    "release:renderer": "npm run build && npm run version:renderer && npm publish --workspace=packages/forms-renderer",
+    "release:all": "npm run build && npm run version:all && npm run sync-deps && npm run publish:packages",
+    "publish:packages": "npm publish --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
-    "@tailwindcss/postcss": "^4.0.6",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
+    "@tailwindcss/vite": "^4.0.6",
     "@vitejs/plugin-react": "^4.3.3",
-    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.0",
     "eslint": "^9.13.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "globals": "^15.11.0",
-    "postcss": "^8.4.49",
-    "tailwind-scrollbar": "^4.0.0",
-    "tailwindcss": "^4.0.6",
-    "vite": "^6.3.6"
+    "vite": "^6.3.6",
+    "vite-plugin-lib-inject-css": "^2.2.2"
   }
 }
