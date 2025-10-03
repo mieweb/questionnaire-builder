@@ -7,14 +7,17 @@ function App() {
   const [fields, setFields] = React.useState([
     { id: 'section-1', fieldType: 'section', title: 'Section 1', fields: [] },
     { id: 'name', fieldType: 'input', question: 'Your Name', required: true },
+    { id: 'gender', fieldType: 'radio', question: 'Gender', options: [{ value: 'Male' }, { value: 'Female' }], selected: null },
   ]);
 
   return (
-    <div className="min-h-screen">
-      <QuestionnaireEditor
-        initialFields={fields}
-        onChange={setFields}
-      />
+    <div className="w-full h-dvh bg-slate-100">
+      <div className="absolute inset-0 overflow-auto">
+        <QuestionnaireEditor
+          initialFields={fields}
+          onChange={setFields}
+        />
+      </div>
     </div>
   );
 }
