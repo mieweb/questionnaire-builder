@@ -1,9 +1,7 @@
 import React from 'react';
 import { useFormStore, useFieldsArray } from '@mieweb/forms-engine';
-import { useQuestionnaireInit } from './hooks/useQuestionnaireInit';
-import { useQuestionnaireSubmit } from './hooks/useQuestionnaireSubmit';
-import { RendererBody } from './components/RendererBody';
-import { SubmitButton } from './components/SubmitButton';
+import { useQuestionnaireInit, useQuestionnaireSubmit } from './hooks';
+import { RendererBody, SubmitButton } from './components';
 
 /**
  * QuestionnaireRenderer
