@@ -1,4 +1,4 @@
-# @mieweb/forms-renderer
+# @mieweb/forms-renderer `v0.1.4`
 
 Read-only questionnaire renderer for displaying and filling out forms. Produces FHIR QuestionnaireResponse output.
 
@@ -8,9 +8,9 @@ Read-only questionnaire renderer for displaying and filling out forms. Produces 
 npm install @mieweb/forms-renderer
 ```
 
-### Peer Dependencies
+### Peer Dependencies (Required)
 
-Ensure you have React 18+ installed:
+You must install React 18+ in your project:
 
 ```bash
 npm install react react-dom
@@ -24,34 +24,77 @@ The following is installed automatically:
 
 ## 🚀 Quick Start
 
-### 1. Basic Usage
+### Basic Usage
 
 ```jsx
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
+import { createRoot } from 'react-dom/client';
+import './index.css';
 
-function App({ fields }) {
-  const handleChange = (updatedFields) => {
-    console.log('Form data:', updatedFields);
-  };
-
-  const handleSubmit = (fhirResponse) => {
-    console.log('FHIR QuestionnaireResponse:', fhirResponse);
-    // Send to your backend
-  };
+function App() {
+  const [fields] = React.useState([
+    { id: 'sec-1', fieldType: 'section', title: 'Personal Info', fields: [] },
+    { id: 'q-name', fieldType: 'input', question: 'What is your name?', answer: '' },
+    { id: 'q-gender', fieldType: 'radio', question: 'Gender', options: [{ value: 'Male' }, { value: 'Female' }], selected: null },
+  ]);
+  const [submitted, setSubmitted] = React.useState(null);
 
   return (
-    <QuestionnaireRenderer
-      fields={fields}
-      onChange={handleChange}
-      onSubmit={handleSubmit}
-      questionnaireId="patient-intake-v1"
-      subjectId="patient-12345"
-    />
+    <div className="w-full h-dvh bg-slate-100">
+      <div className="absolute inset-0 overflow-auto p-4 max-w-4xl mx-auto w-full">
+        <QuestionnaireRenderer
+          questionnaireId="demo-1"
+          fields={fields}
+          onSubmit={(qr) => setSubmitted(qr)}
+        />
+        {submitted && (
+          <pre className="mt-4 bg-neutral-100 p-4">{JSON.stringify(submitted, null, 2)}</pre>
+        )}
+      </div>
+    </div>
+  );
+}
+
+createRoot(document.getElementById('root')).render(<App />);
+```
+
+### Loading from API
+
+```jsx
+function App() {
+  const [fields, setFields] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    fetch('/api/questionnaire/123')
+      .then(res => res.json())
+      .then(data => {
+        setFields(data.fields);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div className="absolute inset-0 overflow-auto p-4">
+      <QuestionnaireRenderer
+        questionnaireId="patient-intake-v1"
+        subjectId="patient-12345"
+        fields={fields}
+        onSubmit={async (fhirResponse) => {
+          await fetch('/api/responses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(fhirResponse)
+          });
+          alert('Submitted!');
+        }}
+      />
+    </div>
   );
 }
 ```
-
-### 2. Field Structure
 
 The `fields` prop accepts any data source (API, database, local storage) that matches this JSON structure:
 
@@ -121,6 +164,8 @@ The `fields` prop accepts any data source (API, database, local storage) that ma
 ```
 
 **Any JSON object matching this structure works** - whether from your backend API, a database query, local storage, or a CMS.
+
+---
 
 ## 📖 Props
 
@@ -211,41 +256,9 @@ On submit, generates a standard FHIR R4 QuestionnaireResponse:
 }
 ```
 
-## 🎯 Usage Examples
+## 🎯 Advanced Usage
 
-### Saving Responses
-
-```jsx
-import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
-import { useState } from 'react';
-
-function FormPage() {
-  const [responses, setResponses] = useState([]);
-
-  const handleSubmit = async (fhirResponse) => {
-    // Save to backend
-    await fetch('/api/responses', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(fhirResponse)
-    });
-
-    setResponses([...responses, fhirResponse]);
-    alert('Form submitted successfully!');
-  };
-
-  return (
-    <QuestionnaireRenderer
-      fields={fields}
-      onSubmit={handleSubmit}
-      questionnaireId="patient-intake"
-      subjectId="patient-67890"
-    />
-  );
-}
-```
-
-### Pre-filled Form
+### Pre-filled Responses
 
 ```jsx
 const prefilledFields = [
@@ -259,42 +272,37 @@ const prefilledFields = [
     id: '2',
     fieldType: 'radio',
     question: 'Gender',
-    options: ['Male', 'Female', 'Other'],
-    selected: 'Female' // Pre-filled
+    options: [{ value: 'Male' }, { value: 'Female' }, { value: 'Other' }],
+    selected: { value: 'Female' } // Pre-filled
   }
 ];
 
-<QuestionnaireRenderer fields={prefilledFields} />
+<QuestionnaireRenderer
+  fields={prefilledFields}
+  questionnaireId="follow-up-visit"
+  subjectId="patient-67890"
+/>
 ```
 
-### Real-time Validation
+### Track Form Changes
 
 ```jsx
-function ValidatedForm() {
-  const [errors, setErrors] = useState({});
-
-  const handleChange = (fields) => {
-    const newErrors = {};
-    
-    fields.forEach(field => {
-      if (field.required && !field.answer && !field.selected) {
-        newErrors[field.id] = 'This field is required';
-      }
-    });
-
-    setErrors(newErrors);
+function App() {
+  const [fields, setFields] = React.useState(initialFields);
+  
+  const handleChange = (updatedFields) => {
+    setFields(updatedFields);
+    console.log('User updated:', updatedFields);
   };
 
   return (
-    <div>
-      <QuestionnaireRenderer
-        fields={fields}
-        onChange={handleChange}
-      />
-      {Object.values(errors).map(err => (
-        <p className="text-red-500">{err}</p>
-      ))}
-    </div>
+    <QuestionnaireRenderer
+      fields={fields}
+      onChange={handleChange}
+      onSubmit={(fhirResponse) => {
+        console.log('Submitting:', fhirResponse);
+      }}
+    />
   );
 }
 ```
@@ -319,8 +327,12 @@ Fields use the same structure as `@mieweb/forms-editor`:
 
 ## 📦 Bundle Size
 
-- **4.85 KB** (ESM, uncompressed)
-- Very lightweight - perfect for embedding in patient portals
+- **ESM format** with tree-shaking support
+- **TypeScript definitions** included
+- **Very lightweight** - perfect for embedding in patient portals
+- **CSS automatically injected** via `@mieweb/forms-engine` dependency
+- Dependencies: `@mieweb/forms-engine` (auto-installed)
+- Peer dependencies: React 18+
 
 ## 🎨 Styling
 

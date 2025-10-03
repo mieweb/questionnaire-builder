@@ -1,6 +1,6 @@
-# @mieweb/forms-engine
+# @mieweb/forms-engine `v0.1.4`
 
-Core state management, field components, and utilities for building FHIR-compatible questionnaire forms.
+Core state management, field components, and utilg FHIR-compatible questionnaire forms.
 
 ## 📦 Installation
 
@@ -8,9 +8,9 @@ Core state management, field components, and utilities for building FHIR-compati
 npm install @mieweb/forms-engine
 ```
 
-### Peer Dependencies
+### Peer Dependencies (Required)
 
-Ensure you have React 18+ installed:
+You must install React 18+ in your project:
 
 ```bash
 npm install react react-dom
@@ -51,7 +51,7 @@ function MyForm() {
 }
 ```
 
-### 3. Manage Form State
+### 2. Manage Form State
 
 ```jsx
 import { useFormApi, useFormStore } from '@mieweb/forms-engine';
@@ -82,7 +82,25 @@ function FormManager() {
 }
 ```
 
-## 📚 Core Exports
+## �️ Development
+
+This package is designed to be used as a dependency in your React applications. It provides the core building blocks for questionnaire functionality.
+
+### Development
+
+If you're contributing to this package:
+
+```bash
+# Build for production
+npm run build
+
+# Build in watch mode (auto-rebuild on changes)
+npm run build:watch
+```
+
+---
+
+## �📚 Core Exports
 
 ### Field Components
 
@@ -217,8 +235,10 @@ You can override styles by adding your own CSS classes or custom styles after im
 
 ## 📦 Bundle Size
 
-- **52.43 KB** (ESM, uncompressed)
-- Tree-shakeable exports
+- **ESM format** with tree-shaking support
+- **TypeScript definitions** included
+- **CSS automatically injected** - no manual imports needed
+- Peer dependencies: React 18+
 
 ## 🔗 Related Packages
 

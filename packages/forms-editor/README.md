@@ -1,4 +1,4 @@
-# @mieweb/forms-editor
+# @mieweb/forms-editor `v0.1.4`
 
 Embeddable questionnaire editor component with drag-and-drop, FHIR export, and conditional logic support.
 
@@ -8,9 +8,9 @@ Embeddable questionnaire editor component with drag-and-drop, FHIR export, and c
 npm install @mieweb/forms-editor
 ```
 
-### Peer Dependencies
+### Peer Dependencies (Required)
 
-Ensure you have React 18+ installed:
+You must install React 18+ in your project:
 
 ```bash
 npm install react react-dom
@@ -26,54 +26,61 @@ The following are installed automatically:
 
 ## 🚀 Quick Start
 
-### 1. Basic Usage
+### Basic Usage
 
 ```jsx
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
+import { createRoot } from 'react-dom/client';
+import './index.css';
 
 function App() {
-  const handleChange = (fields) => {
-    console.log('Form updated:', fields);
+  const [fields, setFields] = React.useState([
+    { id: 'section-1', fieldType: 'section', title: 'Section 1', fields: [] },
+    { id: 'name', fieldType: 'input', question: 'Your Name', required: true },
+    { id: 'gender', fieldType: 'radio', question: 'Gender', options: [{ value: 'Male' }, { value: 'Female' }], selected: null },
+  ]);
+
+  return (
+    <div className="w-full h-dvh bg-slate-100">
+      <div className="absolute inset-0 overflow-auto">
+        <QuestionnaireEditor
+          initialFields={fields}
+          onChange={setFields}
+        />
+      </div>
+    </div>
+  );
+}
+
+createRoot(document.getElementById('root')).render(<App />);
+```
+
+### With State Persistence
+
+```jsx
+function App() {
+  const [fields, setFields] = React.useState(() => {
+    const saved = localStorage.getItem('questionnaire');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  const handleChange = (newFields) => {
+    setFields(newFields);
+    localStorage.setItem('questionnaire', JSON.stringify(newFields));
   };
 
   return (
-    <QuestionnaireEditor
-      onChange={handleChange}
-    />
+    <div className="absolute inset-0 overflow-auto">
+      <QuestionnaireEditor
+        initialFields={fields}
+        onChange={handleChange}
+      />
+    </div>
   );
 }
 ```
 
-### 3. With Initial Data
-
-```jsx
-import { QuestionnaireEditor } from '@mieweb/forms-editor';
-
-const initialFields = [
-  {
-    id: '1',
-    fieldType: 'input',
-    question: 'What is your name?',
-    answer: ''
-  },
-  {
-    id: '2',
-    fieldType: 'radio',
-    question: 'Select your role',
-    options: ['Developer', 'Designer', 'Manager'],
-    selected: null
-  }
-];
-
-function App() {
-  return (
-    <QuestionnaireEditor
-      initialFields={initialFields}
-      onChange={(fields) => console.log(fields)}
-    />
-  );
-}
-```
+---
 
 ## 📖 Props
 
@@ -147,59 +154,34 @@ Toggle preview mode to see how the form looks to end users:
 ### Custom Styling
 
 ```jsx
+<div className="absolute inset-0 overflow-auto">
+  <QuestionnaireEditor
+    className="custom-editor"
+    initialFields={fields}
+    onChange={setFields}
+  />
+</div>
+```
+
+### Start in Preview Mode
+
+```jsx
 <QuestionnaireEditor
-  className="my-custom-editor"
-  onChange={handleChange}
+  initialFields={fields}
+  onChange={setFields}
+  startInPreview={true}
 />
 ```
 
-```css
-.my-custom-editor {
-  --primary-color: #3b82f6;
-  --border-radius: 0.5rem;
-}
-```
-
-### Controlled State
+### Hide Header or Mobile Toolbar
 
 ```jsx
-import { QuestionnaireEditor } from '@mieweb/forms-editor';
-import { useFormStore } from '@mieweb/forms-engine';
-import { useEffect } from 'react';
-
-function ControlledEditor() {
-  const [savedFields, setSavedFields] = useState([]);
-
-  const handleChange = (fields) => {
-    setSavedFields(fields);
-    localStorage.setItem('questionnaire', JSON.stringify(fields));
-  };
-
-  return (
-    <QuestionnaireEditor
-      initialFields={savedFields}
-      onChange={handleChange}
-    />
-  );
-}
-```
-
-### Accessing Internal State
-
-```jsx
-import { useFormStore, useUIStore } from '@mieweb/forms-engine';
-
-function EditorWithStatus() {
-  const fieldCount = useFormStore(state => Object.keys(state.byId).length);
-  const isPreview = useUIStore(state => state.preview);
-
-  return (
-    <div>
-      <p>{fieldCount} fields | Mode: {isPreview ? 'Preview' : 'Edit'}</p>
-      <QuestionnaireEditor />
-    </div>
-  );
-}
+<QuestionnaireEditor
+  initialFields={fields}
+  onChange={setFields}
+  showHeader={false}
+  showMobileToolbar={false}
+/>
 ```
 
 ## 🔧 Field Structure
@@ -228,8 +210,11 @@ Each field follows this structure:
 
 ## 📦 Bundle Size
 
-- **48.13 KB** (ESM, uncompressed)
-- **489 B** CSS
+- **ESM format** with tree-shaking support
+- **TypeScript definitions** included
+- **CSS automatically injected** - no manual imports needed
+- Dependencies: `@mieweb/forms-engine`, `framer-motion`, `js-yaml`
+- Peer dependencies: React 18+
 
 ## 🎨 Theming
 

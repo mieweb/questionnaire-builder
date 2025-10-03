@@ -9,30 +9,30 @@ A modular, FHIR-compatible questionnaire system built with **React**, **Tailwind
 
 ---
 
-## � Packages
+## 📦 Packages
 
 This monorepo contains three npm packages for building and rendering questionnaires:
 
-### [@mieweb/forms-engine](./packages/forms-engine)
-Core state management, field components, and utilities.
+### [@mieweb/forms-engine](./packages/forms-engine) `v0.1.4`
+Core state management, field components, and utilities for building custom questionnaire UIs.
 
 ```bash
 npm install @mieweb/forms-engine
 ```
 
-**Use when:** Building custom questionnaire UIs or need low-level field primitives.
+**Use when:** Building custom questionnaire UIs or need low-level field primitives and state management.
 
-### [@mieweb/forms-editor](./packages/forms-editor)
-Full-featured questionnaire editor with FHIR export and conditional logic.
+### [@mieweb/forms-editor](./packages/forms-editor) `v0.1.4`
+Full-featured questionnaire editor with drag-and-drop, FHIR export, and conditional logic.
 
 ```bash
 npm install @mieweb/forms-editor
 ```
 
-**Use when:** You need a complete editor UI for creating questionnaires.
+**Use when:** You need a complete editor UI for creating and managing questionnaires.
 
-### [@mieweb/forms-renderer](./packages/forms-renderer)
-Read-only renderer for displaying and filling out questionnaires.
+### [@mieweb/forms-renderer](./packages/forms-renderer) `v0.1.4`
+Read-only renderer for displaying questionnaires and collecting responses with FHIR output.
 
 ```bash
 npm install @mieweb/forms-renderer
@@ -42,7 +42,7 @@ npm install @mieweb/forms-renderer
 
 ---
 
-## � Features
+## ✨ Features
 
 - ✅ **Multiple field types** - Input, radio, checkbox, dropdown, sections
 - 🔀 **Conditional logic** - Show/hide fields with `enableWhen` rules
@@ -58,23 +58,24 @@ npm install @mieweb/forms-renderer
 ```
 questionnaire-builder/
 ├── packages/
-│   ├── forms-engine/      # Core primitives (52 KB)
-│   ├── forms-editor/      # Editor component (48 KB)
-│   └── forms-renderer/    # Renderer component (5 KB)
+│   ├── forms-engine/      # Core primitives & state management
+│   ├── forms-editor/      # Full editor component
+│   └── forms-renderer/    # Read-only form renderer
 └── apps/
-    ├── web-editor/        # Full-featured editor demo app
-    └── web-demo-packages/ # Package showcase with mode selector
+    ├── web-editor/        # Production editor application
+    └── web-demo-packages/ # Package showcase & comparison tool
 ```
 
 ### Demo Applications
 
-#### **web-editor**
-A complete questionnaire editor application built with `@mieweb/forms-editor`. Use this as a reference for integrating the editor into your own projects.
+#### **web-editor** - Main Application
+The production questionnaire editor application built with `@mieweb/forms-editor`. This is the main deployed application available at the live demo URL.
 
-- Full editor interface with toolbar and preview
+- Full-featured editor interface with toolbar and preview
 - Import/export functionality (JSON, YAML, FHIR)
-- Conditional logic editor
-- Mobile-responsive design
+- Conditional logic editor with enableWhen support
+- Mobile-responsive design with optimized layouts
+- Reference implementation for integrating the editor package
 
 **Run locally:**
 ```bash
@@ -94,7 +95,7 @@ Interactive showcase demonstrating both the editor and renderer packages side-by
 **Run locally:**
 ```bash
 npm run dev:demos
-# Opens the demo at http://localhost:5173
+# Opens the demo at http://localhost:5180
 # Includes automatic package rebuilding when you edit source code
 ```
 
@@ -122,13 +123,15 @@ npm run dev:demos        # Demo app with package watch mode
 **Main Development:**
 ```bash
 npm run dev              # Web-editor + package watch mode (http://localhost:5173)
-npm run dev:demos        # Demo app + package watch mode (http://localhost:5174)
+npm run dev:demos        # Demo app + package watch mode (http://localhost:5180)
 ```
 
 **Package Development:**
 ```bash
 npm run dev:packages     # Watch mode for packages only (auto-rebuild on changes)
 npm run build            # Build all packages once
+npm run lint             # Run ESLint on all files
+npm run preview          # Preview built web-editor app
 ```
 
 ### Build System
@@ -181,6 +184,11 @@ npm run version:editor     # forms-editor only
 npm run version:renderer   # forms-renderer only
 npm run version:all        # all packages
 
+# Sync dependencies (updates cross-package references)
+npm run sync-deps          # sync all
+npm run sync-deps:editor   # forms-editor dependencies only
+npm run sync-deps:renderer # forms-renderer dependencies only
+
 # Publish without versioning
 npm run publish:packages   # Publish all packages as-is
 ```
@@ -194,10 +202,13 @@ npm run build
 # 2. Version what you want to release
 npm run version:engine     # or version:all for everything
 
-# 3. Publish
+# 3. Sync dependencies (updates package.json cross-references)
+npm run sync-deps
+
+# 4. Publish
 npm run publish:packages
 
-# 4. Push commits and tags
+# 5. Push commits and tags
 git push && git push --tags
 ```
 
@@ -219,14 +230,22 @@ Each package has detailed documentation:
 
 ```jsx
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
+import { createRoot } from 'react-dom/client';
 
 function App() {
+  const [fields, setFields] = React.useState([]);
+
   return (
-    <QuestionnaireEditor
-      onChange={(fields) => console.log(fields)}
-    />
+    <div className="absolute inset-0 overflow-auto">
+      <QuestionnaireEditor
+        initialFields={fields}
+        onChange={setFields}
+      />
+    </div>
   );
 }
+
+createRoot(document.getElementById('root')).render(<App />);
 ```
 
 ### Renderer
@@ -234,12 +253,19 @@ function App() {
 ```jsx
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
-function App({ fields }) {
+function App() {
+  const [fields] = React.useState([
+    { id: 'q1', fieldType: 'input', question: 'Your name?', answer: '' }
+  ]);
+
   return (
-    <QuestionnaireRenderer
-      fields={fields}
-      onSubmit={(fhirResponse) => console.log(fhirResponse)}
-    />
+    <div className="absolute inset-0 overflow-auto p-4">
+      <QuestionnaireRenderer
+        questionnaireId="demo-1"
+        fields={fields}
+        onSubmit={(fhirResponse) => console.log(fhirResponse)}
+      />
+    </div>
   );
 }
 ```
