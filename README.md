@@ -23,7 +23,7 @@ npm install @mieweb/forms-engine
 **Use when:** Building custom questionnaire UIs or need low-level field primitives and state management.
 
 ### [@mieweb/forms-editor](./packages/forms-editor) `v0.1.4`
-Full-featured questionnaire editor with drag-and-drop, FHIR export, and conditional logic.
+Full-featured questionnaire editor with FHIR export and conditional logic.
 
 ```bash
 npm install @mieweb/forms-editor
@@ -62,8 +62,8 @@ questionnaire-builder/
 │   ├── forms-editor/      # Full editor component
 │   └── forms-renderer/    # Read-only form renderer
 └── apps/
-    ├── web-editor/        # Production editor application
-    └── web-demo-packages/ # Package showcase & comparison tool
+    ├── web-editor/        # Production application (deployed)
+    └── web-demo-packages/ # Demo showcase (development/testing)
 ```
 
 ### Demo Applications
@@ -84,13 +84,14 @@ npm run dev
 # Includes automatic package rebuilding when you edit source code
 ```
 
-#### **web-demo-packages**
-Interactive showcase demonstrating both the editor and renderer packages side-by-side.
+#### **web-demo-packages** - Demo Showcase
+Interactive demo application for exploring and comparing both the editor and renderer packages.
 
-- Toggle between Editor and Renderer modes
+- Navigate between Editor and Renderer modes
 - See how questionnaires look from both builder and user perspectives
 - Test conditional logic and field interactions
 - Useful for evaluating which package fits your use case
+- Demo only - not for production deployment
 
 **Run locally:**
 ```bash

@@ -1,6 +1,6 @@
 # @mieweb/forms-editor `v0.1.4`
 
-Embeddable questionnaire editor component with drag-and-drop, FHIR export, and conditional logic support.
+Embeddable questionnaire editor component with FHIR export and conditional logic support.
 
 ## 📦 Installation
 
