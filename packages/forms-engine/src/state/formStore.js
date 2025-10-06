@@ -309,9 +309,3 @@ export const useFieldsArray = () => {
   return React.useMemo(() => order.map((id) => byId[id]), [order, byId]);
 };
 
-export const useFlatArray = () => {
-  const order = useFormStore((s) => s.order);
-  const byId = useFormStore((s) => s.byId);
-  return React.useMemo(() => useFormStore.getState().flatArray(), [order, byId]);
-};
-

@@ -13,7 +13,7 @@ A modular, FHIR-compatible questionnaire system built with **React**, **Tailwind
 
 This monorepo contains three npm packages for building and rendering questionnaires:
 
-### [@mieweb/forms-engine](./packages/forms-engine) `v0.1.4`
+### [@mieweb/forms-engine](./packages/forms-engine) `v0.1.5`
 Core state management, field components, and utilities for building custom questionnaire UIs.
 
 ```bash
@@ -31,7 +31,7 @@ npm install @mieweb/forms-editor
 
 **Use when:** You need a complete editor UI for creating and managing questionnaires.
 
-### [@mieweb/forms-renderer](./packages/forms-renderer) `v0.1.4`
+### [@mieweb/forms-renderer](./packages/forms-renderer) `v0.1.5`
 Read-only renderer for displaying questionnaires and collecting responses with FHIR output.
 
 ```bash
@@ -286,19 +286,30 @@ npm run dev              # Test in web-editor app
 
 ### External Testing
 
-To test packages in external projects:
+To test packages in external projects without publishing:
 
 ```bash
-# Build packages
+# 1. Build and pack the packages
 npm run build
 
-# In external project, use file:// protocol
-# package.json:
-# {
-#   "dependencies": {
-#     "@mieweb/forms-engine": "file:../questionnaire-builder/packages/forms-engine"
-#   }
-# }
+cd packages/forms-engine
+npm pack
+# Creates: mieweb-forms-engine-0.1.5.tgz
+
+cd ../forms-renderer
+npm pack
+# Creates: mieweb-forms-renderer-0.1.5.tgz
+
+# 2. In your external project, install from the .tgz files
+cd /path/to/your/external/project
+npm install /path/to/questionnaire-builder/packages/forms-engine/mieweb-forms-engine-0.1.5.tgz
+npm install /path/to/questionnaire-builder/packages/forms-renderer/mieweb-forms-renderer-0.1.5.tgz
+
+# 3. Clean up .tgz files when done
+cd /path/to/questionnaire-builder/packages
+Get-ChildItem -Recurse -Filter *.tgz | Remove-Item  # PowerShell
+# or
+find . -name "*.tgz" -delete  # Bash/Unix
 ```
 
 ---

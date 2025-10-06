@@ -1,4 +1,4 @@
-# @mieweb/forms-renderer `v0.1.4`
+# @mieweb/forms-renderer `v0.1.5`
 
 Read-only questionnaire renderer for displaying and filling out forms. Produces FHIR QuestionnaireResponse output.
 
