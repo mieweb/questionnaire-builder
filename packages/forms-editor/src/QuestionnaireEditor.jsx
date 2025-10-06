@@ -47,7 +47,17 @@ export function QuestionnaireEditor({
   useEffect(() => {
     if (!onChange) return;
     const unsub = useFormStore.subscribe((s) => {
-      const arr = s.flatArray ? s.flatArray() : Object.values(s.byId);
+      // Build flat array: top-level fields + their children
+      const arr = [];
+      s.order.forEach(id => {
+        const f = s.byId[id];
+        if (f) {
+          arr.push(f);
+          if (f.fieldType === "section" && Array.isArray(f.fields)) {
+            arr.push(...f.fields);
+          }
+        }
+      });
       onChange(arr);
     });
     return unsub;

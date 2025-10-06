@@ -5,8 +5,8 @@
   "type": "module",
   "main": "src/main.jsx",
   "dependencies": {
-    "@mieweb/forms-editor": "*",
-    "@mieweb/forms-renderer": "*",
+    "@mieweb/forms-editor": "file:../../packages/forms-editor/mieweb-forms-editr-0.1.5.tgz",
+    "@mieweb/forms-renderer": "file:../../packages/forms-renderer/mieweb-forms-renderer-0.1.5.tgz",
     "framer-motion": "^12.4.2"
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUIApi, useFieldsArray, isVisible } from '@mieweb/forms-engine';
+import { useUIApi, useVisibleFields } from '@mieweb/forms-engine';
 import { FieldNode } from './FieldNode';
 
 /**
@@ -7,24 +7,7 @@ import { FieldNode } from './FieldNode';
  */
 export function RendererBody() {
   const ui = useUIApi();
-  const fields = useFieldsArray();
-
-  // Build flat array directly from fields (like FormBuilderMain does)
-  const allFlat = React.useMemo(() => {
-    const out = [];
-    (fields || []).forEach(f => {
-      out.push(f);
-      if (f?.fieldType === "section" && Array.isArray(f.fields)) {
-        out.push(...f.fields);
-      }
-    });
-    return out;
-  }, [fields]);
-
-  const visible = React.useMemo(() => {
-    if (!ui.state.isPreview) return fields;
-    return fields.filter(f => isVisible(f, allFlat));
-  }, [ui.state.isPreview, fields, allFlat]);
+  const { fields: visible, allFlat } = useVisibleFields(ui.state.isPreview);
 
   return (
     <div>
