@@ -23,7 +23,8 @@ export function QuestionnaireRenderer({
   React.useEffect(() => {
     if (!onChange) return;
     const unsub = useFormStore.subscribe((s) => {
-      const arr = s.flatArray ? s.flatArray() : Object.values(s.byId);
+      // Return non-flattened array (sections contain nested fields)
+      const arr = s.order.map(id => s.byId[id]);
       onChange(arr);
     });
     return unsub;
@@ -35,7 +36,6 @@ export function QuestionnaireRenderer({
   // Handle form submission
   const handleSubmit = useQuestionnaireSubmit(all, questionnaireId, subjectId, onSubmit);
 
-  // Build root CSS classes
   const rootClasses = [
     'qb-render-root',
     'bg-gray-100',

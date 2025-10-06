@@ -25,6 +25,10 @@ function App() {
     return () => window.removeEventListener('keydown', handler);
   }, [view]);
 
+  const handleFormChange = (data) => {
+    console.log('Form data changed:', data)
+  };
+
   if (view === 'editor') {
     return (
       <div className="w-full h-dvh relative bg-slate-100">
@@ -47,6 +51,7 @@ function App() {
             questionnaireId="demo-1"
             fields={fields}
             onSubmit={(qr) => setSubmitted(qr)}
+            onChange={handleFormChange}
           />
           {submitted && (
             <pre className="mt-4 bg-neutral-100 p-4">{JSON.stringify(submitted, null, 2)}</pre>

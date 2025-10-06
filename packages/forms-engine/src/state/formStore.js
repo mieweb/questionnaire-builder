@@ -148,11 +148,6 @@ export const useFormStore = create((set, get) => ({
     return out;
   },
 
-  flatMap: () => {
-    const arr = get().flatArray();
-    return arr.reduce((m, f) => ((m[f.id] = f), m), {});
-  },
-
   // ────────── Preview helper ──────────
   visibleIds: (isPreview) => {
     const arr = get().flatArray();
@@ -312,5 +307,11 @@ export const useFieldsArray = () => {
   const order = useFormStore((s) => s.order);
   const byId = useFormStore((s) => s.byId);
   return React.useMemo(() => order.map((id) => byId[id]), [order, byId]);
+};
+
+export const useFlatArray = () => {
+  const order = useFormStore((s) => s.order);
+  const byId = useFormStore((s) => s.byId);
+  return React.useMemo(() => useFormStore.getState().flatArray(), [order, byId]);
 };
 

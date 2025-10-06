@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUIApi, useFieldsArray, isVisible } from '@mieweb/forms-engine';
+import { useUIApi, useFlatArray, isVisible } from '@mieweb/forms-engine';
 import { FieldNode } from './FieldNode';
 
 /**
@@ -7,25 +7,13 @@ import { FieldNode } from './FieldNode';
  */
 export function RendererBody() {
   const ui = useUIApi();
-  const fields = useFieldsArray() || [];
-  
-  // Flatten all fields including section children
-  const flat = React.useMemo(() => {
-    const out = [];
-    fields.forEach(f => {
-      out.push(f);
-      if (f?.fieldType === 'section' && Array.isArray(f.fields)) {
-        out.push(...f.fields);
-      }
-    });
-    return out;
-  }, [fields]);
+  const flat = useFlatArray(); // Already flattened by the store
 
   // Filter visible fields based on enableWhen logic
   const visible = React.useMemo(() => {
-    if (!ui.state.isPreview) return fields;
-    return fields.filter(f => isVisible(f, flat));
-  }, [fields, flat, ui.state.isPreview]);
+    if (!ui.state.isPreview) return flat;
+    return flat.filter(f => isVisible(f, flat));
+  }, [flat, ui.state.isPreview]);
 
   return (
     <div>
