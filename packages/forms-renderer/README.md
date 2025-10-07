@@ -198,7 +198,5 @@ The `onSubmit` callback receives a FHIR QuestionnaireResponse:
 
 ## 📚 Documentation
 
-- [📖 Migration Guide](./docs/MIGRATION.md)
-- [🚀 Meteor/Blaze Guide](./docs/METEOR-BLAZE-GUIDE.md)
-- [🌐 Web Component Summary](./docs/WEB-COMPONENT-SUMMARY.md)
-- [🏗️ Architecture](./docs/ARCHITECTURE.md)
+- [⚛️ React Component Example](./examples/example-react.jsx)
+- [🌐 Web Component Example](./examples/example-standalone.html)
