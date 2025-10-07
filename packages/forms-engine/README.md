@@ -1,33 +1,21 @@
-# @mieweb/forms-engine `v0.1.5`
+# 🔧 @mieweb/forms-engine
 
-Core state management, field components, and utilg FHIR-compatible questionnaire forms.
+Core state management and field components for FHIR-compatible questionnaire forms.
 
 ## 📦 Installation
 
 ```bash
-npm install @mieweb/forms-engine
+npm install @mieweb/forms-engine react react-dom
 ```
 
-### Peer Dependencies (Required)
+## 📋 What's Included
 
-You must install React 18+ in your project:
-
-```bash
-npm install react react-dom
-```
-
-## 🎯 What's Included
-
-This package provides the **foundation** for building questionnaires:
-
-- **Field Components**: `TextInput_Field`, `Radio_Field`, `Check_Field`, `DropDown_Field`, `Section_Field`
-- **State Management**: Zustand-based stores for form data and UI state
-- **Field Utilities**: Field initialization, visibility logic, field type registry
-- **Hooks & APIs**: `useFormApi`, `useUIApi`, `useFieldController`
+- **🔧 Field Components**: `TextInput_Field`, `Radio_Field`, `Check_Field`, `DropDown_Field`, `Section_Field`
+- **🏪 State Management**: Zustand stores for form data and UI state
+- **🛠️ Utilities**: Field initialization, visibility logic, field type registry
+- **🪝 Hooks**: `useFormApi`, `useUIApi`, `useFieldController`
 
 ## 🚀 Quick Start
-
-### 1. Use Field Components
 
 ```jsx
 import { TextInput_Field, Radio_Field, useFormStore } from '@mieweb/forms-engine';
@@ -44,147 +32,40 @@ function MyForm() {
         if (field.fieldType === 'radio') {
           return <Radio_Field key={field.id} fieldId={field.id} />;
         }
-        // ... other types
+        return null;
       })}
     </div>
   );
 }
 ```
 
-### 2. Manage Form State
+## 🔧 Field Types
+
+- `input` - 📝 Text input field
+- `radio` - 🔘 Single selection radio buttons
+- `check` - ☑️ Multiple selection checkboxes
+- `selection` - 📋 Dropdown selection
+- `section` - 📂 Container for grouping fields
+
+## 🏪 State Management
 
 ```jsx
-import { useFormApi, useFormStore } from '@mieweb/forms-engine';
+import { useFormStore } from '@mieweb/forms-engine';
 
-function FormManager() {
-  const formApi = useFormApi();
-  const fields = useFormStore(state => Object.values(state.byId));
+// Initialize form
+const replaceAll = useFormStore(state => state.replaceAll);
+replaceAll(fieldsArray);
 
-  const addField = () => {
-    formApi.add({
-      id: crypto.randomUUID(),
-      fieldType: 'input',
-      question: 'What is your name?',
-      answer: ''
-    });
-  };
+// Get current data
+const fields = useFormStore(state => state.flatArray());
+const fieldById = useFormStore(state => state.byId['field-id']);
 
-  const exportData = () => {
-    console.log(fields);
-  };
-
-  return (
-    <div>
-      <button onClick={addField}>Add Field</button>
-      <button onClick={exportData}>Export JSON</button>
-    </div>
-  );
-}
+// Update fields
+const updateField = useFormStore(state => state.updateField);
+updateField('field-id', { answer: 'new value' });
 ```
 
-## �️ Development
-
-This package is designed to be used as a dependency in your React applications. It provides the core building blocks for questionnaire functionality.
-
-### Development
-
-If you're contributing to this package:
-
-```bash
-# Build for production
-npm run build
-
-# Build in watch mode (auto-rebuild on changes)
-npm run build:watch
-```
-
----
-
-## �📚 Core Exports
-
-### Field Components
-
-```jsx
-import {
-  TextInput_Field,    // Text input field
-  Radio_Field,        // Radio button group
-  Check_Field,        // Checkbox field
-  DropDown_Field,     // Dropdown/select field
-  Section_Field       // Section container
-} from '@mieweb/forms-engine';
-```
-
-### State Management
-
-```jsx
-import {
-  useFormStore,       // Main form state store
-  useFormApi,         // API for form mutations (add, update, delete)
-  useUIStore,         // UI state (selected field, preview mode)
-  useUIApi,           // API for UI state changes
-  useField,           // Get single field by ID
-  useChildField,      // Get child field within section
-  useFieldsArray      // Get all fields as array
-} from '@mieweb/forms-engine';
-```
-
-### Field Utilities
-
-```jsx
-import {
-  fieldTypes,              // Field type registry
-  getFieldComponent,       // Get component for field type
-  registerFieldComponent,  // Register custom field type
-  initializeField,         // Initialize field with defaults
-  initializeFieldOptions,  // Initialize field options
-  isVisible,              // Check field visibility (enableWhen logic)
-  FieldWrapper,           // Wrapper component for fields
-  useFieldController      // Hook for field state & handlers
-} from '@mieweb/forms-engine';
-```
-
-### Icons
-
-```jsx
-import {
-  TextIcon,
-  RadioIcon,
-  CheckIcon,
-  DropDownIcon,
-  SectionIcon,
-  TrashIcon,
-  CopyIcon,
-  // ... more icons
-} from '@mieweb/forms-engine';
-```
-
-## 🔧 Advanced Usage
-
-### Custom Field Type
-
-```jsx
-import { registerFieldComponent, FieldWrapper } from '@mieweb/forms-engine';
-
-function CustomDateField({ fieldId }) {
-  return (
-    <FieldWrapper fieldId={fieldId}>
-      <input type="date" />
-    </FieldWrapper>
-  );
-}
-
-registerFieldComponent('date', {
-  label: 'Date Field',
-  component: CustomDateField,
-  defaultProps: {
-    fieldType: 'date',
-    question: '',
-    answer: ''
-  }
-});
-```
-
-### Conditional Visibility (enableWhen)
+## 🔀 Conditional Visibility
 
 ```jsx
 import { isVisible, useFormStore } from '@mieweb/forms-engine';
@@ -194,57 +75,67 @@ function ConditionalField({ fieldId }) {
   const allFields = useFormStore(state => state.byId);
 
   if (!isVisible(field, allFields)) {
-    return null; // Hide field based on logic
+    return null;
   }
 
   return <TextInput_Field fieldId={fieldId} />;
 }
 ```
 
-## 📖 API Reference
-
-### `useFormApi()`
-
-Returns API for form mutations:
-
-- `add(field)` - Add new field
-- `update(id, changes)` - Update field
-- `remove(id)` - Remove field
-- `replaceAll(fields)` - Replace entire form
-
-### `useUIApi()`
-
-Returns API for UI state:
-
-- `selectedFieldId.set(id)` - Select field for editing
-- `preview.set(boolean)` - Toggle preview mode
-
-### `useFieldController(fieldId)`
-
-Returns field state and handlers:
+## 🎨 Custom Field Components
 
 ```jsx
-const { field, updateField, removeField } = useFieldController(fieldId);
+import { useFieldController } from '@mieweb/forms-engine';
+
+function CustomField({ fieldId, sectionId }) {
+  const { field, updateField, isPreview } = useFieldController(fieldId, sectionId);
+
+  return (
+    <div>
+      <label>{field.question}</label>
+      <input
+        value={field.answer || ''}
+        onChange={(e) => updateField({ answer: e.target.value })}
+        disabled={isPreview}
+      />
+    </div>
+  );
+}
 ```
 
-## 🎨 Styling
+## 📚 API Reference
 
-**CSS is automatically included** when you import the package! The Tailwind CSS styles are bundled directly into the JavaScript.
+### 🏪 useFormStore
 
-You can override styles by adding your own CSS classes or custom styles after importing the package.
+- `replaceAll(fields)` - Replace all form data
+- `updateField(id, updates, options)` - Update single field
+- `flatArray()` - Get flat array of all fields
+- `byId` - Object map of fields by ID
 
-## 📦 Bundle Size
+### 🖥️ useUIApi
 
-- **ESM format** with tree-shaking support
-- **TypeScript definitions** included
-- **CSS automatically injected** - no manual imports needed
-- Peer dependencies: React 18+
+- `isPreview` - Current preview mode state
+- `setPreview(boolean)` - Toggle preview mode
+- `selectedFieldId` - Currently selected field ID
 
-## 🔗 Related Packages
+### 📝 Field Structure
 
-- **@mieweb/forms-editor** - Full questionnaire editor UI
-- **@mieweb/forms-renderer** - Read-only renderer for filled forms
-
-## 📄 License
-
-MIT
+```typescript
+{
+  id: string;
+  fieldType: 'input' | 'radio' | 'check' | 'selection' | 'section';
+  question?: string;
+  answer?: string;          // for input fields
+  selected?: string;        // for radio/selection fields
+  selectedOptions?: string[]; // for check fields
+  options?: { id: string; value: string }[];
+  enableWhen?: {
+    logic: 'AND' | 'OR';
+    conditions: {
+      targetId: string;
+      operator: 'equals' | 'contains' | 'includes';
+      value: string;
+    }[];
+  };
+}
+```

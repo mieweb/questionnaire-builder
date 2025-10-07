@@ -4,6 +4,9 @@ import tailwindcss from '@tailwindcss/vite';
 import { libInjectCss } from 'vite-plugin-lib-inject-css';
 import { resolve } from 'path';
 
+/**
+ * React component build (lightweight, requires peer dependencies)
+ */
 export default defineConfig({
   plugins: [
     react(),
@@ -12,9 +15,9 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, 'index.js'),
+      entry: resolve(__dirname, 'src/QuestionnaireRenderer.jsx'),
       name: 'FormsRenderer',
-      fileName: 'index',
+      fileName: 'react',
       formats: ['es']
     },
     rollupOptions: {

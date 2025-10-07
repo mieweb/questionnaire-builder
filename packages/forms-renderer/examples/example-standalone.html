@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Standalone Web Component - No React Required</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .info {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 1rem;
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✨ Standalone Web Component Example</h1>
+    
+    <div class="info">
+      <strong>✅ No React installation required!</strong><br>
+      This uses the standalone bundle that includes all dependencies (React, ReactDOM, forms-engine).
+    </div>
+    
+    <questionnaire-renderer 
+      questionnaire-id="standalone-demo" 
+      full-height>
+    </questionnaire-renderer>
+  </div>
+
+  <script type="module">
+    // Import standalone bundle - includes everything!
+    // No need to install React, ReactDOM, or forms-engine
+    import { QuestionnaireRendererElement } from '@mieweb/forms-renderer/standalone';
+
+    // Get reference to the element
+    const renderer = document.querySelector('questionnaire-renderer');
+
+    // Set fields programmatically with enableWhen logic
+    renderer.fields = [
+      {
+        id: 'sec-1',
+        fieldType: 'section',
+        title: 'Patient Information',
+        fields: [
+          {
+            id: 'q-name',
+            fieldType: 'input',
+            question: 'Full Name',
+            answer: ''
+          },
+          {
+            id: 'q-dob',
+            fieldType: 'input',
+            question: 'Date of Birth',
+            answer: ''
+          },
+          {
+            id: 'q-gender',
+            fieldType: 'radio',
+            question: 'Biological sex',
+            options: [
+              { id: 'gender-male', value: 'Male' },
+              { id: 'gender-female', value: 'Female' },
+              { id: 'gender-other', value: 'Other' }
+            ],
+            selected: null
+          },
+          {
+            id: 'q-email',
+            fieldType: 'input',
+            question: 'Email address',
+            answer: ''
+          }
+        ]
+      },
+      {
+        id: 'sec-pregnancy',
+        fieldType: 'section',
+        title: 'Pregnancy Information',
+        enableWhen: {
+          logic: 'AND',
+          conditions: [
+            { targetId: 'q-gender', operator: 'equals', value: 'gender-female' }
+          ]
+        },
+        fields: [
+          {
+            id: 'q-pregnant',
+            fieldType: 'radio',
+            question: 'Are you currently pregnant?',
+            options: [
+              { id: 'preg-yes', value: 'Yes' },
+              { id: 'preg-no', value: 'No' }
+            ],
+            selected: null
+          },
+          {
+            id: 'q-weeks',
+            fieldType: 'input',
+            question: 'Weeks gestation (if known)',
+            answer: '',
+            enableWhen: {
+              logic: 'AND',
+              conditions: [
+                { targetId: 'q-pregnant', operator: 'equals', value: 'preg-yes' }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: 'sec-2',
+        fieldType: 'section',
+        title: 'Medical History',
+        fields: [
+          {
+            id: 'q-medications',
+            fieldType: 'radio',
+            question: 'Are you currently taking any medications?',
+            options: [
+              { id: 'meds-yes', value: 'Yes' },
+              { id: 'meds-no', value: 'No' }
+            ],
+            selected: null
+          },
+          {
+            id: 'q-med-list',
+            fieldType: 'input',
+            question: 'List current medications (name, dose, frequency)',
+            answer: '',
+            enableWhen: {
+              logic: 'AND',
+              conditions: [
+                { targetId: 'q-medications', operator: 'equals', value: 'meds-yes' }
+              ]
+            }
+          },
+          {
+            id: 'q-conditions',
+            fieldType: 'check',
+            question: 'Do you have any of the following conditions? (Check all that apply)',
+            options: [
+              { id: 'cond-diabetes', value: 'Diabetes' },
+              { id: 'cond-hypertension', value: 'Hypertension' },
+              { id: 'cond-asthma', value: 'Asthma' },
+              { id: 'cond-heart', value: 'Heart Disease' },
+              { id: 'cond-other', value: 'Other (specify below)' }
+            ],
+            selected: []
+          },
+          {
+            id: 'q-conditions-other',
+            fieldType: 'input',
+            question: 'Please specify other conditions',
+            answer: '',
+            enableWhen: {
+              logic: 'OR',
+              conditions: [
+                { targetId: 'q-conditions', operator: 'includes', value: 'cond-other' }
+              ]
+            }
+          },
+          {
+            id: 'q-allergies',
+            fieldType: 'check',
+            question: 'Known allergies (select all that apply)',
+            options: [
+              { id: 'alg-none', value: 'No known allergies' },
+              { id: 'alg-penicillin', value: 'Penicillin' },
+              { id: 'alg-peanut', value: 'Peanuts' },
+              { id: 'alg-other', value: 'Other (specify below)' }
+            ],
+            selected: []
+          },
+          {
+            id: 'q-allergy-details',
+            fieldType: 'input',
+            question: 'Please specify allergy details (reaction, severity)',
+            answer: '',
+            enableWhen: {
+              logic: 'OR',
+              conditions: [
+                { targetId: 'q-allergies', operator: 'includes', value: 'alg-penicillin' },
+                { targetId: 'q-allergies', operator: 'includes', value: 'alg-peanut' },
+                { targetId: 'q-allergies', operator: 'includes', value: 'alg-other' }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        id: 'q-notes',
+        fieldType: 'input',
+        question: 'Additional notes or comments',
+        answer: ''
+      }
+    ];
+
+    // Handle form changes
+    renderer.onChange = (updatedFields) => {
+      console.log('Form changed:', updatedFields);
+    };
+
+    // Handle form submission
+    renderer.onSubmit = (fhirResponse) => {
+      console.log('✅ Form submitted!');
+      console.log('FHIR QuestionnaireResponse:', fhirResponse);
+      
+      // Show alert with summary
+      const summary = JSON.stringify(fhirResponse, null, 2);
+      alert('Form submitted successfully!\n\nCheck console for full FHIR output.');
+      
+      // In a real app, you would send this to your server:
+      // fetch('/api/questionnaire-responses', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(fhirResponse)
+      // });
+    };
+
+    console.log('✅ Standalone Web Component loaded!');
+    console.log('📦 Bundle includes: React + ReactDOM + forms-engine');
+    console.log('🚀 No peer dependencies required!');
+  </script>
+</body>
+</html>
