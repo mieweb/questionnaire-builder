@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useUIApi, useVisibleFields } from '@mieweb/forms-engine';
 import { FieldNode } from './FieldNode';
 
@@ -7,16 +7,16 @@ import { FieldNode } from './FieldNode';
  */
 export function RendererBody() {
   const ui = useUIApi();
-  const { fields: visible, allFlat } = useVisibleFields(ui.state.isPreview);
+  const { fields: visibleFields } = useVisibleFields(ui.state.isPreview);
+
+  const visibleIds = useMemo(() => visibleFields.map(f => f.id), [visibleFields]);
 
   return (
     <div>
-      {visible.map(f => (
+      {visibleIds.map(id => (
         <FieldNode 
-          key={f.id} 
-          field={f} 
-          allFlat={allFlat}
-          isPreview={ui.state.isPreview}
+          key={id} 
+          id={id}
         />
       ))}
     </div>

@@ -1,15 +1,18 @@
 import React from 'react';
-import { getFieldComponent, isVisible } from '@mieweb/forms-engine';
+import { getFieldComponent, useFormStore } from '@mieweb/forms-engine';
 
-export function FieldNode({ field, allFlat, isPreview }) {
-  const Comp = getFieldComponent(field.fieldType);
-  if (!Comp) return null;
+export const FieldNode = React.memo(function FieldNode({ id }) {
+  const field = useFormStore(React.useCallback((s) => s.byId[id], [id]));
+  
+  if (!field) return null;
 
-  if (field.fieldType === 'section' && isPreview && Array.isArray(field.fields)) {
-    const visibleChildren = field.fields.filter(ch => isVisible(ch, allFlat));
-    const filteredSection = { ...field, fields: visibleChildren };
-    return <Comp field={filteredSection} />;
-  }
+  const FieldComponent = getFieldComponent(field.fieldType);
 
-  return <Comp field={field} />;
-}
+  if (!FieldComponent) return null;
+
+  return (
+    <div className="mb-1.5" data-field-type={field.fieldType} data-field-id={field.id}>
+      <FieldComponent field={field} />
+    </div>
+  );
+});

@@ -26,6 +26,12 @@ const normalize = (arr) => {
   (arr || []).forEach((f) => {
     const id = f.id || uuidv4();
     const init = initializeField({ ...f, id });
+    
+    // Initialize nested children in sections (but don't add them to byId separately)
+    if (init.fieldType === "section" && Array.isArray(init.fields)) {
+      init.fields = init.fields.map(child => initializeField(child));
+    }
+    
     byId[id] = init;
     order.push(id);
   });
@@ -89,23 +95,6 @@ export const useFormStore = create((set, get) => ({
   order: [],
 
   // ────────── Minimal init API ──────────
-  ingest: (arr = []) => set(() => {
-    const byId = {};
-    const order = [];
-    arr.forEach(raw => {
-      const id = raw.id;
-      const f = initializeField(raw);
-      byId[id] = f;
-      order.push(id);
-      if (f.fieldType === "section" && Array.isArray(f.fields)) {
-        f.fields.forEach(child => {
-          byId[child.id] = initializeField(child);
-        });
-      }
-    });
-    return { byId, order };
-  }),
-
   setEnableWhen: (id, enableWhen) =>
     set((s) => {
       const f = s.byId[id];

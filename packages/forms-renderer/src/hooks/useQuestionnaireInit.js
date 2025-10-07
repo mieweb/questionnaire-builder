@@ -7,7 +7,7 @@ export function useQuestionnaireInit(fields) {
 
   React.useEffect(() => {
     if (initializedRef.current || !Array.isArray(fields)) return;
-    useFormStore.getState().ingest(fields);
+    useFormStore.getState().replaceAll(fields);
     ui.preview.set(true);
     initializedRef.current = true;
   }, [fields, ui.preview]);
