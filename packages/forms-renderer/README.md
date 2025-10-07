@@ -11,8 +11,8 @@ npm install @mieweb/forms-renderer
 ## 🚀 Examples
 
 See the complete working examples in this package:
-- [`example-react.jsx`](./example-react.jsx) - ⚛️ React component usage
-- [`example-standalone.html`](./example-standalone.html) - 🌐 Web Component usage
+- [`example-react.jsx`](./examples/example-react.jsx) - ⚛️ React component usage
+- [`example-standalone.html`](./examples/example-standalone.html) - 🌐 Web Component usage
 
 ## 💻 Usage
 
@@ -23,7 +23,7 @@ Requires React peer dependencies:
 npm install react react-dom
 ```
 
-From [`example-react.jsx`](./example-react.jsx):
+From [`example-react.jsx`](./examples/example-react.jsx):
 ```jsx
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
@@ -69,7 +69,7 @@ function App() {
 
 ✨ Zero dependencies - works with any framework or vanilla JS.
 
-From [`example-standalone.html`](./example-standalone.html):
+From [`example-standalone.html`](./examples/example-standalone.html):
 ```html
 <script type="module">
   import './package/dist/standalone.js';
@@ -142,7 +142,7 @@ From [`example-standalone.html`](./example-standalone.html):
 
 Fields can be shown/hidden based on other field values. Both examples include conditional logic:
 
-From [`example-react.jsx`](./example-react.jsx):
+From [`example-react.jsx`](./examples/example-react.jsx):
 ```javascript
 {
   id: 'sec-pregnancy',
