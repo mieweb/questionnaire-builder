@@ -2,12 +2,14 @@ name: deployment
 
 on:
   push:
+    branches: ["**"]
   create:
   delete:
 
 jobs:
   setup-runner:
     runs-on: ubuntu-latest
+    if: github.event_name != 'push' || github.event.created == false
     steps:
       - name: install-dep
         run: |
@@ -21,6 +23,7 @@ jobs:
           github_pat: ${{ secrets.runner_pat }}
   deploy:
     runs-on: self-hosted
+    if: github.event_name != 'push' || github.event.created == false
     needs: setup-runner
     steps:
       - name: deploy-to-proxmox
@@ -33,4 +36,4 @@ jobs:
           install_command: npm install
           start_command: npm run dev
           runtime_language: nodejs
-          
+          build_command: "npm run build"
