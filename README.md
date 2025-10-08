@@ -3,7 +3,7 @@
 
 # 📝 Questionnaire Builder
 
-🔗 [Live Demo](https://mieweb-questionnaire-builder-main.opensource.mieweb.org/)
+🔗 Live Demo - Paused
 
 A modular, FHIR-compatible questionnaire system built with **React**, **Tailwind CSS**, and **Zustand**. Build dynamic forms with conditional logic and export to [FHIR Questionnaire](https://hl7.org/fhir/questionnaire.html) format.
 
