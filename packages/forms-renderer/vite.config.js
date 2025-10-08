@@ -15,7 +15,7 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/QuestionnaireRenderer.jsx'),
+      entry: resolve(__dirname, 'index.js'),
       name: 'FormsRenderer',
       fileName: 'react',
       formats: ['es']

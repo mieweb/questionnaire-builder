@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion } from 'framer-motion';
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
-import { QuestionnaireRenderer, useQuestionnaireData } from '@mieweb/forms-renderer';
+import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
 import './index.css';
 
 const initialFields = [
@@ -166,18 +166,22 @@ const initialFields = [
   ];
 
 // Custom wrapper demonstrating how to use the renderer with your own submit button
-function RendererWithSubmit({ fields, onChange, onSubmit }) {
-  const { getQuestionnaireResponse } = useQuestionnaireData('demo-1', 'patient-123');
+function RendererWithSubmit({ fields, schemaType = 'inhouse', onChange, onSubmit }) {
+  const currentFields = useFieldsArray();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const fhirResponse = getQuestionnaireResponse();
+    const fhirResponse = buildQuestionnaireResponse(currentFields, 'demo-1', 'patient-123');
     onSubmit(fhirResponse);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer fields={fields} onChange={onChange} />
+      <QuestionnaireRenderer 
+        fields={fields} 
+        schemaType={schemaType}
+        onChange={onChange} 
+      />
       <div className="pt-4">
         <button
           type="submit"
@@ -194,6 +198,7 @@ function App() {
   const [fields, setFields] = React.useState(initialFields);
   const [submitted, setSubmitted] = React.useState(null);
   const [view, setView] = React.useState('landing');
+  const [surveySchema, setSurveySchema] = React.useState(null);
 
   // ESC to return to landing when not already there
   React.useEffect(() => {
@@ -207,6 +212,41 @@ function App() {
   const handleFormChange = (data) => {
     console.log('Form data changed:', data)
   };
+
+  const loadSurveyJS = async () => {
+    try {
+      const response = await fetch('/examples/surveyjs-sample.json');
+      const data = await response.json();
+      setSurveySchema(data);
+      setView('surveyjs');
+    } catch (err) {
+      alert('Failed to load SurveyJS sample: ' + err.message);
+    }
+  };
+
+  if (view === 'surveyjs' && surveySchema) {
+    return (
+      <div className="w-full h-dvh relative bg-slate-100">
+        <FloatingBack onExit={() => setView('landing')} />
+        <FloatingFooter />
+        <div className="absolute inset-0 overflow-auto p-4 max-w-4xl mx-auto w-full">
+          <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+            <h2 className="text-xl font-semibold mb-2">SurveyJS Schema Test</h2>
+            <p className="text-sm text-slate-500">Testing converted SurveyJS schema</p>
+          </div>
+          <RendererWithSubmit 
+            fields={surveySchema}
+            schemaType="surveyjs"
+            onChange={handleFormChange}
+            onSubmit={(qr) => setSubmitted(qr)}
+          />
+          {submitted && (
+            <pre className="mt-4 bg-neutral-100 p-4 rounded-lg overflow-auto">{JSON.stringify(submitted, null, 2)}</pre>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (view === 'editor') {
     return (
@@ -257,6 +297,15 @@ function App() {
           <DemoCard title="Renderer" desc="Fill out the questionnaire & submit." onClick={() => setView('renderer')} />
         </div>
 
+        <div className="mb-8">
+          <button
+            onClick={loadSurveyJS}
+            className="px-6 py-3 bg-purple-500 text-white rounded-xl font-medium shadow-lg hover:bg-purple-600 transition-all"
+          >
+            🧪 Test SurveyJS Schema
+          </button>
+        </div>
+
         <Landing />
 
         <div className="mt-12 pt-8 border-t border-slate-200 text-center">
@@ -278,13 +327,9 @@ function FloatingBack({ onExit }) {
         aria-label="Back to landing"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="inline-flex items-center gap-2.5 bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-3 text-sm tracking-tight rounded-2xl cursor-pointer font-medium shadow-lg font-sans"
-        whileHover={{
-          background: 'rgba(255, 255, 255, 0.85)',
-          borderColor: 'rgba(255, 255, 255, 0.5)',
-          boxShadow: '0 12px 48px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8)'
-        }}
+        whileHover={{ y: -1, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        className="inline-flex items-center gap-2.5 bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-3 text-sm tracking-tight rounded-2xl cursor-pointer font-medium shadow-lg font-sans hover:bg-white/85 hover:border-white/50 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]"
         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70">
@@ -318,14 +363,9 @@ function DemoCard({ title, desc, onClick }) {
   return (
     <motion.div
       onClick={onClick}
-      className="cursor-pointer rounded-3xl p-7 px-6 bg-white/75 backdrop-blur-2xl backdrop-saturate-150 border border-white/40 shadow-xl relative overflow-hidden"
-      whileHover={{
-        y: -4,
-        background: 'rgba(255, 255, 255, 0.9)',
-        borderColor: 'rgba(255, 255, 255, 0.6)',
-        boxShadow: '0 20px 48px -12px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,1)'
-      }}
+      whileHover={{ y: -4, scale: 1.01 }}
       whileTap={{ scale: 0.98 }}
+      className="cursor-pointer rounded-3xl p-7 px-6 bg-white/75 backdrop-blur-2xl backdrop-saturate-150 border border-white/40 shadow-xl relative overflow-hidden hover:bg-white/90 hover:border-white/60 hover:shadow-[0_20px_48px_-12px_rgba(0,0,0,0.15),0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,1)]"
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
     >
       <h3 className="m-0 mb-2.5 text-xl font-semibold tracking-tight text-slate-900">{title}</h3>
@@ -368,12 +408,8 @@ function Landing() {
 function InfoRow({ name, desc }) {
   return (
     <motion.div 
-      className="flex flex-wrap gap-3 items-center p-4 px-5 bg-slate-50/60 backdrop-blur-xl backdrop-saturate-150 border border-slate-100/80 rounded-xl shadow-md"
-      whileHover={{
-        background: 'rgba(255, 255, 255, 0.8)',
-        borderColor: 'rgba(203, 213, 225, 0.6)',
-        boxShadow: '0 4px 16px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)'
-      }}
+      whileHover={{ scale: 1.01, y: -2 }}
+      className="flex flex-wrap gap-3 items-center p-4 px-5 bg-slate-50/60 backdrop-blur-xl backdrop-saturate-150 border border-slate-100/80 rounded-xl shadow-md hover:bg-white/80 hover:border-slate-300/60 hover:shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]"
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
     >
       <code className="bg-blue-100/70 backdrop-blur-lg px-3 py-2 rounded-lg text-xs tracking-wide font-semibold text-blue-800 border border-blue-200/60 shadow-sm">{name}</code>

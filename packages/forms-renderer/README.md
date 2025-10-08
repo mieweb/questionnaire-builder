@@ -25,7 +25,7 @@ npm install react react-dom
 
 #### Basic Usage (Custom Submit Button)
 ```jsx
-import { QuestionnaireRenderer, useQuestionnaireData } from '@mieweb/forms-renderer';
+import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
 
 function MyForm() {
   const [fields] = React.useState([
@@ -37,11 +37,11 @@ function MyForm() {
     }
   ]);
   
-  const { getQuestionnaireResponse } = useQuestionnaireData('my-questionnaire', 'patient-123');
+  const currentFields = useFieldsArray();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const fhirResponse = getQuestionnaireResponse();
+    const fhirResponse = buildQuestionnaireResponse(currentFields, 'my-questionnaire', 'patient-123');
     console.log('Submitted:', fhirResponse);
     // Send to your API, etc.
   };
@@ -61,7 +61,7 @@ function MyForm() {
 #### With Sections and Conditional Logic
 From [`example-react.jsx`](./examples/example-react.jsx):
 ```jsx
-import { QuestionnaireRenderer, useQuestionnaireData } from '@mieweb/forms-renderer';
+import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
 
 function App() {
   const [fields] = React.useState([
@@ -90,11 +90,11 @@ function App() {
     }
   ]);
   
-  const { fields: currentFields, getQuestionnaireResponse } = useQuestionnaireData('demo-1');
+  const currentFields = useFieldsArray();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const fhirResponse = getQuestionnaireResponse();
+    const fhirResponse = buildQuestionnaireResponse(currentFields, 'demo-1', 'patient-123');
     // Handle submission
   };
 
@@ -169,46 +169,34 @@ React component for rendering questionnaires (no built-in submit button).
 - `className` *(string)* - Additional CSS classes
 - `fullHeight` *(boolean)* - Full viewport height mode
 
-### `useQuestionnaireData(questionnaireId, subjectId)` Hook
-Get current questionnaire data and FHIR response builder.
+### Helper Functions
+
+#### `buildQuestionnaireResponse(fields, questionnaireId, subjectId)`
+Build FHIR QuestionnaireResponse from fields. Use with `useFieldsArray()`.
 
 **Parameters:**
-- `questionnaireId` *(string)* - FHIR Questionnaire ID (default: `'questionnaire-1'`)
+- `fields` *(array)* - Current form fields (from `useFieldsArray()`)
+- `questionnaireId` *(string)* - FHIR Questionnaire ID
 - `subjectId` *(string, optional)* - Patient/subject ID
 
-**Returns:**
-```typescript
-{
-  fields: Field[],                           // Current form fields with answers
-  getQuestionnaireResponse: () => Object     // Get FHIR QuestionnaireResponse
-}
-```
+**Returns:** FHIR QuestionnaireResponse object
 
 **Example:**
 ```jsx
-const { fields, getQuestionnaireResponse } = useQuestionnaireData('q-1', 'patient-123');
+import { buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
 
-const handleSubmit = () => {
-  const fhirResponse = getQuestionnaireResponse();
-  // fhirResponse is a FHIR QuestionnaireResponse object
-};
+function MyForm() {
+  const currentFields = useFieldsArray();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fhirResponse = buildQuestionnaireResponse(currentFields, 'q-1', 'patient-123');
+    // Send to API, save to database, etc.
+  };
+  
+  return <form onSubmit={handleSubmit}>...</form>;
+}
 ```
-
-### `useQuestionnaireSubmit(fields, questionnaireId, subjectId, onSubmit)` Hook
-*(Legacy)* Pre-built submit handler.
-
-**Parameters:**
-- `fields` *(array)* - Current form fields
-- `questionnaireId` *(string)* - FHIR Questionnaire ID
-- `subjectId` *(string, optional)* - Patient/subject ID
-- `onSubmit` *(function)* - Callback with FHIR response
-
-**Returns:** `(event) => void` - Form submit handler
-
-### `buildQuestionnaireResponse(fields, questionnaireId, subjectId)` Utility
-Build FHIR QuestionnaireResponse from fields.
-
-**Returns:** FHIR QuestionnaireResponse object
 
 ### 🌐 Web Component
 - `full-height` - Full viewport height (attribute)

@@ -15,6 +15,7 @@ export { default as useFieldController } from './src/helper_shared/useFieldContr
 export { default as fieldTypes, getFieldComponent, registerFieldComponent } from './src/helper_shared/fieldTypes-config.js';
 export { initializeField, initializeFieldOptions } from './src/helper_shared/initializedField.js';
 export { isVisible } from './src/helper_shared/logicVisibility.js';
+export { detectSchemaType, adaptSchema } from './src/helper_shared/schemaAdapter.js';
 
 // state: stores, apis, selectors
 

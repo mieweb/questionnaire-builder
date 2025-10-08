@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { QuestionnaireRenderer, useQuestionnaireData } from '@mieweb/forms-renderer';
+import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
 
 /**
  * Example: Using QuestionnaireRenderer as a React component
@@ -130,8 +130,8 @@ function App() {
 
   const [submitted, setSubmitted] = React.useState(null);
   
-  // Hook to get current data and FHIR response builder
-  const { getQuestionnaireResponse } = useQuestionnaireData('demo-questionnaire', 'patient-12345');
+  // Get current fields from form store
+  const currentFields = useFieldsArray();
 
   const handleChange = (updatedFields) => {
     console.log('Form changed:', updatedFields);
@@ -139,7 +139,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const fhirResponse = getQuestionnaireResponse();
+    const fhirResponse = buildQuestionnaireResponse(currentFields, 'demo-questionnaire', 'patient-12345');
     console.log('Form submitted! FHIR Response:', fhirResponse);
     setSubmitted(fhirResponse);
   };

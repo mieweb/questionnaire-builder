@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useFormStore, useFieldsArray, useUIApi } from "@mieweb/forms-engine";
-import DataViewer from "./DataViewer";
+import DataViewer from "./DataViewer.jsx";
 
 export default function Header() {
   const [showData, setShowData] = useState(false);

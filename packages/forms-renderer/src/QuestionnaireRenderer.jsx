@@ -7,17 +7,24 @@ import { RendererBody } from './components';
  * QuestionnaireRenderer
  * Read-only / answer capture rendering (no editing tools) for a questionnaire definition (fields array)
  * 
+ * @param {Array|Object} fields - Questionnaire fields (inhouse or SurveyJS format)
+ * @param {string} schemaType - Schema format: 'inhouse' (default) or 'surveyjs'
+ * @param {Function} onChange - Callback when fields change
+ * @param {string} className - Additional CSS classes
+ * @param {boolean} fullHeight - Use min-h-screen
+ * 
  * Note: This component does not include a submit button or form wrapper.
  * Use `useQuestionnaireData()` hook to get current data and handle submission yourself.
  */
 export function QuestionnaireRenderer({
   fields,
+  schemaType = 'inhouse',
   onChange,
   className = '',
   fullHeight = false,
 }) {
   // Initialize questionnaire and set preview mode
-  useQuestionnaireInit(fields);
+  useQuestionnaireInit(fields, schemaType);
 
   // Subscribe to form changes
   React.useEffect(() => {
