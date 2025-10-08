@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion } from 'framer-motion';
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
-import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
+import { QuestionnaireRenderer, useQuestionnaireData } from '@mieweb/forms-renderer';
 import './index.css';
 
 const initialFields = [
@@ -165,6 +165,31 @@ const initialFields = [
     }
   ];
 
+// Custom wrapper demonstrating how to use the renderer with your own submit button
+function RendererWithSubmit({ fields, onChange, onSubmit }) {
+  const { getQuestionnaireResponse } = useQuestionnaireData('demo-1', 'patient-123');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fhirResponse = getQuestionnaireResponse();
+    onSubmit(fhirResponse);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <QuestionnaireRenderer fields={fields} onChange={onChange} />
+      <div className="pt-4">
+        <button
+          type="submit"
+          className="px-6 py-3 rounded-xl bg-blue-500 text-white font-medium shadow-lg hover:bg-blue-600 hover:shadow-xl transition-all active:scale-95"
+        >
+          Submit Questionnaire
+        </button>
+      </div>
+    </form>
+  );
+}
+
 function App() {
   const [fields, setFields] = React.useState(initialFields);
   const [submitted, setSubmitted] = React.useState(null);
@@ -201,14 +226,13 @@ function App() {
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingFooter />
         <div className="absolute inset-0 overflow-auto p-4 max-w-4xl mx-auto w-full">
-          <QuestionnaireRenderer
-            questionnaireId="demo-1"
+          <RendererWithSubmit 
             fields={fields}
-            onSubmit={(qr) => setSubmitted(qr)}
             onChange={handleFormChange}
+            onSubmit={(qr) => setSubmitted(qr)}
           />
           {submitted && (
-            <pre className="mt-4 bg-neutral-100 p-4">{JSON.stringify(submitted, null, 2)}</pre>
+            <pre className="mt-4 bg-neutral-100 p-4 rounded-lg">{JSON.stringify(submitted, null, 2)}</pre>
           )}
         </div>
       </div>

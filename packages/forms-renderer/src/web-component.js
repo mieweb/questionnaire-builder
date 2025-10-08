@@ -1,15 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QuestionnaireRenderer } from './QuestionnaireRenderer.jsx';
+import { useFormStore } from '@mieweb/forms-engine';
+import { buildQuestionnaireResponse } from './utils/fhirConverter';
 
 /**
  * QuestionnaireRendererElement
  * Web Component wrapper for QuestionnaireRenderer React component
  * Converts props to attributes and provides framework-agnostic interface
+ * 
+ * Note: Does not include submit button. Wrap in a form and add your own submit button.
+ * Use the getQuestionnaireResponse() method to get FHIR response data.
  */
 class QuestionnaireRendererElement extends HTMLElement {
   static get observedAttributes() {
-    return ['fields', 'questionnaire-id', 'subject-id', 'full-height'];
+    return ['fields', 'full-height'];
   }
 
   constructor() {
@@ -17,7 +22,6 @@ class QuestionnaireRendererElement extends HTMLElement {
     this._root = null;
     this._fields = [];
     this._onChange = null;
-    this._onSubmit = null;
   }
 
   connectedCallback() {
@@ -53,13 +57,16 @@ class QuestionnaireRendererElement extends HTMLElement {
     return this._onChange;
   }
 
-  set onSubmit(fn) {
-    this._onSubmit = fn;
-    this._render();
-  }
-
-  get onSubmit() {
-    return this._onSubmit;
+  /**
+   * Get FHIR QuestionnaireResponse from current form data
+   * @param {string} questionnaireId - ID for the questionnaire
+   * @param {string} subjectId - Optional subject/patient ID
+   * @returns {Object} FHIR QuestionnaireResponse
+   */
+  getQuestionnaireResponse(questionnaireId = 'questionnaire-1', subjectId) {
+    const state = useFormStore.getState();
+    const fields = state.order.map(id => state.byId[id]);
+    return buildQuestionnaireResponse(fields, questionnaireId, subjectId);
   }
 
   _mount() {
@@ -92,8 +99,6 @@ class QuestionnaireRendererElement extends HTMLElement {
     }
 
     // Parse other attributes
-    const questionnaireId = this.getAttribute('questionnaire-id') || 'questionnaire-1';
-    const subjectId = this.getAttribute('subject-id') || undefined;
     const fullHeight = this.hasAttribute('full-height');
     const className = this.getAttribute('class') || '';
 
@@ -101,9 +106,6 @@ class QuestionnaireRendererElement extends HTMLElement {
       React.createElement(QuestionnaireRenderer, {
         fields,
         onChange: this._onChange,
-        onSubmit: this._onSubmit,
-        questionnaireId,
-        subjectId,
         className,
         fullHeight,
       })

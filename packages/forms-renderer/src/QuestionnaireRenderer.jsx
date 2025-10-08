@@ -1,18 +1,18 @@
 import React from 'react';
-import { useFormStore, useFieldsArray } from '@mieweb/forms-engine';
-import { useQuestionnaireInit, useQuestionnaireSubmit } from './hooks';
-import { RendererBody, SubmitButton } from './components';
+import { useFormStore } from '@mieweb/forms-engine';
+import { useQuestionnaireInit } from './hooks';
+import { RendererBody } from './components';
 
 /**
  * QuestionnaireRenderer
  * Read-only / answer capture rendering (no editing tools) for a questionnaire definition (fields array)
+ * 
+ * Note: This component does not include a submit button or form wrapper.
+ * Use `useQuestionnaireData()` hook to get current data and handle submission yourself.
  */
 export function QuestionnaireRenderer({
   fields,
   onChange,
-  onSubmit,
-  questionnaireId = 'questionnaire-1',
-  subjectId,
   className = '',
   fullHeight = false,
 }) {
@@ -30,12 +30,6 @@ export function QuestionnaireRenderer({
     return unsub;
   }, [onChange]);
 
-  // Get current fields for submission
-  const all = useFieldsArray();
-
-  // Handle form submission
-  const handleSubmit = useQuestionnaireSubmit(all, questionnaireId, subjectId, onSubmit);
-
   const rootClasses = [
     'qb-render-root',
     'bg-gray-100',
@@ -46,10 +40,9 @@ export function QuestionnaireRenderer({
 
   return (
     <div className={rootClasses}>
-      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto px-2 pb-8 pt-4">
+      <div className="max-w-4xl mx-auto px-2 pb-8 pt-4">
         <RendererBody />
-        <SubmitButton />
-      </form>
+      </div>
     </div>
   );
 }
