@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
+import { QuestionnaireRenderer, useQuestionnaireData } from '@mieweb/forms-renderer';
 
 /**
  * Example: Using QuestionnaireRenderer as a React component
@@ -129,12 +129,17 @@ function App() {
   ]);
 
   const [submitted, setSubmitted] = React.useState(null);
+  
+  // Hook to get current data and FHIR response builder
+  const { getQuestionnaireResponse } = useQuestionnaireData('demo-questionnaire', 'patient-12345');
 
   const handleChange = (updatedFields) => {
     console.log('Form changed:', updatedFields);
   };
 
-  const handleSubmit = (fhirResponse) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fhirResponse = getQuestionnaireResponse();
     console.log('Form submitted! FHIR Response:', fhirResponse);
     setSubmitted(fhirResponse);
   };
@@ -143,19 +148,35 @@ function App() {
     <div style={{ padding: '2rem' }}>
       <h1 style={{ textAlign: 'center' }}>React Component Example</h1>
       
-      <QuestionnaireRenderer
-        questionnaireId="demo-questionnaire"
-        subjectId="patient-12345"
-        fields={fields}
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-        fullHeight={false}
-      />
+      <form onSubmit={handleSubmit}>
+        <QuestionnaireRenderer
+          fields={fields}
+          onChange={handleChange}
+          fullHeight={false}
+        />
+        
+        <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+          <button 
+            type="submit"
+            style={{
+              padding: '0.75rem 2rem',
+              fontSize: '1rem',
+              backgroundColor: '#0076a8',
+              color: 'white',
+              border: 'none',
+              borderRadius: '0.5rem',
+              cursor: 'pointer'
+            }}
+          >
+            Submit Questionnaire
+          </button>
+        </div>
+      </form>
 
       {submitted && (
-        <div style={{ marginTop: '2rem', padding: '1rem', background: '#f0f0f0' }}>
+        <div style={{ marginTop: '2rem', padding: '1rem', background: '#f0f0f0', borderRadius: '0.5rem' }}>
           <h3>Submitted FHIR Response:</h3>
-          <pre>{JSON.stringify(submitted, null, 2)}</pre>
+          <pre style={{ overflow: 'auto' }}>{JSON.stringify(submitted, null, 2)}</pre>
         </div>
       )}
     </div>

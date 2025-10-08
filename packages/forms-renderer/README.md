@@ -23,9 +23,45 @@ Requires React peer dependencies:
 npm install react react-dom
 ```
 
+#### Basic Usage (Custom Submit Button)
+```jsx
+import { QuestionnaireRenderer, useQuestionnaireData } from '@mieweb/forms-renderer';
+
+function MyForm() {
+  const [fields] = React.useState([
+    {
+      id: 'q-name',
+      fieldType: 'input',
+      question: 'What is your full name?',
+      answer: ''
+    }
+  ]);
+  
+  const { getQuestionnaireResponse } = useQuestionnaireData('my-questionnaire', 'patient-123');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fhirResponse = getQuestionnaireResponse();
+    console.log('Submitted:', fhirResponse);
+    // Send to your API, etc.
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <QuestionnaireRenderer 
+        fields={fields}
+        onChange={(updated) => console.log('Changed:', updated)}
+      />
+      <button type="submit">Submit Questionnaire</button>
+    </form>
+  );
+}
+```
+
+#### With Sections and Conditional Logic
 From [`example-react.jsx`](./examples/example-react.jsx):
 ```jsx
-import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
+import { QuestionnaireRenderer, useQuestionnaireData } from '@mieweb/forms-renderer';
 
 function App() {
   const [fields] = React.useState([
@@ -53,14 +89,20 @@ function App() {
       ]
     }
   ]);
+  
+  const { fields: currentFields, getQuestionnaireResponse } = useQuestionnaireData('demo-1');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fhirResponse = getQuestionnaireResponse();
+    // Handle submission
+  };
 
   return (
-    <QuestionnaireRenderer
-      questionnaireId="demo-questionnaire"
-      fields={fields}
-      onChange={(updatedFields) => console.log('Changed:', updatedFields)}
-      onSubmit={(fhirResponse) => console.log('Submitted:', fhirResponse)}
-    />
+    <form onSubmit={handleSubmit}>
+      <QuestionnaireRenderer fields={fields} />
+      <button type="submit">Submit</button>
+    </form>
   );
 }
 ```
@@ -101,34 +143,78 @@ From [`example-standalone.html`](./examples/example-standalone.html):
     }
   ];
   
-  renderer.onSubmit = (fhirResponse) => {
+  // Handle form submission
+  const form = document.getElementById('myForm');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fhirResponse = renderer.getQuestionnaireResponse('q-1', 'patient-123');
     console.log('Form submitted:', fhirResponse);
-  };
+  });
 </script>
 
-<questionnaire-renderer 
-  questionnaire-id="standalone-demo" 
-  full-height>
-</questionnaire-renderer>
+<form id="myForm">
+  <questionnaire-renderer full-height></questionnaire-renderer>
+  <button type="submit">Submit</button>
+</form>
 ```
 
-## ⚙️ Props/Attributes
+## ⚙️ API Reference
 
-### ⚛️ React Component
-- `fields` - Questionnaire definition array
-- `onChange` - Callback when answers change
-- `onSubmit` - Callback on form submit
-- `questionnaireId` - FHIR Questionnaire ID
-- `subjectId` - Patient/subject ID
-- `className` - CSS classes
-- `fullHeight` - Full viewport height
+### `<QuestionnaireRenderer>` Component
+React component for rendering questionnaires (no built-in submit button).
+
+**Props:**
+- `fields` *(array)* - Questionnaire definition array
+- `onChange` *(function)* - Callback when answers change: `(updatedFields) => void`
+- `className` *(string)* - Additional CSS classes
+- `fullHeight` *(boolean)* - Full viewport height mode
+
+### `useQuestionnaireData(questionnaireId, subjectId)` Hook
+Get current questionnaire data and FHIR response builder.
+
+**Parameters:**
+- `questionnaireId` *(string)* - FHIR Questionnaire ID (default: `'questionnaire-1'`)
+- `subjectId` *(string, optional)* - Patient/subject ID
+
+**Returns:**
+```typescript
+{
+  fields: Field[],                           // Current form fields with answers
+  getQuestionnaireResponse: () => Object     // Get FHIR QuestionnaireResponse
+}
+```
+
+**Example:**
+```jsx
+const { fields, getQuestionnaireResponse } = useQuestionnaireData('q-1', 'patient-123');
+
+const handleSubmit = () => {
+  const fhirResponse = getQuestionnaireResponse();
+  // fhirResponse is a FHIR QuestionnaireResponse object
+};
+```
+
+### `useQuestionnaireSubmit(fields, questionnaireId, subjectId, onSubmit)` Hook
+*(Legacy)* Pre-built submit handler.
+
+**Parameters:**
+- `fields` *(array)* - Current form fields
+- `questionnaireId` *(string)* - FHIR Questionnaire ID
+- `subjectId` *(string, optional)* - Patient/subject ID
+- `onSubmit` *(function)* - Callback with FHIR response
+
+**Returns:** `(event) => void` - Form submit handler
+
+### `buildQuestionnaireResponse(fields, questionnaireId, subjectId)` Utility
+Build FHIR QuestionnaireResponse from fields.
+
+**Returns:** FHIR QuestionnaireResponse object
 
 ### 🌐 Web Component
-- `questionnaire-id` - FHIR Questionnaire ID (attribute)
 - `full-height` - Full viewport height (attribute)
 - `fields` - Questionnaire definition (property)
 - `onChange` - Change callback (property)
-- `onSubmit` - Submit callback (property)
+- `getQuestionnaireResponse(questionnaireId, subjectId)` - Get FHIR response (method)
 
 ## 🔧 Field Types
 

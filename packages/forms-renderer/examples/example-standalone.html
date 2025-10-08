@@ -24,6 +24,22 @@
       padding: 1rem;
       margin-bottom: 2rem;
     }
+    form {
+      margin-top: 1rem;
+    }
+    button[type="submit"] {
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      background-color: #0076a8;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button[type="submit"]:hover {
+      background-color: #00628a;
+    }
   </style>
 </head>
 <body>
@@ -35,10 +51,10 @@
       This uses the standalone bundle that includes all dependencies (React, ReactDOM, forms-engine).
     </div>
     
-    <questionnaire-renderer 
-      questionnaire-id="standalone-demo" 
-      full-height>
-    </questionnaire-renderer>
+    <form id="questionnaireForm">
+      <questionnaire-renderer full-height></questionnaire-renderer>
+      <button type="submit">Submit Questionnaire</button>
+    </form>
   </div>
 
   <script type="module">
@@ -216,12 +232,17 @@
     };
 
     // Handle form submission
-    renderer.onSubmit = (fhirResponse) => {
+    const form = document.getElementById('questionnaireForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // Get FHIR response from the web component
+      const fhirResponse = renderer.getQuestionnaireResponse('standalone-demo', 'patient-123');
+      
       console.log('✅ Form submitted!');
       console.log('FHIR QuestionnaireResponse:', fhirResponse);
       
       // Show alert with summary
-      const summary = JSON.stringify(fhirResponse, null, 2);
       alert('Form submitted successfully!\n\nCheck console for full FHIR output.');
       
       // In a real app, you would send this to your server:
@@ -230,7 +251,7 @@
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(fhirResponse)
       // });
-    };
+    });
 
     console.log('✅ Standalone Web Component loaded!');
     console.log('📦 Bundle includes: React + ReactDOM + forms-engine');
