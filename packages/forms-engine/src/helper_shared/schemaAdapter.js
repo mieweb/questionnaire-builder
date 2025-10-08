@@ -81,7 +81,7 @@ function convertSurveyElement(element) {
   
   // Base field structure
   const field = {
-    id: element.name || `field-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    id: element.name || `field-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     fieldType,
     question: element.title || element.name || '',
   };
