@@ -13,6 +13,7 @@
     "dev:packages": "npm run build:watch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
     "preview": "vite preview --config apps/web-editor/vite.config.ts",
     "build": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "pack:all": "npm run build && npm pack --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
     "version:engine": "npm version patch --workspace=packages/forms-engine",
     "version:editor": "npm version patch --workspace=packages/forms-editor",
     "version:renderer": "npm version patch --workspace=packages/forms-renderer",

@@ -1,25 +1,22 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
-import { QuestionnaireEditor } from '@mieweb/forms-editor';
+import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
+/**
+ * Example: Using QuestionnaireRenderer as a React component
+ * Requires: react, react-dom (peer dependencies)
+ */
 function App() {
-  const [fields, setFields] = React.useState([
+  const [fields] = React.useState([
     {
       id: 'sec-1',
       fieldType: 'section',
-      title: 'Patient Information',
+      title: 'Personal Information',
       fields: [
         {
           id: 'q-name',
           fieldType: 'input',
-          question: 'Full Name',
-          answer: ''
-        },
-        {
-          id: 'q-dob',
-          fieldType: 'input',
-          question: 'Date of Birth',
+          question: 'What is your full name?',
           answer: ''
         },
         {
@@ -106,12 +103,11 @@ function App() {
         {
           id: 'q-conditions',
           fieldType: 'check',
-          question: 'Do you have any of the following conditions? (Check all that apply)',
+          question: 'Do you have any of the following conditions?',
           options: [
             { id: 'cond-diabetes', value: 'Diabetes' },
             { id: 'cond-hypertension', value: 'Hypertension' },
             { id: 'cond-asthma', value: 'Asthma' },
-            { id: 'cond-heart', value: 'Heart Disease' },
             { id: 'cond-other', value: 'Other (specify below)' }
           ],
           selected: []
@@ -127,51 +123,41 @@ function App() {
               { targetId: 'q-conditions', operator: 'includes', value: 'cond-other' }
             ]
           }
-        },
-        {
-          id: 'q-allergies',
-          fieldType: 'check',
-          question: 'Known allergies (select all that apply)',
-          options: [
-            { id: 'alg-none', value: 'No known allergies' },
-            { id: 'alg-penicillin', value: 'Penicillin' },
-            { id: 'alg-peanut', value: 'Peanuts' },
-            { id: 'alg-other', value: 'Other (specify below)' }
-          ],
-          selected: []
-        },
-        {
-          id: 'q-allergy-details',
-          fieldType: 'input',
-          question: 'Please specify allergy details (reaction, severity)',
-          answer: '',
-          enableWhen: {
-            logic: 'OR',
-            conditions: [
-              { targetId: 'q-allergies', operator: 'includes', value: 'alg-penicillin' },
-              { targetId: 'q-allergies', operator: 'includes', value: 'alg-peanut' },
-              { targetId: 'q-allergies', operator: 'includes', value: 'alg-other' }
-            ]
-          }
         }
       ]
-    },
-    {
-      id: 'q-notes',
-      fieldType: 'input',
-      question: 'Additional notes or comments',
-      answer: ''
     }
   ]);
 
+  const [submitted, setSubmitted] = React.useState(null);
+
+  const handleChange = (updatedFields) => {
+    console.log('Form changed:', updatedFields);
+  };
+
+  const handleSubmit = (fhirResponse) => {
+    console.log('Form submitted! FHIR Response:', fhirResponse);
+    setSubmitted(fhirResponse);
+  };
+
   return (
-    <div className="w-full h-dvh bg-slate-100">
-      <div className="absolute inset-0 overflow-auto">
-        <QuestionnaireEditor
-          initialFields={fields}
-          onChange={setFields}
-        />
-      </div>
+    <div style={{ padding: '2rem' }}>
+      <h1 style={{ textAlign: 'center' }}>React Component Example</h1>
+      
+      <QuestionnaireRenderer
+        questionnaireId="demo-questionnaire"
+        subjectId="patient-12345"
+        fields={fields}
+        onChange={handleChange}
+        onSubmit={handleSubmit}
+        fullHeight={false}
+      />
+
+      {submitted && (
+        <div style={{ marginTop: '2rem', padding: '1rem', background: '#f0f0f0' }}>
+          <h3>Submitted FHIR Response:</h3>
+          <pre>{JSON.stringify(submitted, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 }

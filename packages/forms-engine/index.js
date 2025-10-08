@@ -17,8 +17,9 @@ export { initializeField, initializeFieldOptions } from './src/helper_shared/ini
 export { isVisible } from './src/helper_shared/logicVisibility.js';
 
 // state: stores, apis, selectors
+
+export { useFormStore, useField, useFieldsArray, useVisibleFields } from './src/state/formStore.js';
 export { useFormApi } from './src/state/formApi.js';
-export { useFormStore, useField, useChildField, useFieldsArray } from './src/state/formStore.js';
 export { useUIApi } from './src/state/uiApi.js';
 export { useUIStore } from './src/state/uiStore.js';
 

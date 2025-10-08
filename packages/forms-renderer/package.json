@@ -1,14 +1,18 @@
 {
   "name": "@mieweb/forms-renderer",
-  "version": "0.1.4",
-  "description": "Read-only questionnaire form renderer producing FHIR QuestionnaireResponse",
+  "version": "0.1.8",
+  "description": "Read-only questionnaire form renderer as Web Component producing FHIR QuestionnaireResponse",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "main": "./dist/react.js",
+  "module": "./dist/react.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/react.js",
+      "types": "./dist/react.d.ts"
+    },
+    "./standalone": {
+      "import": "./dist/standalone.js",
+      "require": "./dist/standalone.umd.cjs"
     }
   },
   "files": [
@@ -19,15 +23,24 @@
     "**/*.css"
   ],
   "scripts": {
-    "build": "vite build",
-    "build:watch": "vite build --watch"
+    "build": "vite build && vite build --config vite.config.standalone.js",
+    "build:watch": "vite build --watch",
+    "build:standalone": "vite build --config vite.config.standalone.js"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
   "dependencies": {
-    "@mieweb/forms-engine": "^0.1.4"
+    "@mieweb/forms-engine": "^0.1.6"
   },
   "publishConfig": {
     "access": "public"

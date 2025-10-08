@@ -26,6 +26,12 @@ const normalize = (arr) => {
   (arr || []).forEach((f) => {
     const id = f.id || uuidv4();
     const init = initializeField({ ...f, id });
+    
+    // Initialize nested children in sections (but don't add them to byId separately)
+    if (init.fieldType === "section" && Array.isArray(init.fields)) {
+      init.fields = init.fields.map(child => initializeField(child));
+    }
+    
     byId[id] = init;
     order.push(id);
   });
@@ -89,23 +95,6 @@ export const useFormStore = create((set, get) => ({
   order: [],
 
   // ────────── Minimal init API ──────────
-  ingest: (arr = []) => set(() => {
-    const byId = {};
-    const order = [];
-    arr.forEach(raw => {
-      const id = raw.id;
-      const f = initializeField(raw);
-      byId[id] = f;
-      order.push(id);
-      if (f.fieldType === "section" && Array.isArray(f.fields)) {
-        f.fields.forEach(child => {
-          byId[child.id] = initializeField(child);
-        });
-      }
-    });
-    return { byId, order };
-  }),
-
   setEnableWhen: (id, enableWhen) =>
     set((s) => {
       const f = s.byId[id];
@@ -116,50 +105,6 @@ export const useFormStore = create((set, get) => ({
       return { byId: { ...s.byId, [id]: { ...f, ...(ew ? { enableWhen: ew } : { enableWhen: undefined }) } } };
     }),
 
-  getEnableWhen: (id) => {
-    const f = get().byId[id];
-    return f?.enableWhen ?? { logic: "AND", conditions: [] };
-  },
-
-  // ────────── Flat/read helpers ──────────
-  flatArray: () => {
-    const { byId, order } = get();
-    const out = [];
-    const seen = new Set();
-
-    // top-level first
-    order.forEach(id => {
-      const f = byId[id];
-      if (!f) return;
-      if (!seen.has(f.id)) { out.push(f); seen.add(f.id); }
-      if (f.fieldType === "section" && Array.isArray(f.fields)) {
-        f.fields.forEach(ch => {
-          const child = byId[ch.id] || ch;
-          if (child && !seen.has(child.id)) { out.push(child); seen.add(child.id); }
-        });
-      }
-    });
-
-    // any stragglers
-    Object.values(byId).forEach(f => {
-      if (!seen.has(f.id)) { out.push(f); seen.add(f.id); }
-    });
-
-    return out;
-  },
-
-  flatMap: () => {
-    const arr = get().flatArray();
-    return arr.reduce((m, f) => ((m[f.id] = f), m), {});
-  },
-
-  // ────────── Preview helper ──────────
-  visibleIds: (isPreview) => {
-    const arr = get().flatArray();
-    if (!isPreview) return arr.map(f => f.id);
-    const byId = arr.reduce((m, f) => ((m[f.id] = f), m), {});
-    return arr.filter(f => isVisible(f, byId)).map(f => f.id);
-  },
   // ────────── Action: Replaces All ──────────
   replaceAll: (fields) => set(() => normalize(fields)),
 
@@ -297,20 +242,33 @@ export const useFormStore = create((set, get) => ({
 export const useField = (id) =>
   useFormStore(React.useCallback((s) => s.byId[id], [id]));
 
-// Child field within a section
-export const useChildField = (sectionId, childId) =>
-  useFormStore(
-    React.useCallback((s) => {
-      const sec = s.byId[sectionId];
-      if (!sec || !Array.isArray(sec.fields)) return undefined;
-      return sec.fields.find((c) => c.id === childId);
-    }, [sectionId, childId])
-  );
-
 // All fields as array (use sparingly; virtualize large lists)
 export const useFieldsArray = () => {
   const order = useFormStore((s) => s.order);
   const byId = useFormStore((s) => s.byId);
   return React.useMemo(() => order.map((id) => byId[id]), [order, byId]);
+};
+
+export const useVisibleFields = (isPreview) => {
+  const order = useFormStore((s) => s.order);
+  const byId = useFormStore((s) => s.byId);
+  
+  return React.useMemo(() => {
+    const fields = order.map(id => byId[id]);
+    
+    // Build flat array (sections + their children)
+    const allFlat = [];
+    fields.forEach(f => {
+      allFlat.push(f);
+      if (f?.fieldType === "section" && Array.isArray(f.fields)) {
+        allFlat.push(...f.fields);
+      }
+    });
+
+    // Filter by visibility if in preview
+    if (!isPreview) return { fields, allFlat };
+    const visible = fields.filter(f => isVisible(f, allFlat));
+    return { fields: visible, allFlat };
+  }, [order, byId, isPreview]);
 };
 
