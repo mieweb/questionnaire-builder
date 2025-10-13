@@ -3,171 +3,173 @@ import { createRoot } from 'react-dom/client';
 import { motion } from 'framer-motion';
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
 import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
+import { useUIStore } from '@mieweb/forms-engine';
 import './index.css';
 
 const initialFields = [
-    {
-      id: 'sec-1',
-      fieldType: 'section',
-      title: 'Patient Information',
-      fields: [
-        {
-          id: 'q-name',
-          fieldType: 'input',
-          question: 'Full Name',
-          answer: ''
-        },
-        {
-          id: 'q-dob',
-          fieldType: 'input',
-          question: 'Date of Birth',
-          answer: ''
-        },
-        {
-          id: 'q-gender',
-          fieldType: 'radio',
-          question: 'Biological sex',
-          options: [
-            { id: 'gender-male', value: 'Male' },
-            { id: 'gender-female', value: 'Female' },
-            { id: 'gender-other', value: 'Other' }
-          ],
-          selected: null
-        },
-        {
-          id: 'q-email',
-          fieldType: 'input',
-          question: 'Email address',
-          answer: ''
-        }
-      ]
-    },
-    {
-      id: 'sec-pregnancy',
-      fieldType: 'section',
-      title: 'Pregnancy Information',
-      enableWhen: {
-        logic: 'AND',
-        conditions: [
-          { targetId: 'q-gender', operator: 'equals', value: 'gender-female' }
-        ]
+  {
+    id: 'sec-1',
+    fieldType: 'section',
+    title: 'Patient Information',
+    fields: [
+      {
+        id: 'q-name',
+        fieldType: 'input',
+        question: 'Full Name',
+        answer: ''
       },
-      fields: [
-        {
-          id: 'q-pregnant',
-          fieldType: 'radio',
-          question: 'Are you currently pregnant?',
-          options: [
-            { id: 'preg-yes', value: 'Yes' },
-            { id: 'preg-no', value: 'No' }
-          ],
-          selected: null
-        },
-        {
-          id: 'q-weeks',
-          fieldType: 'input',
-          question: 'Weeks gestation (if known)',
-          answer: '',
-          enableWhen: {
-            logic: 'AND',
-            conditions: [
-              { targetId: 'q-pregnant', operator: 'equals', value: 'preg-yes' }
-            ]
-          }
-        }
+      {
+        id: 'q-dob',
+        fieldType: 'input',
+        question: 'Date of Birth',
+        answer: ''
+      },
+      {
+        id: 'q-gender',
+        fieldType: 'radio',
+        question: 'Biological sex',
+        options: [
+          { id: 'gender-male', value: 'Male' },
+          { id: 'gender-female', value: 'Female' },
+          { id: 'gender-other', value: 'Other' }
+        ],
+        selected: null
+      },
+      {
+        id: 'q-email',
+        fieldType: 'input',
+        question: 'Email address',
+        answer: ''
+      }
+    ]
+  },
+  {
+    id: 'sec-pregnancy',
+    fieldType: 'section',
+    title: 'Pregnancy Information',
+    enableWhen: {
+      logic: 'AND',
+      conditions: [
+        { targetId: 'q-gender', operator: 'equals', value: 'gender-female' }
       ]
     },
-    {
-      id: 'sec-2',
-      fieldType: 'section',
-      title: 'Medical History',
-      fields: [
-        {
-          id: 'q-medications',
-          fieldType: 'radio',
-          question: 'Are you currently taking any medications?',
-          options: [
-            { id: 'meds-yes', value: 'Yes' },
-            { id: 'meds-no', value: 'No' }
-          ],
-          selected: null
-        },
-        {
-          id: 'q-med-list',
-          fieldType: 'input',
-          question: 'List current medications (name, dose, frequency)',
-          answer: '',
-          enableWhen: {
-            logic: 'AND',
-            conditions: [
-              { targetId: 'q-medications', operator: 'equals', value: 'meds-yes' }
-            ]
-          }
-        },
-        {
-          id: 'q-conditions',
-          fieldType: 'check',
-          question: 'Do you have any of the following conditions? (Check all that apply)',
-          options: [
-            { id: 'cond-diabetes', value: 'Diabetes' },
-            { id: 'cond-hypertension', value: 'Hypertension' },
-            { id: 'cond-asthma', value: 'Asthma' },
-            { id: 'cond-heart', value: 'Heart Disease' },
-            { id: 'cond-other', value: 'Other (specify below)' }
-          ],
-          selected: []
-        },
-        {
-          id: 'q-conditions-other',
-          fieldType: 'input',
-          question: 'Please specify other conditions',
-          answer: '',
-          enableWhen: {
-            logic: 'OR',
-            conditions: [
-              { targetId: 'q-conditions', operator: 'includes', value: 'cond-other' }
-            ]
-          }
-        },
-        {
-          id: 'q-allergies',
-          fieldType: 'check',
-          question: 'Known allergies (select all that apply)',
-          options: [
-            { id: 'alg-none', value: 'No known allergies' },
-            { id: 'alg-penicillin', value: 'Penicillin' },
-            { id: 'alg-peanut', value: 'Peanuts' },
-            { id: 'alg-other', value: 'Other (specify below)' }
-          ],
-          selected: []
-        },
-        {
-          id: 'q-allergy-details',
-          fieldType: 'input',
-          question: 'Please specify allergy details (reaction, severity)',
-          answer: '',
-          enableWhen: {
-            logic: 'OR',
-            conditions: [
-              { targetId: 'q-allergies', operator: 'includes', value: 'alg-penicillin' },
-              { targetId: 'q-allergies', operator: 'includes', value: 'alg-peanut' },
-              { targetId: 'q-allergies', operator: 'includes', value: 'alg-other' }
-            ]
-          }
+    fields: [
+      {
+        id: 'q-pregnant',
+        fieldType: 'radio',
+        question: 'Are you currently pregnant?',
+        options: [
+          { id: 'preg-yes', value: 'Yes' },
+          { id: 'preg-no', value: 'No' }
+        ],
+        selected: null
+      },
+      {
+        id: 'q-weeks',
+        fieldType: 'input',
+        question: 'Weeks gestation (if known)',
+        answer: '',
+        enableWhen: {
+          logic: 'AND',
+          conditions: [
+            { targetId: 'q-pregnant', operator: 'equals', value: 'preg-yes' }
+          ]
         }
-      ]
-    },
-    {
-      id: 'q-notes',
-      fieldType: 'input',
-      question: 'Additional notes or comments',
-      answer: ''
-    }
-  ];
+      }
+    ]
+  },
+  {
+    id: 'sec-2',
+    fieldType: 'section',
+    title: 'Medical History',
+    fields: [
+      {
+        id: 'q-medications',
+        fieldType: 'radio',
+        question: 'Are you currently taking any medications?',
+        options: [
+          { id: 'meds-yes', value: 'Yes' },
+          { id: 'meds-no', value: 'No' }
+        ],
+        selected: null
+      },
+      {
+        id: 'q-med-list',
+        fieldType: 'input',
+        question: 'List current medications (name, dose, frequency)',
+        answer: '',
+        enableWhen: {
+          logic: 'AND',
+          conditions: [
+            { targetId: 'q-medications', operator: 'equals', value: 'meds-yes' }
+          ]
+        }
+      },
+      {
+        id: 'q-conditions',
+        fieldType: 'check',
+        question: 'Do you have any of the following conditions? (Check all that apply)',
+        options: [
+          { id: 'cond-diabetes', value: 'Diabetes' },
+          { id: 'cond-hypertension', value: 'Hypertension' },
+          { id: 'cond-asthma', value: 'Asthma' },
+          { id: 'cond-heart', value: 'Heart Disease' },
+          { id: 'cond-other', value: 'Other (specify below)' }
+        ],
+        selected: []
+      },
+      {
+        id: 'q-conditions-other',
+        fieldType: 'input',
+        question: 'Please specify other conditions',
+        answer: '',
+        enableWhen: {
+          logic: 'OR',
+          conditions: [
+            { targetId: 'q-conditions', operator: 'includes', value: 'cond-other' }
+          ]
+        }
+      },
+      {
+        id: 'q-allergies',
+        fieldType: 'check',
+        question: 'Known allergies (select all that apply)',
+        options: [
+          { id: 'alg-none', value: 'No known allergies' },
+          { id: 'alg-penicillin', value: 'Penicillin' },
+          { id: 'alg-peanut', value: 'Peanuts' },
+          { id: 'alg-other', value: 'Other (specify below)' }
+        ],
+        selected: []
+      },
+      {
+        id: 'q-allergy-details',
+        fieldType: 'input',
+        question: 'Please specify allergy details (reaction, severity)',
+        answer: '',
+        enableWhen: {
+          logic: 'OR',
+          conditions: [
+            { targetId: 'q-allergies', operator: 'includes', value: 'alg-penicillin' },
+            { targetId: 'q-allergies', operator: 'includes', value: 'alg-peanut' },
+            { targetId: 'q-allergies', operator: 'includes', value: 'alg-other' }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    id: 'q-notes',
+    fieldType: 'input',
+    question: 'Additional notes or comments',
+    answer: ''
+  }
+];
 
 // Custom wrapper demonstrating how to use the renderer with your own submit button
 function RendererWithSubmit({ fields, schemaType = 'inhouse', onChange, onSubmit }) {
   const currentFields = useFieldsArray();
+  const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -180,7 +182,8 @@ function RendererWithSubmit({ fields, schemaType = 'inhouse', onChange, onSubmit
       <QuestionnaireRenderer 
         fields={fields} 
         schemaType={schemaType}
-        onChange={onChange} 
+        onChange={onChange}
+        hideUnsupportedFields={hideUnsupportedFields}
       />
       <div className="pt-4">
         <button
@@ -224,35 +227,11 @@ function App() {
     }
   };
 
-  if (view === 'surveyjs' && surveySchema) {
-    return (
-      <div className="w-full h-dvh relative bg-slate-100">
-        <FloatingBack onExit={() => setView('landing')} />
-        <FloatingFooter />
-        <div className="absolute inset-0 overflow-auto p-4 max-w-4xl mx-auto w-full">
-          <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-            <h2 className="text-xl font-semibold mb-2">SurveyJS Schema Test</h2>
-            <p className="text-sm text-slate-500">Testing converted SurveyJS schema</p>
-          </div>
-          <RendererWithSubmit 
-            fields={surveySchema}
-            schemaType="surveyjs"
-            onChange={handleFormChange}
-            onSubmit={(qr) => setSubmitted(qr)}
-          />
-          {submitted && (
-            <pre className="mt-4 bg-neutral-100 p-4 rounded-lg overflow-auto">{JSON.stringify(submitted, null, 2)}</pre>
-          )}
-        </div>
-      </div>
-    );
-  }
-
   if (view === 'editor') {
     return (
       <div className="w-full h-dvh relative bg-slate-100">
         <FloatingBack onExit={() => setView('landing')} />
-        <FloatingFooter />
+        <FloatingFooter view={view} />
         <div className="absolute inset-0 overflow-auto">
           <QuestionnaireEditor initialFields={fields} onChange={setFields} />
         </div>
@@ -264,9 +243,9 @@ function App() {
     return (
       <div className="w-full h-dvh relative bg-slate-100">
         <FloatingBack onExit={() => setView('landing')} />
-        <FloatingFooter />
+        <FloatingFooter view={view} />
         <div className="absolute inset-0 overflow-auto p-4 max-w-4xl mx-auto w-full">
-          <RendererWithSubmit 
+          <RendererWithSubmit
             fields={fields}
             onChange={handleFormChange}
             onSubmit={(qr) => setSubmitted(qr)}
@@ -296,16 +275,6 @@ function App() {
           <DemoCard title="Editor" desc="Build & modify questionnaire structure." onClick={() => setView('editor')} />
           <DemoCard title="Renderer" desc="Fill out the questionnaire & submit." onClick={() => setView('renderer')} />
         </div>
-
-        <div className="mb-8">
-          <button
-            onClick={loadSurveyJS}
-            className="px-6 py-3 bg-purple-500 text-white rounded-xl font-medium shadow-lg hover:bg-purple-600 transition-all"
-          >
-            🧪 Test SurveyJS Schema
-          </button>
-        </div>
-
         <Landing />
 
         <div className="mt-12 pt-8 border-t border-slate-200 text-center">
@@ -333,7 +302,7 @@ function FloatingBack({ onExit }) {
         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-70">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
+          <path d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
         <span className="font-medium">Back</span>
         <span className="bg-slate-100/60 px-2 py-1 rounded-md text-xs font-semibold text-slate-500 border border-slate-200/60 font-mono">ESC</span>
@@ -342,18 +311,39 @@ function FloatingBack({ onExit }) {
   );
 }
 
-function FloatingFooter() {
+function FloatingFooter({ view }) {
+  const showToggle = view && view !== 'landing';
+  const hideUnsupported = useUIStore((s) => s.hideUnsupportedFields);
+  const setHideUnsupportedFields = useUIStore((s) => s.setHideUnsupportedFields);
+  
   return (
     <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="inline-flex items-center gap-2 bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-2.5 text-xs tracking-tight rounded-2xl font-medium shadow-lg font-sans"
+        className="inline-flex items-center gap-3 bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-2.5 text-xs tracking-tight rounded-2xl font-medium shadow-lg font-sans"
         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       >
-        <span className="text-slate-500">Press</span>
-        <kbd className="bg-slate-100/80 px-2 py-1 rounded-md font-mono text-xs font-semibold text-slate-600 border border-slate-200/60 shadow-sm">ESC</kbd>
-        <span className="text-slate-500">to return</span>
+        <div className="inline-flex items-center gap-2">
+          <span className="text-slate-500">Press</span>
+          <kbd className="bg-slate-100/80 px-2 py-1 rounded-md font-mono text-xs font-semibold text-slate-600 border border-slate-200/60 shadow-sm">ESC</kbd>
+          <span className="text-slate-500">to return</span>
+        </div>
+        
+        {showToggle && (
+          <>
+            <div className="h-4 w-px bg-slate-300/50" />
+            <label className="inline-flex items-center gap-2 cursor-pointer hover:text-slate-900 transition-colors">
+              <input
+                type="checkbox"
+                checked={hideUnsupported}
+                onChange={(e) => setHideUnsupportedFields(e.target.checked)}
+                className="w-3.5 h-3.5 rounded cursor-pointer"
+              />
+              <span className="text-slate-600">Hide unsupported</span>
+            </label>
+          </>
+        )}
       </motion.div>
     </div>
   );
@@ -372,20 +362,20 @@ function DemoCard({ title, desc, onClick }) {
       <p className="m-0 text-base leading-relaxed text-slate-500">{desc}</p>
       <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-500">
         <span>Explore</span>
-        <motion.svg 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2.5" 
-          strokeLinecap="round" 
+        <motion.svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
           strokeLinejoin="round"
           initial={{ x: 0 }}
           whileHover={{ x: 4 }}
           transition={{ type: 'spring', stiffness: 400, damping: 25 }}
         >
-          <path d="M5 12h14M12 5l7 7-7 7"/>
+          <path d="M5 12h14M12 5l7 7-7 7" />
         </motion.svg>
       </div>
     </motion.div>
@@ -407,7 +397,7 @@ function Landing() {
 
 function InfoRow({ name, desc }) {
   return (
-    <motion.div 
+    <motion.div
       whileHover={{ scale: 1.01, y: -2 }}
       className="flex flex-wrap gap-3 items-center p-4 px-5 bg-slate-50/60 backdrop-blur-xl backdrop-saturate-150 border border-slate-100/80 rounded-xl shadow-md hover:bg-white/80 hover:border-slate-300/60 hover:shadow-[0_4px_16px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.9)]"
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}

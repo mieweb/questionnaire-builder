@@ -107,6 +107,29 @@ function App() {
 }
 ```
 
+#### With SurveyJS Schema and Hidden Unsupported Fields
+```jsx
+import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
+
+function SurveyForm() {
+  const [surveySchema, setSurveySchema] = React.useState(null);
+  
+  React.useEffect(() => {
+    fetch('/surveyjs-schema.json')
+      .then(r => r.json())
+      .then(setSurveySchema);
+  }, []);
+
+  return (
+    <QuestionnaireRenderer 
+      fields={surveySchema}
+      schemaType="surveyjs"
+      hideUnsupportedFields={true}
+    />
+  );
+}
+```
+
 ### 🌐 Standalone Web Component (Framework-Agnostic)
 
 ✨ Zero dependencies - works with any framework or vanilla JS.
@@ -165,9 +188,20 @@ React component for rendering questionnaires (no built-in submit button).
 
 **Props:**
 - `fields` *(array)* - Questionnaire definition array
+- `schemaType` *(string)* - Schema format: `'inhouse'` (default) or `'surveyjs'`
 - `onChange` *(function)* - Callback when answers change: `(updatedFields) => void`
 - `className` *(string)* - Additional CSS classes
 - `fullHeight` *(boolean)* - Full viewport height mode
+- `hideUnsupportedFields` *(boolean)* - Hide unsupported field types instead of showing placeholders. Useful when importing schemas from external sources like SurveyJS that may contain field types not yet supported by this renderer.
+
+**Example with hideUnsupportedFields:**
+```jsx
+<QuestionnaireRenderer 
+  fields={surveyJsSchema}
+  schemaType="surveyjs"
+  hideUnsupportedFields={true}
+/>
+```
 
 ### Helper Functions
 

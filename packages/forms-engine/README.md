@@ -50,7 +50,7 @@ function MyForm() {
 ## 🏪 State Management
 
 ```jsx
-import { useFormStore } from '@mieweb/forms-engine';
+import { useFormStore, useUIStore } from '@mieweb/forms-engine';
 
 // Initialize form
 const replaceAll = useFormStore(state => state.replaceAll);
@@ -63,6 +63,11 @@ const fieldById = useFormStore(state => state.byId['field-id']);
 // Update fields
 const updateField = useFormStore(state => state.updateField);
 updateField('field-id', { answer: 'new value' });
+
+// UI state - hide unsupported fields
+const hideUnsupportedFields = useUIStore(state => state.hideUnsupportedFields);
+const setHideUnsupportedFields = useUIStore(state => state.setHideUnsupportedFields);
+setHideUnsupportedFields(true); // Hide unsupported field types
 ```
 
 ## 🔀 Conditional Visibility
@@ -117,6 +122,8 @@ function CustomField({ fieldId, sectionId }) {
 - `isPreview` - Current preview mode state
 - `setPreview(boolean)` - Toggle preview mode
 - `selectedFieldId` - Currently selected field ID
+- `hideUnsupportedFields` - Hide unsupported field types state
+- `setHideUnsupportedFields(boolean)` - Toggle hiding unsupported fields
 
 ### 📝 Field Structure
 

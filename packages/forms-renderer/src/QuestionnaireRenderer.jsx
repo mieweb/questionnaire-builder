@@ -12,6 +12,7 @@ import { RendererBody } from './components';
  * @param {Function} onChange - Callback when fields change
  * @param {string} className - Additional CSS classes
  * @param {boolean} fullHeight - Use min-h-screen
+ * @param {boolean} hideUnsupportedFields - Hide unsupported field types instead of showing placeholders
  * 
  * Note: This component does not include a submit button or form wrapper.
  * Use `useQuestionnaireData()` hook to get current data and handle submission yourself.
@@ -22,9 +23,10 @@ export function QuestionnaireRenderer({
   onChange,
   className = '',
   fullHeight = false,
+  hideUnsupportedFields = false,
 }) {
   // Initialize questionnaire and set preview mode
-  useQuestionnaireInit(fields, schemaType);
+  useQuestionnaireInit(fields, schemaType, hideUnsupportedFields);
 
   // Subscribe to form changes
   React.useEffect(() => {

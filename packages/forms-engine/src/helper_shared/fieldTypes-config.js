@@ -2,6 +2,7 @@ import InputField from "../basic_field/TextInput_Field"
 import RadioField from "../basic_field/Radio_Field"
 import CheckField from "../basic_field/Check_Field"
 import SelectionField from "../basic_field/DropDown_Field"
+import UnsupportedField from "../basic_field/Unsupported_Field"
 
 
 const fieldTypes = {
@@ -51,11 +52,11 @@ const fieldTypes = {
             selected: [],
         },
     },
-    selection: {
+    dropdown: {
         label: "Dropdown Field",
-        componentKey: "selection",
+        componentKey: "dropdown",
         defaultProps: {
-            fieldType: "selection",
+            fieldType: "dropdown",
             question: "",
             options: [
                 { value: "Option 1" },
@@ -65,15 +66,24 @@ const fieldTypes = {
             selected: null,
         },
     },
+    unsupported: {
+        label: "Unsupported Field",
+        componentKey: "unsupported",
+        defaultProps: {
+            fieldType: "unsupported",
+            question: "Unsupported field type",
+            unsupportedType: "unknown",
+            unsupportedData: {},
+        },
+    },
 };
 
-// Internal component map (key -> React component). Leaf components registered eagerly.
 const componentMap = {
     input: InputField,
     radio: RadioField,
     check: CheckField,
-    selection: SelectionField,
-    // section added lazily
+    dropdown: SelectionField,
+    unsupported: UnsupportedField,
 };
 
 export function registerFieldComponent(key, component) {

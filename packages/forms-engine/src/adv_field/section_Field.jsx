@@ -7,10 +7,12 @@ import FieldWrapper from "../helper_shared/FieldWrapper.jsx";
 import useFieldController from "../helper_shared/useFieldController.jsx";
 import { useUIApi } from "../state/uiApi.js";
 import { useFormStore } from "../state/formStore.js";
+import { useUIStore } from "../state/uiStore.js";
 
 const SectionField = React.memo(function SectionField({ field }) {
   const ctrl = useFieldController(field);
   const ui = useUIApi();
+  const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
 
   const parentId = ui.selectedChildId.ParentId;
   const childId  = ui.selectedChildId.ChildId;
@@ -39,10 +41,16 @@ const SectionField = React.memo(function SectionField({ field }) {
     el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
   }, [selectedChildId, ctrl.isPreview]);
 
+  // ────────── Helper: Check if child should be hidden ──────────
+  const shouldHideChild = (child) => {
+    return hideUnsupportedFields && child.fieldType === 'unsupported';
+  };
+
   // ────────── Child PREVIEW renderer ──────────
   const renderChildPreview = (child, sectionId) => {
     const Comp = getFieldComponent(child.fieldType);
     if (!Comp) return null;
+    if (shouldHideChild(child)) return null;
 
     const visible = isVisible(child, allFlat);
     if (!visible) return null;
@@ -58,6 +66,7 @@ const SectionField = React.memo(function SectionField({ field }) {
   const renderChildEdit = (child, sectionId) => {
     const ChildField = getFieldComponent(child.fieldType);
     if (!ChildField) return null;
+    if (shouldHideChild(child)) return null;
 
     const isHighlighted = selectedChildId === child.id;
 

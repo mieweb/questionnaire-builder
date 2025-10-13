@@ -46,6 +46,10 @@ function App() {
 - `check` - ☑️ Checkboxes
 - `selection` - 📋 Dropdown
 - `section` - 📂 Field container
+- `unsupported` - ⚠️ Placeholder for unsupported field types (can be hidden with toggle)
+
+### 👁️ Hide Unsupported Fields
+Toggle in the UI to hide/show unsupported field types. Useful when importing schemas from external sources like SurveyJS.
 
 ### 🔀 Conditional Logic (enableWhen)
 Show/hide fields based on answers:

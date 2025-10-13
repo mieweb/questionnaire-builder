@@ -32,6 +32,8 @@ npm install @mieweb/forms-renderer
 - 📱 Mobile responsive
 - 🌐 Framework agnostic (Web Component support)
 - 🎨 Tailwind CSS styling
+- 🔌 SurveyJS schema import/conversion support
+- 👁️ Toggle to hide unsupported field types
 
 ## 🛠️ Development
 

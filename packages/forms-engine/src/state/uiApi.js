@@ -7,6 +7,7 @@ export const useUIApi = () => {
   const panelResetKey    = useUIStore((s) => s.panelResetKey);
   const selectedFieldVal = useUIStore((s) => s.selectedFieldId);
   const isEditModalOpen  = useUIStore((s) => s.isEditModalOpen);
+  const conversionReport = useUIStore((s) => s.conversionReport);
 
   // ────────── Base actions ──────────
   const setPreview            = useUIStore((s) => s.setPreview);
@@ -17,6 +18,11 @@ export const useUIApi = () => {
   const renameSelectedFieldId = useUIStore((s) => s.renameSelectedFieldId);
 
   const setEditModalOpen      = useUIStore((s) => s.setEditModalOpen);
+  
+  const setConversionReport   = useUIStore((s) => s.setConversionReport);
+  const clearConversionReport = useUIStore((s) => s.clearConversionReport);
+  
+  const setHideUnsupportedFields = useUIStore((s) => s.setHideUnsupportedFields);
 
   // ────────── selectedChildId (reactive read) ──────────
   const selectedChild         = useUIStore((s) => s.selectedChildId); 
@@ -59,6 +65,14 @@ export const useUIApi = () => {
       renameParentId: renameSelectedChildParentId,
       renameChildId:  renameSelectedChildId,
     },
+    
+    // ────────── Conversion report ──────────
+    conversionReport,
+    setConversionReport,
+    clearConversionReport,
+    
+    // ────────── Hide unsupported fields ──────────
+    setHideUnsupportedFields,
   }), [
     isPreview, isEditModalOpen, panelResetKey,
     setPreview, togglePreview,
@@ -66,5 +80,7 @@ export const useUIApi = () => {
     setEditModalOpen, openEdit, closeEdit, toggleEdit,
     selectedChild, setSelectedChildId, clearSelectedChildId,
     renameSelectedChildParentId, renameSelectedChildId,
+    conversionReport, setConversionReport, clearConversionReport,
+    setHideUnsupportedFields,
   ]);
 };
