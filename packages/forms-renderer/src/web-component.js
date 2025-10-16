@@ -14,13 +14,14 @@ import { buildQuestionnaireResponse } from './utils/fhirConverter';
  */
 class QuestionnaireRendererElement extends HTMLElement {
   static get observedAttributes() {
-    return ['fields', 'full-height'];
+    return ['fields', 'schema-type', 'full-height'];
   }
 
   constructor() {
     super();
     this._root = null;
     this._fields = [];
+    this._schemaType = 'inhouse';
     this._onChange = null;
   }
 
@@ -55,6 +56,15 @@ class QuestionnaireRendererElement extends HTMLElement {
 
   get onChange() {
     return this._onChange;
+  }
+
+  set schemaType(value) {
+    this._schemaType = value || 'inhouse';
+    this._render();
+  }
+
+  get schemaType() {
+    return this._schemaType;
   }
 
   /**
@@ -100,12 +110,14 @@ class QuestionnaireRendererElement extends HTMLElement {
     }
 
     // Parse other attributes
+    const schemaType = this.getAttribute('schema-type') || this._schemaType || 'inhouse';
     const fullHeight = this.hasAttribute('full-height');
     const className = this.getAttribute('class') || '';
 
     this._root.render(
       React.createElement(QuestionnaireRenderer, {
         fields,
+        schemaType,
         onChange: this._onChange,
         className,
         fullHeight,

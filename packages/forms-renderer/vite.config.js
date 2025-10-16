@@ -11,6 +11,7 @@ export default defineConfig({
     react()
   ],
   build: {
+    emptyOutDir: false,
     lib: {
       entry: resolve(__dirname, 'index.js'),
       name: 'FormsRenderer',

@@ -3,12 +3,11 @@ import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import fs from 'fs';
 
-
 export default defineConfig({
   plugins: [
     react(),
     {
-      name: 'inline-css',
+      name: 'inline-css-blaze',
       generateBundle(options, bundle) {
         const cssPath = resolve(__dirname, 'src/styles.output.css');
         if (fs.existsSync(cssPath)) {
@@ -19,14 +18,14 @@ export default defineConfig({
               const cssInjection = `
 (function() {
   if (typeof document === 'undefined') return;
-  if (window.__QUESTIONNAIRE_RENDERER_CSS_INJECTED) return;
-  if (!document.querySelector('#questionnaire-renderer-styles')) {
+  if (window.__QUESTIONNAIRE_BLAZE_CSS_INJECTED) return;
+  if (!document.querySelector('#questionnaire-blaze-styles')) {
     const style = document.createElement('style');
-    style.id = 'questionnaire-renderer-styles';
+    style.id = 'questionnaire-blaze-styles';
     style.textContent = ${JSON.stringify(cssContent)};
     document.head.appendChild(style);
   }
-  window.__QUESTIONNAIRE_RENDERER_CSS_INJECTED = true;
+  window.__QUESTIONNAIRE_BLAZE_CSS_INJECTED = true;
 })();
 `;
               bundle[fileName].code = cssInjection + bundle[fileName].code;
@@ -34,9 +33,6 @@ export default defineConfig({
           });
         }
       },
-      // After files are written, remove any emitted CSS files from the outDir to
-      // avoid leaving a separate .css file and causing duplicate styles when the
-      // bundle is used standalone.
       writeBundle(outputOptions) {
         try {
           const outDir = resolve(__dirname, outputOptions?.dir || 'dist');
@@ -55,20 +51,18 @@ export default defineConfig({
   ],
   build: {
     emptyOutDir: false,
-  minify: 'esbuild',
-    define: {
-      'process.env.NODE_ENV': JSON.stringify('production')
-    },
     lib: {
-      entry: resolve(__dirname, 'src/web-component.js'),
-      name: 'QuestionnaireRenderer',
-      fileName: 'standalone',
-      formats: ['es', 'umd']
+      entry: resolve(__dirname, 'src/blaze-component.js'),
+      name: 'QuestionnaireRendererBlaze',
+      formats: ['es', 'umd'],
+      fileName: (format) => `blaze.${format === 'es' ? 'js' : 'umd.cjs'}`
     },
     rollupOptions: {
-      external: []
+      external: [],
+      output: {
+        globals: {}
+      }
     },
-    cssCodeSplit: false,
     sourcemap: true
   }
 });

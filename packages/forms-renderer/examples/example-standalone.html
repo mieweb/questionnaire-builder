@@ -51,8 +51,10 @@
       This uses the standalone bundle that includes all dependencies (React, ReactDOM, forms-engine).
     </div>
     
-    <form id="questionnaireForm">
-      <questionnaire-renderer full-height></questionnaire-renderer>
+    <form id="questionnaire-form">
+      <!-- Web Component - React is bundled inside! -->
+      <!-- schema-type: 'inhouse' (default) or 'surveyjs' -->
+      <questionnaire-renderer schema-type="inhouse" full-height></questionnaire-renderer>
       <button type="submit">Submit Questionnaire</button>
     </form>
   </div>

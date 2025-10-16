@@ -13,6 +13,10 @@
     "./standalone": {
       "import": "./dist/standalone.js",
       "require": "./dist/standalone.umd.cjs"
+    },
+    "./blaze": {
+      "import": "./dist/blaze.js",
+      "require": "./dist/blaze.umd.cjs"
     }
   },
   "files": [
@@ -24,9 +28,8 @@
   ],
   "scripts": {
     "build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-renderer/src/styles.input.css -o packages/forms-renderer/src/styles.output.css",
-    "build": "npm run build:css && vite build && vite build --config vite.config.standalone.js",
-    "build:watch": "npm run build:css && vite build --watch",
-    "build:standalone": "npm run build:css && vite build --config vite.config.standalone.js"
+    "build": "npm run build:css && vite build && vite build --config vite.config.standalone.js && vite build --config vite.config.blaze.js",
+    "build:watch": "npm run build:css && vite build --watch"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

@@ -1,0 +1,106 @@
+<!-- 
+  Using QuestionnaireRenderer Blaze Component in Meteor
+  
+  This bundles React internally - your Meteor app doesn't need React!
+  
+  File: /imports/ui/questionnaire/questionnaire.html
+-->
+
+<template name="questionnaireForm">
+  <div class="questionnaire-container">
+    <h2>{{title}}</h2>
+    
+    <!-- Use the bundled Blaze component -->
+    {{> questionnaireRenderer 
+        fields=currentFields
+        schemaType="inhouse"
+        onChange=handleChange
+        fullHeight=false}}
+    
+    <button class="submit-btn">Submit</button>
+  </div>
+</template>
+
+
+<!-- File: /imports/ui/questionnaire/questionnaire.js -->
+<script>
+import { Template } from 'meteor/templating';
+import { ReactiveVar } from 'meteor/reactive-var';
+
+// Import the Blaze component (React is bundled inside)
+import '@mieweb/forms-renderer/blaze';
+
+import './questionnaire.html';
+
+Template.questionnaireForm.onCreated(function() {
+  this.fields = new ReactiveVar([]);
+  this.formData = new ReactiveVar(null);
+  
+  // Load initial data from server
+  Meteor.call('getQuestionnaireFields', (err, fields) => {
+    if (!err) this.fields.set(fields);
+  });
+});
+
+Template.questionnaireForm.helpers({
+  title() {
+    return 'Patient Questionnaire';
+  },
+  
+  currentFields() {
+    return Template.instance().fields.get();
+  },
+  
+  handleChange() {
+    const instance = Template.instance();
+    return (updatedFields) => {
+      console.log('Form changed:', updatedFields);
+      instance.formData.set(updatedFields);
+    };
+  }
+});
+
+Template.questionnaireForm.events({
+  'click .submit-btn'(event, instance) {
+    event.preventDefault();
+    
+    const formData = instance.formData.get();
+    if (!formData) {
+      alert('Please fill out the form');
+      return;
+    }
+    
+    Meteor.call('submitQuestionnaire', formData, (err) => {
+      if (err) {
+        alert('Error: ' + err.message);
+      } else {
+        alert('Submitted successfully!');
+      }
+    });
+  }
+});
+</script>
+
+
+<!-- CSS -->
+<style>
+.questionnaire-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.submit-btn {
+  margin-top: 2rem;
+  padding: 0.75rem 2rem;
+  background: #0076a8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: #00628a;
+}
+</style>
