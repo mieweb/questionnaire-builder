@@ -40,6 +40,7 @@ export function registerBlazeTemplate() {
       const props = {
         fields: templateInstance.data.fields || [],
         schemaType: templateInstance.data.schemaType || 'inhouse',
+        hideUnsupportedFields: templateInstance.data.hideUnsupportedFields || false,
         onChange: templateInstance.data.onChange,
         onSubmit: templateInstance.data.onSubmit,
         fullHeight: templateInstance.data.fullHeight,

@@ -14,7 +14,7 @@ import { buildQuestionnaireResponse } from './utils/fhirConverter';
  */
 class QuestionnaireRendererElement extends HTMLElement {
   static get observedAttributes() {
-    return ['fields', 'schema-type', 'full-height'];
+    return ['fields', 'schema-type', 'full-height', 'hide-unsupported-fields'];
   }
 
   constructor() {
@@ -22,6 +22,7 @@ class QuestionnaireRendererElement extends HTMLElement {
     this._root = null;
     this._fields = [];
     this._schemaType = 'inhouse';
+    this._hideUnsupportedFields = false;
     this._onChange = null;
   }
 
@@ -65,6 +66,15 @@ class QuestionnaireRendererElement extends HTMLElement {
 
   get schemaType() {
     return this._schemaType;
+  }
+
+  set hideUnsupportedFields(value) {
+    this._hideUnsupportedFields = Boolean(value);
+    this._render();
+  }
+
+  get hideUnsupportedFields() {
+    return this._hideUnsupportedFields;
   }
 
   /**
@@ -112,12 +122,14 @@ class QuestionnaireRendererElement extends HTMLElement {
     // Parse other attributes
     const schemaType = this.getAttribute('schema-type') || this._schemaType || 'inhouse';
     const fullHeight = this.hasAttribute('full-height');
+    const hideUnsupportedFields = this.hasAttribute('hide-unsupported-fields') || this._hideUnsupportedFields;
     const className = this.getAttribute('class') || '';
 
     this._root.render(
       React.createElement(QuestionnaireRenderer, {
         fields,
         schemaType,
+        hideUnsupportedFields,
         onChange: this._onChange,
         className,
         fullHeight,

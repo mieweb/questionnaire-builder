@@ -1,16 +1,7 @@
-<!-- 
-  Using QuestionnaireRenderer Blaze Component in Meteor
-  
-  This bundles React internally - your Meteor app doesn't need React!
-  
-  File: /imports/ui/questionnaire/questionnaire.html
--->
-
 <template name="questionnaireForm">
   <div class="questionnaire-container">
     <h2>{{title}}</h2>
     
-    <!-- Use the bundled Blaze component -->
     {{> questionnaireRenderer 
         fields=currentFields
         schemaType="inhouse"
@@ -22,7 +13,7 @@
 </template>
 
 
-<!-- File: /imports/ui/questionnaire/questionnaire.js -->
+<!-- File -->
 <script>
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
