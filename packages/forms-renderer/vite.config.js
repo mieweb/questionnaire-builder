@@ -1,17 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite';
-import { libInjectCss } from 'vite-plugin-lib-inject-css';
 import { resolve } from 'path';
 
 /**
  * React component build (lightweight, requires peer dependencies)
+ * CSS is now pre-processed by Tailwind CLI
  */
 export default defineConfig({
   plugins: [
-    react(),
-    tailwindcss(),
-    libInjectCss()
+    react()
   ],
   build: {
     lib: {

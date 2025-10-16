@@ -23,9 +23,10 @@
     "**/*.css"
   ],
   "scripts": {
-    "build": "vite build && vite build --config vite.config.standalone.js",
-    "build:watch": "vite build --watch",
-    "build:standalone": "vite build --config vite.config.standalone.js"
+    "build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-renderer/src/styles.input.css -o packages/forms-renderer/src/styles.output.css",
+    "build": "npm run build:css && vite build && vite build --config vite.config.standalone.js",
+    "build:watch": "npm run build:css && vite build --watch",
+    "build:standalone": "npm run build:css && vite build --config vite.config.standalone.js"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

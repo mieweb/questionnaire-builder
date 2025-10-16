@@ -2,6 +2,8 @@ import React from 'react';
 import { useFormStore } from '@mieweb/forms-engine';
 import { useQuestionnaireInit } from './hooks';
 import { RendererBody } from './components';
+// Import the pre-processed CSS
+import './styles.output.css';
 
 /**
  * QuestionnaireRenderer

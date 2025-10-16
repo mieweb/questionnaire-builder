@@ -13,6 +13,9 @@ dist-ssr
 *.local
 *.tgz
 
+# Generated CSS files
+**/styles.output.css
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

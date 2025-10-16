@@ -92,6 +92,7 @@ class QuestionnaireRendererElement extends HTMLElement {
     if (fieldsAttr && !this._fields.length) {
       try {
         fields = JSON.parse(fieldsAttr);
+        console.error('Valid fields JSON:', fields)
       } catch (e) {
         console.error('Invalid fields JSON:', e);
         fields = [];
