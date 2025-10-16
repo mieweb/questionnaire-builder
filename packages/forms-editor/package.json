@@ -1,6 +1,6 @@
 {
 	"name": "@mieweb/forms-editor",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"description": "Embeddable questionnaire form editor component",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -28,7 +28,7 @@
 		"react-dom": ">=18.0.0"
 	},
 	"dependencies": {
-		"@mieweb/forms-engine": "^0.1.6",
+		"@mieweb/forms-engine": "^0.1.7",
 		"framer-motion": "^12.4.2",
 		"js-yaml": "^4.1.0"
 	},
