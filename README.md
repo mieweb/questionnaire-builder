@@ -1,39 +1,27 @@
 # 📝 Questionnaire Builder
 
-🔗 Live Demo - Paused
-
-FHIR-compatible questionnaire system built with React, Tailwind CSS, and Zustand. Build dynamic forms with conditional logic.
+FHIR-compatible questionnaire system built with React, Tailwind CSS, and Zustand.
 
 ## 📦 Packages
 
 ### 🔧 [@mieweb/forms-engine](./packages/forms-engine)
 Core state management and field components.
-```bash
-npm install @mieweb/forms-engine
-```
 
 ### ✏️ [@mieweb/forms-editor](./packages/forms-editor)
 Complete questionnaire editor with conditional logic.
-```bash
-npm install @mieweb/forms-editor
-```
 
 ### 📋 [@mieweb/forms-renderer](./packages/forms-renderer)
 Web Component + React renderer for displaying questionnaires.
-```bash
-npm install @mieweb/forms-renderer
-```
 
 ## ✨ Features
 
-- 🔧 Multiple field types (input, radio, checkbox, dropdown, sections)
-- 🔀 Conditional logic with `enableWhen` rules
-- 🏥 FHIR Questionnaire/QuestionnaireResponse export
-- 📱 Mobile responsive
-- 🌐 Framework agnostic (Web Component support)
-- 🎨 Tailwind CSS styling
-- 🔌 SurveyJS schema import/conversion support
-- 👁️ Toggle to hide unsupported field types
+- Multiple field types (input, radio, checkbox, dropdown, sections)
+- Conditional logic with `enableWhen` rules
+- FHIR Questionnaire/QuestionnaireResponse export
+- Mobile responsive
+- Framework agnostic (Web Component support)
+- SurveyJS schema import/conversion
+- Hide unsupported field types
 
 ## 🛠️ Development
 
@@ -41,50 +29,75 @@ npm install @mieweb/forms-renderer
 git clone https://github.com/mieweb/questionnaire-builder.git
 cd questionnaire-builder
 npm install
-
-# Run main editor
-npm run dev
-
-# Run package demos
-npm run dev:demos
-```
-
-### 🔧 Scripts
-
-```bash
+npm run dev              # Main editor
+npm run dev:demos        # Package demos
 npm run build            # Build all packages
-npm run dev:packages     # Watch mode for packages
-npm run lint             # ESLint
 ```
 
 ## 🚀 Quick Start
 
-### ✏️ Editor
+### Editor (React)
 ```jsx
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
 
-function App() {
-  const [fields, setFields] = React.useState([]);
+<QuestionnaireEditor 
+  initialFields={[]} 
+  onChange={(fields) => console.log(fields)} 
+/>
+```
+
+### Renderer
+
+**React Component:**
+```jsx
+import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
+
+function MyForm() {
+  const fields = [{ id: 'q1', fieldType: 'input', question: 'Name?', answer: '' }];
+  const currentFields = useFieldsArray();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const fhir = buildQuestionnaireResponse(currentFields, 'q-1');
+  };
+
   return (
-    <QuestionnaireEditor initialFields={fields} onChange={setFields} />
+    <form onSubmit={handleSubmit}>
+      <QuestionnaireRenderer fields={fields} />
+      <button type="submit">Submit</button>
+    </form>
   );
 }
 ```
 
-### 📋 Renderer
-```jsx
-import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
+**Web Component:**
+```html
+<script type="module">
+  import '@mieweb/forms-renderer/standalone';
+</script>
 
-function App() {
-  const fields = [
-    { id: 'q1', fieldType: 'input', question: 'Your name?', answer: '' }
-  ];
-  return (
-    <QuestionnaireRenderer
-      questionnaireId="demo-1"
-      fields={fields}
-      onSubmit={(fhirResponse) => console.log(fhirResponse)}
-    />
-  );
-}
+<form id="form">
+  <questionnaire-renderer></questionnaire-renderer>
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  const renderer = document.querySelector('questionnaire-renderer');
+  renderer.fields = [{ id: 'q1', fieldType: 'input', question: 'Name?', answer: '' }];
+  
+  document.getElementById('form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fhir = renderer.getQuestionnaireResponse('q-1');
+  });
+</script>
+```
+
+**Blaze/Meteor:**
+```javascript
+// Client code
+import { registerBlazeTemplate } from '@mieweb/forms-renderer/blaze';
+registerBlazeTemplate();
+```
+```handlebars
+{{> questionnaireRenderer fields=myFields onChange=handleChange}}
 ```

@@ -4,14 +4,6 @@ import { QuestionnaireRenderer } from './QuestionnaireRenderer.jsx';
 import { useFormStore } from '@mieweb/forms-engine';
 import { buildQuestionnaireResponse } from './utils/fhirConverter';
 
-/**
- * QuestionnaireRendererElement
- * Web Component wrapper for QuestionnaireRenderer React component
- * Converts props to attributes and provides framework-agnostic interface
- * 
- * Note: Does not include submit button. Wrap in a form and add your own submit button.
- * Use the getQuestionnaireResponse() method to get FHIR response data.
- */
 class QuestionnaireRendererElement extends HTMLElement {
   static get observedAttributes() {
     return ['fields', 'schema-type', 'full-height', 'hide-unsupported-fields'];
@@ -40,7 +32,6 @@ class QuestionnaireRendererElement extends HTMLElement {
     }
   }
 
-  // Property setters for imperative API
   set fields(value) {
     this._fields = value;
     this._render();
@@ -77,12 +68,6 @@ class QuestionnaireRendererElement extends HTMLElement {
     return this._hideUnsupportedFields;
   }
 
-  /**
-   * Get FHIR QuestionnaireResponse from current form data
-   * @param {string} questionnaireId - ID for the questionnaire
-   * @param {string} subjectId - Optional subject/patient ID
-   * @returns {Object} FHIR QuestionnaireResponse
-   */
   getQuestionnaireResponse(questionnaireId = 'questionnaire-1', subjectId) {
     const state = useFormStore.getState();
     const fields = state.order.map(id => state.byId[id]);
@@ -106,20 +91,16 @@ class QuestionnaireRendererElement extends HTMLElement {
   _render() {
     if (!this._root) return;
 
-    // Parse fields from attribute or use property
     let fields = this._fields;
     const fieldsAttr = this.getAttribute('fields');
     if (fieldsAttr && !this._fields.length) {
       try {
         fields = JSON.parse(fieldsAttr);
-        console.error('Valid fields JSON:', fields)
-      } catch (e) {
-        console.error('Invalid fields JSON:', e);
+      } catch {
         fields = [];
       }
     }
 
-    // Parse other attributes
     const schemaType = this.getAttribute('schema-type') || this._schemaType || 'inhouse';
     const fullHeight = this.hasAttribute('full-height');
     const hideUnsupportedFields = this.hasAttribute('hide-unsupported-fields') || this._hideUnsupportedFields;
@@ -138,7 +119,6 @@ class QuestionnaireRendererElement extends HTMLElement {
   }
 }
 
-// Auto-register if not already defined
 if (!customElements.get('questionnaire-renderer')) {
   customElements.define('questionnaire-renderer', QuestionnaireRendererElement);
 }

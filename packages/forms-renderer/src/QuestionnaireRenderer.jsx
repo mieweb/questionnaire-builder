@@ -2,23 +2,8 @@ import React from 'react';
 import { useFormStore } from '@mieweb/forms-engine';
 import { useQuestionnaireInit } from './hooks';
 import { RendererBody } from './components';
-// Import the pre-processed CSS
 import './styles.output.css';
 
-/**
- * QuestionnaireRenderer
- * Read-only / answer capture rendering (no editing tools) for a questionnaire definition (fields array)
- * 
- * @param {Array|Object} fields - Questionnaire fields (inhouse or SurveyJS format)
- * @param {string} schemaType - Schema format: 'inhouse' (default) or 'surveyjs'
- * @param {Function} onChange - Callback when fields change
- * @param {string} className - Additional CSS classes
- * @param {boolean} fullHeight - Use min-h-screen
- * @param {boolean} hideUnsupportedFields - Hide unsupported field types instead of showing placeholders
- * 
- * Note: This component does not include a submit button or form wrapper.
- * Use `useQuestionnaireData()` hook to get current data and handle submission yourself.
- */
 export function QuestionnaireRenderer({
   fields,
   schemaType = 'inhouse',
@@ -27,14 +12,11 @@ export function QuestionnaireRenderer({
   fullHeight = false,
   hideUnsupportedFields = false,
 }) {
-  // Initialize questionnaire and set preview mode
   useQuestionnaireInit(fields, schemaType, hideUnsupportedFields);
 
-  // Subscribe to form changes
   React.useEffect(() => {
     if (!onChange) return;
     const unsub = useFormStore.subscribe((s) => {
-      // Return non-flattened array (sections contain nested fields)
       const arr = s.order.map(id => s.byId[id]);
       onChange(arr);
     });

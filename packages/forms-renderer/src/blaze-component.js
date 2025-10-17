@@ -1,18 +1,7 @@
-/**
- * Blaze Component for QuestionnaireRenderer
- * Bundles React internally so Meteor apps don't need React dependency
- */
-
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QuestionnaireRenderer } from './QuestionnaireRenderer.jsx';
 
-/**
- * Register Blaze template: questionnaireRenderer
- * 
- * Usage in Meteor/Blaze:
- * {{> questionnaireRenderer fields=myFields onChange=handleChange}}
- */
 export function registerBlazeTemplate() {
   if (typeof Template === 'undefined') {
     console.error('Blaze Template not found. Make sure this runs in a Meteor environment.');
@@ -32,10 +21,7 @@ export function registerBlazeTemplate() {
       return;
     }
 
-    // Create React root
     const root = ReactDOM.createRoot(mountNode);
-    
-    // Render function that reads reactive data
     const render = () => {
       const props = {
         fields: templateInstance.data.fields || [],
@@ -50,7 +36,6 @@ export function registerBlazeTemplate() {
       root.render(React.createElement(QuestionnaireRenderer, props));
     };
 
-    // Set up reactive rendering with Tracker
     if (typeof Tracker !== 'undefined') {
       templateInstance.autorun(() => {
         render();
@@ -59,14 +44,12 @@ export function registerBlazeTemplate() {
       render();
     }
 
-    // Clean up on destroy
     templateInstance.view.onViewDestroyed(() => {
       root.unmount();
     });
   });
 }
 
-// Auto-register if in Meteor environment
 if (typeof Meteor !== 'undefined') {
   registerBlazeTemplate();
 }

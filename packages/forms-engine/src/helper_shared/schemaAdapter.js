@@ -1,13 +1,3 @@
-/**
- * Schema Adapter
- * Converts external form schemas (SurveyJS, etc.) to internal format
- */
-
-/**
- * Detect schema type from raw data
- * @param {any} data - Raw schema data
- * @returns {'surveyjs' | 'inhouse' | 'unknown'}
- */
 export function detectSchemaType(data) {
   if (!data) return 'unknown';
   
@@ -17,12 +7,6 @@ export function detectSchemaType(data) {
   return 'unknown';
 }
 
-/**
- * Main adapter entry point
- * @param {any} data - Raw schema data
- * @param {string} schemaType - Explicit schema type ('surveyjs' | 'inhouse')
- * @returns {Object} - { fields: Array, conversionReport: Object }
- */
 export function adaptSchema(data, schemaType = 'inhouse') {
   if (!data) return { fields: [], conversionReport: null };
   
@@ -39,11 +23,6 @@ export function adaptSchema(data, schemaType = 'inhouse') {
   }
 }
 
-/**
- * Convert SurveyJS schema to inhouse format
- * @param {Object} surveyData - SurveyJS schema
- * @returns {Object} - { fields: Array, conversionReport: Object }
- */
 function surveyJSToInhouse(surveyData) {
   if (!surveyData) return { fields: [], conversionReport: null };
   
@@ -112,12 +91,6 @@ function surveyJSToInhouse(surveyData) {
   return { fields, conversionReport };
 }
 
-/**
- * Convert single SurveyJS element to inhouse field
- * @param {Object} element - SurveyJS element
- * @param {Set} fieldNames - Set of valid field names for condition validation
- * @returns {Object|null} - Inhouse field or null if unsupported
- */
 function convertSurveyElement(element, fieldNames = new Set()) {
   if (!element || !element.type) return null;
   
@@ -225,22 +198,11 @@ function convertSurveyElement(element, fieldNames = new Set()) {
   return field;
 }
 
-/**
- * Remove a specific warning from warnings array
- * @param {Array} warnings - Warnings array
- * @param {string} type - Warning type
- * @param {string} property - Warning property
- */
 function removeWarning(warnings, type, property) {
   const index = warnings.findIndex(w => w.type === type && w.property === property);
   if (index !== -1) warnings.splice(index, 1);
 }
 
-/**
- * Map SurveyJS field type to inhouse field type
- * @param {string} surveyType - SurveyJS type
- * @returns {string|null} - Inhouse fieldType or null
- */
 function mapSurveyTypeToInhouse(surveyType) {
   const typeMap = {
     'text': 'input',
@@ -260,11 +222,6 @@ function mapSurveyTypeToInhouse(surveyType) {
   return typeMap[surveyType] || null;
 }
 
-/**
- * Convert SurveyJS choices to inhouse options format
- * @param {Array} choices - SurveyJS choices array
- * @returns {Array} - Inhouse options array
- */
 function mapSurveyChoices(choices) {
   if (!Array.isArray(choices)) return [];
   
@@ -283,11 +240,6 @@ function mapSurveyChoices(choices) {
   });
 }
 
-/**
- * Extract survey-level metadata (will be lost in conversion)
- * @param {Object} surveyData - SurveyJS schema
- * @returns {Object} - Extracted metadata
- */
 function extractSurveyMetadata(surveyData) {
   const metadata = {};
   
@@ -307,11 +259,6 @@ function extractSurveyMetadata(surveyData) {
   return metadata;
 }
 
-/**
- * Check for lost input-specific features
- * @param {Object} element - SurveyJS element
- * @param {Array} warnings - Warnings array to populate
- */
 function checkLostInputFeatures(element, warnings) {
   if (element.inputType && element.inputType !== 'text') {
     warnings.push({
@@ -354,11 +301,6 @@ function checkLostInputFeatures(element, warnings) {
   }
 }
 
-/**
- * Check for lost choice-specific features
- * @param {Object} element - SurveyJS element
- * @param {Array} warnings - Warnings array to populate
- */
 function checkLostChoiceFeatures(element, warnings) {
   if (element.hasOther) {
     warnings.push({
@@ -391,11 +333,6 @@ function checkLostChoiceFeatures(element, warnings) {
   }
 }
 
-/**
- * Check for lost common features
- * @param {Object} element - SurveyJS element
- * @param {Array} warnings - Warnings array to populate
- */
 function checkLostCommonFeatures(element, warnings) {
   if (element.visibleIf) {
     warnings.push({
@@ -448,23 +385,6 @@ function checkLostCommonFeatures(element, warnings) {
   }
 }
 
-/**
- * Convert SurveyJS visibleIf/enableIf expression to inhouse enableWhen format
- * @param {string} expression - SurveyJS expression (e.g., "{consent} = true")
- * @param {Set} fieldNames - Set of valid field names (excludes calculated values)
- * @returns {Object|null} - enableWhen object or null if unable to convert
- * 
- * Supported formats:
- * - Simple equality: {fieldName} = value
- * - Simple equality with quotes: {fieldName} = 'value'
- * - Boolean: {fieldName} = true|false
- * - Multiple AND: {field1} = value1 and {field2} = value2
- * - Multiple OR: {field1} = value1 or {field2} = value2
- * - Not equal: {fieldName} <> value or {fieldName} != value
- * - Contains (for strings): {fieldName} contains value
- * 
- * Note: Conditions referencing calculated values or non-existent fields are filtered out
- */
 function convertVisibleIfToEnableWhen(expression, fieldNames = new Set()) {
   if (!expression || typeof expression !== 'string') return null;
   
@@ -510,11 +430,6 @@ function convertVisibleIfToEnableWhen(expression, fieldNames = new Set()) {
   }
 }
 
-/**
- * Parse a single condition from SurveyJS expression
- * @param {string} condition - Single condition (e.g., "{consent} = true")
- * @returns {Object|null} - Condition object or null
- */
 function parseCondition(condition) {
   const matchPattern = (pattern) => condition.match(pattern);
   
@@ -557,11 +472,6 @@ function parseCondition(condition) {
   return null;
 }
 
-/**
- * Build a field lookup map for quick access by ID
- * @param {Array} fields - Array of fields (including nested sections)
- * @returns {Map} - Map of fieldId -> field
- */
 function buildFieldMap(fields) {
   const fieldMap = new Map();
   
@@ -578,10 +488,6 @@ function buildFieldMap(fields) {
   return fieldMap;
 }
 
-/**
- * Resolve option values to IDs in enableWhen conditions
- * @param {Array} fields - Array of fields to process
- */
 function resolveEnableWhenValues(fields) {
   const fieldMap = buildFieldMap(fields);
   

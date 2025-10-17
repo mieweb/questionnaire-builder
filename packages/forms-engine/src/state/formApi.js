@@ -2,12 +2,6 @@ import React from "react";
 import { useFormStore } from "./formStore";
 import { useUIStore } from "./uiStore";
 
-// ────────── Bound API for a field (works for top-level or section child) ──────────
-// Pass: useFieldApi(fieldId) for top-level
-//       useFieldApi(childId, sectionId) for a child inside a section
-//       useFieldApi(sectionId, sectionId) inside a Section component to make `add` add children
-// state/useFieldApi.js (or inline in formStore as you had)
-
 export const useFormApi = (id, sectionId) => {
   const addField     = useFormStore((s) => s.addField);
   const updateField  = useFormStore((s) => s.updateField);

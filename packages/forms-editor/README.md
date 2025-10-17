@@ -1,14 +1,12 @@
-# ✏️ @mieweb/forms-editor
+# @mieweb/forms-editor
 
-Embeddable questionnaire editor component with FHIR export and conditional logic support.
-
-## 📦 Installation
+Embeddable questionnaire editor with FHIR export and conditional logic.
 
 ```bash
 npm install @mieweb/forms-editor react react-dom
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ```jsx
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
@@ -22,51 +20,37 @@ function App() {
   ]);
 
   return (
-    <div className="w-full h-dvh bg-slate-100">
-      <QuestionnaireEditor
-        initialFields={fields}
-        onChange={setFields}
-      />
-    </div>
+    <QuestionnaireEditor initialFields={fields} onChange={setFields} />
   );
 }
 ```
 
-## ⚙️ Props
+## Props
 
 - `initialFields` - Array of field objects
 - `onChange` - Callback when fields change
-- `startInPreview` - Start in preview mode (default: false)
+- `startInPreview` - Start in preview mode
 
-## ✨ Features
+## Features
 
-### 🔧 Field Types
-- `input` - 📝 Text input
-- `radio` - 🔘 Radio buttons
-- `check` - ☑️ Checkboxes
-- `selection` - 📋 Dropdown
-- `section` - 📂 Field container
-- `unsupported` - ⚠️ Placeholder for unsupported field types (can be hidden with toggle)
+### Field Types
+- `input` - Text input
+- `radio` - Radio buttons
+- `check` - Checkboxes
+- `dropdown` - Dropdown
+- `section` - Field container
+- `unsupported` - Placeholder (can be hidden)
 
-### 👁️ Hide Unsupported Fields
-Toggle in the UI to hide/show unsupported field types. Useful when importing schemas from external sources like SurveyJS.
+### Conditional Logic
+Show/hide fields based on answers via the Logic panel.
 
-### 🔀 Conditional Logic (enableWhen)
-Show/hide fields based on answers:
-1. Select a field
-2. Click "Logic" in the edit panel
-3. Add conditions (e.g., "Show when Question 1 equals 'Yes'")
+### Import/Export
+- JSON, YAML, FHIR formats
 
-### 📤 Import/Export
-- JSON format
-- YAML format
-- FHIR Questionnaire format
+### Mobile Support
+Responsive with swipeable modal editing.
 
-### 📱 Mobile Support
-- Desktop: Side-by-side editor and preview
-- Mobile: Swipeable modal for field editing
-
-## 📝 Field Structure
+## Field Structure
 
 ```javascript
 {
@@ -86,26 +70,4 @@ Show/hide fields based on answers:
     ]
   }
 }
-```
-
-## 🎨 Styling
-
-Uses Tailwind CSS. Include in your project:
-
-```css
-@import 'tailwindcss/base';
-@import 'tailwindcss/components'; 
-@import 'tailwindcss/utilities';
-```
-
-## 🏥 Export FHIR
-
-```jsx
-import { exportToFHIR } from '@mieweb/forms-editor';
-
-const fhirQuestionnaire = exportToFHIR(fields, {
-  id: 'my-questionnaire',
-  title: 'Patient Survey',
-  version: '1.0'
-});
 ```

@@ -1,76 +1,55 @@
-# 🔧 @mieweb/forms-engine
+# @mieweb/forms-engine
 
-Core state management and field components for FHIR-compatible questionnaire forms.
-
-## 📦 Installation
+Core state management and field components for FHIR-compatible questionnaires.
 
 ```bash
 npm install @mieweb/forms-engine react react-dom
 ```
 
-## 📋 What's Included
+## Includes
 
-- **🔧 Field Components**: `TextInput_Field`, `Radio_Field`, `Check_Field`, `DropDown_Field`, `Section_Field`
-- **🏪 State Management**: Zustand stores for form data and UI state
-- **🛠️ Utilities**: Field initialization, visibility logic, field type registry
-- **🪝 Hooks**: `useFormApi`, `useUIApi`, `useFieldController`
+- Field components: `TextInput_Field`, `Radio_Field`, `Check_Field`, `DropDown_Field`, `Section_Field`
+- State management: Zustand stores for form data and UI state
+- Utilities: Field initialization, visibility logic, schema adapter
+- Hooks: `useFormApi`, `useUIApi`, `useFieldController`
 
-## 🚀 Quick Start
+## Quick Start
 
 ```jsx
 import { TextInput_Field, Radio_Field, useFormStore } from '@mieweb/forms-engine';
 
-function MyForm() {
-  const fields = useFormStore(state => state.flatArray());
+const fields = useFormStore(state => state.flatArray());
 
-  return (
-    <div>
-      {fields.map(field => {
-        if (field.fieldType === 'input') {
-          return <TextInput_Field key={field.id} fieldId={field.id} />;
-        }
-        if (field.fieldType === 'radio') {
-          return <Radio_Field key={field.id} fieldId={field.id} />;
-        }
-        return null;
-      })}
-    </div>
-  );
-}
+{fields.map(field => {
+  if (field.fieldType === 'input') return <TextInput_Field key={field.id} fieldId={field.id} />;
+  if (field.fieldType === 'radio') return <Radio_Field key={field.id} fieldId={field.id} />;
+  return null;
+})}
 ```
 
-## 🔧 Field Types
+## Field Types
 
-- `input` - 📝 Text input field
-- `radio` - 🔘 Single selection radio buttons
-- `check` - ☑️ Multiple selection checkboxes
-- `selection` - 📋 Dropdown selection
-- `section` - 📂 Container for grouping fields
+- `input` - Text input
+- `radio` - Single selection
+- `check` - Multiple selection
+- `dropdown` - Dropdown selection
+- `section` - Container for grouping
 
-## 🏪 State Management
+## State Management
 
 ```jsx
-import { useFormStore, useUIStore } from '@mieweb/forms-engine';
+import { useFormStore, useUIApi } from '@mieweb/forms-engine';
 
-// Initialize form
-const replaceAll = useFormStore(state => state.replaceAll);
-replaceAll(fieldsArray);
-
-// Get current data
+useFormStore.getState().replaceAll(fieldsArray);
 const fields = useFormStore(state => state.flatArray());
-const fieldById = useFormStore(state => state.byId['field-id']);
-
-// Update fields
 const updateField = useFormStore(state => state.updateField);
 updateField('field-id', { answer: 'new value' });
 
-// UI state - hide unsupported fields
-const hideUnsupportedFields = useUIStore(state => state.hideUnsupportedFields);
-const setHideUnsupportedFields = useUIStore(state => state.setHideUnsupportedFields);
-setHideUnsupportedFields(true); // Hide unsupported field types
+const ui = useUIApi();
+ui.setHideUnsupportedFields(true);
 ```
 
-## 🔀 Conditional Visibility
+## Conditional Visibility
 
 ```jsx
 import { isVisible, useFormStore } from '@mieweb/forms-engine';
@@ -108,24 +87,22 @@ function CustomField({ fieldId, sectionId }) {
 }
 ```
 
-## 📚 API Reference
+## API
 
-### 🏪 useFormStore
+### useFormStore
 
 - `replaceAll(fields)` - Replace all form data
-- `updateField(id, updates, options)` - Update single field
-- `flatArray()` - Get flat array of all fields
+- `updateField(id, updates)` - Update single field
+- `flatArray()` - Get flat array of fields
 - `byId` - Object map of fields by ID
 
-### 🖥️ useUIApi
+### useUIApi
 
-- `isPreview` - Current preview mode state
-- `setPreview(boolean)` - Toggle preview mode
-- `selectedFieldId` - Currently selected field ID
-- `hideUnsupportedFields` - Hide unsupported field types state
+- `preview.set(boolean)` - Toggle preview mode
+- `selectedFieldId.value` - Currently selected field ID
 - `setHideUnsupportedFields(boolean)` - Toggle hiding unsupported fields
 
-### 📝 Field Structure
+### Field Structure
 
 ```typescript
 {

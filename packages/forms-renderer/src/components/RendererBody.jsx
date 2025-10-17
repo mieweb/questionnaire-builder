@@ -2,9 +2,6 @@ import React, { useMemo } from 'react';
 import { useUIApi, useVisibleFields, useUIStore } from '@mieweb/forms-engine';
 import { FieldNode } from './FieldNode';
 
-/**
- * Render the body of the questionnaire with visible fields
- */
 export function RendererBody() {
   const ui = useUIApi();
   const { fields: visibleFields } = useVisibleFields(ui.state.isPreview);
