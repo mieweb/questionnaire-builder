@@ -1,11 +1,11 @@
 // React component export (requires React peer dependencies)
 export { QuestionnaireRenderer } from './src/QuestionnaireRenderer.jsx';
 
-// Hooks for handling submission
-export { useQuestionnaireData, useQuestionnaireSubmit } from './src/hooks';
-
 // Components (optional - for custom layouts)
 export { RendererBody, FieldNode } from './src/components';
 
-// Utilities
+// Utilities for building FHIR responses
 export { buildQuestionnaireResponse } from './src/utils/fhirConverter';
+
+// Re-export useful hook from forms-engine for convenience
+export { useFieldsArray } from '@mieweb/forms-engine';

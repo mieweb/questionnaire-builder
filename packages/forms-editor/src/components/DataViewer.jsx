@@ -20,16 +20,9 @@ export default function DataViewer({
     const indent = Math.max(2, pretty | 0);
     try {
       return mode === "yaml"
-        ? yaml.dump(data ?? {}, {
-          indent,
-          lineWidth: 80,
-          noRefs: true,
-          forceQuotes: true,
-          skipInvalid: true,
-        })
+        ? yaml.dump(data ?? {}, { indent, lineWidth: 80, noRefs: true, forceQuotes: true, skipInvalid: true })
         : JSON.stringify(data ?? {}, null, indent);
     } catch {
-      // fallback if something can't be serialized
       return mode === "yaml" ? "# Failed to render YAML" : String(data);
     }
   }, [data, mode, pretty]);
@@ -84,7 +77,7 @@ export default function DataViewer({
                 </h3>
                 <div className="flex items-center gap-2">
                   {/* Toggle */}
-                  <div className="inline-flex rounded-lg border border-black/10 overflow-hidden">
+                                <div className="inline-flex rounded-lg border border-black/10 overflow-hidden">
                     <button
                       className={`px-3 py-1 text-sm ${mode === "yaml" ? "bg-black/6" : "bg-gray-200 hover:bg-black/5"}`}
                       aria-pressed={mode === "yaml"}
@@ -116,7 +109,6 @@ export default function DataViewer({
                 </div>
               </div>
 
-              {/* ────────── Content ──────────  */}
               <div className={
                 isCenter
                   ? `p-4 overflow-auto max-h-[70vh] ${contentClassName}`

@@ -2,28 +2,21 @@ import React from 'react';
 import { useFormStore } from '@mieweb/forms-engine';
 import { useQuestionnaireInit } from './hooks';
 import { RendererBody } from './components';
+import './styles.output.css';
 
-/**
- * QuestionnaireRenderer
- * Read-only / answer capture rendering (no editing tools) for a questionnaire definition (fields array)
- * 
- * Note: This component does not include a submit button or form wrapper.
- * Use `useQuestionnaireData()` hook to get current data and handle submission yourself.
- */
 export function QuestionnaireRenderer({
   fields,
+  schemaType = 'inhouse',
   onChange,
   className = '',
   fullHeight = false,
+  hideUnsupportedFields = false,
 }) {
-  // Initialize questionnaire and set preview mode
-  useQuestionnaireInit(fields);
+  useQuestionnaireInit(fields, schemaType, hideUnsupportedFields);
 
-  // Subscribe to form changes
   React.useEffect(() => {
     if (!onChange) return;
     const unsub = useFormStore.subscribe((s) => {
-      // Return non-flattened array (sections contain nested fields)
       const arr = s.order.map(id => s.byId[id]);
       onChange(arr);
     });

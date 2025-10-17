@@ -1,6 +1,6 @@
 {
   "name": "@mieweb/forms-renderer",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Read-only questionnaire form renderer as Web Component producing FHIR QuestionnaireResponse",
   "type": "module",
   "main": "./dist/react.js",
@@ -13,6 +13,10 @@
     "./standalone": {
       "import": "./dist/standalone.js",
       "require": "./dist/standalone.umd.cjs"
+    },
+    "./blaze": {
+      "import": "./dist/blaze.js",
+      "require": "./dist/blaze.umd.cjs"
     }
   },
   "files": [
@@ -23,9 +27,9 @@
     "**/*.css"
   ],
   "scripts": {
-    "build": "vite build && vite build --config vite.config.standalone.js",
-    "build:watch": "vite build --watch",
-    "build:standalone": "vite build --config vite.config.standalone.js"
+    "build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-renderer/src/styles.input.css -o packages/forms-renderer/src/styles.output.css",
+    "build": "npm run build:css && vite build && vite build --config vite.config.standalone.js && vite build --config vite.config.blaze.js",
+    "build:watch": "npm run build:css && vite build --watch"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
@@ -40,7 +44,7 @@
     }
   },
   "dependencies": {
-    "@mieweb/forms-engine": "^0.1.6"
+    "@mieweb/forms-engine": "^0.1.7"
   },
   "publishConfig": {
     "access": "public"

@@ -11,17 +11,6 @@ import {
 } from '@mieweb/forms-engine';
 import './index.css';
 
-/**
- * QuestionnaireEditor
- * Embeddable editor component wrapping the builder UI.
- * Props:
- *  - initialFields?: Array<FieldLike>
- *  - onChange?: (fieldsArray) => void
- *  - className?: string
- *  - showHeader?: boolean (default true)
- *  - showMobileToolbar?: boolean (default true)
- *  - startInPreview?: boolean (optional initial preview state)
- */
 export function QuestionnaireEditor({
   initialFields,
   onChange,
@@ -33,7 +22,6 @@ export function QuestionnaireEditor({
   const ui = useUIApi();
   const formStoreInitialized = useRef(false);
 
-  // Initialize fields & initial preview state once
   useEffect(() => {
     if (formStoreInitialized.current) return;
     if (Array.isArray(initialFields) && initialFields.length) {
@@ -43,11 +31,9 @@ export function QuestionnaireEditor({
     formStoreInitialized.current = true;
   }, [initialFields, startInPreview, ui.preview]);
 
-  // Emit changes (simple subscription)
   useEffect(() => {
     if (!onChange) return;
     const unsub = useFormStore.subscribe((s) => {
-      // Build flat array: top-level fields + their children
       const arr = [];
       s.order.forEach(id => {
         const f = s.byId[id];
@@ -63,7 +49,6 @@ export function QuestionnaireEditor({
     return unsub;
   }, [onChange]);
 
-  // Selected field resolution (for mobile modal logic via Layout)
   const selectedField = useFormStore(
     React.useCallback(
       (s) => (ui.selectedFieldId.value ? s.byId[ui.selectedFieldId.value] : null),

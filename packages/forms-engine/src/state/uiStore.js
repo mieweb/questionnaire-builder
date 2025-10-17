@@ -59,4 +59,16 @@ export const useUIStore = create((set, get) => ({
       selectedChildId: { ...s.selectedChildId, childId: newId ?? null },
     })),
 
+  // ────────── Conversion report (SurveyJS, etc.) ──────────
+  conversionReport: null,
+  
+  setConversionReport: (report) => set({ conversionReport: report }),
+  
+  clearConversionReport: () => set({ conversionReport: null }),
+
+  // ────────── Hide unsupported fields ──────────
+  hideUnsupportedFields: false,
+  
+  setHideUnsupportedFields: (v) => set({ hideUnsupportedFields: !!v }),
+
 }));

@@ -1,14 +1,12 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
-import { libInjectCss } from 'vite-plugin-lib-inject-css';
 import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [
     react(),
-    tailwindcss(),
-    libInjectCss()
+    tailwindcss()
   ],
   build: {
     lib: {
@@ -28,7 +26,7 @@ export default defineConfig({
         }
       }
     },
-    cssCodeSplit: true,  // Required for vite-plugin-lib-inject-css
+    cssCodeSplit: true,
     sourcemap: true
   }
 });

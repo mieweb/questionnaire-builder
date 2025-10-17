@@ -4,7 +4,7 @@ function getValueOf(field) {
     case "input":
       return field.answer ?? "";
     case "radio":
-    case "selection":
+    case "dropdown":
       return field.selected ?? null;
     case "check":
       if (Array.isArray(field.selected)) return field.selected;

@@ -1,11 +1,17 @@
 import React, { useMemo } from "react";
-import { fieldTypes, getFieldComponent, useVisibleFields, useFormStore, useUIApi } from "@mieweb/forms-engine";
+import { fieldTypes, getFieldComponent, useVisibleFields, useFormStore, useUIApi, useUIStore } from "@mieweb/forms-engine";
 
 export default function FormBuilderMain() {
   const ui = useUIApi();
   const { fields: visibleFields } = useVisibleFields(ui.state.isPreview);
+  const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
 
-  const visibleIds = useMemo(() => visibleFields.map(f => f.id), [visibleFields]);
+  const visibleIds = useMemo(() => {
+    const filtered = hideUnsupportedFields
+      ? visibleFields.filter(f => f.fieldType !== 'unsupported')
+      : visibleFields;
+    return filtered.map(f => f.id);
+  }, [visibleFields, hideUnsupportedFields]);
 
   return (
     <div
@@ -21,6 +27,7 @@ export default function FormBuilderMain() {
 
 const FieldRow = React.memo(function FieldRow({ id }) {
   const field = useFormStore(React.useCallback((s) => s.byId[id], [id]));
+  
   if (!field) return null;
 
   const FieldComponent = getFieldComponent(field.fieldType);

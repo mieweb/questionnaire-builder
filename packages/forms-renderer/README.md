@@ -1,31 +1,27 @@
-# 📋 @mieweb/forms-renderer
+# @mieweb/forms-renderer
 
-Read-only questionnaire renderer with dual distribution: React component or Standalone Web Component.
+Questionnaire renderer with three distribution options: React component, standalone Web Component, or Blaze component for Meteor.
 
-## 📦 Installation
+## Examples
 
+- [`example-react.jsx`](./examples/example-react.jsx) - React component
+- [`example-standalone.html`](./examples/example-standalone.html) - Web Component
+- [`blaze-example.html`](./examples/blaze-example.html) - Blaze/Meteor
+
+## Usage
+
+Choose the method that fits your stack:
+
+### 1. React Component (for React apps)
+
+**Install:**
 ```bash
-npm install @mieweb/forms-renderer
+npm install @mieweb/forms-renderer react react-dom
 ```
 
-## 🚀 Examples
-
-See the complete working examples in this package:
-- [`example-react.jsx`](./examples/example-react.jsx) - ⚛️ React component usage
-- [`example-standalone.html`](./examples/example-standalone.html) - 🌐 Web Component usage
-
-## 💻 Usage
-
-### ⚛️ React Component (Recommended for React Projects)
-
-Requires React peer dependencies:
-```bash
-npm install react react-dom
-```
-
-#### Basic Usage (Custom Submit Button)
+**Basic Usage:**
 ```jsx
-import { QuestionnaireRenderer, useQuestionnaireData } from '@mieweb/forms-renderer';
+import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
 
 function MyForm() {
   const [fields] = React.useState([
@@ -37,65 +33,11 @@ function MyForm() {
     }
   ]);
   
-  const { getQuestionnaireResponse } = useQuestionnaireData('my-questionnaire', 'patient-123');
+  const currentFields = useFieldsArray();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const fhirResponse = getQuestionnaireResponse();
-    console.log('Submitted:', fhirResponse);
-    // Send to your API, etc.
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer 
-        fields={fields}
-        onChange={(updated) => console.log('Changed:', updated)}
-      />
-      <button type="submit">Submit Questionnaire</button>
-    </form>
-  );
-}
-```
-
-#### With Sections and Conditional Logic
-From [`example-react.jsx`](./examples/example-react.jsx):
-```jsx
-import { QuestionnaireRenderer, useQuestionnaireData } from '@mieweb/forms-renderer';
-
-function App() {
-  const [fields] = React.useState([
-    {
-      id: 'sec-1',
-      fieldType: 'section',
-      title: 'Personal Information',
-      fields: [
-        {
-          id: 'q-name',
-          fieldType: 'input',
-          question: 'What is your full name?',
-          answer: ''
-        },
-        {
-          id: 'q-gender',
-          fieldType: 'radio',
-          question: 'Biological sex',
-          options: [
-            { id: 'gender-male', value: 'Male' },
-            { id: 'gender-female', value: 'Female' }
-          ],
-          selected: null
-        }
-      ]
-    }
-  ]);
-  
-  const { fields: currentFields, getQuestionnaireResponse } = useQuestionnaireData('demo-1');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const fhirResponse = getQuestionnaireResponse();
-    // Handle submission
+    const fhir = buildQuestionnaireResponse(currentFields, 'my-questionnaire', 'patient-123');
   };
 
   return (
@@ -107,128 +49,179 @@ function App() {
 }
 ```
 
-### 🌐 Standalone Web Component (Framework-Agnostic)
+**With SurveyJS Schema:**
+```jsx
+import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
-✨ Zero dependencies - works with any framework or vanilla JS.
-
-From [`example-standalone.html`](./examples/example-standalone.html):
-```html
-<script type="module">
-  import './package/dist/standalone.js';
-  
-  const renderer = document.querySelector('questionnaire-renderer');
-  renderer.fields = [
-    {
-      id: 'sec-1',
-      fieldType: 'section',
-      title: 'Patient Information',
-      fields: [
-        {
-          id: 'q-name',
-          fieldType: 'input',
-          question: 'Full Name',
-          answer: ''
-        },
-        {
-          id: 'q-gender',
-          fieldType: 'radio',
-          question: 'Biological sex',
-          options: [
-            { id: 'gender-male', value: 'Male' },
-            { id: 'gender-female', value: 'Female' }
-          ],
-          selected: null
-        }
+function SurveyForm() {
+  const surveySchema = {
+    pages: [{
+      elements: [
+        { type: 'text', name: 'firstName', title: 'First Name' },
+        { type: 'text', name: 'lastName', title: 'Last Name' }
       ]
-    }
-  ];
-  
-  // Handle form submission
-  const form = document.getElementById('myForm');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const fhirResponse = renderer.getQuestionnaireResponse('q-1', 'patient-123');
-    console.log('Form submitted:', fhirResponse);
-  });
-</script>
+    }]
+  };
 
-<form id="myForm">
-  <questionnaire-renderer full-height></questionnaire-renderer>
-  <button type="submit">Submit</button>
-</form>
-```
-
-## ⚙️ API Reference
-
-### `<QuestionnaireRenderer>` Component
-React component for rendering questionnaires (no built-in submit button).
-
-**Props:**
-- `fields` *(array)* - Questionnaire definition array
-- `onChange` *(function)* - Callback when answers change: `(updatedFields) => void`
-- `className` *(string)* - Additional CSS classes
-- `fullHeight` *(boolean)* - Full viewport height mode
-
-### `useQuestionnaireData(questionnaireId, subjectId)` Hook
-Get current questionnaire data and FHIR response builder.
-
-**Parameters:**
-- `questionnaireId` *(string)* - FHIR Questionnaire ID (default: `'questionnaire-1'`)
-- `subjectId` *(string, optional)* - Patient/subject ID
-
-**Returns:**
-```typescript
-{
-  fields: Field[],                           // Current form fields with answers
-  getQuestionnaireResponse: () => Object     // Get FHIR QuestionnaireResponse
+  return (
+    <QuestionnaireRenderer 
+      fields={surveySchema}
+      schemaType="surveyjs"
+      hideUnsupportedFields={true}
+    />
+  );
 }
 ```
 
-**Example:**
-```jsx
-const { fields, getQuestionnaireResponse } = useQuestionnaireData('q-1', 'patient-123');
+---
 
-const handleSubmit = () => {
-  const fhirResponse = getQuestionnaireResponse();
-  // fhirResponse is a FHIR QuestionnaireResponse object
-};
+### 2. Standalone Web Component (framework-agnostic)
+
+**Install:**
+```bash
+npm install @mieweb/forms-renderer
+```
+No peer dependencies required - bundles React internally.
+
+**Usage:**
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="module">
+    import '@mieweb/forms-renderer/standalone';
+  </script>
+</head>
+<body>
+  <form id="myForm">
+    <questionnaire-renderer></questionnaire-renderer>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const renderer = document.querySelector('questionnaire-renderer');
+    
+    // Set schema type for SurveyJS schemas
+    renderer.schemaType = 'surveyjs';
+    
+    // Hide unsupported field types
+    renderer.hideUnsupportedFields = true;
+    
+    renderer.fields = [
+      {
+        id: 'q-name',
+        fieldType: 'input',
+        question: 'Full Name',
+        answer: ''
+      }
+    ];
+    
+    document.getElementById('myForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fhir = renderer.getQuestionnaireResponse('q-1', 'patient-123');
+      console.log(fhir);
+    });
+  </script>
+</body>
+</html>
 ```
 
-### `useQuestionnaireSubmit(fields, questionnaireId, subjectId, onSubmit)` Hook
-*(Legacy)* Pre-built submit handler.
+---
 
-**Parameters:**
-- `fields` *(array)* - Current form fields
-- `questionnaireId` *(string)* - FHIR Questionnaire ID
-- `subjectId` *(string, optional)* - Patient/subject ID
-- `onSubmit` *(function)* - Callback with FHIR response
+### 3. Blaze Component (for Meteor apps)
 
-**Returns:** `(event) => void` - Form submit handler
+**Install:**
+```bash
+meteor npm install @mieweb/forms-renderer
+```
 
-### `buildQuestionnaireResponse(fields, questionnaireId, subjectId)` Utility
-Build FHIR QuestionnaireResponse from fields.
+**Usage:**
+```javascript
+// In your Meteor client code
+import '@mieweb/forms-renderer/blaze';
 
-**Returns:** FHIR QuestionnaireResponse object
+// If the above doesn't work in your Meteor version, try:
+// import '@mieweb/forms-renderer/dist/blaze.js';
+```
 
-### 🌐 Web Component
-- `full-height` - Full viewport height (attribute)
-- `fields` - Questionnaire definition (property)
-- `onChange` - Change callback (property)
-- `getQuestionnaireResponse(questionnaireId, subjectId)` - Get FHIR response (method)
+**In your Blaze template:**
+```handlebars
+{{> questionnaireRenderer 
+    fields=myFields 
+    schemaType="surveyjs" 
+    hideUnsupportedFields=true 
+    onChange=handleChange}}
+```
 
-## 🔧 Field Types
+**Helper example:**
+```javascript
+Template.myTemplate.helpers({
+  myFields() {
+    return [
+      { id: 'q1', fieldType: 'input', question: 'Name?', answer: '' }
+    ];
+  },
+  handleChange() {
+    return (updatedFields) => {
+      console.log('Fields changed:', updatedFields);
+    };
+  }
+});
+```
 
-- `input` - 📝 Text input field
-- `radio` - 🔘 Single selection radio buttons
-- `check` - ☑️ Multiple selection checkboxes
-- `selection` - 📋 Dropdown selection
-- `section` - 📂 Container for grouping fields
+---
 
-## 🔀 Conditional Logic (enableWhen)
+## API Reference
 
-Fields can be shown/hidden based on other field values. Both examples include conditional logic:
+### React Component Props
 
-From [`example-react.jsx`](./examples/example-react.jsx):
+- `fields` - Questionnaire definition array
+- `schemaType` - `'inhouse'` (default) or `'surveyjs'`
+- `onChange` - Callback when answers change
+- `className` - Additional CSS classes
+- `fullHeight` - Full viewport height mode
+- `hideUnsupportedFields` - Hide unsupported field types
+
+### React Helpers
+
+**`buildQuestionnaireResponse(fields, questionnaireId, subjectId)`**
+
+Returns FHIR QuestionnaireResponse. Use with `useFieldsArray()` to get current form state:
+
+```jsx
+import { buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
+
+const currentFields = useFieldsArray();
+const fhir = buildQuestionnaireResponse(currentFields, 'q-1', 'patient-123');
+```
+
+### Web Component API
+
+- `renderer.fields` - Set/get questionnaire definition (property)
+- `renderer.onChange` - Set change callback (property)
+- `renderer.schemaType` - Set to `'surveyjs'` for SurveyJS schemas (property)
+- `renderer.hideUnsupportedFields` - Boolean to hide unsupported types (property)
+- `renderer.getQuestionnaireResponse(id, subjectId)` - Get FHIR response (method)
+
+### Blaze Component Data Context
+
+- `fields` - Questionnaire definition array
+- `schemaType` - `'inhouse'` or `'surveyjs'`
+- `onChange` - Change callback function
+- `hideUnsupportedFields` - Boolean to hide unsupported types
+- `fullHeight` - Boolean for full height mode
+
+## Field Types
+
+- `input` - Text input
+- `radio` - Single selection
+- `check` - Multiple selection
+- `dropdown` - Dropdown selection
+- `section` - Container for grouping
+
+## Conditional Logic
+
+Show/hide fields based on other answers:
 ```javascript
 {
   id: 'sec-pregnancy',
@@ -257,9 +250,9 @@ From [`example-react.jsx`](./examples/example-react.jsx):
 }
 ```
 
-## 🏥 FHIR Output
+## FHIR Output
 
-The `onSubmit` callback receives a FHIR QuestionnaireResponse:
+FHIR QuestionnaireResponse format:
 
 ```javascript
 {
@@ -276,13 +269,3 @@ The `onSubmit` callback receives a FHIR QuestionnaireResponse:
   ]
 }
 ```
-
-## 📊 Bundle Sizes
-
-- **⚛️ React version**: ~24 KB (requires peer deps)
-- **🌐 Standalone version**: ~819 KB (zero dependencies)
-
-## 📚 Documentation
-
-- [⚛️ React Component Example](./examples/example-react.jsx)
-- [🌐 Web Component Example](./examples/example-standalone.html)
