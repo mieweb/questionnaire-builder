@@ -138,8 +138,10 @@ meteor npm install @mieweb/forms-renderer
 **Usage:**
 ```javascript
 // In your Meteor client code
-import { registerBlazeTemplate } from '@mieweb/forms-renderer/blaze';
-registerBlazeTemplate();
+import '@mieweb/forms-renderer/blaze';
+
+// If the above doesn't work in your Meteor version, try:
+// import '@mieweb/forms-renderer/dist/blaze.js';
 ```
 
 **In your Blaze template:**

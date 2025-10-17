@@ -63,7 +63,14 @@ function MyForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer fields={fields} />
+      <QuestionnaireRenderer 
+        fields={fields}
+        schemaType="inhouse"
+        hideUnsupportedFields={false}
+        onChange={(updated) => console.log(updated)}
+        fullHeight={false}
+        className=""
+      />
       <button type="submit">Submit</button>
     </form>
   );
@@ -83,7 +90,11 @@ function MyForm() {
 
 <script>
   const renderer = document.querySelector('questionnaire-renderer');
+  
   renderer.fields = [{ id: 'q1', fieldType: 'input', question: 'Name?', answer: '' }];
+  renderer.schemaType = 'inhouse'; // or 'surveyjs'
+  renderer.hideUnsupportedFields = false;
+  renderer.onChange = (updated) => console.log(updated);
   
   document.getElementById('form').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -95,9 +106,13 @@ function MyForm() {
 **Blaze/Meteor:**
 ```javascript
 // Client code
-import { registerBlazeTemplate } from '@mieweb/forms-renderer/blaze';
-registerBlazeTemplate();
+import '@mieweb/forms-renderer/blaze';
 ```
 ```handlebars
-{{> questionnaireRenderer fields=myFields onChange=handleChange}}
+{{> questionnaireRenderer 
+    fields=myFields 
+    schemaType="inhouse"
+    hideUnsupportedFields=false
+    fullHeight=false
+    onChange=handleChange}}
 ```
