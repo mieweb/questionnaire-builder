@@ -2,7 +2,7 @@ import React from "react";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 
-const TextInputField = React.memo(function TextInputField({ field, sectionId }) {
+const TextField = React.memo(function TextField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
 
   return (
@@ -49,4 +49,4 @@ const TextInputField = React.memo(function TextInputField({ field, sectionId }) 
   );
 });
 
-export default TextInputField;
+export default TextField;

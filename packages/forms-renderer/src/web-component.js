@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QuestionnaireRenderer } from './QuestionnaireRenderer.jsx';
 import { useFormStore } from '@mieweb/forms-engine';
-import { buildQuestionnaireResponse } from './utils/fhirConverter';
+import { buildQuestionnaireResponse } from './utils/fhirResponse';
 
 class QuestionnaireRendererElement extends HTMLElement {
   static get observedAttributes() {

@@ -31,14 +31,14 @@ const LongTextField = React.memo(function LongTextField({ field, sectionId }) {
               className="px-3 py-2 w-full border border-black/40 rounded"
               type="text"
               value={f.question || ""}
-              onChange={(e) => api.field.update("question", e.target.value)}
+              onChange={(e) => api.field.update("question", e.target.value)}ange name
               placeholder="Enter question"
             />
 
             <textarea
               value={f.answer || ""}
               placeholder="Type your answer"
-              className="px-3 py-2 my-1.5 w-full border border-black/10 shadow-2xs rounded min-h-24 max-h-60 resize-y"
+              className="px-3 py-2 my-1.5 w-full border border-black/10 shadow-2xs rounded min-h-24 max-h-56 resize-y"
               rows={4}
               disabled
             />

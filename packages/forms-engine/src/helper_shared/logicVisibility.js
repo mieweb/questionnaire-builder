@@ -1,7 +1,8 @@
 // ────────── Get a field's current value for comparison ──────────
 function getValueOf(field) {
   switch (field?.fieldType) {
-    case "input":
+    case "text":
+    case "longtext":
       return field.answer ?? "";
     case "radio":
     case "dropdown":

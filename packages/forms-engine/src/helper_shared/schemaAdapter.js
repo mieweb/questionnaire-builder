@@ -212,9 +212,9 @@ function removeWarning(warnings, type, property) {
 
 function mapSurveyTypeToInhouse(surveyType) {
   const typeMap = {
-    'text': 'input',
-    'comment': 'input',
-    'multipletext': 'input',
+    'text': 'text',
+    'comment': 'text',
+    'multipletext': 'text',
     
     'radiogroup': 'radio',
     'dropdown': 'dropdown',

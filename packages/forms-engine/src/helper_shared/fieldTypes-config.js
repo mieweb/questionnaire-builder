@@ -1,4 +1,4 @@
-import InputField from "../basic_field/TextInput_Field"
+import Text from "../basic_field/Text_Field"
 import LongTextField from "../basic_field/LongText_Field"
 import MultiTextField from "../basic_field/MultiText_Field"
 import RadioField from "../basic_field/Radio_Field"
@@ -18,11 +18,11 @@ const fieldTypes = {
       fields: [],
     }
   },
-  input: {
-    label: "Input Field",
-    componentKey: "input",
+  text: {
+    label: "Text Field",
+    componentKey: "text",
     defaultProps: {
-      fieldType: "input",
+      fieldType: "text",
       question: "",
       answer: "",
     },
@@ -117,7 +117,7 @@ const fieldTypes = {
 };
 
 const componentMap = {
-  input: InputField,
+  text: Text,
   longtext: LongTextField,
   multitext: MultiTextField,
   radio: RadioField,

@@ -26,7 +26,7 @@ export const initializeField = (field) => {
     ...(field.fieldType === "section" ? { title } : { question }),
   };
   
-  const textFieldTypes = ["input", "longtext"];
+  const textFieldTypes = ["text", "longtext"];
   
   return {
     ...base,
