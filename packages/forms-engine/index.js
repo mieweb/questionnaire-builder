@@ -16,6 +16,7 @@ export { default as fieldTypes, getFieldComponent, registerFieldComponent } from
 export { initializeField, initializeFieldOptions } from './src/helper_shared/initializedField.js';
 export { isVisible } from './src/helper_shared/logicVisibility.js';
 export { detectSchemaType, adaptSchema } from './src/helper_shared/schemaAdapter.js';
+export { generateFieldId, generateOptionId } from './src/helper_shared/idGenerator.js';
 
 // state: stores, apis, selectors
 

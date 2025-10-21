@@ -2,6 +2,7 @@ import React from "react";
 import { TRASHCANTWO_ICON, PLUSOPTION_ICON } from "../helper_shared/icons";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
+import UnselectableRadio from "../helper_shared/UnselectableRadio";
 
 const RadioField = React.memo(function RadioField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
@@ -15,18 +16,29 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
                 <div className="font-light">{f.question || "Question"}</div>
                 <div>
-                  {(f.options || []).map((option) => (
-                    <label key={option.id} className="flex items-center px-3 py-1 my-2">
-                      <input
-                        type="radio"
-                        name={`question-${f.id}`}
-                        className="mr-2 h-9 w-9 flex-shrink-0"
-                        checked={f.selected === option.id}
-                        onChange={() => api.selection.single(option.id)}
-                      />
-                      {option.value}
-                    </label>
-                  ))}
+                  {(f.options || []).map((option) => {
+                    const inputId = `${f.id}-${option.id}`;
+                    const isSelected = f.selected === option.id;
+                    
+                    return (
+                      <label
+                        key={option.id}
+                        htmlFor={inputId}
+                        className="flex items-center px-3 py-1 my-2 cursor-pointer"
+                      >
+                        <UnselectableRadio
+                          id={inputId}
+                          name={`question-${f.id}`}
+                          value={option.id}
+                          checked={isSelected}
+                          onSelect={() => api.selection.single(option.id)}
+                          onUnselect={() => api.field.update("selected", null)}
+                          className="mr-2 h-9 w-9 flex-shrink-0 cursor-pointer"
+                        />
+                        {option.value}
+                      </label>
+                    );
+                  })}
                 </div>
               </div>
             </div>

@@ -1,9 +1,9 @@
 import React from "react";
 import { create } from "zustand";
-import { v4 as uuidv4 } from "uuid";
 import fieldTypes from "../helper_shared/fieldTypes-config";
 import { initializeField } from "../helper_shared/initializedField";
 import { isVisible } from "../helper_shared/logicVisibility";
+import { generateFieldId, generateOptionId } from "../helper_shared/idGenerator";
 
 // ────────── Helpers ──────────
 const shallowEqual = (a, b) => {
@@ -23,13 +23,32 @@ const insertAt = (arr, item, index) => {
 const normalize = (arr) => {
   const byId = {};
   const order = [];
+  const existingIds = new Set();
+  
   (arr || []).forEach((f) => {
-    const id = f.id || uuidv4();
+    let id = f.id;
+    if (!id) {
+      // Generate meaningful ID if missing
+      const question = f.question || f.title || '';
+      const fieldType = f.fieldType || 'field';
+      id = generateFieldId(question, fieldType, existingIds);
+    }
+    existingIds.add(id);
+    
     const init = initializeField({ ...f, id });
     
-    // Initialize nested children in sections (but don't add them to byId separately)
+    // Initialize nested children in sections and generate IDs for them too
     if (init.fieldType === "section" && Array.isArray(init.fields)) {
-      init.fields = init.fields.map(child => initializeField(child));
+      init.fields = init.fields.map(child => {
+        let childId = child.id;
+        if (!childId) {
+          const childQuestion = child.question || child.title || '';
+          const childFieldType = child.fieldType || 'field';
+          childId = generateFieldId(childQuestion, childFieldType, existingIds);
+          existingIds.add(childId);
+        }
+        return initializeField({ ...child, id: childId });
+      });
     }
     
     byId[id] = init;
@@ -114,8 +133,19 @@ export const useFormStore = create((set, get) => ({
       const { sectionId, initialPatch = {}, index } = options;
       const tpl = fieldTypes[type]?.defaultProps;
       if (!tpl) return state;;
-      const id = uuidv4();
-      const f = initializeField({ ...tpl, id, ...initialPatch });
+      
+      // Collect existing IDs for collision detection
+      const existingIds = new Set(Object.keys(state.byId));
+      if (sectionId && state.byId[sectionId]?.fields) {
+        state.byId[sectionId].fields.forEach(f => existingIds.add(f.id));
+      }
+      
+      const question = initialPatch?.question || tpl.question || '';
+      const title = initialPatch?.title || tpl.title || '';
+      const text = type === 'section' ? title : question;
+      const id = generateFieldId(text, type, existingIds);
+      
+      const f = initializeField({ ...tpl, ...initialPatch, id });
 
       if (!sectionId) {
         return {
@@ -139,7 +169,16 @@ export const useFormStore = create((set, get) => ({
         sectionId,
         (prev) => {
           const patch = typeof patchOrFn === "function" ? patchOrFn(prev) : patchOrFn;
-          return patch ? { ...prev, ...patch } : null;
+          if (!patch) return null;
+          
+          const { fieldType, id: fieldId, question, title, ...rest } = { ...prev, ...patch };
+          const base = {
+            fieldType,
+            id: fieldId,
+            ...(fieldType === "section" ? { title } : { question }),
+          };
+          
+          return { ...base, ...rest };
         },
         { onIdChange, forbidCollision: true }
       );
@@ -168,7 +207,9 @@ export const useFormStore = create((set, get) => ({
       const { sectionId } = options;
       const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
         const opts = Array.isArray(f.options) ? f.options : [];
-        const next = [...opts, { id: uuidv4(), value }];
+        const existingIds = new Set(opts.map(o => o.id));
+        const optionId = generateOptionId(value, existingIds, fieldId);
+        const next = [...opts, { id: optionId, value }];
         return { ...f, options: next };
       });
       return res ? res : state;;
@@ -184,7 +225,7 @@ export const useFormStore = create((set, get) => ({
           if (o.id !== optId) return o;
           if (o.value === value) return o;
           changed = true;
-          return { ...o, value };
+          return { id: o.id, value };
         });
         if (!changed) return null;
         return { ...f, options: next };

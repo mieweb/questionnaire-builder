@@ -1,11 +1,13 @@
 import React from "react";
-import { v4 as uuidv4 } from "uuid";
+import { generateOptionId } from "@mieweb/forms-engine";
 
 export default function OptionListEditor({ field, onUpdateField }) {
   const opts = field.options || [];
 
   const addOption = () => {
-    onUpdateField("options", [...opts, { id: uuidv4(), value: "" }]);
+    const existingIds = new Set(opts.map(o => o.id));
+    const newId = generateOptionId("", existingIds, field.id);
+    onUpdateField("options", [...opts, { id: newId, value: "" }]);
   };
 
   const updateOption = (id, value) => {

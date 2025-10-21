@@ -2,8 +2,8 @@ import InputField from "../basic_field/TextInput_Field"
 import RadioField from "../basic_field/Radio_Field"
 import CheckField from "../basic_field/Check_Field"
 import SelectionField from "../basic_field/DropDown_Field"
+import BooleanField from "../basic_field/Boolean_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
-import { fieldTypes } from "../../dist"
 
 
 const fieldTypes = {
@@ -53,6 +53,19 @@ const fieldTypes = {
       selected: [],
     },
   },
+  boolean: {
+    label: "Boolean Field",
+    componentKey: "boolean",
+    defaultProps: {
+      fieldType: "boolean",
+      question: "",
+      options: [
+        { id: "yes", value: "Yes" },
+        { id: "no", value: "No" },
+      ],
+      selected: null,
+    },
+  },
   dropdown: {
     label: "Dropdown Field",
     componentKey: "dropdown",
@@ -77,65 +90,13 @@ const fieldTypes = {
       unsupportedData: {},
     },
   },
-
-  singlematrix: {
-    label: "singlematrix field",
-    componentKey: "singlematrix",
-    defaultProps: {
-      fieldTypes: "singlematrix",
-      question: "",
-      rows: [],
-      columns: [],
-      selected: {},
-    }
-  },
-
-  multimatrix: {
-    label: "multimatrix field",
-    componentKey: "multimatrix",
-    defaultProps: {
-      fieldTypes: "multimatrix",
-      question: "",
-      columns: [
-        {
-          id: "col1",
-          value: "Column 1",
-          options: [
-            { id: "opt1", value: "Option 1" },
-            { id: "opt2", value: "Option 2" },
-            { id: "opt3", value: "Option 3" },
-          ]
-        },
-        {
-          id: "col2",
-          value: "Column 2",
-          options: [
-            { id: "opt1", value: "Option 1" },
-            { id: "opt3", value: "Option 3" },
-          ]
-        },
-        {
-          id: "col3",
-          value: "Column 3",
-          options: [
-            { id: "opt1", value: "Option 1" },  
-          ]
-        },
-      ],
-      rows: [
-        { id: "row1", value: "Row 1" },
-        { id: "row2", value: "Row 2" },
-        { id: "row3", value: "Row 3" },
-      ],
-      selected: {},
-    }
-  }
 };
 
 const componentMap = {
   input: InputField,
   radio: RadioField,
   check: CheckField,
+  boolean: BooleanField,
   dropdown: SelectionField,
   unsupported: UnsupportedField,
 };

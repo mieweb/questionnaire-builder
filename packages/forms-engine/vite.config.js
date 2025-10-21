@@ -16,13 +16,12 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'zustand', 'uuid'],
+      external: ['react', 'react-dom', 'zustand'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          zustand: 'zustand',
-          uuid: 'uuid'
+          zustand: 'zustand'
         }
       }
     },

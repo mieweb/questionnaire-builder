@@ -24,13 +24,11 @@
     "build:watch": "vite build --watch"
   },
   "dependencies": {
-    "uuid": "^11.0.4",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@types/uuid": "^10.0.0",
     "typescript": "^5.9.2",
     "vite": "^6.3.6"
   },
