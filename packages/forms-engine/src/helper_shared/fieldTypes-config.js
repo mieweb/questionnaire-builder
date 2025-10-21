@@ -1,4 +1,6 @@
 import InputField from "../basic_field/TextInput_Field"
+import LongTextField from "../basic_field/LongText_Field"
+import MultiTextField from "../basic_field/MultiText_Field"
 import RadioField from "../basic_field/Radio_Field"
 import CheckField from "../basic_field/Check_Field"
 import SelectionField from "../basic_field/DropDown_Field"
@@ -23,6 +25,28 @@ const fieldTypes = {
       fieldType: "input",
       question: "",
       answer: "",
+    },
+  },
+  longtext: {
+    label: "Long Text Field",
+    componentKey: "longtext",
+    defaultProps: {
+      fieldType: "longtext",
+      question: "",
+      answer: "",
+    },
+  },
+  multitext: {
+    label: "Multi Text Field",
+    componentKey: "multitext",
+    defaultProps: {
+      fieldType: "multitext",
+      question: "",
+      options: [
+        { value: "Field 1" },
+        { value: "Field 2" },
+        { value: "Field 3" },
+      ],
     },
   },
   radio: {
@@ -94,6 +118,8 @@ const fieldTypes = {
 
 const componentMap = {
   input: InputField,
+  longtext: LongTextField,
+  multitext: MultiTextField,
   radio: RadioField,
   check: CheckField,
   boolean: BooleanField,

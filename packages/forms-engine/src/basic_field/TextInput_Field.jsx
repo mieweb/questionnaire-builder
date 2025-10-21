@@ -18,7 +18,7 @@ const TextInputField = React.memo(function TextInputField({ field, sectionId }) 
                   value={f.answer || ""}
                   onChange={(e) => api.field.update("answer", e.target.value)}
                   placeholder="Type your answer"
-                  className="px-3 py-2 w-full border border-black/10 shadow-2xs rounded h-9"
+                  className="px-4 py-2 w-full border border-black/10 shadow-2xs rounded"
                 />
               </div>
             </div>
@@ -39,7 +39,7 @@ const TextInputField = React.memo(function TextInputField({ field, sectionId }) 
               type="text"
               value={f.answer || ""}
               placeholder="Type your answer"
-              className="px-3 my-1.5 w-full border border-black/10 shadow-2xs rounded h-10"
+              className="px-4 py-2 my-1.5 w-full border border-black/10 shadow-2xs rounded"
               disabled
             />
           </div>

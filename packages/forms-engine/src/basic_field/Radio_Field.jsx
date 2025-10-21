@@ -56,14 +56,14 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
             />
 
             {(f.options || []).map((option) => (
-              <div key={option.id} className="flex items-center px-3 my-1.5 shadow border border-black/10 rounded-lg h-10">
+              <div key={option.id} className="flex items-center px-4 my-1.5 shadow border border-black/10 rounded-lg">
                 <input type="radio" disabled className="mr-2" />
                 <input
                   type="text"
                   value={option.value}
                   onChange={(e) => api.option.update(option.id, e.target.value)}
                   placeholder="Option text"
-                  className="w-full"
+                  className="w-full py-2"
                 />
                 <button onClick={() => api.option.remove(option.id)}>
                   <TRASHCANTWO_ICON className="h-5 w-5" />

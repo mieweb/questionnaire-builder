@@ -26,10 +26,12 @@ export const initializeField = (field) => {
     ...(field.fieldType === "section" ? { title } : { question }),
   };
   
+  const textFieldTypes = ["input", "longtext"];
+  
   return {
     ...base,
     ...rest,
-    ...(fieldType !== "input" && {
+    ...(!textFieldTypes.includes(fieldType) && {
       options: initializeFieldOptions(rest.options || [], id),
     }),
   };

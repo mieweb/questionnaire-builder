@@ -233,6 +233,24 @@ export const useFormStore = create((set, get) => ({
       return res ? res : state;;
     }),
 
+  updateOptionAnswer: (fieldId, optId, answer, options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const opts = Array.isArray(f.options) ? f.options : [];
+        let changed = false;
+        const next = opts.map((o) => {
+          if (o.id !== optId) return o;
+          if (o.answer === answer) return o;
+          changed = true;
+          return { ...o, answer };
+        });
+        if (!changed) return null;
+        return { ...f, options: next };
+      });
+      return res ? res : state;;
+    }),
+
   deleteOption: (fieldId, optId, options = {}) =>
     set((state) => {
       const { sectionId } = options;

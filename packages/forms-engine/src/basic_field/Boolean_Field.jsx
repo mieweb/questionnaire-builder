@@ -63,14 +63,14 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
             />
 
             {options.map((opt, idx) => (
-              <div key={opt.id} className="flex items-center px-3 my-1.5 shadow border border-black/10 rounded-lg h-10">
+              <div key={opt.id} className="flex items-center px-4 my-1.5 shadow border border-black/10 rounded-lg">
                 <input type="radio" name={`${f.fieldId}-edit`} disabled className="mr-2" />
                 <input
                   type="text"
                   value={opt.value}
                   onChange={(e) => api.option.update(idx, "value", e.target.value)}
                   placeholder={`Option ${idx + 1}`}
-                  className="w-full"
+                  className="w-full py-2"
                 />
               </div>
             ))}
