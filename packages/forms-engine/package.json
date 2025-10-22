@@ -20,8 +20,9 @@
     "**/*.css"
   ],
   "scripts": {
-    "build": "vite build",
-    "build:watch": "vite build --watch"
+    "build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-engine/src/styles.css -o packages/forms-engine/src/styles.output.css",
+    "build": "npm run build:css && vite build",
+    "build:watch": "npm run build:css && vite build --watch"
   },
   "dependencies": {
     "zustand": "^5.0.8"

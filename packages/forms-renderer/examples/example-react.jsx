@@ -15,7 +15,7 @@ function App() {
       fields: [
         {
           id: 'q-name',
-          fieldType: 'input',
+          fieldType: 'text',
           question: 'What is your full name?',
           answer: ''
         },
@@ -32,9 +32,19 @@ function App() {
         },
         {
           id: 'q-email',
-          fieldType: 'input',
+          fieldType: 'text',
           question: 'Email address',
           answer: ''
+        },
+        {
+          id: 'q-contact',
+          fieldType: 'multitext',
+          question: 'Contact Information',
+          options: [
+            { id: 'contact-phone', value: 'Phone', answer: '' },
+            { id: 'contact-address', value: 'Address', answer: '' },
+            { id: 'contact-city', value: 'City', answer: '' }
+          ]
         }
       ]
     },
@@ -61,7 +71,7 @@ function App() {
         },
         {
           id: 'q-weeks',
-          fieldType: 'input',
+          fieldType: 'text',
           question: 'Weeks gestation (if known)',
           answer: '',
           enableWhen: {
@@ -90,7 +100,7 @@ function App() {
         },
         {
           id: 'q-med-list',
-          fieldType: 'input',
+          fieldType: 'longtext',
           question: 'List current medications (name, dose, frequency)',
           answer: '',
           enableWhen: {
@@ -114,7 +124,7 @@ function App() {
         },
         {
           id: 'q-conditions-other',
-          fieldType: 'input',
+          fieldType: 'longtext',
           question: 'Please specify other conditions',
           answer: '',
           enableWhen: {

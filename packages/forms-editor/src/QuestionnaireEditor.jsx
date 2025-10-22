@@ -18,6 +18,7 @@ export function QuestionnaireEditor({
   showHeader = true,
   showMobileToolbar = true,
   startInPreview = false,
+  hideUnsupportedFields = false,
 }) {
   const ui = useUIApi();
   const formStoreInitialized = useRef(false);
@@ -30,6 +31,10 @@ export function QuestionnaireEditor({
     ui.preview.set(!!startInPreview);
     formStoreInitialized.current = true;
   }, [initialFields, startInPreview, ui.preview]);
+
+  useEffect(() => {
+    ui.setHideUnsupportedFields(hideUnsupportedFields);
+  }, [hideUnsupportedFields, ui]);
 
   useEffect(() => {
     if (!onChange) return;

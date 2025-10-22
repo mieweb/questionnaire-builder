@@ -17,8 +17,9 @@
 		"README.md"
 	],
 	"scripts": {
-		"build": "vite build",
-		"build:watch": "vite build --watch"
+		"build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-editor/src/index.css -o packages/forms-editor/src/index.output.css",
+		"build": "npm run build:css && vite build",
+		"build:watch": "npm run build:css && vite build --watch"
 	},
 	"sideEffects": [
 		"**/*.css"

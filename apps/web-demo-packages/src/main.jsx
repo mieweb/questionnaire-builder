@@ -6,7 +6,76 @@ import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } fro
 import { useUIStore } from '@mieweb/forms-engine';
 import './index.css';
 
-const initialFields = [];
+const initialFields = [
+  {
+    id: 'section-1',
+    fieldType: 'section',
+    title: 'Personal Information',
+    fields: [
+      {
+        id: 'text-1',
+        fieldType: 'text',
+        question: 'Full Name',
+        answer: ''
+      },
+      {
+        id: 'text-2',
+        fieldType: 'text',
+        question: 'Email Address',
+        answer: ''
+      },
+      {
+        id: 'boolean-1',
+        fieldType: 'boolean',
+        question: 'Are you over 18?',
+        options: [
+          { id: 'yes', value: 'Yes' },
+          { id: 'no', value: 'No' }
+        ],
+        selected: null
+      }
+    ]
+  },
+  {
+    id: 'radio-1',
+    fieldType: 'radio',
+    question: 'Preferred Contact Method',
+    options: [
+      { id: 'radio-1-option', value: 'Email' },
+      { id: 'radio-1-option-1', value: 'Phone' },
+      { id: 'radio-1-option-2', value: 'Text Message' }
+    ],
+    selected: null
+  },
+  {
+    id: 'multitext-1',
+    fieldType: 'multitext',
+    question: 'Contact Details',
+    options: [
+      { id: 'multitext-1-option', value: 'Phone', answer: '' },
+      { id: 'multitext-1-option-1', value: 'Address', answer: '' },
+      { id: 'multitext-1-option-2', value: 'City', answer: '' }
+    ]
+  },
+  {
+    id: 'longtext-1',
+    fieldType: 'longtext',
+    question: 'Additional Comments',
+    answer: ''
+  },
+  {
+    id: 'check-1',
+    fieldType: 'check',
+    question: 'Interests (select all that apply)',
+    options: [
+      { id: 'check-1-option', value: 'Sports' },
+      { id: 'check-1-option-1', value: 'Music' },
+      { id: 'check-1-option-2', value: 'Reading' },
+      { id: 'check-1-option-3', value: 'Travel' }
+    ],
+    selected: []
+  }
+];
 
 // Custom wrapper demonstrating how to use the renderer with your own submit button
 function RendererWithSubmit({ fields, schemaType = 'inhouse', onChange, onSubmit }) {

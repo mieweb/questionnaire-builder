@@ -2,7 +2,7 @@ import React from 'react';
 import { useFormStore } from '@mieweb/forms-engine';
 import { useQuestionnaireInit } from './hooks';
 import { RendererBody } from './components';
-import './styles.output.css';
+import './styles.input.css';
 
 export function QuestionnaireRenderer({
   fields,
