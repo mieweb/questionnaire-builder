@@ -60,7 +60,7 @@
   </div>
 
   <script type="module">
-    import { QuestionnaireRendererElement } from '@mieweb/forms-renderer/standalone';
+    import '@mieweb/forms-renderer/standalone';
 
     // Get reference to the element
     const renderer = document.querySelector('questionnaire-renderer');
@@ -74,13 +74,13 @@
         fields: [
           {
             id: 'q-name',
-            fieldType: 'input',
+            fieldType: 'text',
             question: 'Full Name',
             answer: ''
           },
           {
             id: 'q-dob',
-            fieldType: 'input',
+            fieldType: 'text',
             question: 'Date of Birth',
             answer: ''
           },
@@ -96,10 +96,13 @@
             selected: null
           },
           {
-            id: 'q-email',
-            fieldType: 'input',
-            question: 'Email address',
-            answer: ''
+            id: 'q-contact',
+            fieldType: 'multitext',
+            question: 'Contact Information',
+            options: [
+              { id: 'contact-phone', value: 'Phone', answer: '' },
+              { id: 'contact-email', value: 'Email', answer: '' }
+            ]
           }
         ]
       },
@@ -126,7 +129,7 @@
           },
           {
             id: 'q-weeks',
-            fieldType: 'input',
+            fieldType: 'text',
             question: 'Weeks gestation (if known)',
             answer: '',
             enableWhen: {
@@ -155,7 +158,7 @@
           },
           {
             id: 'q-med-list',
-            fieldType: 'input',
+            fieldType: 'longtext',
             question: 'List current medications (name, dose, frequency)',
             answer: '',
             enableWhen: {
@@ -180,7 +183,7 @@
           },
           {
             id: 'q-conditions-other',
-            fieldType: 'input',
+            fieldType: 'longtext',
             question: 'Please specify other conditions',
             answer: '',
             enableWhen: {
@@ -204,7 +207,7 @@
           },
           {
             id: 'q-allergy-details',
-            fieldType: 'input',
+            fieldType: 'text',
             question: 'Please specify allergy details (reaction, severity)',
             answer: '',
             enableWhen: {
@@ -220,7 +223,7 @@
       },
       {
         id: 'q-notes',
-        fieldType: 'input',
+        fieldType: 'longtext',
         question: 'Additional notes or comments',
         answer: ''
       }
@@ -232,7 +235,7 @@
     };
 
     // Handle form submission
-    const form = document.getElementById('questionnaireForm');
+    const form = document.getElementById('questionnaire-form');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       
