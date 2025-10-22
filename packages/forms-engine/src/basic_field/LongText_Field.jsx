@@ -31,7 +31,7 @@ const LongTextField = React.memo(function LongTextField({ field, sectionId }) {
               className="px-3 py-2 w-full border border-black/40 rounded"
               type="text"
               value={f.question || ""}
-              onChange={(e) => api.field.update("question", e.target.value)}ange name
+              onChange={(e) => api.field.update("question", e.target.value)}
               placeholder="Enter question"
             />
 
