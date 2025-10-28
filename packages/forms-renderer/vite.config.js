@@ -15,7 +15,6 @@ export default defineConfig({
         const cssPath = resolve(__dirname, 'src/styles.output.css');
         if (fs.existsSync(cssPath)) {
           const cssContent = fs.readFileSync(cssPath, 'utf-8');
-          
           Object.keys(bundle).forEach(fileName => {
             if (fileName.endsWith('.js') && bundle[fileName].type === 'chunk') {
               const cssInjection = `
