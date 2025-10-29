@@ -7,9 +7,10 @@ export const useFormApi = (id, sectionId) => {
   const updateField  = useFormStore((s) => s.updateField);
   const deleteField  = useFormStore((s) => s.deleteField);
 
-  const addOption    = useFormStore((s) => s.addOption);
-  const updateOption = useFormStore((s) => s.updateOption);
-  const deleteOption = useFormStore((s) => s.deleteOption);
+  const addOption       = useFormStore((s) => s.addOption);
+  const updateOption    = useFormStore((s) => s.updateOption);
+  const updateOptionAnswer = useFormStore((s) => s.updateOptionAnswer);
+  const deleteOption    = useFormStore((s) => s.deleteOption);
 
   const selectSingle = useFormStore((s) => s.selectSingle);
   const toggleMulti  = useFormStore((s) => s.toggleMulti);
@@ -30,9 +31,10 @@ export const useFormApi = (id, sectionId) => {
         remove: () => deleteField(id, { sectionId }),
       },
       option: {
-        add:    (value = "")   => addOption(id, value, { sectionId }),
-        update: (optId, value) => updateOption(id, optId, value, { sectionId }),
-        remove: (optId)        => deleteOption(id, optId, { sectionId }),
+        add:          (value = "")   => addOption(id, value, { sectionId }),
+        update:       (optId, value) => updateOption(id, optId, value, { sectionId }),
+        updateAnswer: (optId, answer) => updateOptionAnswer(id, optId, answer, { sectionId }),
+        remove:       (optId)        => deleteOption(id, optId, { sectionId }),
       },
       selection: {
         single:      (optId) => selectSingle(id, optId, { sectionId }),
@@ -52,6 +54,7 @@ export const useFormApi = (id, sectionId) => {
       deleteField,
       addOption,
       updateOption,
+      updateOptionAnswer,
       deleteOption,
       selectSingle,
       toggleMulti,

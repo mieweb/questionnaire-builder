@@ -15,6 +15,7 @@ dist-ssr
 
 # Generated CSS files
 **/styles.output.css
+**/index.output.css
 
 # Editor directories and files
 .vscode/*

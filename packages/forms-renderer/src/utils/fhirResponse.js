@@ -1,7 +1,8 @@
 
 export function toFhirAnswers(field) {
   switch (field.fieldType) {
-    case 'input':
+    case 'text':
+    case 'longtext':
       return field.answer ? [{ valueString: String(field.answer) }] : [];
     case 'radio':
       return field.selected ? [{ valueString: getOptionValue(field, field.selected) }] : [];

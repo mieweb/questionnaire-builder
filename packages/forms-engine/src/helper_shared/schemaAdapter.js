@@ -102,8 +102,6 @@ function convertSurveyElement(element, fieldNames = new Set()) {
     id: element.name || `field-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`,
     fieldType: fieldType || 'unsupported',
     question: element.title || element.name || '',
-    _sourceData: element,
-    _conversionWarnings: warnings
   };
   
   if (!fieldType) {
@@ -125,6 +123,10 @@ function convertSurveyElement(element, fieldNames = new Set()) {
       message: `Field type "${element.type}" is not supported. Displayed as placeholder.`,
       impact: 'high'
     });
+    
+    // Add metadata properties at the end
+    field._sourceData = element;
+    field._conversionWarnings = warnings;
     
     return field;
   }
@@ -153,13 +155,6 @@ function convertSurveyElement(element, fieldNames = new Set()) {
       field.fields = Array.isArray(element.elements) 
         ? element.elements.map(el => convertSurveyElement(el, fieldNames)).filter(Boolean)
         : [];
-      
-      if (element.elements && Array.isArray(element.elements)) {
-        field._sourceData = {
-          ...element,
-          elements: element.elements.map(el => el.name).filter(Boolean)
-        };
-      }
       break;
   }
   
@@ -195,6 +190,18 @@ function convertSurveyElement(element, fieldNames = new Set()) {
   
   checkLostCommonFeatures(element, warnings);
   
+  // Add metadata properties at the end
+  // For sections, store a simplified version of sourceData with element names instead of full objects
+  if (field.fieldType === 'section' && element.elements && Array.isArray(element.elements)) {
+    field._sourceData = {
+      ...element,
+      elements: element.elements.map(el => el.name).filter(Boolean)
+    };
+  } else {
+    field._sourceData = element;
+  }
+  field._conversionWarnings = warnings;
+  
   return field;
 }
 
@@ -205,9 +212,9 @@ function removeWarning(warnings, type, property) {
 
 function mapSurveyTypeToInhouse(surveyType) {
   const typeMap = {
-    'text': 'input',
-    'comment': 'input',
-    'multipletext': 'input',
+    'text': 'text',
+    'comment': 'text',
+    'multipletext': 'text',
     
     'radiogroup': 'radio',
     'dropdown': 'dropdown',

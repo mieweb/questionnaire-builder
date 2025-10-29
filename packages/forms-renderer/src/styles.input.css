@@ -1,8 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
-@import "tailwindcss";
+
+/* Tell Tailwind which files to scan for utility classes */
+@source "../../../packages/forms-renderer/src/**/*.{js,jsx}";
+@source "../../../packages/forms-engine/src/**/*.{js,jsx}";
+
+/* Import Tailwind with higher layer priority to override Bootstrap */
+@layer bootstrap, tailwind-overrides;
+@layer tailwind-overrides {
+  @import "tailwindcss";
+}
 
 @theme {
   --font-titillium: "Titillium Web", sans-serif;
+}
+
+/* Add scoped reset for the root component to override Bootstrap */
+.qb-render-root {
+  all: revert-layer;
+  
+  * {
+    all: revert-layer;
+  }
 }
 
 @utility custom-scrollbar {
@@ -11,4 +29,4 @@
   [&::-webkit-scrollbar-track]:bg-gray-100
   [&::-webkit-scrollbar-thumb]:rounded-full
   [&::-webkit-scrollbar-thumb]:bg-gray-500;
-}
+} 

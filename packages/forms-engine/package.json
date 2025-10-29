@@ -1,6 +1,6 @@
 {
   "name": "@mieweb/forms-engine",
-  "version": "0.1.7",
+  "version": "0.1.10",
   "description": "Field components and utilities for questionnaire builder",
   "type": "module",
   "main": "./dist/index.js",
@@ -20,17 +20,16 @@
     "**/*.css"
   ],
   "scripts": {
-    "build": "vite build",
-    "build:watch": "vite build --watch"
+    "build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-engine/src/styles.css -o packages/forms-engine/src/styles.output.css",
+    "build": "npm run build:css && vite build",
+    "build:watch": "npm run build:css && vite build --watch"
   },
   "dependencies": {
-    "uuid": "^11.0.4",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@types/uuid": "^10.0.0",
     "typescript": "^5.9.2",
     "vite": "^6.3.6"
   },

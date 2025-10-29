@@ -1,6 +1,6 @@
 {
 	"name": "@mieweb/forms-editor",
-	"version": "0.1.7",
+	"version": "0.1.10",
 	"description": "Embeddable questionnaire form editor component",
 	"type": "module",
 	"main": "./dist/index.js",
@@ -17,8 +17,9 @@
 		"README.md"
 	],
 	"scripts": {
-		"build": "vite build",
-		"build:watch": "vite build --watch"
+		"build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-editor/src/index.css -o packages/forms-editor/src/index.output.css",
+		"build": "npm run build:css && vite build",
+		"build:watch": "npm run build:css && vite build --watch"
 	},
 	"sideEffects": [
 		"**/*.css"
@@ -28,7 +29,7 @@
 		"react-dom": ">=18.0.0"
 	},
 	"dependencies": {
-		"@mieweb/forms-engine": "^0.1.7",
+		"@mieweb/forms-engine": "^0.1.10",
 		"framer-motion": "^12.4.2",
 		"js-yaml": "^4.1.0"
 	},

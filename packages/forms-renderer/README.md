@@ -27,7 +27,7 @@ function MyForm() {
   const [fields] = React.useState([
     {
       id: 'q-name',
-      fieldType: 'input',
+      fieldType: 'text',
       question: 'What is your full name?',
       answer: ''
     }
@@ -110,7 +110,7 @@ No peer dependencies required - bundles React internally.
     renderer.fields = [
       {
         id: 'q-name',
-        fieldType: 'input',
+        fieldType: 'text',
         question: 'Full Name',
         answer: ''
       }
@@ -158,7 +158,7 @@ import '@mieweb/forms-renderer/blaze';
 Template.myTemplate.helpers({
   myFields() {
     return [
-      { id: 'q1', fieldType: 'input', question: 'Name?', answer: '' }
+      { id: 'q1', fieldType: 'text', question: 'Name?', answer: '' }
     ];
   },
   handleChange() {
@@ -213,7 +213,10 @@ const fhir = buildQuestionnaireResponse(currentFields, 'q-1', 'patient-123');
 
 ## Field Types
 
-- `input` - Text input
+- `text` - Single-line text input
+- `longtext` - Multi-line text area
+- `multitext` - Multiple labeled text inputs
+- `boolean` - Yes/No button selection
 - `radio` - Single selection
 - `check` - Multiple selection
 - `dropdown` - Dropdown selection
@@ -236,7 +239,7 @@ Show/hide fields based on other answers:
   fields: [
     {
       id: 'q-weeks',
-      fieldType: 'input',
+      fieldType: 'text',
       question: 'Weeks gestation (if known)',
       answer: '',
       enableWhen: {

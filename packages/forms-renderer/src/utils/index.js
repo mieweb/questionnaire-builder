@@ -1,1 +1,1 @@
-export { toFhirAnswers, getOptionValue, buildQuestionnaireResponse } from './fhirConverter';
+export { toFhirAnswers, getOptionValue, buildQuestionnaireResponse } from './fhirResponse';

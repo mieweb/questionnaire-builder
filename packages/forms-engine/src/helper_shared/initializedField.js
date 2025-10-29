@@ -1,21 +1,40 @@
-import { v4 as uuidv4 } from "uuid"
+import { generateOptionId } from "./idGenerator";
 
-export const initializeFieldOptions = (options) => {
+export const initializeFieldOptions = (options, fieldId = '') => {
   if (!Array.isArray(options)) return [];
-  return options.map((option) =>
-    typeof option === "string"
-      ? { id: uuidv4(), value: option }
-      : { ...option, id: option.id || uuidv4() }
-  )
+  const existingIds = new Set();
+  
+  return options.map((option) => {
+    if (typeof option === "string") {
+      const id = generateOptionId(option, existingIds, fieldId);
+      existingIds.add(id);
+      return { id, value: option };
+    } else {
+      const id = option.id || generateOptionId(option.value, existingIds, fieldId);
+      existingIds.add(id);
+      return { id, ...option };
+    }
+  });
 }
 
 export const initializeField = (field) => {
+  const { fieldType, id, question, title, ...rest } = field;
+  
+  const base = {
+    fieldType,
+    id,
+    ...(field.fieldType === "section" ? { title } : { question }),
+  };
+  
+  const textFieldTypes = ["text", "longtext"];
+  
   return {
-    ...field,
-    ...(field.fieldType !== "input" && {
-      options: initializeFieldOptions(field.options || []),
+    ...base,
+    ...rest,
+    ...(!textFieldTypes.includes(fieldType) && {
+      options: initializeFieldOptions(rest.options || [], id),
     }),
-  }
+  };
 }
 
 

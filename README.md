@@ -15,13 +15,14 @@ Web Component + React renderer for displaying questionnaires.
 
 ## ✨ Features
 
-- Multiple field types (input, radio, checkbox, dropdown, sections)
+- Multiple field types (text, longtext, multitext, radio, checkbox, dropdown, boolean, sections)
 - Conditional logic with `enableWhen` rules
 - FHIR Questionnaire/QuestionnaireResponse export
-- Mobile responsive
+- Mobile responsive design
 - Framework agnostic (Web Component support)
 - SurveyJS schema import/conversion
 - Hide unsupported field types
+- Automatic CSS injection (no manual imports needed)
 
 ## 🛠️ Development
 
@@ -53,7 +54,7 @@ import { QuestionnaireEditor } from '@mieweb/forms-editor';
 import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
 
 function MyForm() {
-  const fields = [{ id: 'q1', fieldType: 'input', question: 'Name?', answer: '' }];
+  const fields = [{ id: 'q1', fieldType: 'text', question: 'Name?', answer: '' }];
   const currentFields = useFieldsArray();
 
   const handleSubmit = (e) => {
@@ -91,7 +92,7 @@ function MyForm() {
 <script>
   const renderer = document.querySelector('questionnaire-renderer');
   
-  renderer.fields = [{ id: 'q1', fieldType: 'input', question: 'Name?', answer: '' }];
+  renderer.fields = [{ id: 'q1', fieldType: 'text', question: 'Name?', answer: '' }];
   renderer.schemaType = 'inhouse'; // or 'surveyjs'
   renderer.hideUnsupportedFields = false;
   renderer.onChange = (updated) => console.log(updated);

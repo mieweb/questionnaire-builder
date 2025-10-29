@@ -8,20 +8,23 @@ npm install @mieweb/forms-engine react react-dom
 
 ## Includes
 
-- Field components: `TextInput_Field`, `Radio_Field`, `Check_Field`, `DropDown_Field`, `Section_Field`
+- Field components: `Text_Field`, `LongText_Field`, `MultiText_Field`, `Boolean_Field`, `Radio_Field`, `Check_Field`, `DropDown_Field`, `Section_Field`
 - State management: Zustand stores for form data and UI state
-- Utilities: Field initialization, visibility logic, schema adapter
+- Utilities: Field initialization, visibility logic, schema adapter, ID generation
 - Hooks: `useFormApi`, `useUIApi`, `useFieldController`
+- CSS: Automatically injected (no manual imports needed)
 
 ## Quick Start
 
 ```jsx
-import { TextInput_Field, Radio_Field, useFormStore } from '@mieweb/forms-engine';
+import { Text_Field, LongText_Field, Radio_Field, Boolean_Field, useFormStore } from '@mieweb/forms-engine';
 
 const fields = useFormStore(state => state.flatArray());
 
 {fields.map(field => {
-  if (field.fieldType === 'input') return <TextInput_Field key={field.id} fieldId={field.id} />;
+  if (field.fieldType === 'text') return <Text_Field key={field.id} fieldId={field.id} />;
+  if (field.fieldType === 'longtext') return <LongText_Field key={field.id} fieldId={field.id} />;
+  if (field.fieldType === 'boolean') return <Boolean_Field key={field.id} fieldId={field.id} />;
   if (field.fieldType === 'radio') return <Radio_Field key={field.id} fieldId={field.id} />;
   return null;
 })}
@@ -29,11 +32,14 @@ const fields = useFormStore(state => state.flatArray());
 
 ## Field Types
 
-- `input` - Text input
-- `radio` - Single selection
-- `check` - Multiple selection
+- `text` - Single-line text input
+- `longtext` - Multi-line text area
+- `multitext` - Multiple labeled text inputs in one field
+- `boolean` - Yes/No buttons
+- `radio` - Single selection from options
+- `check` - Multiple selection (checkboxes)
 - `dropdown` - Dropdown selection
-- `section` - Container for grouping
+- `section` - Container for grouping fields
 
 ## State Management
 
@@ -62,7 +68,7 @@ function ConditionalField({ fieldId }) {
     return null;
   }
 
-  return <TextInput_Field fieldId={fieldId} />;
+  return <Text_Field fieldId={fieldId} />;
 }
 ```
 
@@ -107,12 +113,11 @@ function CustomField({ fieldId, sectionId }) {
 ```typescript
 {
   id: string;
-  fieldType: 'input' | 'radio' | 'check' | 'selection' | 'section';
+  fieldType: 'text' | 'longtext' | 'multitext' | 'boolean' | 'radio' | 'check' | 'dropdown' | 'section';
   question?: string;
-  answer?: string;          // for input fields
-  selected?: string;        // for radio/selection fields
-  selectedOptions?: string[]; // for check fields
-  options?: { id: string; value: string }[];
+  answer?: string;          // for text/longtext fields
+  selected?: string;        // for radio/dropdown/boolean fields
+  options?: { id: string; value: string; answer?: string }[]; // answer for multitext
   enableWhen?: {
     logic: 'AND' | 'OR';
     conditions: {
