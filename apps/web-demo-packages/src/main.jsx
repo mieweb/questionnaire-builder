@@ -6,79 +6,230 @@ import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } fro
 import { useUIStore } from '@mieweb/forms-engine';
 import './index.css';
 
-const initialFields = [
-  {
-    id: 'section-1',
-    fieldType: 'section',
-    title: 'Personal Information',
-    fields: [
-      {
-        id: 'text-1',
-        fieldType: 'text',
-        question: 'Full Name',
-        answer: ''
-      },
-      {
-        id: 'text-2',
-        fieldType: 'text',
-        question: 'Email Address',
-        answer: ''
-      },
-      {
-        id: 'boolean-1',
-        fieldType: 'boolean',
-        question: 'Are you over 18?',
-        options: [
-          { id: 'yes', value: 'Yes' },
-          { id: 'no', value: 'No' }
-        ],
-        selected: null
-      }
-    ]
-  },
-  {
-    id: 'radio-1',
-    fieldType: 'radio',
-    question: 'Preferred Contact Method',
-    options: [
-      { id: 'radio-1-option', value: 'Email' },
-      { id: 'radio-1-option-1', value: 'Phone' },
-      { id: 'radio-1-option-2', value: 'Text Message' }
-    ],
-    selected: null
-  },
-  {
-    id: 'multitext-1',
-    fieldType: 'multitext',
-    question: 'Contact Details',
-    options: [
-      { id: 'multitext-1-option', value: 'Phone', answer: '' },
-      { id: 'multitext-1-option-1', value: 'Address', answer: '' },
-      { id: 'multitext-1-option-2', value: 'City', answer: '' }
-    ]
-  },
-  {
-    id: 'longtext-1',
-    fieldType: 'longtext',
-    question: 'Additional Comments',
-    answer: ''
-  },
-  {
-    id: 'check-1',
-    fieldType: 'check',
-    question: 'Interests (select all that apply)',
-    options: [
-      { id: 'check-1-option', value: 'Sports' },
-      { id: 'check-1-option-1', value: 'Music' },
-      { id: 'check-1-option-2', value: 'Reading' },
-      { id: 'check-1-option-3', value: 'Travel' }
-    ],
-    selected: []
-  }
-];
+const initialFormData = {
+  "title": "General Health Screening",
+  "description": "Quick intake screening for symptoms, risks, and well-being.",
+  "showProgressBar": "top",
+  "progressBarType": "questions",
+  "showQuestionNumbers": "onPage",
+  "completedHtml": "<h3>Thanks!</h3><p>Your screening has been submitted.</p>",
+  "calculatedValues": [
+    { "name": "phq2_total", "expression": "sum({phq2_item1}, {phq2_item2})" }
+  ],
+  "pages": [
+    {
+      "name": "screening_panels",
+      "title": "Health Screening",
+      "elements": [
+        {
+          "type": "panel",
+          "name": "sec_patient_info",
+          "title": "Patient Information",
+          "elements": [
+            { "type": "text", "name": "full_name", "title": "Full Name", "isRequired": true },
+            { "type": "text", "name": "dob", "title": "Date of Birth", "inputType": "date", "isRequired": true },
+            {
+              "type": "dropdown",
+              "name": "sex_at_birth",
+              "title": "Sex at Birth",
+              "isRequired": true,
+              "choices": ["Female", "Male", "Intersex", "Prefer not to say"]
+            },
+            { "type": "text", "name": "contact_phone", "title": "Phone", "inputType": "tel" },
+            { "type": "text", "name": "contact_email", "title": "Email", "inputType": "email", "validators": [{ "type": "email" }] },
+            { "type": "boolean", "name": "consent", "title": "I consent to screening and data collection for care.", "isRequired": true, "labelTrue": "Yes", "labelFalse": "No" },
+            { "type": "html", "name": "consent_blocker", "visibleIf": "{consent} = false", "html": "<div style='color:#b00020'><b>Consent required to proceed.</b></div>" }
+          ]
+        },
+        {
+          "type": "panel",
+          "name": "sec_presenting",
+          "title": "Presenting Concerns",
+          "visibleIf": "{consent} = true",
+          "elements": [
+            {
+              "type": "comment",
+              "name": "chief_complaint",
+              "title": "Chief Concern",
+              "placeHolder": "Briefly describe your main concern today",
+              "isRequired": true
+            },
+            {
+              "type": "checkbox",
+              "name": "symptoms",
+              "title": "Current Symptoms (check all that apply)",
+              "choices": [
+                "Fever or chills",
+                "Cough",
+                "Shortness of breath",
+                "Chest pain",
+                "Headache",
+                "Sore throat",
+                "Nausea or vomiting",
+                "Diarrhea",
+                "Fatigue",
+                "Body aches",
+                "Loss of taste or smell",
+                "Rash",
+                "None of the above"
+              ],
+              "hasOther": true,
+              "otherText": "Other"
+            },
+            {
+              "type": "boolean",
+              "name": "red_flags",
+              "title": "Any severe symptoms (e.g., severe chest pain, difficulty breathing, confusion, bluish lips/face)?",
+              "labelTrue": "Yes",
+              "labelFalse": "No",
+              "isRequired": true
+            },
+            {
+              "type": "comment",
+              "name": "red_flags_details",
+              "title": "Please describe severe symptoms",
+              "visibleIf": "{red_flags} = true",
+              "isRequired": true
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "name": "sec_vitals",
+          "title": "Self-Reported Vitals",
+          "visibleIf": "{consent} = true",
+          "elements": [
+            { "type": "text", "name": "height_cm", "title": "Height (cm)", "inputType": "number", "min": 30, "max": 250 },
+            { "type": "text", "name": "weight_kg", "title": "Weight (kg)", "inputType": "number", "min": 2, "max": 400 },
+            { "type": "text", "name": "temp_c", "title": "Temperature (°C)", "inputType": "number", "min": 32, "max": 43 },
+            { "type": "text", "name": "sbp", "title": "Systolic Blood Pressure (mmHg)", "inputType": "number", "min": 60, "max": 260 },
+            { "type": "text", "name": "dbp", "title": "Diastolic Blood Pressure (mmHg)", "inputType": "number", "min": 30, "max": 160 },
+            { "type": "text", "name": "pulse", "title": "Heart Rate (bpm)", "inputType": "number", "min": 20, "max": 220 }
+          ]
+        },
+        {
+          "type": "panel",
+          "name": "sec_phq2",
+          "title": "Well-Being (PHQ-2)",
+          "visibleIf": "{consent} = true",
+          "elements": [
+            {
+              "type": "radiogroup",
+              "name": "phq2_item1",
+              "title": "Over the last 2 weeks, how often have you had little interest or pleasure in doing things?",
+              "isRequired": true,
+              "choices": [
+                { "value": 0, "text": "Not at all (0)" },
+                { "value": 1, "text": "Several days (1)" },
+                { "value": 2, "text": "More than half the days (2)" },
+                { "value": 3, "text": "Nearly every day (3)" }
+              ]
+            },
+            {
+              "type": "radiogroup",
+              "name": "phq2_item2",
+              "title": "Over the last 2 weeks, how often have you felt down, depressed, or hopeless?",
+              "isRequired": true,
+              "choices": [
+                { "value": 0, "text": "Not at all (0)" },
+                { "value": 1, "text": "Several days (1)" },
+                { "value": 2, "text": "More than half the days (2)" },
+                { "value": 3, "text": "Nearly every day (3)" }
+              ]
+            },
+            {
+              "type": "html",
+              "name": "phq2_score",
+              "title": "PHQ-2 Score",
+              "html": "<div>PHQ-2 total: <b>{phq2_total}</b> (≥3 suggests further screening)</div>"
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "name": "sec_risk_social",
+          "title": "Risk Factors & Social",
+          "visibleIf": "{consent} = true",
+          "elements": [
+            {
+              "type": "checkbox",
+              "name": "medical_history",
+              "title": "Medical History (check all that apply)",
+              "choices": [
+                "Diabetes",
+                "Hypertension",
+                "Heart disease",
+                "Asthma/COPD",
+                "Chronic kidney disease",
+                "Cancer",
+                "Pregnancy",
+                "Immunosuppression",
+                "None of the above"
+              ],
+              "hasOther": true
+            },
+            {
+              "type": "boolean",
+              "name": "pregnant",
+              "title": "Are you currently pregnant?",
+              "labelTrue": "Yes",
+              "labelFalse": "No",
+              "visibleIf": "{sex_at_birth} = 'Female'"
+            },
+            {
+              "type": "radiogroup",
+              "name": "tobacco_use",
+              "title": "Tobacco Use",
+              "choices": ["Never", "Former", "Current"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "alcohol_use",
+              "title": "Alcohol Use",
+              "choices": ["None", "Occasional", "Weekly", "Daily"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "housing_security",
+              "title": "Do you have stable housing?",
+              "choices": ["Yes", "No", "Prefer not to say"]
+            },
+            {
+              "type": "radiogroup",
+              "name": "food_security",
+              "title": "In the last 12 months, were you ever worried food would run out before you had money to buy more?",
+              "choices": ["Often true", "Sometimes true", "Never true", "Prefer not to say"]
+            }
+          ]
+        },
+        {
+          "type": "panel",
+          "name": "sec_infectious",
+          "title": "Infectious Screening (Respiratory/COVID-like)",
+          "visibleIf": "{consent} = true",
+          "elements": [
+            { "type": "boolean", "name": "close_contact", "title": "Close contact with a sick person in past 10 days?", "labelTrue": "Yes", "labelFalse": "No" },
+            { "type": "radiogroup", "name": "fever_history", "title": "Fever in the last 48 hours?", "choices": ["Yes", "No", "Unsure"] },
+            { "type": "radiogroup", "name": "resp_symptoms", "title": "Respiratory symptoms now?", "choices": ["None", "Mild", "Moderate", "Severe"] }
+          ]
+        },
+        {
+          "type": "panel",
+          "name": "sec_review",
+          "title": "Review & Submit",
+          "visibleIf": "{consent} = true",
+          "elements": [
+            { "type": "signaturepad", "name": "signature", "title": "Signature (optional)" },
+            { "type": "comment", "name": "notes", "title": "Anything else you'd like to add?" }
+          ]
+        }
+      ]
+    }
+  ]
+};
 
 // Custom wrapper demonstrating how to use the renderer with your own submit button
-function RendererWithSubmit({ fields, schemaType = 'inhouse', onChange, onSubmit }) {
+function RendererWithSubmit({ formData, onChange, onSubmit }) {
   const currentFields = useFieldsArray();
   const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
 
@@ -90,9 +241,8 @@ function RendererWithSubmit({ fields, schemaType = 'inhouse', onChange, onSubmit
 
   return (
     <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer 
-        fields={fields} 
-        schemaType={schemaType}
+      <QuestionnaireRenderer
+        formData={formData}
         onChange={onChange}
         hideUnsupportedFields={hideUnsupportedFields}
       />
@@ -109,7 +259,7 @@ function RendererWithSubmit({ fields, schemaType = 'inhouse', onChange, onSubmit
 }
 
 function App() {
-  const [fields, setFields] = React.useState(initialFields);
+  const [formData, setFormData] = React.useState(initialFormData);
   const [submitted, setSubmitted] = React.useState(null);
   const [view, setView] = React.useState('landing');
   const [surveySchema, setSurveySchema] = React.useState(null);
@@ -131,10 +281,34 @@ function App() {
     try {
       const response = await fetch('/examples/surveyjs-sample.json');
       const data = await response.json();
-      setSurveySchema(data);
-      setView('surveyjs');
+      // Pass SurveyJS data directly - will be auto-converted
+      setFormData(data);
+      setView('editor');
     } catch (err) {
       alert('Failed to load SurveyJS sample: ' + err.message);
+    }
+  };
+
+  const loadMIEFormsJSON = async () => {
+    try {
+      const response = await fetch('/examples/inhouse-sample.json');
+      const data = await response.json();
+      setFormData(data); // Pass complete form data with metadata
+      setView('editor');
+    } catch (err) {
+      alert('Failed to load MIE Forms JSON sample: ' + err.message);
+    }
+  };
+
+  const loadMIEFormsYAML = async () => {
+    try {
+      const response = await fetch('/examples/inhouse-sample.yaml');
+      const yamlText = await response.text();
+      // Pass YAML string directly - will be auto-parsed
+      setFormData(yamlText);
+      setView('editor');
+    } catch (err) {
+      alert('Failed to load MIE Forms YAML sample: ' + err.message);
     }
   };
 
@@ -143,8 +317,8 @@ function App() {
       <div className="w-full h-dvh relative bg-slate-100">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingFooter view={view} />
-        <div className="absolute inset-0 overflow-auto">
-          <QuestionnaireEditor initialFields={fields} onChange={setFields} />
+        <div className="absolute inset-0">
+          <QuestionnaireEditor initialFormData={formData} onChange={setFormData} />
         </div>
       </div>
     );
@@ -155,9 +329,9 @@ function App() {
       <div className="w-full h-dvh relative bg-slate-100">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingFooter view={view} />
-        <div className="absolute inset-0 overflow-auto p-4 max-w-4xl mx-auto w-full">
+        <div className="">
           <RendererWithSubmit
-            fields={fields}
+            formData={formData}
             onChange={handleFormChange}
             onSubmit={(qr) => setSubmitted(qr)}
           />
@@ -186,6 +360,32 @@ function App() {
           <DemoCard title="Editor" desc="Build & modify questionnaire structure." onClick={() => setView('editor')} />
           <DemoCard title="Renderer" desc="Fill out the questionnaire & submit." onClick={() => setView('renderer')} />
         </div>
+
+        <div className="mb-8 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
+          <h2 className="m-0 mb-3 text-lg font-semibold text-slate-900 tracking-tight">Test Auto-Detection</h2>
+          <p className="mb-4 text-sm text-slate-600">Load example schemas to test YAML parsing and automatic format detection:</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button
+              onClick={loadMIEFormsJSON}
+              className="px-4 py-2.5 bg-white text-slate-700 rounded-lg border border-slate-200 font-medium text-sm hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow"
+            >
+              📄 MIE Forms JSON
+            </button>
+            <button
+              onClick={loadMIEFormsYAML}
+              className="px-4 py-2.5 bg-white text-slate-700 rounded-lg border border-slate-200 font-medium text-sm hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow"
+            >
+              📝 MIE Forms YAML
+            </button>
+            <button
+              onClick={loadSurveyJS}
+              className="px-4 py-2.5 bg-white text-slate-700 rounded-lg border border-slate-200 font-medium text-sm hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow"
+            >
+              🔄 SurveyJS JSON
+            </button>
+          </div>
+        </div>
+
         <Landing />
 
         <div className="mt-12 pt-8 border-t border-slate-200 text-center">
@@ -226,7 +426,7 @@ function FloatingFooter({ view }) {
   const showToggle = view && view !== 'landing';
   const hideUnsupported = useUIStore((s) => s.hideUnsupportedFields);
   const setHideUnsupportedFields = useUIStore((s) => s.setHideUnsupportedFields);
-  
+
   return (
     <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
       <motion.div
@@ -240,7 +440,7 @@ function FloatingFooter({ view }) {
           <kbd className="bg-slate-100/80 px-2 py-1 rounded-md font-mono text-xs font-semibold text-slate-600 border border-slate-200/60 shadow-sm">ESC</kbd>
           <span className="text-slate-500">to return</span>
         </div>
-        
+
         {showToggle && (
           <>
             <div className="h-4 w-px bg-slate-300/50" />

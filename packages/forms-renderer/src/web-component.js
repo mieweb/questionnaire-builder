@@ -5,16 +5,14 @@ import { useFormStore } from '@mieweb/forms-engine';
 import { buildQuestionnaireResponse } from './utils/fhirResponse';
 
 class QuestionnaireRendererElement extends HTMLElement {
-  static get observedAttributes() {
-    return ['fields', 'schema-type', 'full-height', 'hide-unsupported-fields'];
-  }
+  static observedAttributes = ['form-data', 'schema-type', 'full-height', 'hide-unsupported-fields'];
 
   constructor() {
     super();
     this._root = null;
-    this._fields = [];
-    this._schemaType = 'inhouse';
-    this._hideUnsupportedFields = false;
+    this._formData = [];
+    this._schemaType = undefined;
+    this._hideUnsupportedFields = true;
     this._onChange = null;
   }
 
@@ -27,18 +25,16 @@ class QuestionnaireRendererElement extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue !== newValue) {
-      this._render();
-    }
+    if (oldValue !== newValue) this._render();
   }
 
-  set fields(value) {
-    this._fields = value;
+  set formData(value) {
+    this._formData = value;
     this._render();
   }
 
-  get fields() {
-    return this._fields;
+  get formData() {
+    return this._formData;
   }
 
   set onChange(fn) {
@@ -46,12 +42,8 @@ class QuestionnaireRendererElement extends HTMLElement {
     this._render();
   }
 
-  get onChange() {
-    return this._onChange;
-  }
-
   set schemaType(value) {
-    this._schemaType = value || 'inhouse';
+    this._schemaType = value;
     this._render();
   }
 
@@ -91,29 +83,24 @@ class QuestionnaireRendererElement extends HTMLElement {
   _render() {
     if (!this._root) return;
 
-    let fields = this._fields;
-    const fieldsAttr = this.getAttribute('fields');
-    if (fieldsAttr && !this._fields.length) {
+    let formData = this._formData;
+    const formDataAttr = this.getAttribute('form-data');
+    if (formDataAttr && !this._formData.length) {
       try {
-        fields = JSON.parse(fieldsAttr);
+        formData = JSON.parse(formDataAttr);
       } catch {
-        fields = [];
+        formData = [];
       }
     }
 
-    const schemaType = this.getAttribute('schema-type') || this._schemaType || 'inhouse';
-    const fullHeight = this.hasAttribute('full-height');
-    const hideUnsupportedFields = this.hasAttribute('hide-unsupported-fields') || this._hideUnsupportedFields;
-    const className = this.getAttribute('class') || '';
-
     this._root.render(
       React.createElement(QuestionnaireRenderer, {
-        fields,
-        schemaType,
-        hideUnsupportedFields,
+        formData,
+        schemaType: this.getAttribute('schema-type') || this._schemaType || undefined,
+        hideUnsupportedFields: this.hasAttribute('hide-unsupported-fields') || this._hideUnsupportedFields,
         onChange: this._onChange,
-        className,
-        fullHeight,
+        className: this.getAttribute('class') || '',
+        fullHeight: this.hasAttribute('full-height'),
       })
     );
   }

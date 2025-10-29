@@ -1,29 +1,42 @@
+/**
+ * Current MIE Forms schema type identifier
+ * Similar to FHIR resourceType field
+ */
+export const MIE_FORMS_SCHEMA_TYPE = 'mieforms-v1.0';
+
 export function detectSchemaType(data) {
   if (!data) return 'unknown';
   
-  if (data.elements || data.pages) return 'surveyjs';
-  if (Array.isArray(data) || data.fields) return 'inhouse';
+  // Check for MIE Forms metadata (must be explicit)
+  // Similar to FHIR resourceType pattern
+  if (data.schemaType && data.schemaType.startsWith('mieforms-v')) {
+    return 'mieforms';
+  }
+  
+  // Check for SurveyJS schema markers (pages array with name or elements)
+  if (Array.isArray(data.pages) && data.pages.some(p => p.name || p.elements)) {
+    return 'surveyjs';
+  }
   
   return 'unknown';
 }
 
-export function adaptSchema(data, schemaType = 'inhouse') {
+export function adaptSchema(data, schemaType = 'mieforms') {
   if (!data) return { fields: [], conversionReport: null };
   
   switch (schemaType) {
     case 'surveyjs':
-      return surveyJSToInhouse(data);
+      return surveyJSToMIEForms(data);
       
-    case 'inhouse':
-      const fields = Array.isArray(data) ? data : (data.fields && Array.isArray(data.fields) ? data.fields : []);
-      return { fields, conversionReport: null };
+    case 'mieforms':
+      return { fields: data.fields || [], conversionReport: null };
       
     default:
-      throw new Error(`Unsupported schema type: ${schemaType}`);
+      throw new Error(`Unsupported schema type: ${schemaType}. MIE Forms data must include schemaType field starting with 'mieforms-v'`);
   }
 }
 
-function surveyJSToInhouse(surveyData) {
+function surveyJSToMIEForms(surveyData) {
   if (!surveyData) return { fields: [], conversionReport: null };
   
   const conversionReport = {
@@ -36,10 +49,9 @@ function surveyJSToInhouse(surveyData) {
     warnings: []
   };
   
+  // SurveyJS always has pages array, elements are nested inside pages
   let elements = [];
-  if (Array.isArray(surveyData.elements)) {
-    elements = surveyData.elements;
-  } else if (Array.isArray(surveyData.pages)) {
+  if (Array.isArray(surveyData.pages)) {
     elements = surveyData.pages.flatMap(page => page.elements || []);
     
     if (surveyData.pages.length > 1) {
@@ -94,7 +106,7 @@ function surveyJSToInhouse(surveyData) {
 function convertSurveyElement(element, fieldNames = new Set()) {
   if (!element || !element.type) return null;
   
-  const fieldType = mapSurveyTypeToInhouse(element.type);
+  const fieldType = mapSurveyTypeToMIEForms(element.type);
   
   const warnings = [];
   
@@ -115,18 +127,6 @@ function convertSurveyElement(element, fieldNames = new Set()) {
     }
     
     field.unsupportedData = unsupportedData;
-    
-    warnings.push({
-      type: 'unsupported_field_type',
-      property: 'type',
-      value: element.type,
-      message: `Field type "${element.type}" is not supported. Displayed as placeholder.`,
-      impact: 'high'
-    });
-    
-    // Add metadata properties at the end
-    field._sourceData = element;
-    field._conversionWarnings = warnings;
     
     return field;
   }
@@ -210,7 +210,7 @@ function removeWarning(warnings, type, property) {
   if (index !== -1) warnings.splice(index, 1);
 }
 
-function mapSurveyTypeToInhouse(surveyType) {
+function mapSurveyTypeToMIEForms(surveyType) {
   const typeMap = {
     'text': 'text',
     'comment': 'text',
@@ -402,11 +402,7 @@ function convertVisibleIfToEnableWhen(expression, fieldNames = new Set()) {
     const hasOr = / or /i.test(expr);
     const hasAnd = / and /i.test(expr);
     
-    if (hasOr && hasAnd) {
-      console.warn(`[schemaAdapter] Mixed AND/OR logic not supported in: ${expression}`);
-      return null;
-    }
-    
+    if (hasOr && hasAnd) return null;
     if (hasOr) logic = 'OR';
     
     const parts = expr.split(hasOr ? / or /i : / and /i);
@@ -416,12 +412,9 @@ function convertVisibleIfToEnableWhen(expression, fieldNames = new Set()) {
       const condition = parseCondition(part.trim());
       if (condition) {
         if (fieldNames.size > 0 && !fieldNames.has(condition.targetId)) {
-          console.warn(`[schemaAdapter] Skipping condition - field "${condition.targetId}" not found (may be calculated value or metadata): ${part}`);
           continue;
         }
         conditions.push(condition);
-      } else {
-        console.warn(`[schemaAdapter] Unable to parse condition: ${part}`);
       }
     }
     
@@ -431,8 +424,7 @@ function convertVisibleIfToEnableWhen(expression, fieldNames = new Set()) {
       logic: conditions.length === 1 ? 'AND' : logic,
       conditions
     };
-  } catch (error) {
-    console.warn(`[schemaAdapter] Error converting visibleIf: ${expression}`, error);
+  } catch {
     return null;
   }
 }
@@ -454,10 +446,7 @@ function parseCondition(condition) {
           matchPattern(/\{(\w+)\}\s*(?:<>|!=)\s*"([^"]+)"/) ||
           matchPattern(/\{(\w+)\}\s*(?:<>|!=)\s*([\w.-]+)/);
   
-  if (match) {
-    console.warn(`[schemaAdapter] "not equal" operator not yet supported: ${condition}`);
-    return null;
-  }
+  if (match) return null;
   
   match = matchPattern(/\{(\w+)\}\s+contains\s+'([^']+)'/) ||
           matchPattern(/\{(\w+)\}\s+contains\s+"([^"]+)"/) ||
@@ -471,10 +460,7 @@ function parseCondition(condition) {
   if (match) return { targetId: match[1], operator: 'equals', value: '' };
   
   match = matchPattern(/\{(\w+)\}\s+notempty/i);
-  if (match) {
-    console.warn(`[schemaAdapter] "notempty" operator not yet supported: ${condition}`);
-    return null;
-  }
+  if (match) return null;
   
   return null;
 }
@@ -503,17 +489,12 @@ function resolveEnableWhenValues(fields) {
       field.enableWhen.conditions.forEach(condition => {
         const targetField = fieldMap.get(condition.targetId);
         
-        if (targetField && targetField.options && Array.isArray(targetField.options)) {
-          // For radio/dropdown/check fields with options, map value to option ID
+        if (targetField?.options && Array.isArray(targetField.options)) {
           const matchingOption = targetField.options.find(opt => opt.value === condition.value);
-          
           if (matchingOption) {
             condition.value = matchingOption.id;
-          } else {
-            console.warn(`[schemaAdapter] No matching option found for value "${condition.value}" in field "${condition.targetId}"`);
           }
         }
-        // For other field types (input, etc.), keep the value as-is
       });
     }
     

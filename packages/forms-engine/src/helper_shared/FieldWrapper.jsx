@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { EDIT_ICON, TRASHCAN_ICON, VIEWSMALL_ICON, VIEWBIG_ICON } from "./icons";
 
 export default function FieldWrapper({ ctrl, children }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = React.useState(true);
 
   const onEditClick = (e) => {
     e.stopPropagation();

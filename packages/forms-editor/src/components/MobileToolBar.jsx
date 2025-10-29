@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { DATALOG_ICON, EYEEDIT_ICON, EYECLOSED_ICON, PLUSSQUARE_ICON, X_ICON } from "@mieweb/forms-engine";
 import { useFormStore, useFieldsArray, useUIApi, fieldTypes } from "@mieweb/forms-engine";
 import DataViewer from "./DataViewer";
 
 export default function MobileToolBar() {
-  const [isToolBarExpanded, setIsToolBarExpanded] = useState(false);
-  const [isLogExpanded, setIsLogExpanded] = useState(false);
-  const containerRef = useRef(null);
+  const [isToolBarExpanded, setIsToolBarExpanded] = React.useState(false);
+  const [isLogExpanded, setIsLogExpanded] = React.useState(false);
+  const containerRef = React.useRef(null);
 
   const addField = useFormStore((s) => s.addField);
   const fieldsArray = useFieldsArray();
@@ -30,7 +30,7 @@ export default function MobileToolBar() {
     setIsLogExpanded(false);
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isToolBarExpanded || isLogExpanded) return;
     const handleDocDown = (event) => {
       const el = containerRef.current;

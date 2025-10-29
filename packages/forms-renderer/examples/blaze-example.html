@@ -3,10 +3,13 @@
     <h2>{{title}}</h2>
     
     {{> questionnaireRenderer 
-        fields=currentFields
-        schemaType="inhouse"
+        formData=currentFormData
         onChange=handleChange
         fullHeight=false}}
+    <!-- Optional props (auto-detected if not provided):
+         - schemaType: 'mieforms' or 'surveyjs' - Auto-detects from schema metadata
+         - hideUnsupportedFields: boolean - Hide unsupported field types (default: true)
+    -->
     
     <button class="submit-btn">Submit</button>
   </div>
@@ -24,13 +27,60 @@ import '@mieweb/forms-renderer/blaze';
 import './questionnaire.html';
 
 Template.questionnaireForm.onCreated(function() {
-  this.fields = new ReactiveVar([]);
-  this.formData = new ReactiveVar(null);
+  // Auto-detection example: Pass YAML or JSON string, or parsed object
+  // The component will automatically detect:
+  // 1. Format (YAML vs JSON)
+  // 2. Schema type (MIE Forms vs SurveyJS)
   
-  // Load initial data from server
-  Meteor.call('getQuestionnaireFields', (err, fields) => {
-    if (!err) this.fields.set(fields);
-  });
+  // Example 1: MIE Forms schema in YAML (auto-detected)
+  const mieFormsYaml = `
+- id: name
+  fieldType: input
+  question: What is your name?
+  required: true
+- id: age
+  fieldType: input
+  question: How old are you?
+- id: gender
+  fieldType: radio
+  question: Gender
+  options:
+    - value: male
+      label: Male
+    - value: female
+      label: Female
+    - value: other
+      label: Other
+  `;
+  
+  // Example 2: SurveyJS schema in JSON (auto-detected and converted)
+  const surveyJsJson = `{
+    "pages": [{
+      "elements": [
+        {
+          "type": "text",
+          "name": "name",
+          "title": "What is your name?",
+          "isRequired": true
+        },
+        {
+          "type": "text",
+          "name": "age",
+          "title": "How old are you?"
+        },
+        {
+          "type": "radiogroup",
+          "name": "gender",
+          "title": "Gender",
+          "choices": ["Male", "Female", "Other"]
+        }
+      ]
+    }]
+  }`;
+  
+  // Use either schema - both will auto-detect and render correctly
+  this.questFormData = new ReactiveVar(mieFormsYaml);
+  this.submittedData = new ReactiveVar(null);
 });
 
 Template.questionnaireForm.helpers({
@@ -38,15 +88,15 @@ Template.questionnaireForm.helpers({
     return 'Patient Questionnaire';
   },
   
-  currentFields() {
-    return Template.instance().fields.get();
+  currentFormData() {
+    return Template.instance().questFormData.get();
   },
   
   handleChange() {
     const instance = Template.instance();
-    return (updatedFields) => {
-      console.log('Form changed:', updatedFields);
-      instance.formData.set(updatedFields);
+    return (updatedFormData) => {
+      console.log('Form changed:', updatedFormData);
+      instance.submittedData.set(updatedFormData);
     };
   }
 });
@@ -55,13 +105,13 @@ Template.questionnaireForm.events({
   'click .submit-btn'(event, instance) {
     event.preventDefault();
     
-    const formData = instance.formData.get();
-    if (!formData) {
+    const submittedData = instance.submittedData.get();
+    if (!submittedData) {
       alert('Please fill out the form');
       return;
     }
     
-    Meteor.call('submitQuestionnaire', formData, (err) => {
+    Meteor.call('submitQuestionnaire', submittedData, (err) => {
       if (err) {
         alert('Error: ' + err.message);
       } else {

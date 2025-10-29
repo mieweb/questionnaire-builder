@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from "react";
+import React from "react";
 import fieldTypes, { registerFieldComponent, getFieldComponent } from "../helper_shared/fieldTypes-config.js";
 import { isVisible } from "../helper_shared/logicVisibility.js";
 import { PLUSSQUARE_ICON } from "../helper_shared/icons.jsx";
@@ -19,11 +19,10 @@ const SectionField = React.memo(function SectionField({ field }) {
 
   const selectedChildId = parentId === field.id ? childId : null;
 
-  const childRefs = useRef({});
+  const childRefs = React.useRef({});
 
-  // ────────── All fields (flat) for visibility evaluation ──────────
   const byId = useFormStore((s) => s.byId);
-  const allFlat = useMemo(() => {
+  const allFlat = React.useMemo(() => {
     const arr = Object.values(byId);
     const out = [];
     arr.forEach(f => {
@@ -34,8 +33,7 @@ const SectionField = React.memo(function SectionField({ field }) {
     return out;
   }, [byId]);
 
-  // ────────── Autoscroll to selected child in EDIT mode ──────────
-  useEffect(() => {
+  React.useEffect(() => {
     if (ctrl.isPreview || !selectedChildId) return;
     const el = childRefs.current[selectedChildId];
     el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });

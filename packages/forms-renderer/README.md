@@ -2,6 +2,42 @@
 
 Questionnaire renderer with three distribution options: React component, standalone Web Component, or Blaze component for Meteor.
 
+## 🆕 New Features
+
+### YAML & JSON Auto-Parsing
+Pass YAML strings, JSON strings, or parsed objects:
+```jsx
+// YAML string
+const yamlData = `
+schemaType: mieforms-v1.0
+fields:
+  - id: name
+    fieldType: text
+    question: Name?
+`;
+
+<QuestionnaireRenderer formData={yamlData} />
+
+// JSON string or object also work!
+```
+
+### Schema Auto-Detection
+Schema type is automatically detected - no need to specify:
+```jsx
+<QuestionnaireRenderer 
+  formData={unknownSchema}  // Auto-detects MIE Forms or SurveyJS
+/>
+```
+
+### Flexible Styling
+Pass custom CSS classes for styling:
+```jsx
+<QuestionnaireRenderer 
+  formData={formData}
+  className="custom-wrapper p-4"
+/>
+```
+
 ## Examples
 
 - [`example-react.jsx`](./examples/example-react.jsx) - React component
@@ -24,14 +60,17 @@ npm install @mieweb/forms-renderer react react-dom
 import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
 
 function MyForm() {
-  const [fields] = React.useState([
-    {
-      id: 'q-name',
-      fieldType: 'text',
-      question: 'What is your full name?',
-      answer: ''
-    }
-  ]);
+  const [formData] = React.useState({
+    schemaType: 'mieforms-v1.0',
+    fields: [
+      {
+        id: 'q-name',
+        fieldType: 'text',
+        question: 'What is your full name?',
+        answer: ''
+      }
+    ]
+  });
   
   const currentFields = useFieldsArray();
 
@@ -42,7 +81,7 @@ function MyForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer fields={fields} />
+      <QuestionnaireRenderer formData={formData} />
       <button type="submit">Submit</button>
     </form>
   );
@@ -65,8 +104,7 @@ function SurveyForm() {
 
   return (
     <QuestionnaireRenderer 
-      fields={surveySchema}
-      schemaType="surveyjs"
+      formData={surveySchema}
       hideUnsupportedFields={true}
     />
   );
@@ -101,20 +139,23 @@ No peer dependencies required - bundles React internally.
   <script>
     const renderer = document.querySelector('questionnaire-renderer');
     
-    // Set schema type for SurveyJS schemas
-    renderer.schemaType = 'surveyjs';
+    // Auto-detection enabled by default (or set explicitly)
+    // renderer.schemaType = 'mieforms'; // or 'surveyjs'
     
-    // Hide unsupported field types
+    // Hide unsupported field types (default: true)
     renderer.hideUnsupportedFields = true;
     
-    renderer.fields = [
-      {
-        id: 'q-name',
-        fieldType: 'text',
-        question: 'Full Name',
-        answer: ''
-      }
-    ];
+    renderer.formData = {
+      schemaType: 'mieforms-v1.0',
+      fields: [
+        {
+          id: 'q-name',
+          fieldType: 'text',
+          question: 'Full Name',
+          answer: ''
+        }
+      ]
+    };
     
     document.getElementById('myForm').addEventListener('submit', (e) => {
       e.preventDefault();
@@ -147,8 +188,7 @@ import '@mieweb/forms-renderer/blaze';
 **In your Blaze template:**
 ```handlebars
 {{> questionnaireRenderer 
-    fields=myFields 
-    schemaType="surveyjs" 
+    formData=myFormData 
     hideUnsupportedFields=true 
     onChange=handleChange}}
 ```
@@ -156,14 +196,17 @@ import '@mieweb/forms-renderer/blaze';
 **Helper example:**
 ```javascript
 Template.myTemplate.helpers({
-  myFields() {
-    return [
-      { id: 'q1', fieldType: 'text', question: 'Name?', answer: '' }
-    ];
+  myFormData() {
+    return {
+      schemaType: 'mieforms-v1.0',
+      fields: [
+        { id: 'q1', fieldType: 'text', question: 'Name?', answer: '' }
+      ]
+    };
   },
   handleChange() {
-    return (updatedFields) => {
-      console.log('Fields changed:', updatedFields);
+    return (updatedFormData) => {
+      console.log('Form changed:', updatedFormData);
     };
   }
 });
@@ -175,12 +218,43 @@ Template.myTemplate.helpers({
 
 ### React Component Props
 
-- `fields` - Questionnaire definition array
-- `schemaType` - `'inhouse'` (default) or `'surveyjs'`
-- `onChange` - Callback when answers change
+- `formData` - Form data object, YAML string, or JSON string (supports auto-parsing)
+- `schemaType` - Optional: `'mieforms'` or `'surveyjs'` (auto-detected if not provided)
+- `onChange` - Callback when answers change (receives complete form data object)
 - `className` - Additional CSS classes
 - `fullHeight` - Full viewport height mode
-- `hideUnsupportedFields` - Hide unsupported field types
+- `hideUnsupportedFields` - Hide unsupported field types (default: `true`)
+
+### 🔄 Breaking Changes (v0.1.14)
+
+**Prop Rename:**
+```jsx
+// ❌ Before
+<QuestionnaireRenderer fields={fields} />
+
+// ✅ After
+<QuestionnaireRenderer formData={formData} />
+```
+
+**onChange Callback:**
+```jsx
+// ❌ Before
+onChange={(fields) => console.log(fields)}
+
+// ✅ After
+onChange={(formData) => console.log(formData)}
+// formData = { schemaType, ...metadata, fields: [...] }
+```
+
+**Default for hideUnsupportedFields:**
+```jsx
+// Before: default was false
+// After: default is true
+<QuestionnaireRenderer 
+  formData={data}
+  hideUnsupportedFields={false}  // Explicitly set if you want to show unsupported
+/>
+```
 
 ### React Helpers
 
@@ -197,19 +271,37 @@ const fhir = buildQuestionnaireResponse(currentFields, 'q-1', 'patient-123');
 
 ### Web Component API
 
-- `renderer.fields` - Set/get questionnaire definition (property)
+- `renderer.formData` - Set/get form data (property) - accepts object, YAML, or JSON string
 - `renderer.onChange` - Set change callback (property)
-- `renderer.schemaType` - Set to `'surveyjs'` for SurveyJS schemas (property)
-- `renderer.hideUnsupportedFields` - Boolean to hide unsupported types (property)
+- `renderer.schemaType` - Optional: `'mieforms'` or `'surveyjs'` (auto-detected if not set)
+- `renderer.hideUnsupportedFields` - Boolean to hide unsupported types (default: `true`)
 - `renderer.getQuestionnaireResponse(id, subjectId)` - Get FHIR response (method)
+
+**Migration:**
+```js
+// ❌ Before
+renderer.fields = [...];
+
+// ✅ After
+renderer.formData = { schemaType: 'mieforms-v1.0', fields: [...] };
+```
 
 ### Blaze Component Data Context
 
-- `fields` - Questionnaire definition array
-- `schemaType` - `'inhouse'` or `'surveyjs'`
-- `onChange` - Change callback function
-- `hideUnsupportedFields` - Boolean to hide unsupported types
+- `formData` - Form data object (with `schemaType` and `fields`)
+- `schemaType` - Optional: `'mieforms'` or `'surveyjs'` (auto-detected if not provided)
+- `onChange` - Change callback function (receives complete form data object)
+- `hideUnsupportedFields` - Boolean to hide unsupported types (default: `true`)
 - `fullHeight` - Boolean for full height mode
+
+**Migration:**
+```handlebars
+<!-- ❌ Before -->
+{{> questionnaireRenderer fields=myFields}}
+
+<!-- ✅ After -->
+{{> questionnaireRenderer formData=myFormData}}
+```
 
 ## Field Types
 

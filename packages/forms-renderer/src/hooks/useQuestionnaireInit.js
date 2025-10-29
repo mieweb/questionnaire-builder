@@ -1,23 +1,55 @@
 import React from 'react';
-import { useFormStore, useUIApi, adaptSchema } from '@mieweb/forms-engine';
+import { useFormStore, useUIApi, adaptSchema, parseAndDetect } from '@mieweb/forms-engine';
 
-export function useQuestionnaireInit(fields, schemaType = 'inhouse', hideUnsupportedFields = false) {
+/**
+ * Initialize questionnaire with flexible input format
+ * @param {string|object} formData - YAML string, JSON string, or form data object
+ * @param {string} [schemaType] - Optional: 'mieforms' or 'surveyjs' (auto-detected if not provided)
+ * @param {boolean} [hideUnsupportedFields=true] - Whether to hide unsupported fields
+ */
+export function useQuestionnaireInit(formData, schemaType, hideUnsupportedFields = true) {
   const initializedRef = React.useRef(false);
   const ui = useUIApi();
+  
   React.useEffect(() => {
-    if (initializedRef.current || !fields) return;
+    if (initializedRef.current || !formData) return;
     
-    const result = adaptSchema(fields, schemaType);
-    const adaptedFields = result.fields || result;
-    
-    if (result.conversionReport) {
-      ui.setConversionReport(result.conversionReport);
+    try {
+      const { data, schemaType: detectedType } = parseAndDetect(formData, schemaType || null);
+      const result = adaptSchema(data, detectedType);
+      
+      if (result.conversionReport) {
+        ui.setConversionReport(result.conversionReport);
+      }
+      
+      const defaultSchemaType = 'mieforms-v1.0';
+      const schemaObject = {
+        schemaType: detectedType === 'surveyjs' 
+          ? defaultSchemaType 
+          : (data?.schemaType || defaultSchemaType),
+        fields: result.fields || []
+      };
+      
+      // Preserve original metadata for SurveyJS schemas
+      if (detectedType === 'surveyjs' && result.conversionReport?.surveyMetadata) {
+        Object.assign(schemaObject, result.conversionReport.surveyMetadata);
+      } else if (detectedType === 'mieforms') {
+        // For MIE Forms, preserve any metadata that's not fields or schemaType
+        const { fields: _f, schemaType: _st, ...metadata } = data;
+        if (Object.keys(metadata).length > 0) {
+          Object.assign(schemaObject, metadata);
+        }
+      }
+      
+      useFormStore.getState().replaceAll(schemaObject);
+      ui.preview.set(true);
+      initializedRef.current = true;
+    } catch (error) {
+      useFormStore.getState().replaceAll({ schemaType: 'mieforms-v1.0', fields: [] });
+      ui.preview.set(true);
+      initializedRef.current = true;
     }
-    
-    useFormStore.getState().replaceAll(adaptedFields);
-    ui.preview.set(true);
-    initializedRef.current = true;
-  }, [fields, schemaType, ui]);
+  }, [formData, schemaType, ui]);
 
   React.useEffect(() => {
     ui.setHideUnsupportedFields(hideUnsupportedFields);

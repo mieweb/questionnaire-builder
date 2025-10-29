@@ -15,12 +15,13 @@ export { default as useFieldController } from './src/helper_shared/useFieldContr
 export { default as fieldTypes, getFieldComponent, registerFieldComponent } from './src/helper_shared/fieldTypes-config.js';
 export { initializeField, initializeFieldOptions } from './src/helper_shared/initializedField.js';
 export { isVisible } from './src/helper_shared/logicVisibility.js';
-export { detectSchemaType, adaptSchema } from './src/helper_shared/schemaAdapter.js';
+export { detectSchemaType, adaptSchema, MIE_FORMS_SCHEMA_TYPE } from './src/helper_shared/schemaAdapter.js';
+export { parseInput, parseAndDetect } from './src/helper_shared/schemaParser.js';
 export { generateFieldId, generateOptionId } from './src/helper_shared/idGenerator.js';
 
 // state: stores, apis, selectors
 
-export { useFormStore, useField, useFieldsArray, useVisibleFields } from './src/state/formStore.js';
+export { useFormStore, useField, useFieldsArray, useFormData, useVisibleFields } from './src/state/formStore.js';
 export { useFormApi } from './src/state/formApi.js';
 export { useUIApi } from './src/state/uiApi.js';
 export { useUIStore } from './src/state/uiStore.js';

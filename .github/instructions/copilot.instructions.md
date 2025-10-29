@@ -87,7 +87,6 @@ Only if **all** are true:
 - The same logic appears in **≥3** places or will immediately be reused in multiple modules.  
 - Keeping it inline measurably **increases** duplication or cognitive load.  
 - The file fits existing folder conventions and naming patterns.  
-- The public API is **tiny** and documented with a short header comment.
 
 ---
 

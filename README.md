@@ -5,10 +5,10 @@ FHIR-compatible questionnaire system built with React, Tailwind CSS, and Zustand
 ## 📦 Packages
 
 ### 🔧 [@mieweb/forms-engine](./packages/forms-engine)
-Core state management and field components.
+Core state management, field components, and utilities. Includes automatic schema detection and YAML/JSON parsing.
 
 ### ✏️ [@mieweb/forms-editor](./packages/forms-editor)
-Complete questionnaire editor with conditional logic.
+Complete questionnaire editor with conditional logic and SurveyJS import.
 
 ### 📋 [@mieweb/forms-renderer](./packages/forms-renderer)
 Web Component + React renderer for displaying questionnaires.
@@ -16,13 +16,14 @@ Web Component + React renderer for displaying questionnaires.
 ## ✨ Features
 
 - Multiple field types (text, longtext, multitext, radio, checkbox, dropdown, boolean, sections)
+- **Auto-detection** of schema format (MIE Forms vs SurveyJS)
+- **YAML and JSON** parsing support
 - Conditional logic with `enableWhen` rules
 - FHIR Questionnaire/QuestionnaireResponse export
 - Mobile responsive design
 - Framework agnostic (Web Component support)
 - SurveyJS schema import/conversion
 - Hide unsupported field types
-- Automatic CSS injection (no manual imports needed)
 
 ## 🛠️ Development
 
@@ -42,7 +43,7 @@ npm run build            # Build all packages
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
 
 <QuestionnaireEditor 
-  initialFields={[]} 
+  initialFormData={[]} 
   onChange={(fields) => console.log(fields)} 
 />
 ```
@@ -65,12 +66,9 @@ function MyForm() {
   return (
     <form onSubmit={handleSubmit}>
       <QuestionnaireRenderer 
-        fields={fields}
-        schemaType="inhouse"
-        hideUnsupportedFields={false}
-        onChange={(updated) => console.log(updated)}
-        fullHeight={false}
-        className=""
+        formData={fields}
+        schemaType="mieforms"  // Optional: 'mieforms' or 'surveyjs' (auto-detected)
+        hideUnsupportedFields={false}  // Optional: hide unsupported field types
       />
       <button type="submit">Submit</button>
     </form>
@@ -84,36 +82,27 @@ function MyForm() {
   import '@mieweb/forms-renderer/standalone';
 </script>
 
-<form id="form">
-  <questionnaire-renderer></questionnaire-renderer>
-  <button type="submit">Submit</button>
-</form>
+<questionnaire-renderer></questionnaire-renderer>
 
 <script>
   const renderer = document.querySelector('questionnaire-renderer');
+  renderer.formData = [{ id: 'q1', fieldType: 'text', question: 'Name?', answer: '' }];
   
-  renderer.fields = [{ id: 'q1', fieldType: 'text', question: 'Name?', answer: '' }];
-  renderer.schemaType = 'inhouse'; // or 'surveyjs'
-  renderer.hideUnsupportedFields = false;
-  renderer.onChange = (updated) => console.log(updated);
+  // Optional: Override auto-detected schema type
+  renderer.schemaType = 'mieforms'; // 'mieforms' or 'surveyjs'
   
-  document.getElementById('form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const fhir = renderer.getQuestionnaireResponse('q-1');
-  });
+  // Optional: Hide unsupported field types
+  renderer.hideUnsupportedFields = true;
 </script>
 ```
 
 **Blaze/Meteor:**
 ```javascript
-// Client code
 import '@mieweb/forms-renderer/blaze';
 ```
 ```handlebars
 {{> questionnaireRenderer 
-    fields=myFields 
-    schemaType="inhouse"
-    hideUnsupportedFields=false
-    fullHeight=false
-    onChange=handleChange}}
+    formData=myFormData 
+    schemaType="mieforms"
+    hideUnsupportedFields=true}}
 ```
