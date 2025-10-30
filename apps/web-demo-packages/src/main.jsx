@@ -6,113 +6,18 @@ import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } fro
 import { useUIStore } from '@mieweb/forms-engine';
 import './index.css';
 
-const initialFields = [
-  {
-    id: 'section-1',
-    fieldType: 'section',
-    title: 'Personal Information',
-    fields: [
-      {
-        id: 'text-1',
-        fieldType: 'text',
-        question: 'Full Name',
-        answer: ''
-      },
-      {
-        id: 'text-2',
-        fieldType: 'text',
-        question: 'Email Address',
-        answer: ''
-      },
-      {
-        id: 'boolean-1',
-        fieldType: 'boolean',
-        question: 'Are you over 18?',
-        options: [
-          { id: 'yes', value: 'Yes' },
-          { id: 'no', value: 'No' }
-        ],
-        selected: null
-      }
-    ]
-  },
-  {
-    id: 'radio-1',
-    fieldType: 'radio',
-    question: 'Preferred Contact Method',
-    options: [
-      { id: 'radio-1-option', value: 'Email' },
-      { id: 'radio-1-option-1', value: 'Phone' },
-      { id: 'radio-1-option-2', value: 'Text Message' }
-    ],
-    selected: null
-  },
-  {
-    id: 'multitext-1',
-    fieldType: 'multitext',
-    question: 'Contact Details',
-    options: [
-      { id: 'multitext-1-option', value: 'Phone', answer: '' },
-      { id: 'multitext-1-option-1', value: 'Address', answer: '' },
-      { id: 'multitext-1-option-2', value: 'City', answer: '' }
-    ]
-  },
-  {
-    id: 'longtext-1',
-    fieldType: 'longtext',
-    question: 'Additional Comments',
-    answer: ''
-  },
-  {
-    id: 'check-1',
-    fieldType: 'check',
-    question: 'Interests (select all that apply)',
-    options: [
-      { id: 'check-1-option', value: 'Sports' },
-      { id: 'check-1-option-1', value: 'Music' },
-      { id: 'check-1-option-2', value: 'Reading' },
-      { id: 'check-1-option-3', value: 'Travel' }
-    ],
-    selected: []
-  }
-];
-
-// Custom wrapper demonstrating how to use the renderer with your own submit button
-function RendererWithSubmit({ fields, schemaType = 'inhouse', onChange, onSubmit }) {
-  const currentFields = useFieldsArray();
-  const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const fhirResponse = buildQuestionnaireResponse(currentFields, 'demo-1', 'patient-123');
-    onSubmit(fhirResponse);
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer 
-        fields={fields} 
-        schemaType={schemaType}
-        onChange={onChange}
-        hideUnsupportedFields={hideUnsupportedFields}
-      />
-      <div className="pt-4">
-        <button
-          type="submit"
-          className="px-6 py-3 rounded-xl bg-blue-500 text-white font-medium shadow-lg hover:bg-blue-600 hover:shadow-xl transition-all active:scale-95"
-        >
-          Submit Questionnaire
-        </button>
-      </div>
-    </form>
-  );
-}
-
 function App() {
-  const [fields, setFields] = React.useState(initialFields);
+  const [formData, setFormData] = React.useState(null);
   const [submitted, setSubmitted] = React.useState(null);
   const [view, setView] = React.useState('landing');
-  const [surveySchema, setSurveySchema] = React.useState(null);
+
+  // Load initial form data from example
+  React.useEffect(() => {
+    fetch('/examples/surveyjs-sample.json')
+      .then(res => res.json())
+      .then(data => setFormData(data))
+      .catch(err => console.error('Failed to load initial form:', err));
+  }, []);
 
   // ESC to return to landing when not already there
   React.useEffect(() => {
@@ -127,42 +32,91 @@ function App() {
     console.log('Form data changed:', data)
   };
 
+  // Hooks used by the renderer — call unconditionally to preserve hook order
+  const currentFields = useFieldsArray();
+  const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
+
   const loadSurveyJS = async () => {
     try {
       const response = await fetch('/examples/surveyjs-sample.json');
       const data = await response.json();
-      setSurveySchema(data);
-      setView('surveyjs');
+      // Pass SurveyJS data directly - will be auto-converted
+      setFormData(data);
+      setView('editor');
     } catch (err) {
       alert('Failed to load SurveyJS sample: ' + err.message);
     }
   };
 
+  const loadMIEFormsJSON = async () => {
+    try {
+      const response = await fetch('/examples/inhouse-sample.json');
+      const data = await response.json();
+      setFormData(data); // Pass complete form data with metadata
+      setView('editor');
+    } catch (err) {
+      alert('Failed to load MIE Forms JSON sample: ' + err.message);
+    }
+  };
+
+  const loadMIEFormsYAML = async () => {
+    try {
+      const response = await fetch('/examples/inhouse-sample.yaml');
+      const yamlText = await response.text();
+      // Pass YAML string directly - will be auto-parsed
+      setFormData(yamlText);
+      setView('editor');
+    } catch (err) {
+      alert('Failed to load MIE Forms YAML sample: ' + err.message);
+    }
+  };
+
   if (view === 'editor') {
     return (
-      <div className="w-full h-dvh relative bg-slate-100">
+      <div className="w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingFooter view={view} />
-        <div className="absolute inset-0 overflow-auto">
-          <QuestionnaireEditor initialFields={fields} onChange={setFields} />
+        <div className="absolute inset-0">
+          <QuestionnaireEditor
+            initialFormData={formData}
+            onChange={setFormData} />
         </div>
       </div>
     );
   }
 
   if (view === 'renderer') {
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      const fhirResponse = buildQuestionnaireResponse(currentFields, 'demo-1', 'patient-123');
+      setSubmitted(fhirResponse);
+    };
+
     return (
-      <div className="w-full h-dvh relative bg-slate-100">
+      <div className="w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingFooter view={view} />
-        <div className="absolute inset-0 overflow-auto p-4 max-w-4xl mx-auto w-full">
-          <RendererWithSubmit
-            fields={fields}
-            onChange={handleFormChange}
-            onSubmit={(qr) => setSubmitted(qr)}
-          />
+        <div className="w-full">
+          <form onSubmit={handleSubmit}>
+            <QuestionnaireRenderer
+              formData={formData}
+              onChange={handleFormChange}
+              hideUnsupportedFields={hideUnsupportedFields}
+              className="p-0 overflow-y-visible"
+            />
+            <div className="flex w-full mb-10">
+              <div className="mx-auto py-4">
+                <button
+                  type="submit"
+                  className="px-6 py-2 rounded-xl bg-blue-500 text-white font-medium shadow-lg"
+                >
+                  Submit Questionnaire
+                </button>
+              </div>
+            </div>
+          </form>
           {submitted && (
-            <pre className="mt-4 bg-neutral-100 p-4 rounded-lg">{JSON.stringify(submitted, null, 2)}</pre>
+            <pre className="flex mx-auto mt-4 bg-neutral-100 p-4 rounded-lg">{JSON.stringify(submitted, null, 2)}</pre>
           )}
         </div>
       </div>
@@ -186,6 +140,32 @@ function App() {
           <DemoCard title="Editor" desc="Build & modify questionnaire structure." onClick={() => setView('editor')} />
           <DemoCard title="Renderer" desc="Fill out the questionnaire & submit." onClick={() => setView('renderer')} />
         </div>
+
+        <div className="mb-8 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
+          <h2 className="m-0 mb-3 text-lg font-semibold text-slate-900 tracking-tight">Test Auto-Detection</h2>
+          <p className="mb-4 text-sm text-slate-600">Load example schemas to test YAML parsing and automatic format detection:</p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button
+              onClick={loadMIEFormsJSON}
+              className="px-4 py-2.5 bg-white text-slate-700 rounded-lg border border-slate-200 font-medium text-sm hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow"
+            >
+              📄 MIE Forms JSON
+            </button>
+            <button
+              onClick={loadMIEFormsYAML}
+              className="px-4 py-2.5 bg-white text-slate-700 rounded-lg border border-slate-200 font-medium text-sm hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow"
+            >
+              📝 MIE Forms YAML
+            </button>
+            <button
+              onClick={loadSurveyJS}
+              className="px-4 py-2.5 bg-white text-slate-700 rounded-lg border border-slate-200 font-medium text-sm hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow"
+            >
+              🔄 SurveyJS JSON
+            </button>
+          </div>
+        </div>
+
         <Landing />
 
         <div className="mt-12 pt-8 border-t border-slate-200 text-center">
@@ -226,7 +206,7 @@ function FloatingFooter({ view }) {
   const showToggle = view && view !== 'landing';
   const hideUnsupported = useUIStore((s) => s.hideUnsupportedFields);
   const setHideUnsupportedFields = useUIStore((s) => s.setHideUnsupportedFields);
-  
+
   return (
     <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
       <motion.div
@@ -240,7 +220,7 @@ function FloatingFooter({ view }) {
           <kbd className="bg-slate-100/80 px-2 py-1 rounded-md font-mono text-xs font-semibold text-slate-600 border border-slate-200/60 shadow-sm">ESC</kbd>
           <span className="text-slate-500">to return</span>
         </div>
-        
+
         {showToggle && (
           <>
             <div className="h-4 w-px bg-slate-300/50" />

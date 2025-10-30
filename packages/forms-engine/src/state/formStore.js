@@ -112,6 +112,8 @@ export const useFormStore = create((set, get) => ({
   // ────────── State ──────────
   byId: {},
   order: [],
+  schemaType: 'mieforms-v1.0', // Store schema type metadata
+  schemaMetadata: {}, // Store additional metadata (title, description, etc.)
 
   // ────────── Minimal init API ──────────
   setEnableWhen: (id, enableWhen) =>
@@ -125,7 +127,24 @@ export const useFormStore = create((set, get) => ({
     }),
 
   // ────────── Action: Replaces All ──────────
-  replaceAll: (fields) => set(() => normalize(fields)),
+  replaceAll: (data) => set(() => {
+    // Expects form data object with schemaType and fields
+    if (!data || typeof data !== 'object') {
+      return { 
+        ...normalize([]), 
+        schemaType: 'mieforms-v1.0', 
+        schemaMetadata: {} 
+      };
+    }
+    
+    const fields = data.fields || [];
+    const schemaType = data.schemaType || 'mieforms-v1.0';
+    
+    // Extract metadata (anything that's not fields or schemaType)
+    const { fields: _f, schemaType: _st, ...schemaMetadata } = data;
+    
+    return { ...normalize(fields), schemaType, schemaMetadata };
+  }),
 
   // ────────── Fields (top-level or section child via options.sectionId) ──────────
   addField: (type, options = {}) =>
@@ -306,6 +325,20 @@ export const useFieldsArray = () => {
   const order = useFormStore((s) => s.order);
   const byId = useFormStore((s) => s.byId);
   return React.useMemo(() => order.map((id) => byId[id]), [order, byId]);
+};
+
+// Get complete form data with metadata for export/save
+export const useFormData = () => {
+  const order = useFormStore((s) => s.order);
+  const byId = useFormStore((s) => s.byId);
+  const schemaType = useFormStore((s) => s.schemaType);
+  const schemaMetadata = useFormStore((s) => s.schemaMetadata);
+  
+  return React.useMemo(() => ({
+    schemaType,
+    ...schemaMetadata,
+    fields: order.map((id) => byId[id])
+  }), [order, byId, schemaType, schemaMetadata]);
 };
 
 export const useVisibleFields = (isPreview) => {

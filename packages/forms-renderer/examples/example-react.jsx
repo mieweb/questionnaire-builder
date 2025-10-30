@@ -7,7 +7,7 @@ import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } fro
  * Requires: react, react-dom (peer dependencies)
  */
 function App() {
-  const [fields] = React.useState([
+  const [formData] = React.useState([
     {
       id: 'sec-1',
       fieldType: 'section',
@@ -143,8 +143,8 @@ function App() {
   // Get current fields from form store
   const currentFields = useFieldsArray();
 
-  const handleChange = (updatedFields) => {
-    console.log('Form changed:', updatedFields);
+  const handleChange = (updatedFormData) => {
+    console.log('Form changed:', updatedFormData);
   };
 
   const handleSubmit = (e) => {
@@ -160,9 +160,12 @@ function App() {
       
       <form onSubmit={handleSubmit}>
         <QuestionnaireRenderer
-          fields={fields}
+          formData={formData}
           onChange={handleChange}
           fullHeight={false}
+          // Optional props (auto-detected if not provided):
+          // schemaType: 'mieforms' | 'surveyjs' - Auto-detects from schema metadata
+          // hideUnsupportedFields: boolean - Hide unsupported field types (default: true)
         />
         
         <div style={{ marginTop: '1rem', textAlign: 'center' }}>

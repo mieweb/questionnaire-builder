@@ -18,7 +18,7 @@ export const useFormApi = (id, sectionId) => {
   const onIdChange = React.useCallback((newId, oldId) => {
     const ui = useUIStore.getState();
     if (ui.selectedFieldId === oldId) ui.renameSelectedFieldId?.(newId);
-    ui.renameSectionIdInHighlight?.(oldId, newId); // harmless if oldId wasn't a section
+    ui.renameSectionIdInHighlight?.(oldId, newId);
   }, []);
 
   return React.useMemo(

@@ -1,18 +1,30 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import Header from './components/Header.jsx';
 import MobileToolBar from './components/MobileToolBar.jsx';
 import Layout from './components/desktopLayout/Layout.jsx';
 
 import {
   useFormStore,
-  useFormApi,
   useUIApi,
-  useFieldsArray,
+  adaptSchema,
+  parseAndDetect,
 } from '@mieweb/forms-engine';
 import './index.css';
 
+/**
+ * QuestionnaireEditor - Interactive questionnaire builder/editor
+ * @param {string|object} initialFormData - YAML string, JSON string, or form data object
+ * @param {string} [schemaType] - Optional: 'mieforms' or 'surveyjs' (auto-detected if not provided)
+ * @param {function} [onChange] - Callback fired when form data changes
+ * @param {string} [className] - Additional CSS classes
+ * @param {boolean} [showHeader=true] - Show editor header
+ * @param {boolean} [showMobileToolbar=true] - Show mobile toolbar
+ * @param {boolean} [startInPreview=false] - Start in preview mode
+ * @param {boolean} [hideUnsupportedFields=false] - Hide unsupported field types
+ */
 export function QuestionnaireEditor({
-  initialFields,
+  initialFormData,
+  schemaType,
   onChange,
   className = '',
   showHeader = true,
@@ -21,44 +33,63 @@ export function QuestionnaireEditor({
   hideUnsupportedFields = false,
 }) {
   const ui = useUIApi();
-  const formStoreInitialized = useRef(false);
+  const formStoreInitialized = React.useRef(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (formStoreInitialized.current) return;
-    if (Array.isArray(initialFields) && initialFields.length) {
-      useFormStore.getState().replaceAll(initialFields);
+    if (initialFormData) {
+      try {
+        const { data, schemaType: detectedType } = parseAndDetect(initialFormData, schemaType);
+        const result = adaptSchema(data, detectedType);
+        
+        if (result.conversionReport) {
+          ui.setConversionReport(result.conversionReport);
+        }
+        
+        const schemaObject = {
+          schemaType: detectedType === 'surveyjs' ? 'mieforms-v1.0' : (data.schemaType || 'mieforms-v1.0'),
+          fields: result.fields || []
+        };
+        
+        // Preserve original metadata for SurveyJS schemas
+        if (detectedType === 'surveyjs' && result.conversionReport?.surveyMetadata) {
+          Object.assign(schemaObject, result.conversionReport.surveyMetadata);
+        } else if (detectedType === 'mieforms') {
+          // For MIE Forms, preserve any metadata that's not fields or schemaType
+          const { fields: _f, schemaType: _st, ...metadata } = data;
+          if (Object.keys(metadata).length > 0) {
+            Object.assign(schemaObject, metadata);
+          }
+        }
+        
+        if (Array.isArray(schemaObject.fields) && schemaObject.fields.length) {
+          useFormStore.getState().replaceAll(schemaObject);
+        }
+      } catch {
+        useFormStore.getState().replaceAll({ schemaType: 'mieforms-v1.0', fields: [] });
+      }
     }
     ui.preview.set(!!startInPreview);
     formStoreInitialized.current = true;
-  }, [initialFields, startInPreview, ui.preview]);
+  }, [initialFormData, schemaType, startInPreview, ui]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     ui.setHideUnsupportedFields(hideUnsupportedFields);
   }, [hideUnsupportedFields, ui]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!onChange) return;
-    const unsub = useFormStore.subscribe((s) => {
-      const arr = [];
-      s.order.forEach(id => {
-        const f = s.byId[id];
-        if (f) {
-          arr.push(f);
-          if (f.fieldType === "section" && Array.isArray(f.fields)) {
-            arr.push(...f.fields);
-          }
-        }
+    return useFormStore.subscribe((s) => {
+      onChange({
+        schemaType: s.schemaType || 'mieforms-v1.0',
+        ...s.schemaMetadata,
+        fields: s.order.map(id => s.byId[id])
       });
-      onChange(arr);
     });
-    return unsub;
   }, [onChange]);
 
-  const selectedField = useFormStore(
-    React.useCallback(
-      (s) => (ui.selectedFieldId.value ? s.byId[ui.selectedFieldId.value] : null),
-      [ui.selectedFieldId.value]
-    )
+  const selectedField = useFormStore((s) => 
+    ui.selectedFieldId.value ? s.byId[ui.selectedFieldId.value] : null
   );
 
   return (

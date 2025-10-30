@@ -1,0 +1,84 @@
+schemaType: mieforms-v1.0
+title: Patient Intake Form
+description: Basic patient information and medical history
+
+fields:
+  - id: patient_name
+    fieldType: text
+    question: What is your full name?
+    required: true
+    answer: ""
+
+  - id: date_of_birth
+    fieldType: text
+    question: What is your date of birth?
+    required: true
+    answer: ""
+
+  - id: gender
+    fieldType: radio
+    question: What is your gender?
+    required: true
+    options:
+      - id: male
+        value: Male
+      - id: female
+        value: Female
+      - id: other
+        value: Other
+      - id: prefer_not_to_say
+        value: Prefer not to say
+    selected: null
+
+  - id: medical_history_section
+    fieldType: section
+    title: Medical History
+    fields:
+      - id: current_medications
+        fieldType: text
+        question: List any current medications
+        answer: ""
+
+      - id: allergies
+        fieldType: text
+        question: Do you have any allergies?
+        answer: ""
+
+      - id: chronic_conditions
+        fieldType: check
+        question: Do you have any of the following conditions?
+        options:
+          - id: diabetes
+            value: Diabetes
+          - id: hypertension
+            value: High Blood Pressure
+          - id: asthma
+            value: Asthma
+          - id: heart_disease
+            value: Heart Disease
+          - id: none
+            value: None of the above
+        selected: []
+
+  - id: smoking_status
+    fieldType: radio
+    question: Do you smoke?
+    options:
+      - id: "yes"
+        value: "Yes"
+      - id: "no"
+        value: "No"
+      - id: former
+        value: Former smoker
+    selected: null
+
+  - id: packs_per_day
+    fieldType: text
+    question: How many packs per day?
+    answer: ""
+    enableWhen:
+      logic: AND
+      conditions:
+        - targetId: smoking_status
+          operator: equals
+          value: "yes"

@@ -6,34 +6,100 @@ Embeddable questionnaire editor with FHIR export and conditional logic.
 npm install @mieweb/forms-editor react react-dom
 ```
 
+## 🆕 New Features
+
+### YAML & JSON Import
+Import questionnaires from YAML or JSON with automatic format detection:
+- Drag and drop `.json`, `.yaml`, or `.yml` files
+- Auto-detects MIE Forms vs SurveyJS schemas
+- Preserves metadata (title, description, etc.)
+
+### Auto-Parsing on Initialization
+Pass YAML strings, JSON strings, or objects directly:
+```jsx
+// YAML string
+const yamlData = `
+schemaType: mieforms-v1.0
+fields:
+  - id: name
+    fieldType: text
+    question: Name?
+`;
+
+<QuestionnaireEditor initialFormData={yamlData} />
+
+// Or JSON string, or parsed object - all work!
+```
+
 ## Quick Start
 
 ```jsx
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
 
 function App() {
-  const [fields, setFields] = React.useState([
-    { id: 'section-1', fieldType: 'section', title: 'Section 1', fields: [] },
-    { id: 'name', fieldType: 'text', question: 'Your Name', required: true },
-    { id: 'gender', fieldType: 'radio', question: 'Gender', 
-      options: [{ value: 'Male' }, { value: 'Female' }], selected: null },
-  ]);
+  const [formData, setFormData] = React.useState({
+    schemaType: 'mieforms-v1.0',
+    title: 'Patient Intake',
+    fields: [
+      { id: 'section-1', fieldType: 'section', title: 'Section 1', fields: [] },
+      { id: 'name', fieldType: 'text', question: 'Your Name', required: true },
+      { id: 'gender', fieldType: 'radio', question: 'Gender', 
+        options: [{ value: 'Male' }, { value: 'Female' }], selected: null },
+    ]
+  });
 
   return (
-    <QuestionnaireEditor initialFields={fields} onChange={setFields} />
+    <QuestionnaireEditor 
+      initialFormData={formData} 
+      onChange={setFormData} 
+    />
   );
 }
 ```
 
 ## Props
 
-- `initialFields` - Array of field objects
-- `onChange` - Callback when fields change
+- `initialFormData` - Form data object or YAML/JSON string (supports auto-parsing)
+- `schemaType` - Optional: `'mieforms'` or `'surveyjs'` (auto-detected if not provided)
+- `onChange` - Callback when form data changes (receives complete form object with metadata)
 - `startInPreview` - Start in preview mode (default: false)
 - `hideUnsupportedFields` - Hide unsupported field types (default: false)
 - `showHeader` - Show editor header (default: true)
 - `showMobileToolbar` - Show mobile toolbar (default: true)
 - `className` - Additional CSS classes
+
+## 🔄 Breaking Changes (v0.1.1)
+
+### Prop Rename
+```jsx
+// ❌ Before
+<QuestionnaireEditor initialFields={fields} />
+
+// ✅ After
+<QuestionnaireEditor initialFormData={formData} />
+```
+
+### onChange Callback
+Now receives complete form data object instead of just fields array:
+```jsx
+// ❌ Before
+onChange={(fields) => console.log(fields)}
+
+// ✅ After
+onChange={(formData) => {
+  console.log(formData);
+  // { schemaType: 'mieforms-v1.0', title: '...', fields: [...] }
+}}
+```
+
+### Schema Type Required
+Form data must include `schemaType` field:
+```jsx
+const formData = {
+  schemaType: 'mieforms-v1.0', // Required!
+  fields: [...]
+};
+```
 
 ## Features
 
@@ -52,7 +118,9 @@ function App() {
 Show/hide fields based on answers via the Logic panel.
 
 ### Import/Export
-- JSON, YAML, FHIR formats
+- JSON, YAML formats with auto-detection
+- SurveyJS schema import with conversion report
+- FHIR export (via forms-engine)
 
 ### Mobile Support
 Responsive with swipeable modal editing.

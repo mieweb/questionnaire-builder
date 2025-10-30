@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React from "react";
 import OptionListEditor from "./OptionListEditor";
 import CommonEditor from "./CommonEditor";
 import { fieldTypes, useFormStore, useFormApi } from "@mieweb/forms-engine";
@@ -8,15 +8,13 @@ function SectionEditor({ section, onActiveChildChange }) {
   const sectionApi = useFormApi(section.id);
 
   const children = Array.isArray(section.fields) ? section.fields : [];
-  const [activeChildId, setActiveChildId] = useState(children[0]?.id || null);
+  const [activeChildId, setActiveChildId] = React.useState(children[0]?.id || null);
 
-  // ────────── Reset ONLY when switching to a different section ──────────
-  useEffect(() => {
+  React.useEffect(() => {
     setActiveChildId(children[0]?.id || null);
   }, [section.id]);
 
-  // ────────── Keep active child valid ──────────
-  useEffect(() => {
+  React.useEffect(() => {
     if (!children.length) {
       if (activeChildId !== null) setActiveChildId(null);
       return;
@@ -25,24 +23,21 @@ function SectionEditor({ section, onActiveChildChange }) {
     if (!stillExists) setActiveChildId(children[0].id);
   }, [children, activeChildId]);
 
-  // ────────── Inform parent ──────────
-  useEffect(() => {
+  React.useEffect(() => {
     onActiveChildChange?.(section.id, activeChildId || null);
   }, [section.id, activeChildId, onActiveChildChange]);
 
-  // ────────── update section-level props ──────────
-  const onUpdateSection = useCallback(
+  const onUpdateSection = React.useCallback(
     (key, value) => sectionApi.field.update(key, value),
     [sectionApi]
   );
 
-  const activeChild = useMemo(
+  const activeChild = React.useMemo(
     () => children.find((c) => c.id === activeChildId) || null,
     [children, activeChildId]
   );
 
-  // ────────── update active child prop ──────────
-  const onUpdateChild = useCallback(
+  const onUpdateChild = React.useCallback(
     (key, value) => {
       if (!activeChild) return;
       if (key === "id") {
@@ -71,12 +66,12 @@ function SectionEditor({ section, onActiveChildChange }) {
     [activeChild, section.id]
   );
 
-  const onDeleteChild = useCallback(() => {
+  const onDeleteChild = React.useCallback(() => {
     if (!activeChild) return;
     useFormStore.getState().deleteField(activeChild.id, { sectionId: section.id });
   }, [activeChild, section.id]);
 
-  const isChoiceChild = useMemo(
+  const isChoiceChild = React.useMemo(
     () => activeChild && ["radio", "check", "selection"].includes(activeChild.fieldType),
     [activeChild]
   );

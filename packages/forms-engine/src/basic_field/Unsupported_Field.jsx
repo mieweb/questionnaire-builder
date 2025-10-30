@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 function UnsupportedField({ field }) {
-  const [showDetails, setShowDetails] = useState(false);
+  const [showDetails, setShowDetails] = React.useState(false);
   
   const unsupportedType = field.unsupportedType || 'unknown';
   const data = field.unsupportedData || field._sourceData || {};

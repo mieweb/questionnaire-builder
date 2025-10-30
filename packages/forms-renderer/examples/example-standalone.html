@@ -53,8 +53,12 @@
     
     <form id="questionnaire-form">
       <!-- Web Component - React is bundled inside! -->
-      <!-- schema-type: 'inhouse' (default) or 'surveyjs' -->
-      <questionnaire-renderer schema-type="inhouse" full-height></questionnaire-renderer>
+      <!-- Optional attributes:
+           - schema-type: Auto-detects 'mieforms' or 'surveyjs' if not provided
+           - full-height: Apply min-h-screen for full viewport height
+           - hide-unsupported-fields: Hide unsupported field types (default: true)
+      -->
+      <questionnaire-renderer full-height></questionnaire-renderer>
       <button type="submit">Submit Questionnaire</button>
     </form>
   </div>
@@ -65,8 +69,8 @@
     // Get reference to the element
     const renderer = document.querySelector('questionnaire-renderer');
 
-    // Set fields programmatically with enableWhen logic
-    renderer.fields = [
+    // Set formData programmatically with enableWhen logic
+    renderer.formData = [
       {
         id: 'sec-1',
         fieldType: 'section',
@@ -230,8 +234,8 @@
     ];
 
     // Handle form changes
-    renderer.onChange = (updatedFields) => {
-      console.log('Form changed:', updatedFields);
+    renderer.onChange = (updatedFormData) => {
+      console.log('Form changed:', updatedFormData);
     };
 
     // Handle form submission

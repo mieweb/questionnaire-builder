@@ -1,4 +1,5 @@
 import { generateOptionId } from "./idGenerator";
+import fieldTypes from "./fieldTypes-config";
 
 export const initializeFieldOptions = (options, fieldId = '') => {
   if (!Array.isArray(options)) return [];
@@ -20,18 +21,17 @@ export const initializeFieldOptions = (options, fieldId = '') => {
 export const initializeField = (field) => {
   const { fieldType, id, question, title, ...rest } = field;
   
-  const base = {
-    fieldType,
-    id,
-    ...(field.fieldType === "section" ? { title } : { question }),
-  };
+  const defaultProps = fieldTypes[fieldType]?.defaultProps || {};
   
-  const textFieldTypes = ["text", "longtext"];
+  const hasOptionsInDefault = defaultProps.options !== undefined;
   
   return {
-    ...base,
+    id,
+    ...defaultProps,
+    fieldType,
+    ...(field.fieldType === "section" ? { title } : { question }),
     ...rest,
-    ...(!textFieldTypes.includes(fieldType) && {
+    ...(hasOptionsInDefault && {
       options: initializeFieldOptions(rest.options || [], id),
     }),
   };

@@ -24,9 +24,9 @@ export function registerBlazeTemplate() {
     const root = ReactDOM.createRoot(mountNode);
     const render = () => {
       const props = {
-        fields: templateInstance.data.fields || [],
-        schemaType: templateInstance.data.schemaType || 'inhouse',
-        hideUnsupportedFields: templateInstance.data.hideUnsupportedFields || false,
+        formData: templateInstance.data.formData || [],
+        schemaType: templateInstance.data.schemaType,
+        hideUnsupportedFields: templateInstance.data.hideUnsupportedFields,
         onChange: templateInstance.data.onChange,
         onSubmit: templateInstance.data.onSubmit,
         fullHeight: templateInstance.data.fullHeight,
