@@ -6,263 +6,18 @@ import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } fro
 import { useUIStore } from '@mieweb/forms-engine';
 import './index.css';
 
-const initialFormData = {
-  "title": "General Health Screening",
-  "description": "Quick intake screening for symptoms, risks, and well-being.",
-  "showProgressBar": "top",
-  "progressBarType": "questions",
-  "showQuestionNumbers": "onPage",
-  "completedHtml": "<h3>Thanks!</h3><p>Your screening has been submitted.</p>",
-  "calculatedValues": [
-    { "name": "phq2_total", "expression": "sum({phq2_item1}, {phq2_item2})" }
-  ],
-  "pages": [
-    {
-      "name": "screening_panels",
-      "title": "Health Screening",
-      "elements": [
-        {
-          "type": "panel",
-          "name": "sec_patient_info",
-          "title": "Patient Information",
-          "elements": [
-            { "type": "text", "name": "full_name", "title": "Full Name", "isRequired": true },
-            { "type": "text", "name": "dob", "title": "Date of Birth", "inputType": "date", "isRequired": true },
-            {
-              "type": "dropdown",
-              "name": "sex_at_birth",
-              "title": "Sex at Birth",
-              "isRequired": true,
-              "choices": ["Female", "Male", "Intersex", "Prefer not to say"]
-            },
-            { "type": "text", "name": "contact_phone", "title": "Phone", "inputType": "tel" },
-            { "type": "text", "name": "contact_email", "title": "Email", "inputType": "email", "validators": [{ "type": "email" }] },
-            { "type": "boolean", "name": "consent", "title": "I consent to screening and data collection for care.", "isRequired": true, "labelTrue": "Yes", "labelFalse": "No" },
-            { "type": "html", "name": "consent_blocker", "visibleIf": "{consent} = false", "html": "<div style='color:#b00020'><b>Consent required to proceed.</b></div>" }
-          ]
-        },
-        {
-          "type": "panel",
-          "name": "sec_presenting",
-          "title": "Presenting Concerns",
-          "visibleIf": "{consent} = true",
-          "elements": [
-            {
-              "type": "comment",
-              "name": "chief_complaint",
-              "title": "Chief Concern",
-              "placeHolder": "Briefly describe your main concern today",
-              "isRequired": true
-            },
-            {
-              "type": "checkbox",
-              "name": "symptoms",
-              "title": "Current Symptoms (check all that apply)",
-              "choices": [
-                "Fever or chills",
-                "Cough",
-                "Shortness of breath",
-                "Chest pain",
-                "Headache",
-                "Sore throat",
-                "Nausea or vomiting",
-                "Diarrhea",
-                "Fatigue",
-                "Body aches",
-                "Loss of taste or smell",
-                "Rash",
-                "None of the above"
-              ],
-              "hasOther": true,
-              "otherText": "Other"
-            },
-            {
-              "type": "boolean",
-              "name": "red_flags",
-              "title": "Any severe symptoms (e.g., severe chest pain, difficulty breathing, confusion, bluish lips/face)?",
-              "labelTrue": "Yes",
-              "labelFalse": "No",
-              "isRequired": true
-            },
-            {
-              "type": "comment",
-              "name": "red_flags_details",
-              "title": "Please describe severe symptoms",
-              "visibleIf": "{red_flags} = true",
-              "isRequired": true
-            }
-          ]
-        },
-        {
-          "type": "panel",
-          "name": "sec_vitals",
-          "title": "Self-Reported Vitals",
-          "visibleIf": "{consent} = true",
-          "elements": [
-            { "type": "text", "name": "height_cm", "title": "Height (cm)", "inputType": "number", "min": 30, "max": 250 },
-            { "type": "text", "name": "weight_kg", "title": "Weight (kg)", "inputType": "number", "min": 2, "max": 400 },
-            { "type": "text", "name": "temp_c", "title": "Temperature (°C)", "inputType": "number", "min": 32, "max": 43 },
-            { "type": "text", "name": "sbp", "title": "Systolic Blood Pressure (mmHg)", "inputType": "number", "min": 60, "max": 260 },
-            { "type": "text", "name": "dbp", "title": "Diastolic Blood Pressure (mmHg)", "inputType": "number", "min": 30, "max": 160 },
-            { "type": "text", "name": "pulse", "title": "Heart Rate (bpm)", "inputType": "number", "min": 20, "max": 220 }
-          ]
-        },
-        {
-          "type": "panel",
-          "name": "sec_phq2",
-          "title": "Well-Being (PHQ-2)",
-          "visibleIf": "{consent} = true",
-          "elements": [
-            {
-              "type": "radiogroup",
-              "name": "phq2_item1",
-              "title": "Over the last 2 weeks, how often have you had little interest or pleasure in doing things?",
-              "isRequired": true,
-              "choices": [
-                { "value": 0, "text": "Not at all (0)" },
-                { "value": 1, "text": "Several days (1)" },
-                { "value": 2, "text": "More than half the days (2)" },
-                { "value": 3, "text": "Nearly every day (3)" }
-              ]
-            },
-            {
-              "type": "radiogroup",
-              "name": "phq2_item2",
-              "title": "Over the last 2 weeks, how often have you felt down, depressed, or hopeless?",
-              "isRequired": true,
-              "choices": [
-                { "value": 0, "text": "Not at all (0)" },
-                { "value": 1, "text": "Several days (1)" },
-                { "value": 2, "text": "More than half the days (2)" },
-                { "value": 3, "text": "Nearly every day (3)" }
-              ]
-            },
-            {
-              "type": "html",
-              "name": "phq2_score",
-              "title": "PHQ-2 Score",
-              "html": "<div>PHQ-2 total: <b>{phq2_total}</b> (≥3 suggests further screening)</div>"
-            }
-          ]
-        },
-        {
-          "type": "panel",
-          "name": "sec_risk_social",
-          "title": "Risk Factors & Social",
-          "visibleIf": "{consent} = true",
-          "elements": [
-            {
-              "type": "checkbox",
-              "name": "medical_history",
-              "title": "Medical History (check all that apply)",
-              "choices": [
-                "Diabetes",
-                "Hypertension",
-                "Heart disease",
-                "Asthma/COPD",
-                "Chronic kidney disease",
-                "Cancer",
-                "Pregnancy",
-                "Immunosuppression",
-                "None of the above"
-              ],
-              "hasOther": true
-            },
-            {
-              "type": "boolean",
-              "name": "pregnant",
-              "title": "Are you currently pregnant?",
-              "labelTrue": "Yes",
-              "labelFalse": "No",
-              "visibleIf": "{sex_at_birth} = 'Female'"
-            },
-            {
-              "type": "radiogroup",
-              "name": "tobacco_use",
-              "title": "Tobacco Use",
-              "choices": ["Never", "Former", "Current"]
-            },
-            {
-              "type": "radiogroup",
-              "name": "alcohol_use",
-              "title": "Alcohol Use",
-              "choices": ["None", "Occasional", "Weekly", "Daily"]
-            },
-            {
-              "type": "radiogroup",
-              "name": "housing_security",
-              "title": "Do you have stable housing?",
-              "choices": ["Yes", "No", "Prefer not to say"]
-            },
-            {
-              "type": "radiogroup",
-              "name": "food_security",
-              "title": "In the last 12 months, were you ever worried food would run out before you had money to buy more?",
-              "choices": ["Often true", "Sometimes true", "Never true", "Prefer not to say"]
-            }
-          ]
-        },
-        {
-          "type": "panel",
-          "name": "sec_infectious",
-          "title": "Infectious Screening (Respiratory/COVID-like)",
-          "visibleIf": "{consent} = true",
-          "elements": [
-            { "type": "boolean", "name": "close_contact", "title": "Close contact with a sick person in past 10 days?", "labelTrue": "Yes", "labelFalse": "No" },
-            { "type": "radiogroup", "name": "fever_history", "title": "Fever in the last 48 hours?", "choices": ["Yes", "No", "Unsure"] },
-            { "type": "radiogroup", "name": "resp_symptoms", "title": "Respiratory symptoms now?", "choices": ["None", "Mild", "Moderate", "Severe"] }
-          ]
-        },
-        {
-          "type": "panel",
-          "name": "sec_review",
-          "title": "Review & Submit",
-          "visibleIf": "{consent} = true",
-          "elements": [
-            { "type": "signaturepad", "name": "signature", "title": "Signature (optional)" },
-            { "type": "comment", "name": "notes", "title": "Anything else you'd like to add?" }
-          ]
-        }
-      ]
-    }
-  ]
-};
-
-// Custom wrapper demonstrating how to use the renderer with your own submit button
-function RendererWithSubmit({ formData, onChange, onSubmit }) {
-  const currentFields = useFieldsArray();
-  const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const fhirResponse = buildQuestionnaireResponse(currentFields, 'demo-1', 'patient-123');
-    onSubmit(fhirResponse);
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer
-        formData={formData}
-        onChange={onChange}
-        hideUnsupportedFields={hideUnsupportedFields}
-      />
-      <div className="pt-4">
-        <button
-          type="submit"
-          className="px-6 py-3 rounded-xl bg-blue-500 text-white font-medium shadow-lg hover:bg-blue-600 hover:shadow-xl transition-all active:scale-95"
-        >
-          Submit Questionnaire
-        </button>
-      </div>
-    </form>
-  );
-}
-
 function App() {
-  const [formData, setFormData] = React.useState(initialFormData);
+  const [formData, setFormData] = React.useState(null);
   const [submitted, setSubmitted] = React.useState(null);
   const [view, setView] = React.useState('landing');
-  const [surveySchema, setSurveySchema] = React.useState(null);
+
+  // Load initial form data from example
+  React.useEffect(() => {
+    fetch('/examples/surveyjs-sample.json')
+      .then(res => res.json())
+      .then(data => setFormData(data))
+      .catch(err => console.error('Failed to load initial form:', err));
+  }, []);
 
   // ESC to return to landing when not already there
   React.useEffect(() => {
@@ -276,6 +31,10 @@ function App() {
   const handleFormChange = (data) => {
     console.log('Form data changed:', data)
   };
+
+  // Hooks used by the renderer — call unconditionally to preserve hook order
+  const currentFields = useFieldsArray();
+  const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
 
   const loadSurveyJS = async () => {
     try {
@@ -314,29 +73,50 @@ function App() {
 
   if (view === 'editor') {
     return (
-      <div className="w-full h-dvh relative bg-slate-100">
+      <div className="w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingFooter view={view} />
         <div className="absolute inset-0">
-          <QuestionnaireEditor initialFormData={formData} onChange={setFormData} />
+          <QuestionnaireEditor
+            initialFormData={formData}
+            onChange={setFormData} />
         </div>
       </div>
     );
   }
 
   if (view === 'renderer') {
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      const fhirResponse = buildQuestionnaireResponse(currentFields, 'demo-1', 'patient-123');
+      setSubmitted(fhirResponse);
+    };
+
     return (
-      <div className="w-full h-dvh relative bg-slate-100">
+      <div className="w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingFooter view={view} />
-        <div className="">
-          <RendererWithSubmit
-            formData={formData}
-            onChange={handleFormChange}
-            onSubmit={(qr) => setSubmitted(qr)}
-          />
+        <div className="w-full">
+          <form onSubmit={handleSubmit}>
+            <QuestionnaireRenderer
+              formData={formData}
+              onChange={handleFormChange}
+              hideUnsupportedFields={hideUnsupportedFields}
+              className="p-0 overflow-y-visible"
+            />
+            <div className="flex w-full mb-10">
+              <div className="mx-auto py-4">
+                <button
+                  type="submit"
+                  className="px-6 py-2 rounded-xl bg-blue-500 text-white font-medium shadow-lg"
+                >
+                  Submit Questionnaire
+                </button>
+              </div>
+            </div>
+          </form>
           {submitted && (
-            <pre className="mt-4 bg-neutral-100 p-4 rounded-lg">{JSON.stringify(submitted, null, 2)}</pre>
+            <pre className="flex mx-auto mt-4 bg-neutral-100 p-4 rounded-lg">{JSON.stringify(submitted, null, 2)}</pre>
           )}
         </div>
       </div>
