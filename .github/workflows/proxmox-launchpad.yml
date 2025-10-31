@@ -31,3 +31,4 @@ jobs:
           install_command: npm run build
           start_command: npm run dev:demos
           runtime_language: nodejs
+          http_port: 3000
