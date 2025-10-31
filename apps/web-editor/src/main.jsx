@@ -8,7 +8,6 @@ function App() {
   return (
     <div className="w-full h-dvh bg-slate-100">
         <QuestionnaireEditor/>
-        <QuestionnaireEditor/>
     </div>
   );
 }
