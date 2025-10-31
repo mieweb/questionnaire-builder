@@ -1,37 +1,41 @@
 import React from "react";
-import { useUIStore } from "./uiStore";
+import { UIStoreContext } from "./uiStore";
+import { useStore } from "zustand";
 
 export const useUIApi = () => {
+  const uiStore = React.useContext(UIStoreContext);
+  if (!uiStore) throw new Error('Missing UIStoreContext.Provider in the tree');
+  
   // ────────── Base state ──────────
-  const isPreview        = useUIStore((s) => s.isPreview);
-  const panelResetKey    = useUIStore((s) => s.panelResetKey);
-  const selectedFieldVal = useUIStore((s) => s.selectedFieldId);
-  const isEditModalOpen  = useUIStore((s) => s.isEditModalOpen);
-  const conversionReport = useUIStore((s) => s.conversionReport);
+  const isPreview        = useStore(uiStore, (s) => s.isPreview);
+  const panelResetKey    = useStore(uiStore, (s) => s.panelResetKey);
+  const selectedFieldVal = useStore(uiStore, (s) => s.selectedFieldId);
+  const isEditModalOpen  = useStore(uiStore, (s) => s.isEditModalOpen);
+  const conversionReport = useStore(uiStore, (s) => s.conversionReport);
 
   // ────────── Base actions ──────────
-  const setPreview            = useUIStore((s) => s.setPreview);
-  const togglePreview         = useUIStore((s) => s.togglePreview);
+  const setPreview            = useStore(uiStore, (s) => s.setPreview);
+  const togglePreview         = useStore(uiStore, (s) => s.togglePreview);
 
-  const setSelectField        = useUIStore((s) => s.setSelectField);
-  const clearSelectedField    = useUIStore((s) => s.clearSelectedField);
-  const renameSelectedFieldId = useUIStore((s) => s.renameSelectedFieldId);
+  const setSelectField        = useStore(uiStore, (s) => s.setSelectField);
+  const clearSelectedField    = useStore(uiStore, (s) => s.clearSelectedField);
+  const renameSelectedFieldId = useStore(uiStore, (s) => s.renameSelectedFieldId);
 
-  const setEditModalOpen      = useUIStore((s) => s.setEditModalOpen);
+  const setEditModalOpen      = useStore(uiStore, (s) => s.setEditModalOpen);
   
-  const setConversionReport   = useUIStore((s) => s.setConversionReport);
-  const clearConversionReport = useUIStore((s) => s.clearConversionReport);
+  const setConversionReport   = useStore(uiStore, (s) => s.setConversionReport);
+  const clearConversionReport = useStore(uiStore, (s) => s.clearConversionReport);
   
-  const setHideUnsupportedFields = useUIStore((s) => s.setHideUnsupportedFields);
+  const setHideUnsupportedFields = useStore(uiStore, (s) => s.setHideUnsupportedFields);
 
   // ────────── selectedChildId (reactive read) ──────────
-  const selectedChild         = useUIStore((s) => s.selectedChildId); 
+  const selectedChild         = useStore(uiStore, (s) => s.selectedChildId); 
 
   // ────────── selectedChildId actions ──────────
-  const setSelectedChildId          = useUIStore((s) => s.setSelectedChildId);
-  const clearSelectedChildId        = useUIStore((s) => s.clearSelectedChildId);
-  const renameSelectedChildParentId = useUIStore((s) => s.renameSelectedChildParentId);
-  const renameSelectedChildId       = useUIStore((s) => s.renameSelectedChildId);
+  const setSelectedChildId          = useStore(uiStore, (s) => s.setSelectedChildId);
+  const clearSelectedChildId        = useStore(uiStore, (s) => s.clearSelectedChildId);
+  const renameSelectedChildParentId = useStore(uiStore, (s) => s.renameSelectedChildParentId);
+  const renameSelectedChildId       = useStore(uiStore, (s) => s.renameSelectedChildId);
 
   // ────────── Conveniences ──────────
   const openEdit   = React.useCallback(() => setEditModalOpen(true),  [setEditModalOpen]);

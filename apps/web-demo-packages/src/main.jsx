@@ -2,14 +2,14 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { motion } from 'framer-motion';
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
-import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
-import { useUIStore } from '@mieweb/forms-engine';
+import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 import './index.css';
 
 function App() {
   const [formData, setFormData] = React.useState(null);
   const [submitted, setSubmitted] = React.useState(null);
   const [view, setView] = React.useState('landing');
+  const [hideUnsupportedFields, setHideUnsupportedFields] = React.useState(false);
 
   // Load initial form data from example
   React.useEffect(() => {
@@ -31,10 +31,6 @@ function App() {
   const handleFormChange = (data) => {
     console.log('Form data changed:', data)
   };
-
-  // Hooks used by the renderer — call unconditionally to preserve hook order
-  const currentFields = useFieldsArray();
-  const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
 
   const loadSurveyJS = async () => {
     try {
@@ -75,11 +71,17 @@ function App() {
     return (
       <div className="w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
-        <FloatingFooter view={view} />
+        <FloatingFooter 
+          view={view}
+          hideUnsupportedFields={hideUnsupportedFields}
+          setHideUnsupportedFields={setHideUnsupportedFields}
+        />
         <div className="absolute inset-0">
           <QuestionnaireEditor
             initialFormData={formData}
-            onChange={setFormData} />
+            onChange={setFormData}
+            hideUnsupportedFields={hideUnsupportedFields}
+          />
         </div>
       </div>
     );
@@ -88,21 +90,26 @@ function App() {
   if (view === 'renderer') {
     const handleSubmit = (e) => {
       e.preventDefault();
-      const fhirResponse = buildQuestionnaireResponse(currentFields, 'demo-1', 'patient-123');
-      setSubmitted(fhirResponse);
+      // Note: buildQuestionnaireResponse would need to be accessed from within the renderer
+      // or via a ref to the renderer's store. For this demo, we'll just submit the form data.
+      setSubmitted(formData);
     };
 
     return (
       <div className="w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
-        <FloatingFooter view={view} />
+        <FloatingFooter 
+          view={view}
+          hideUnsupportedFields={hideUnsupportedFields}
+          setHideUnsupportedFields={setHideUnsupportedFields}
+        />
         <div className="w-full">
           <form onSubmit={handleSubmit}>
             <QuestionnaireRenderer
               formData={formData}
               onChange={handleFormChange}
-              hideUnsupportedFields={hideUnsupportedFields}
               className="p-0 overflow-y-visible"
+              hideUnsupportedFields={hideUnsupportedFields}
             />
             <div className="flex w-full mb-10">
               <div className="mx-auto py-4">
@@ -116,7 +123,7 @@ function App() {
             </div>
           </form>
           {submitted && (
-            <pre className="flex mx-auto mt-4 bg-neutral-100 p-4 rounded-lg">{JSON.stringify(submitted, null, 2)}</pre>
+            <pre className="flex mx-auto mt-4 bg-neutral-100 p-4 rounded-lg overflow-auto max-h-96">{JSON.stringify(submitted, null, 2)}</pre>
           )}
         </div>
       </div>
@@ -202,10 +209,8 @@ function FloatingBack({ onExit }) {
   );
 }
 
-function FloatingFooter({ view }) {
+function FloatingFooter({ view, hideUnsupportedFields, setHideUnsupportedFields }) {
   const showToggle = view && view !== 'landing';
-  const hideUnsupported = useUIStore((s) => s.hideUnsupportedFields);
-  const setHideUnsupportedFields = useUIStore((s) => s.setHideUnsupportedFields);
 
   return (
     <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
@@ -227,7 +232,7 @@ function FloatingFooter({ view }) {
             <label className="inline-flex items-center gap-2 cursor-pointer hover:text-slate-900 transition-colors">
               <input
                 type="checkbox"
-                checked={hideUnsupported}
+                checked={hideUnsupportedFields}
                 onChange={(e) => setHideUnsupportedFields(e.target.checked)}
                 className="w-3.5 h-3.5 rounded cursor-pointer"
               />

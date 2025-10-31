@@ -1,6 +1,21 @@
-import { create } from "zustand";
+import React from "react";
+import { createStore, useStore } from "zustand";
 
-export const useUIStore = create((set, get) => ({
+export const createUIStore = (initProps = {}) => {
+  const DEFAULT_PROPS = {
+    isPreview: false,
+    isEditModalOpen: false,
+    panelResetKey: 0,
+    selectedFieldId: null,
+    selectedChildId: { parentId: null, childId: null },
+    conversionReport: null,
+    hideUnsupportedFields: false,
+  };
+
+  return createStore((set, get) => ({
+    // ────────── State ──────────
+    ...DEFAULT_PROPS,
+    ...initProps,
   // ────────── Preview/Edit mode ──────────
   isPreview: false,
   setPreview: (v) => set({ isPreview: !!v }),
@@ -72,3 +87,12 @@ export const useUIStore = create((set, get) => ({
   setHideUnsupportedFields: (v) => set({ hideUnsupportedFields: !!v }),
 
 }));
+};
+
+export const UIStoreContext = React.createContext(null);
+
+export const useUIStore = (selector) => {
+  const store = React.useContext(UIStoreContext);
+  if (!store) throw new Error('Missing UIStoreContext.Provider in the tree');
+  return useStore(store, selector);
+};

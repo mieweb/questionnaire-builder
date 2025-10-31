@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QuestionnaireRenderer } from './QuestionnaireRenderer.jsx';
-import { useFormStore } from '@mieweb/forms-engine';
 import { buildQuestionnaireResponse } from './utils/fhirResponse';
 
 class QuestionnaireRendererElement extends HTMLElement {
@@ -14,6 +13,7 @@ class QuestionnaireRendererElement extends HTMLElement {
     this._schemaType = undefined;
     this._hideUnsupportedFields = true;
     this._onChange = null;
+    this._storeRef = React.createRef(); // Store reference for accessing state
   }
 
   connectedCallback() {
@@ -61,7 +61,11 @@ class QuestionnaireRendererElement extends HTMLElement {
   }
 
   getQuestionnaireResponse(questionnaireId = 'questionnaire-1', subjectId) {
-    const state = useFormStore.getState();
+    if (!this._storeRef.current) {
+      console.warn('Store not initialized yet');
+      return null;
+    }
+    const state = this._storeRef.current.getState();
     const fields = state.order.map(id => state.byId[id]);
     return buildQuestionnaireResponse(fields, questionnaireId, subjectId);
   }
@@ -101,6 +105,7 @@ class QuestionnaireRendererElement extends HTMLElement {
         onChange: this._onChange,
         className: this.getAttribute('class') || '',
         fullHeight: this.hasAttribute('full-height'),
+        storeRef: this._storeRef,
       })
     );
   }

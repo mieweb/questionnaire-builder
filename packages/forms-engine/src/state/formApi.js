@@ -1,25 +1,32 @@
 import React from "react";
-import { useFormStore } from "./formStore";
-import { useUIStore } from "./uiStore";
+import { FormStoreContext } from "./formStore";
+import { UIStoreContext } from "./uiStore";
+import { useStore } from "zustand";
 
 export const useFormApi = (id, sectionId) => {
-  const addField     = useFormStore((s) => s.addField);
-  const updateField  = useFormStore((s) => s.updateField);
-  const deleteField  = useFormStore((s) => s.deleteField);
+  const formStore = React.useContext(FormStoreContext);
+  const uiStore = React.useContext(UIStoreContext);
+  
+  if (!formStore) throw new Error('Missing FormStoreContext.Provider in the tree');
+  if (!uiStore) throw new Error('Missing UIStoreContext.Provider in the tree');
+  
+  const addField     = useStore(formStore, (s) => s.addField);
+  const updateField  = useStore(formStore, (s) => s.updateField);
+  const deleteField  = useStore(formStore, (s) => s.deleteField);
 
-  const addOption       = useFormStore((s) => s.addOption);
-  const updateOption    = useFormStore((s) => s.updateOption);
-  const updateOptionAnswer = useFormStore((s) => s.updateOptionAnswer);
-  const deleteOption    = useFormStore((s) => s.deleteOption);
+  const addOption       = useStore(formStore, (s) => s.addOption);
+  const updateOption    = useStore(formStore, (s) => s.updateOption);
+  const updateOptionAnswer = useStore(formStore, (s) => s.updateOptionAnswer);
+  const deleteOption    = useStore(formStore, (s) => s.deleteOption);
 
-  const selectSingle = useFormStore((s) => s.selectSingle);
-  const toggleMulti  = useFormStore((s) => s.toggleMulti);
+  const selectSingle = useStore(formStore, (s) => s.selectSingle);
+  const toggleMulti  = useStore(formStore, (s) => s.toggleMulti);
 
   const onIdChange = React.useCallback((newId, oldId) => {
-    const ui = useUIStore.getState();
+    const ui = uiStore.getState();
     if (ui.selectedFieldId === oldId) ui.renameSelectedFieldId?.(newId);
     ui.renameSectionIdInHighlight?.(oldId, newId);
-  }, []);
+  }, [uiStore]);
 
   return React.useMemo(
     () => ({
