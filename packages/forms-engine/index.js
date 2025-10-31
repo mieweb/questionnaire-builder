@@ -21,10 +21,10 @@ export { generateFieldId, generateOptionId } from './src/helper_shared/idGenerat
 
 // state: stores, apis, selectors
 
-export { useFormStore, useField, useFieldsArray, useFormData, useVisibleFields } from './src/state/formStore.js';
+export { createFormStore, FormStoreContext, useFormStore, useField, useFieldsArray, useFormData, useVisibleFields } from './src/state/formStore.js';
 export { useFormApi } from './src/state/formApi.js';
 export { useUIApi } from './src/state/uiApi.js';
-export { useUIStore } from './src/state/uiStore.js';
+export { createUIStore, UIStoreContext, useUIStore } from './src/state/uiStore.js';
 
 //assets
 export * from './src/helper_shared/icons.jsx';

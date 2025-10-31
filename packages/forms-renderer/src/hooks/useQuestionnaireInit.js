@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormStore, useUIApi, adaptSchema, parseAndDetect } from '@mieweb/forms-engine';
+import { FormStoreContext, useUIApi, adaptSchema, parseAndDetect } from '@mieweb/forms-engine';
 
 /**
  * Initialize questionnaire with flexible input format
@@ -10,6 +10,9 @@ import { useFormStore, useUIApi, adaptSchema, parseAndDetect } from '@mieweb/for
 export function useQuestionnaireInit(formData, schemaType, hideUnsupportedFields = true) {
   const initializedRef = React.useRef(false);
   const ui = useUIApi();
+  const formStore = React.useContext(FormStoreContext);
+  
+  if (!formStore) throw new Error('Missing FormStoreContext.Provider in the tree');
   
   React.useEffect(() => {
     if (initializedRef.current || !formData) return;
@@ -41,15 +44,15 @@ export function useQuestionnaireInit(formData, schemaType, hideUnsupportedFields
         }
       }
       
-      useFormStore.getState().replaceAll(schemaObject);
+      formStore.getState().replaceAll(schemaObject);
       ui.preview.set(true);
       initializedRef.current = true;
     } catch (error) {
-      useFormStore.getState().replaceAll({ schemaType: 'mieforms-v1.0', fields: [] });
+      formStore.getState().replaceAll({ schemaType: 'mieforms-v1.0', fields: [] });
       ui.preview.set(true);
       initializedRef.current = true;
     }
-  }, [formData, schemaType, ui]);
+  }, [formData, schemaType, ui, formStore]);
 
   React.useEffect(() => {
     ui.setHideUnsupportedFields(hideUnsupportedFields);

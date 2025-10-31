@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFormStore } from '@mieweb/forms-engine';
+import { FormStoreContext, UIStoreContext, createFormStore, createUIStore } from '@mieweb/forms-engine';
 import { useQuestionnaireInit } from './hooks';
 import { RendererBody } from './components';
 import './styles.input.css';
@@ -12,27 +12,38 @@ import './styles.input.css';
  * @param {string} [className] - Additional CSS classes
  * @param {boolean} [fullHeight=false] - Apply min-h-screen
  * @param {boolean} [hideUnsupportedFields=true] - Hide unsupported field types
+ * @param {React.MutableRefObject} [storeRef] - Optional ref to access the store instance
  */
-export function QuestionnaireRenderer({
+function QuestionnaireRendererInner({
   formData,
   schemaType,
   onChange,
   className = '',
   fullHeight = false,
   hideUnsupportedFields = true,
+  storeRef,
 }) {
+  const formStore = React.useContext(FormStoreContext);
+  
+  // Expose store to parent via ref
+  React.useEffect(() => {
+    if (storeRef && formStore) {
+      storeRef.current = formStore;
+    }
+  }, [storeRef, formStore]);
+  
   useQuestionnaireInit(formData, schemaType, hideUnsupportedFields);
 
   React.useEffect(() => {
-    if (!onChange) return;
-    return useFormStore.subscribe((s) => {
+    if (!onChange || !formStore) return;
+    return formStore.subscribe((s) => {
       onChange({
         schemaType: s.schemaType || 'mieforms-v1.0',
         ...s.schemaMetadata,
         fields: s.order.map(id => s.byId[id])
       });
     });
-  }, [onChange]);
+  }, [onChange, formStore]);
 
   const rootClasses = [
     'qb-render-root font-titillium overflow-y-auto custom-scrollbar',
@@ -45,5 +56,18 @@ export function QuestionnaireRenderer({
     <div className={rootClasses}>
       <RendererBody />
     </div>
+  );
+}
+
+export function QuestionnaireRenderer(props) {
+  const formStore = React.useRef(createFormStore()).current;
+  const uiStore = React.useRef(createUIStore()).current;
+
+  return (
+    <FormStoreContext.Provider value={formStore}>
+      <UIStoreContext.Provider value={uiStore}>
+        <QuestionnaireRendererInner {...props} />
+      </UIStoreContext.Provider>
+    </FormStoreContext.Provider>
   );
 }

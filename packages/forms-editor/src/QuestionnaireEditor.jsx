@@ -4,11 +4,15 @@ import MobileToolBar from './components/MobileToolBar.jsx';
 import Layout from './components/desktopLayout/Layout.jsx';
 
 import {
-  useFormStore,
+  FormStoreContext,
+  UIStoreContext,
+  createFormStore,
+  createUIStore,
   useUIApi,
   adaptSchema,
   parseAndDetect,
 } from '@mieweb/forms-engine';
+import { useStore } from 'zustand';
 import './index.css';
 
 /**
@@ -22,7 +26,7 @@ import './index.css';
  * @param {boolean} [startInPreview=false] - Start in preview mode
  * @param {boolean} [hideUnsupportedFields=false] - Hide unsupported field types
  */
-export function QuestionnaireEditor({
+function QuestionnaireEditorInner({
   initialFormData,
   schemaType,
   onChange,
@@ -34,9 +38,10 @@ export function QuestionnaireEditor({
 }) {
   const ui = useUIApi();
   const formStoreInitialized = React.useRef(false);
+  const formStore = React.useContext(FormStoreContext);
 
   React.useEffect(() => {
-    if (formStoreInitialized.current) return;
+    if (formStoreInitialized.current || !formStore) return;
     if (initialFormData) {
       try {
         const { data, schemaType: detectedType } = parseAndDetect(initialFormData, schemaType);
@@ -63,32 +68,32 @@ export function QuestionnaireEditor({
         }
         
         if (Array.isArray(schemaObject.fields) && schemaObject.fields.length) {
-          useFormStore.getState().replaceAll(schemaObject);
+          formStore.getState().replaceAll(schemaObject);
         }
       } catch {
-        useFormStore.getState().replaceAll({ schemaType: 'mieforms-v1.0', fields: [] });
+        formStore.getState().replaceAll({ schemaType: 'mieforms-v1.0', fields: [] });
       }
     }
     ui.preview.set(!!startInPreview);
     formStoreInitialized.current = true;
-  }, [initialFormData, schemaType, startInPreview, ui]);
+  }, [initialFormData, schemaType, startInPreview, ui, formStore]);
 
   React.useEffect(() => {
     ui.setHideUnsupportedFields(hideUnsupportedFields);
   }, [hideUnsupportedFields, ui]);
 
   React.useEffect(() => {
-    if (!onChange) return;
-    return useFormStore.subscribe((s) => {
+    if (!onChange || !formStore) return;
+    return formStore.subscribe((s) => {
       onChange({
         schemaType: s.schemaType || 'mieforms-v1.0',
         ...s.schemaMetadata,
         fields: s.order.map(id => s.byId[id])
       });
     });
-  }, [onChange]);
+  }, [onChange, formStore]);
 
-  const selectedField = useFormStore((s) => 
+  const selectedField = useStore(formStore, (s) => 
     ui.selectedFieldId.value ? s.byId[ui.selectedFieldId.value] : null
   );
 
@@ -98,5 +103,18 @@ export function QuestionnaireEditor({
       {showMobileToolbar && <div className="lg:hidden"><MobileToolBar /></div>}
       <Layout selectedField={selectedField} />
     </div>
+  );
+}
+
+export function QuestionnaireEditor(props) {
+  const formStore = React.useRef(createFormStore()).current;
+  const uiStore = React.useRef(createUIStore()).current;
+
+  return (
+    <FormStoreContext.Provider value={formStore}>
+      <UIStoreContext.Provider value={uiStore}>
+        <QuestionnaireEditorInner {...props} />
+      </UIStoreContext.Provider>
+    </FormStoreContext.Provider>
   );
 }

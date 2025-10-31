@@ -1,5 +1,5 @@
 import React from "react";
-import { create } from "zustand";
+import { createStore, useStore } from "zustand";
 import fieldTypes from "../helper_shared/fieldTypes-config";
 import { initializeField } from "../helper_shared/initializedField";
 import { isVisible } from "../helper_shared/logicVisibility";
@@ -108,14 +108,20 @@ function updateFieldHelper(state, id, sectionId, makeNext, opts = {}) {
 }
 
 
-export const useFormStore = create((set, get) => ({
-  // ────────── State ──────────
-  byId: {},
-  order: [],
-  schemaType: 'mieforms-v1.0', // Store schema type metadata
-  schemaMetadata: {}, // Store additional metadata (title, description, etc.)
+export const createFormStore = (initProps = {}) => {
+  const DEFAULT_PROPS = {
+    byId: {},
+    order: [],
+    schemaType: 'mieforms-v1.0',
+    schemaMetadata: {},
+  };
 
-  // ────────── Minimal init API ──────────
+  return createStore((set, get) => ({
+    // ────────── State ──────────
+    ...DEFAULT_PROPS,
+    ...initProps,
+
+    // ────────── Minimal init API ──────────
   setEnableWhen: (id, enableWhen) =>
     set((s) => {
       const f = s.byId[id];
@@ -314,8 +320,16 @@ export const useFormStore = create((set, get) => ({
       return res ? res : state;;
     }),
 }));
+};
+
+export const FormStoreContext = React.createContext(null);
 
 // ────────── Selectors / Hooks ──────────
+export const useFormStore = (selector) => {
+  const store = React.useContext(FormStoreContext);
+  if (!store) throw new Error('Missing FormStoreContext.Provider in the tree');
+  return useStore(store, selector);
+};
 
 export const useField = (id) =>
   useFormStore(React.useCallback((s) => s.byId[id], [id]));

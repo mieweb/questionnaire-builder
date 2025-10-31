@@ -1,11 +1,14 @@
 import React from "react";
 import OptionListEditor from "./OptionListEditor";
 import CommonEditor from "./CommonEditor";
-import { fieldTypes, useFormStore, useFormApi } from "@mieweb/forms-engine";
+import { fieldTypes, FormStoreContext, useFormApi } from "@mieweb/forms-engine";
 import DraftIdEditor from "./DraftIdEditor"
 
 function SectionEditor({ section, onActiveChildChange }) {
   const sectionApi = useFormApi(section.id);
+  const formStore = React.useContext(FormStoreContext);
+
+  if (!formStore) throw new Error('Missing FormStoreContext.Provider in the tree');
 
   const children = Array.isArray(section.fields) ? section.fields : [];
   const [activeChildId, setActiveChildId] = React.useState(children[0]?.id || null);
@@ -44,7 +47,7 @@ function SectionEditor({ section, onActiveChildChange }) {
         const next = String(value ?? "").trim();
         if (!next) return;
 
-        useFormStore.getState().updateField(
+        formStore.getState().updateField(
           activeChild.id,
           { id: next },
           {
@@ -57,19 +60,19 @@ function SectionEditor({ section, onActiveChildChange }) {
         return;
       }
 
-      useFormStore.getState().updateField(
+      formStore.getState().updateField(
         activeChild.id,
         { [key]: value },
         { sectionId: section.id }
       );
     },
-    [activeChild, section.id]
+    [activeChild, section.id, formStore]
   );
 
   const onDeleteChild = React.useCallback(() => {
     if (!activeChild) return;
-    useFormStore.getState().deleteField(activeChild.id, { sectionId: section.id });
-  }, [activeChild, section.id]);
+    formStore.getState().deleteField(activeChild.id, { sectionId: section.id });
+  }, [activeChild, section.id, formStore]);
 
   const isChoiceChild = React.useMemo(
     () => activeChild && ["radio", "check", "selection"].includes(activeChild.fieldType),
