@@ -4,23 +4,21 @@
 @source "../../../packages/forms-renderer/src/**/*.{js,jsx}";
 @source "../../../packages/forms-engine/src/**/*.{js,jsx}";
 
-/* Import Tailwind with higher layer priority to override Bootstrap */
-@layer bootstrap, tailwind-overrides;
-@layer tailwind-overrides {
+/* Scope ALL Tailwind styles to .qb-render-root to prevent global pollution */
+.qb-render-root {
+  /* Import Tailwind scoped to this component only */
   @import "tailwindcss";
+  
+  /* Reset any Bootstrap conflicts within our component */
+  @layer base {
+    * {
+      box-sizing: border-box;
+    }
+  }
 }
 
 @theme {
   --font-titillium: "Titillium Web", sans-serif;
-}
-
-/* Add scoped reset for the root component to override Bootstrap */
-.qb-render-root {
-  all: revert-layer;
-  
-  * {
-    all: revert-layer;
-  }
 }
 
 @utility custom-scrollbar {
