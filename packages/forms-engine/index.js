@@ -4,10 +4,15 @@ import './src/styles.css';
 export { default as Section_Field } from './src/adv_field/section_Field.jsx';
 
 // basic fields
+export { default as Boolean_Field } from './src/basic_field/Boolean_Field.jsx';
 export { default as Check_Field } from './src/basic_field/Check_Field.jsx';
 export { default as DropDown_Field } from './src/basic_field/DropDown_Field.jsx';
+export { default as LongText_Field } from './src/basic_field/LongText_Field.jsx';
+export { default as MultiText_Field } from './src/basic_field/MultiText_Field.jsx';
 export { default as Radio_Field } from './src/basic_field/Radio_Field.jsx';
+export { default as Rating_Field } from './src/basic_field/Rating_Field.jsx';
 export { default as Text_Field } from './src/basic_field/Text_Field.jsx';
+export { default as Unsupported_Field } from './src/basic_field/Unsupported_Field.jsx';
 
 // shared helper components and hooks
 export { default as FieldWrapper } from './src/helper_shared/FieldWrapper.jsx';
