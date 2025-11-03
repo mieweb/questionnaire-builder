@@ -8,6 +8,7 @@ export { default as Check_Field } from './src/basic_field/Check_Field.jsx';
 export { default as DropDown_Field } from './src/basic_field/DropDown_Field.jsx';
 export { default as Radio_Field } from './src/basic_field/Radio_Field.jsx';
 export { default as Text_Field } from './src/basic_field/Text_Field.jsx';
+export { default as Slider_Field } from './src/basic_field/Slider_Field.jsx';
 
 // shared helper components and hooks
 export { default as FieldWrapper } from './src/helper_shared/FieldWrapper.jsx';
