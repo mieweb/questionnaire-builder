@@ -2,6 +2,23 @@
 @import "tailwindcss/theme";
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
 
+/* Dark mode support - when inside a Bootstrap dark theme parent */
+[data-bs-theme="dark"] .qb-editor-root {
+  color-scheme: dark;
+}
+
+[data-bs-theme="dark"] .qb-editor-root .bg-white {
+  background-color: #2B3036 !important;
+}
+
+[data-bs-theme="dark"] .qb-editor-root .bg-gray-50 {
+  background-color: #2B3036 !important;
+}
+
+[data-bs-theme="dark"] .qb-editor-root .bg-gray-100 {
+  background-color: #363c42 !important;
+}
+
 @theme {
   --font-titillium: "Titillium Web", sans-serif;
 }
