@@ -5,6 +5,7 @@ import RadioField from "../basic_field/Radio_Field"
 import CheckField from "../basic_field/Check_Field"
 import SelectionField from "../basic_field/DropDown_Field"
 import BooleanField from "../basic_field/Boolean_Field"
+import SliderField from "../basic_field/Slider_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 
 
@@ -104,6 +105,20 @@ const fieldTypes = {
       selected: null,
     },
   },
+  slider: {
+    label: "Slider Field",
+    componentKey: "slider",
+    defaultProps: {
+      fieldType: "slider",
+      question: "",
+      options: [
+        { value: "Low" },
+        { value: "Medium" },
+        { value: "High" },
+      ],
+      selected: null,
+    },
+  },
   unsupported: {
     label: "Unsupported Field",
     componentKey: "unsupported",
@@ -124,6 +139,7 @@ const componentMap = {
   check: CheckField,
   boolean: BooleanField,
   dropdown: SelectionField,
+  slider: SliderField,
   unsupported: UnsupportedField,
 };
 
