@@ -6,6 +6,23 @@
 @source "../../../packages/forms-renderer/src/**/*.{js,jsx}";
 @source "../../../packages/forms-engine/src/**/*.{js,jsx}";
 
+/* Dark mode support - when inside a Bootstrap dark theme parent */
+[data-bs-theme="dark"] .qb-render-root {
+  color-scheme: dark;
+}
+
+[data-bs-theme="dark"] .qb-render-root .bg-white {
+  background-color: #2B3036 !important;
+}
+
+[data-bs-theme="dark"] .qb-render-root .bg-gray-50 {
+  background-color: #2B3036 !important;
+}
+
+[data-bs-theme="dark"] .qb-render-root .bg-gray-100 {
+  background-color: #363c42 !important;
+}
+
 @theme {
   --font-titillium: "Titillium Web", sans-serif;
 }

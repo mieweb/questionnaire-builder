@@ -118,6 +118,10 @@ const fieldTypes = {
         { value: "3" },
         { value: "4" },
         { value: "5" },
+      ],
+      selected: null,
+    },
+  },
   slider: {
     label: "Slider Field",
     componentKey: "slider",
