@@ -7,6 +7,7 @@ import SelectionField from "../basic_field/DropDown_Field"
 import BooleanField from "../basic_field/Boolean_Field"
 import RatingField from "../basic_field/Rating_Field"
 import SliderField from "../basic_field/Slider_Field"
+import MultiMatrixField from "../basic_field/MultiMatrix_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 
 
@@ -136,6 +137,25 @@ const fieldTypes = {
       selected: null,
     },
   },
+  multimatrix: {
+    label: "Multi Matrix Field",
+    componentKey: "multimatrix",
+    defaultProps: {
+      fieldType: "multimatrix",
+      question: "",
+      rows: [
+        { value: "Row 1" },
+        { value: "Row 2" },
+        { value: "Row 3" },
+      ],
+      columns: [
+        { value: "Column 1" },
+        { value: "Column 2" },
+        { value: "Column 3" },
+      ],
+      selected: {},
+    },
+  },
   unsupported: {
     label: "Unsupported Field",
     componentKey: "unsupported",
@@ -158,6 +178,7 @@ const componentMap = {
   dropdown: SelectionField,
   rating: RatingField,
   slider: SliderField,
+  multimatrix: MultiMatrixField,
   unsupported: UnsupportedField,
 };
 

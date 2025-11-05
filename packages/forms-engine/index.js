@@ -13,6 +13,7 @@ export { default as Radio_Field } from './src/basic_field/Radio_Field.jsx';
 export { default as Rating_Field } from './src/basic_field/Rating_Field.jsx';
 export { default as Text_Field } from './src/basic_field/Text_Field.jsx';
 export { default as Slider_Field } from './src/basic_field/Slider_Field.jsx';
+export { default as MultiMatrix_Field } from './src/basic_field/MultiMatrix_Field.jsx';
 export { default as Unsupported_Field } from './src/basic_field/Unsupported_Field.jsx';
 
 // shared helper components and hooks
