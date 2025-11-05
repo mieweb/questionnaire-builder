@@ -28,7 +28,7 @@ export default function useFieldController(field, sectionId) {
     "rounded-lg bg-white",
     !ui.state.isPreview ? "border" : "",
     !insideSection && ui.state.isPreview ? "border" : "",
-    field.fieldType === "section" && ui.state.isPreview ? "p-0 border" : "p-4",
+    field.fieldType === "section" && ui.state.isPreview ? "p-0 border" : "p-6",
     selected ? "border-blue-300 border-2 border-dashed" : "border-gray-200",
   ].join(" ");
 
