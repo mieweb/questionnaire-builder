@@ -27,7 +27,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                     {/* Column Headers - Hidden on mobile */}
                     <div className="hidden lg:flex items-center gap-4 pl-32">
                       {columns.map((col) => (
-                        <div key={col.value} className="flex-1 text-center font-normal">
+                        <div key={col.id} className="flex-1 text-center font-normal">
                           {col.value}
                         </div>
                       ))}
@@ -35,7 +35,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                     
                     {/* Rows with Radio Buttons */}
                     {rows.map((row, rowIndex) => (
-                      <div key={row.value} className="py-1 my-2">
+                      <div key={row.id} className="py-1 my-2">
                         <div className="lg:hidden font-semibold mb-2">{row.value}</div>
                         <div className="flex lg:flex-row flex-col items-start lg:items-center gap-4">
                           <div className="hidden lg:block w-32 font-normal">{row.value}</div>
@@ -44,7 +44,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                             const inputId = `matrix-${fieldId}-${rowIndex}-${colIndex}`;
                             
                             return (
-                              <div key={col.value} className="flex-1 flex lg:justify-center items-center gap-3">
+                              <div key={col.id} className="flex-1 flex lg:justify-center items-center gap-3">
                                 <UnselectableRadio
                                   id={inputId}
                                   name={`matrix-${fieldId}-${row.value}`}
