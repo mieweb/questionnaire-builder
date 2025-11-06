@@ -9,7 +9,7 @@ function App() {
   const [formData, setFormData] = React.useState(null);
   const [submitted, setSubmitted] = React.useState(null);
   const [view, setView] = React.useState('landing');
-  const [hideUnsupportedFields, setHideUnsupportedFields] = React.useState(false);
+  const [hideUnsupportedFields, setHideUnsupportedFields] = React.useState(true);
 
   // Load initial form data from example
   React.useEffect(() => {
