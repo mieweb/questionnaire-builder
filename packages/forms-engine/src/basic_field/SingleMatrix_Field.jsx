@@ -26,8 +26,8 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                   <div className="space-y-1 border-t border-gray-200 pt-3">
                     {/* Column Headers - Hidden on mobile */}
                     <div className="hidden lg:flex items-center gap-4 pl-32">
-                      {columns.map((col, colIndex) => (
-                        <div key={colIndex} className="flex-1 text-center font-normal">
+                      {columns.map((col) => (
+                        <div key={col.value} className="flex-1 text-center font-normal">
                           {col.value}
                         </div>
                       ))}
@@ -35,7 +35,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                     
                     {/* Rows with Radio Buttons */}
                     {rows.map((row, rowIndex) => (
-                      <div key={rowIndex} className="py-1 my-2">
+                      <div key={row.value} className="py-1 my-2">
                         <div className="lg:hidden font-semibold mb-2">{row.value}</div>
                         <div className="flex lg:flex-row flex-col items-start lg:items-center gap-4">
                           <div className="hidden lg:block w-32 font-normal">{row.value}</div>
@@ -44,7 +44,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                             const inputId = `matrix-${fieldId}-${rowIndex}-${colIndex}`;
                             
                             return (
-                              <div key={colIndex} className="flex-1 flex lg:justify-center items-center gap-3">
+                              <div key={col.value} className="flex-1 flex lg:justify-center items-center gap-3">
                                 <UnselectableRadio
                                   id={inputId}
                                   name={`matrix-${fieldId}-${row.value}`}
@@ -104,33 +104,22 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
 
             <div className="mb-4">
               <div className="text-sm font-semibold mb-2">Rows</div>
-              {(f.rows || []).map((row, index) => (
-                <div key={index} className="flex items-center px-4 my-1.5 shadow border border-black/10 rounded-lg">
+              {(f.rows || []).map((row) => (
+                <div key={row.id} className="flex items-center px-4 my-1.5 shadow border border-black/10 rounded-lg">
                   <input
                     type="text"
                     value={row.value}
-                    onChange={(e) => {
-                      const updatedRows = f.rows.map((r, i) => 
-                        i === index ? { value: e.target.value } : r
-                      );
-                      api.field.update("rows", updatedRows);
-                    }}
+                    onChange={(e) => api.row.update(row.id, e.target.value)}
                     placeholder="Row text"
                     className="w-full py-2"
                   />
-                  <button onClick={() => {
-                    const updatedRows = f.rows.filter((r, i) => i !== index);
-                    api.field.update("rows", updatedRows);
-                  }}>
+                  <button onClick={() => api.row.remove(row.id)}>
                     <TRASHCANTWO_ICON className="h-5 w-5" />
                   </button>
                 </div>
               ))}
               <button
-                onClick={() => {
-                  const newRow = { value: `Row ${(f.rows || []).length + 1}` };
-                  api.field.update("rows", [...(f.rows || []), newRow]);
-                }}
+                onClick={() => api.row.add(`Row ${(f.rows || []).length + 1}`)}
                 className="mt-2 ml-2 flex gap-3 justify-center"
               >
                 <PLUSOPTION_ICON className="h-6 w-6" /> Add Row
@@ -139,24 +128,16 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
 
             <div className="mb-4">
               <div className="text-sm font-semibold mb-2">Columns</div>
-              {(f.columns || []).map((col, index) => (
-                <div key={index} className="flex items-center px-4 my-1.5 shadow border border-black/10 rounded-lg">
+              {(f.columns || []).map((col) => (
+                <div key={col.id} className="flex items-center px-4 my-1.5 shadow border border-black/10 rounded-lg">
                   <input
                     type="text"
                     value={col.value}
-                    onChange={(e) => {
-                      const updatedColumns = f.columns.map((c, i) => 
-                        i === index ? { value: e.target.value } : c
-                      );
-                      api.field.update("columns", updatedColumns);
-                    }}
+                    onChange={(e) => api.column.update(col.id, e.target.value)}
                     placeholder="Column text"
                     className="w-full py-2"
                   />
-                  <button onClick={() => {
-                    const updatedColumns = f.columns.filter((c, i) => i !== index);
-                    api.field.update("columns", updatedColumns);
-                  }}>
+                  <button onClick={() => api.column.remove(col.id)}>
                     <TRASHCANTWO_ICON className="h-5 w-5" />
                   </button>
                 </div>
@@ -165,10 +146,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                 <div className="mt-2 ml-2 text-gray-500 text-sm">Max columns reached</div>
               ) : (
                 <button
-                  onClick={() => {
-                    const newCol = { value: `Column ${(f.columns || []).length + 1}` };
-                    api.field.update("columns", [...(f.columns || []), newCol]);
-                  }}
+                  onClick={() => api.column.add(`Column ${(f.columns || []).length + 1}`)}
                   className="mt-2 ml-2 flex gap-3 justify-center"
                 >
                   <PLUSOPTION_ICON className="h-6 w-6" /> Add Column

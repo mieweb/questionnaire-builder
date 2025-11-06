@@ -295,6 +295,131 @@ export const createFormStore = (initProps = {}) => {
       return res ? res : state;;
     }),
 
+  // ────────── Rows (<field>.rows[]) for matrix fields ──────────
+  addRow: (fieldId, value = "", options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const rows = Array.isArray(f.rows) ? f.rows : [];
+        const existingIds = new Set(rows.map(r => r.id));
+        const rowId = generateOptionId(value, existingIds, `${fieldId}-row`);
+        const next = [...rows, { id: rowId, value }];
+        return { ...f, rows: next };
+      });
+      return res ? res : state;;
+    }),
+
+  updateRow: (fieldId, rowId, value, options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const rows = Array.isArray(f.rows) ? f.rows : [];
+        let changed = false;
+        const next = rows.map((r) => {
+          if (r.id !== rowId) return r;
+          if (r.value === value) return r;
+          changed = true;
+          return { id: r.id, value };
+        });
+        if (!changed) return null;
+        return { ...f, rows: next };
+      });
+      return res ? res : state;;
+    }),
+
+  deleteRow: (fieldId, rowId, options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const oldRows = Array.isArray(f.rows) ? f.rows : [];
+        const rowsNext = oldRows.filter((r) => r.id !== rowId);
+        if (rowsNext.length === oldRows.length) return null;
+        const next = { ...f, rows: rowsNext };
+        // Clean up selected object if this row had selections
+        if (f.selected && typeof f.selected === 'object') {
+          const rowValue = oldRows.find(r => r.id === rowId)?.value;
+          if (rowValue && f.selected[rowValue] !== undefined) {
+            const updatedSelected = { ...f.selected };
+            delete updatedSelected[rowValue];
+            next.selected = updatedSelected;
+          }
+        }
+        return next;
+      });
+      return res ? res : state;;
+    }),
+
+  // ────────── Columns (<field>.columns[]) for matrix fields ──────────
+  addColumn: (fieldId, value = "", options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const columns = Array.isArray(f.columns) ? f.columns : [];
+        const existingIds = new Set(columns.map(c => c.id));
+        const colId = generateOptionId(value, existingIds, `${fieldId}-col`);
+        const next = [...columns, { id: colId, value }];
+        return { ...f, columns: next };
+      });
+      return res ? res : state;;
+    }),
+
+  updateColumn: (fieldId, colId, value, options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const columns = Array.isArray(f.columns) ? f.columns : [];
+        let changed = false;
+        const next = columns.map((c) => {
+          if (c.id !== colId) return c;
+          if (c.value === value) return c;
+          changed = true;
+          return { id: c.id, value };
+        });
+        if (!changed) return null;
+        return { ...f, columns: next };
+      });
+      return res ? res : state;;
+    }),
+
+  deleteColumn: (fieldId, colId, options = {}) =>
+    set((state) => {
+      const { sectionId } = options;
+      const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
+        const oldColumns = Array.isArray(f.columns) ? f.columns : [];
+        const columnsNext = oldColumns.filter((c) => c.id !== colId);
+        if (columnsNext.length === oldColumns.length) return null;
+        const next = { ...f, columns: columnsNext };
+        // Clean up selected object if any row had this column selected
+        if (f.selected && typeof f.selected === 'object') {
+          const colValue = oldColumns.find(c => c.id === colId)?.value;
+          if (colValue) {
+            const updatedSelected = { ...f.selected };
+            let hasChanges = false;
+            Object.keys(updatedSelected).forEach(rowKey => {
+              // For single matrix (value is column value)
+              if (updatedSelected[rowKey] === colValue) {
+                delete updatedSelected[rowKey];
+                hasChanges = true;
+              }
+              // For multi matrix (value is array of column values)
+              else if (Array.isArray(updatedSelected[rowKey])) {
+                const filtered = updatedSelected[rowKey].filter(v => v !== colValue);
+                if (filtered.length !== updatedSelected[rowKey].length) {
+                  updatedSelected[rowKey] = filtered;
+                  hasChanges = true;
+                }
+              }
+            });
+            if (hasChanges) {
+              next.selected = updatedSelected;
+            }
+          }
+        }
+        return next;
+      });
+      return res ? res : state;;
+    }),
+
   // ────────── Selection (single / Multi[]) ──────────
   selectSingle: (fieldId, optId, options = {}) =>
     set((state) => {

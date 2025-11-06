@@ -19,6 +19,14 @@ export const useFormApi = (id, sectionId) => {
   const updateOptionAnswer = useStore(formStore, (s) => s.updateOptionAnswer);
   const deleteOption    = useStore(formStore, (s) => s.deleteOption);
 
+  const addRow       = useStore(formStore, (s) => s.addRow);
+  const updateRow    = useStore(formStore, (s) => s.updateRow);
+  const deleteRow    = useStore(formStore, (s) => s.deleteRow);
+
+  const addColumn    = useStore(formStore, (s) => s.addColumn);
+  const updateColumn = useStore(formStore, (s) => s.updateColumn);
+  const deleteColumn = useStore(formStore, (s) => s.deleteColumn);
+
   const selectSingle = useStore(formStore, (s) => s.selectSingle);
   const toggleMulti  = useStore(formStore, (s) => s.toggleMulti);
 
@@ -43,6 +51,16 @@ export const useFormApi = (id, sectionId) => {
         updateAnswer: (optId, answer) => updateOptionAnswer(id, optId, answer, { sectionId }),
         remove:       (optId)        => deleteOption(id, optId, { sectionId }),
       },
+      row: {
+        add:    (value = "")   => addRow(id, value, { sectionId }),
+        update: (rowId, value) => updateRow(id, rowId, value, { sectionId }),
+        remove: (rowId)        => deleteRow(id, rowId, { sectionId }),
+      },
+      column: {
+        add:    (value = "")   => addColumn(id, value, { sectionId }),
+        update: (colId, value) => updateColumn(id, colId, value, { sectionId }),
+        remove: (colId)        => deleteColumn(id, colId, { sectionId }),
+      },
       selection: {
         single:      (optId) => selectSingle(id, optId, { sectionId }),
         multiToggle: (optId) => toggleMulti(id, optId, { sectionId }),
@@ -63,6 +81,12 @@ export const useFormApi = (id, sectionId) => {
       updateOption,
       updateOptionAnswer,
       deleteOption,
+      addRow,
+      updateRow,
+      deleteRow,
+      addColumn,
+      updateColumn,
+      deleteColumn,
       selectSingle,
       toggleMulti,
       onIdChange,
