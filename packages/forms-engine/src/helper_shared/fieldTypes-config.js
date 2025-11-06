@@ -7,6 +7,7 @@ import SelectionField from "../basic_field/DropDown_Field"
 import MultiSelectDropDownField from "../basic_field/multiSelectDropDown_Field"
 import BooleanField from "../basic_field/Boolean_Field"
 import RatingField from "../basic_field/Rating_Field"
+import RankingField from "../basic_field/Ranking_Field"
 import SliderField from "../basic_field/Slider_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 
@@ -137,6 +138,20 @@ const fieldTypes = {
       selected: null,
     },
   },
+  ranking: {
+    label: "Ranking Field",
+    componentKey: "ranking",
+    defaultProps: {
+      fieldType: "ranking",
+      question: "",
+      options: [
+        { value: "Item 1" },
+        { value: "Item 2" },
+        { value: "Item 3" },
+      ],
+      selected: [],
+    },
+  },
   slider: {
     label: "Slider Field",
     componentKey: "slider",
@@ -173,6 +188,7 @@ const componentMap = {
   dropdown: SelectionField,
   multiselectdropdown: MultiSelectDropDownField,
   rating: RatingField,
+  ranking: RankingField,
   slider: SliderField,
   unsupported: UnsupportedField,
 };
