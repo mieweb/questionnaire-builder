@@ -68,6 +68,28 @@ If any box is unchecked, **simplify**.
 - **Localize complexity**: keep tricky logic private/internal.  
 - **Keep functions short** (< ~40 lines when possible).
 
+### React & Tailwind Specific
+
+- **Never use `sr-only` with flex layouts**: The `sr-only` class (screen-reader only) can cause layout issues when combined with flex containers. Use `hidden` (display: none) instead to hide elements like radio buttons.
+  ```jsx
+  // ❌ BAD - causes white space issues with flex
+  <input type="radio" className="sr-only" />
+  
+  // ✅ GOOD - use hidden instead
+  <input type="radio" className="hidden" />
+  ```
+- **Use UnselectableRadio for radio inputs**: When creating fields with radio buttons that need unselect functionality, use the `UnselectableRadio` component with `onSelect`/`onUnselect` callbacks instead of inline click handlers.
+
+- **Avoid Index as Key**: Using array index as `key` is only acceptable for truly static lists where order/count never changes. For dynamic lists (items can be reordered, added, or removed), always use stable unique identifiers (like `item.id`).
+  ```jsx
+  // ❌ BAD - breaks when list changes
+  {items.map((item, idx) => <div key={idx}>{item.name}</div>)}
+  
+  // ✅ GOOD - stable identifier
+  {items.map((item) => <div key={item.id}>{item.name}</div>)}
+  ```
+  This prevents inefficient re-renders and preserves component state correctly during list mutations.
+
 ---
 
 ## Anti-Patterns to Avoid
