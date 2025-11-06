@@ -9,6 +9,7 @@ import BooleanField from "../basic_field/Boolean_Field"
 import RatingField from "../basic_field/Rating_Field"
 import RankingField from "../basic_field/Ranking_Field"
 import SliderField from "../basic_field/Slider_Field"
+import SingleMatrixField from "../basic_field/SingleMatrix_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 
 
@@ -166,6 +167,25 @@ const fieldTypes = {
       selected: null,
     },
   },
+  singlematrix: {
+    label: "Single Matrix Field",
+    componentKey: "singlematrix",
+    defaultProps: {
+      fieldType: "singlematrix",
+      question: "",
+      rows: [
+        { value: "Row 1" },
+        { value: "Row 2" },
+        { value: "Row 3" },
+      ],
+      columns: [
+        { value: "Column 1" },
+        { value: "Column 2" },
+        { value: "Column 3" },
+      ],
+      selected: {},
+    },
+  },
   unsupported: {
     label: "Unsupported Field",
     componentKey: "unsupported",
@@ -190,6 +210,7 @@ const componentMap = {
   rating: RatingField,
   ranking: RankingField,
   slider: SliderField,
+  singlematrix: SingleMatrixField,
   unsupported: UnsupportedField,
 };
 
