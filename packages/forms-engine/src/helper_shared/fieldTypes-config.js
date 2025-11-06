@@ -4,6 +4,7 @@ import MultiTextField from "../basic_field/MultiText_Field"
 import RadioField from "../basic_field/Radio_Field"
 import CheckField from "../basic_field/Check_Field"
 import SelectionField from "../basic_field/DropDown_Field"
+import MultiSelectDropDownField from "../basic_field/multiSelectDropDown_Field"
 import BooleanField from "../basic_field/Boolean_Field"
 import RatingField from "../basic_field/Rating_Field"
 import SliderField from "../basic_field/Slider_Field"
@@ -106,6 +107,20 @@ const fieldTypes = {
       selected: null,
     },
   },
+  multiselectdropdown: {
+    label: "Multi-Select Dropdown",
+    componentKey: "multiselectdropdown",
+    defaultProps: {
+      fieldType: "multiselectdropdown",
+      question: "",
+      options: [
+        { value: "Item 1" },
+        { value: "Item 2" },
+        { value: "Item 3" },
+      ],
+      selected: [],
+    },
+  },
   rating: {
     label: "Rating Field",
     componentKey: "rating",
@@ -156,6 +171,7 @@ const componentMap = {
   check: CheckField,
   boolean: BooleanField,
   dropdown: SelectionField,
+  multiselectdropdown: MultiSelectDropDownField,
   rating: RatingField,
   slider: SliderField,
   unsupported: UnsupportedField,
