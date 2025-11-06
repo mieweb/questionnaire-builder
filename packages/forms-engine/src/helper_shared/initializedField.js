@@ -24,6 +24,8 @@ export const initializeField = (field) => {
   const defaultProps = fieldTypes[fieldType]?.defaultProps || {};
   
   const hasOptionsInDefault = defaultProps.options !== undefined;
+  const hasRowsInDefault = defaultProps.rows !== undefined;
+  const hasColumnsInDefault = defaultProps.columns !== undefined;
   
   return {
     id,
@@ -33,6 +35,12 @@ export const initializeField = (field) => {
     ...rest,
     ...(hasOptionsInDefault && {
       options: initializeFieldOptions(rest.options || [], id),
+    }),
+    ...(hasRowsInDefault && {
+      rows: initializeFieldOptions(rest.rows || [], `${id}-row`),
+    }),
+    ...(hasColumnsInDefault && {
+      columns: initializeFieldOptions(rest.columns || [], `${id}-col`),
     }),
   };
 }
