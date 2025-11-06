@@ -337,10 +337,9 @@ export const createFormStore = (initProps = {}) => {
         const next = { ...f, rows: rowsNext };
         // Clean up selected object if this row had selections
         if (f.selected && typeof f.selected === 'object') {
-          const rowValue = oldRows.find(r => r.id === rowId)?.value;
-          if (rowValue && f.selected[rowValue] !== undefined) {
+          if (f.selected[rowId] !== undefined) {
             const updatedSelected = { ...f.selected };
-            delete updatedSelected[rowValue];
+            delete updatedSelected[rowId];
             next.selected = updatedSelected;
           }
         }
@@ -391,28 +390,25 @@ export const createFormStore = (initProps = {}) => {
         const next = { ...f, columns: columnsNext };
         // Clean up selected object if any row had this column selected
         if (f.selected && typeof f.selected === 'object') {
-          const colValue = oldColumns.find(c => c.id === colId)?.value;
-          if (colValue) {
-            const updatedSelected = { ...f.selected };
-            let hasChanges = false;
-            Object.keys(updatedSelected).forEach(rowKey => {
-              // For single matrix (value is column value)
-              if (updatedSelected[rowKey] === colValue) {
-                delete updatedSelected[rowKey];
+          const updatedSelected = { ...f.selected };
+          let hasChanges = false;
+          Object.keys(updatedSelected).forEach(rowId => {
+            // For single matrix (value is column id)
+            if (updatedSelected[rowId] === colId) {
+              delete updatedSelected[rowId];
+              hasChanges = true;
+            }
+            // For multi matrix (value is array of column ids)
+            else if (Array.isArray(updatedSelected[rowId])) {
+              const filtered = updatedSelected[rowId].filter(id => id !== colId);
+              if (filtered.length !== updatedSelected[rowId].length) {
+                updatedSelected[rowId] = filtered;
                 hasChanges = true;
               }
-              // For multi matrix (value is array of column values)
-              else if (Array.isArray(updatedSelected[rowKey])) {
-                const filtered = updatedSelected[rowKey].filter(v => v !== colValue);
-                if (filtered.length !== updatedSelected[rowKey].length) {
-                  updatedSelected[rowKey] = filtered;
-                  hasChanges = true;
-                }
-              }
-            });
-            if (hasChanges) {
-              next.selected = updatedSelected;
             }
+          });
+          if (hasChanges) {
+            next.selected = updatedSelected;
           }
         }
         return next;

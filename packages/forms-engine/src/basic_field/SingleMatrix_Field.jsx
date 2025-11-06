@@ -40,24 +40,24 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                         <div className="flex lg:flex-row flex-col items-start lg:items-center gap-4">
                           <div className="hidden lg:block w-32 font-normal">{row.value}</div>
                           {columns.map((col, colIndex) => {
-                            const isSelected = selected[row.value] === col.value;
+                            const isSelected = selected[row.id] === col.id;
                             const inputId = `matrix-${fieldId}-${rowIndex}-${colIndex}`;
                             
                             return (
                               <div key={col.id} className="flex-1 flex lg:justify-center items-center gap-3">
                                 <UnselectableRadio
                                   id={inputId}
-                                  name={`matrix-${fieldId}-${row.value}`}
-                                  value={col.value}
+                                  name={`matrix-${fieldId}-${row.id}`}
+                                  value={col.id}
                                   checked={isSelected}
                                   onSelect={() => {
                                     // Rebuild selected in row order
                                     const updatedSelected = {};
                                     rows.forEach((r) => {
-                                      if (r.value === row.value) {
-                                        updatedSelected[r.value] = col.value;
-                                      } else if (selected[r.value]) {
-                                        updatedSelected[r.value] = selected[r.value];
+                                      if (r.id === row.id) {
+                                        updatedSelected[r.id] = col.id;
+                                      } else if (selected[r.id]) {
+                                        updatedSelected[r.id] = selected[r.id];
                                       }
                                     });
                                     api.field.update("selected", updatedSelected);
@@ -66,8 +66,8 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                                     // Rebuild selected in row order, excluding current row
                                     const updatedSelected = {};
                                     rows.forEach((r) => {
-                                      if (r.value !== row.value && selected[r.value]) {
-                                        updatedSelected[r.value] = selected[r.value];
+                                      if (r.id !== row.id && selected[r.id]) {
+                                        updatedSelected[r.id] = selected[r.id];
                                       }
                                     });
                                     api.field.update("selected", updatedSelected);
