@@ -2,6 +2,7 @@ import React from "react";
 import { TRASHCANTWO_ICON, PLUSOPTION_ICON } from "../helper_shared/icons";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
+import UnselectableRadio from "../helper_shared/UnselectableRadio";
 
 const RatingField = React.memo(function RatingField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
@@ -21,35 +22,26 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                   {options.length > 0 && (
                     <div className="flex flex-wrap justify-evenly gap-2">
                       {options.map((option, index) => {
+                        const inputId = `${f.id}-${option.id}`;
                         const isSelected = selectedIndex === index;
+                        const labelClasses = isSelected
+                          ? "flex items-center justify-center min-w-[44px] h-11 px-3 rounded-full border-2 transition-all cursor-pointer bg-gray-900 text-white border-gray-900 scale-105"
+                          : "flex items-center justify-center min-w-[44px] h-11 px-3 rounded-full border-2 transition-all cursor-pointer bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:scale-105";
+                        
                         return (
                           <label
                             key={option.id}
-                            className={`
-                              flex items-center justify-center
-                              min-w-[44px] h-11 px-3
-                              rounded-full border-2 transition-all cursor-pointer
-                              ${isSelected
-                                ? 'bg-gray-900 text-white border-gray-900 scale-105'
-                                : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:scale-105'
-                              }
-                            `}
+                            htmlFor={inputId}
+                            className={labelClasses}
                           >
-                            <input
-                              type="radio"
+                            <UnselectableRadio
+                              id={inputId}
                               name={`rating-${f.id}`}
                               value={option.id}
                               checked={isSelected}
-                              onClick={() => {
-                                if (isSelected) {
-                                  // Unselect if already selected
-                                  api.selection.single(null);
-                                } else {
-                                  api.selection.single(option.id);
-                                }
-                              }}
-                              onChange={() => {}}
-                              className="sr-only"
+                              onSelect={() => api.selection.single(option.id)}
+                              onUnselect={() => api.field.update("selected", null)}
+                              className="hidden"
                             />
                             <span className="text-sm font-medium whitespace-nowrap">
                               {option.value}
