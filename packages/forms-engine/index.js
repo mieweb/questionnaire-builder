@@ -10,10 +10,12 @@ export { default as DropDown_Field } from './src/basic_field/DropDown_Field.jsx'
 export { default as LongText_Field } from './src/basic_field/LongText_Field.jsx';
 export { default as MultiText_Field } from './src/basic_field/MultiText_Field.jsx';
 export { default as Radio_Field } from './src/basic_field/Radio_Field.jsx';
+export { default as Ranking_Field } from './src/basic_field/Ranking_Field.jsx';
 export { default as Rating_Field } from './src/basic_field/Rating_Field.jsx';
 export { default as Text_Field } from './src/basic_field/Text_Field.jsx';
 export { default as Slider_Field } from './src/basic_field/Slider_Field.jsx';
 export { default as MultiMatrix_Field } from './src/basic_field/MultiMatrix_Field.jsx';
+export { default as SingleMatrix_Field } from './src/basic_field/SingleMatrix_Field.jsx';
 export { default as Unsupported_Field } from './src/basic_field/Unsupported_Field.jsx';
 
 // shared helper components and hooks

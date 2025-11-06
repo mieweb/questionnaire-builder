@@ -4,10 +4,13 @@ import MultiTextField from "../basic_field/MultiText_Field"
 import RadioField from "../basic_field/Radio_Field"
 import CheckField from "../basic_field/Check_Field"
 import SelectionField from "../basic_field/DropDown_Field"
+import MultiSelectDropDownField from "../basic_field/multiSelectDropDown_Field"
 import BooleanField from "../basic_field/Boolean_Field"
 import RatingField from "../basic_field/Rating_Field"
+import RankingField from "../basic_field/Ranking_Field"
 import SliderField from "../basic_field/Slider_Field"
 import MultiMatrixField from "../basic_field/MultiMatrix_Field"
+import SingleMatrixField from "../basic_field/SingleMatrix_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 
 
@@ -107,6 +110,20 @@ const fieldTypes = {
       selected: null,
     },
   },
+  multiselectdropdown: {
+    label: "Multi-Select Dropdown",
+    componentKey: "multiselectdropdown",
+    defaultProps: {
+      fieldType: "multiselectdropdown",
+      question: "",
+      options: [
+        { value: "Item 1" },
+        { value: "Item 2" },
+        { value: "Item 3" },
+      ],
+      selected: [],
+    },
+  },
   rating: {
     label: "Rating Field",
     componentKey: "rating",
@@ -121,6 +138,20 @@ const fieldTypes = {
         { value: "5" },
       ],
       selected: null,
+    },
+  },
+  ranking: {
+    label: "Ranking Field",
+    componentKey: "ranking",
+    defaultProps: {
+      fieldType: "ranking",
+      question: "",
+      options: [
+        { value: "Item 1" },
+        { value: "Item 2" },
+        { value: "Item 3" },
+      ],
+      selected: [],
     },
   },
   slider: {
@@ -156,6 +187,25 @@ const fieldTypes = {
       selected: {},
     },
   },
+  singlematrix: {
+    label: "Single Matrix Field",
+    componentKey: "singlematrix",
+    defaultProps: {
+      fieldType: "singlematrix",
+      question: "",
+      rows: [
+        { value: "Row 1" },
+        { value: "Row 2" },
+        { value: "Row 3" },
+      ],
+      columns: [
+        { value: "Column 1" },
+        { value: "Column 2" },
+        { value: "Column 3" },
+      ],
+      selected: {},
+    },
+  },
   unsupported: {
     label: "Unsupported Field",
     componentKey: "unsupported",
@@ -176,9 +226,12 @@ const componentMap = {
   check: CheckField,
   boolean: BooleanField,
   dropdown: SelectionField,
+  multiselectdropdown: MultiSelectDropDownField,
   rating: RatingField,
+  ranking: RankingField,
   slider: SliderField,
   multimatrix: MultiMatrixField,
+  singlematrix: SingleMatrixField,
   unsupported: UnsupportedField,
 };
 
