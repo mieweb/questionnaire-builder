@@ -1,34 +1,34 @@
-name: Proxmox Container Management (Auto Runners)
+# name: Proxmox Container Management (Auto Runners)
 
-on:
-  push:
-  create:
-  delete:
+# on:
+#   push:
+#   create:
+#   delete:
 
-jobs:
-  setup-runner:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install Dependencies
-        run: |
-          sudo apt install -y sshpass jq
+# jobs:
+#   setup-runner:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Install Dependencies
+#         run: |
+#           sudo apt install -y sshpass jq
 
-      - uses: maxklema/proxmox-launchpad@main
-        with:
-          proxmox_username: ${{ secrets.PROXMOX_USERNAME }}
-          proxmox_password: ${{ secrets.PROXMOX_PASSWORD }}
-          github_pat: ${{ secrets.GH_PAT }}
+#       - uses: maxklema/proxmox-launchpad@main
+#         with:
+#           proxmox_username: ${{ secrets.PROXMOX_USERNAME }}
+#           proxmox_password: ${{ secrets.PROXMOX_PASSWORD }}
+#           github_pat: ${{ secrets.GH_PAT }}
 
-  manage-container:
-    runs-on: self-hosted
-    needs: setup-runner
-    steps:
-      - uses: maxklema/proxmox-launchpad@main
-        with:
-          proxmox_username: ${{ secrets.PROXMOX_USERNAME }}
-          proxmox_password: ${{ secrets.PROXMOX_PASSWORD }}
-          github_pat: ${{ secrets.GH_PAT }}  
-          install_command: npm run build
-          start_command: npm run dev:demos
-          runtime_language: nodejs
-          http_port: 3000
+#   manage-container:
+#     runs-on: self-hosted
+#     needs: setup-runner
+#     steps:
+#       - uses: maxklema/proxmox-launchpad@main
+#         with:
+#           proxmox_username: ${{ secrets.PROXMOX_USERNAME }}
+#           proxmox_password: ${{ secrets.PROXMOX_PASSWORD }}
+#           github_pat: ${{ secrets.GH_PAT }}  
+#           install_command: npm run build
+#           start_command: npm run dev:demos
+#           runtime_language: nodejs
+#           http_port: 3000
