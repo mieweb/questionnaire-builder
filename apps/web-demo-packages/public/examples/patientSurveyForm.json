@@ -1,0 +1,179 @@
+{
+  "schemaType": "mieforms-v1.0",
+  "title": "Patient Experience Survey (NPS)",
+  "description": "Brief survey about your recent visit and overall experience with our clinic.",
+  "showProgressBar": "off",
+  "progressBarType": "questions",
+  "showQuestionNumbers": "onPage",
+  "completedHtml": "<h3>Thank you!</h3><p>Your feedback helps us improve patient care.</p>",
+  "fields": [
+    {
+      "id": "section_nps",
+      "fieldType": "section",
+      "title": "Overall Recommendation",
+      "fields": [
+        {
+          "id": "nps_score",
+          "fieldType": "rating",
+          "question": "On a scale from 0 to 10, how likely are you to recommend this clinic to a friend or family member?",
+          "options": [
+            { "id": "score_0", "value": "0" },
+            { "id": "score_1", "value": "1" },
+            { "id": "score_2", "value": "2" },
+            { "id": "score_3", "value": "3" },
+            { "id": "score_4", "value": "4" },
+            { "id": "score_5", "value": "5" },
+            { "id": "score_6", "value": "6" },
+            { "id": "score_7", "value": "7" },
+            { "id": "score_8", "value": "8" },
+            { "id": "score_9", "value": "9" },
+            { "id": "score_10", "value": "10" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "rating",
+            "name": "nps_score",
+            "title": "Likelihood to recommend clinic",
+            "rateMin": 0,
+            "rateMax": 10,
+            "isRequired": true
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "nps_comment",
+          "fieldType": "longtext",
+          "question": "What is the main reason for the score you selected?",
+          "answer": "",
+          "_sourceData": {
+            "type": "comment",
+            "name": "nps_comment",
+            "title": "Reason for score",
+            "placeHolder": "Please share anything that went especially well or could be improved."
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "section_nps",
+        "title": "Overall Recommendation",
+        "elements": ["nps_score", "nps_comment"]
+      },
+      "_conversionWarnings": []
+    },
+    {
+      "id": "section_experience",
+      "fieldType": "section",
+      "title": "Experience With Today’s Visit",
+      "fields": [
+        {
+          "id": "visit_overall_satisfaction",
+          "fieldType": "radio",
+          "question": "Overall, how satisfied were you with today’s visit?",
+          "options": [
+            { "id": "opt-0", "value": "Very satisfied" },
+            { "id": "opt-1", "value": "Satisfied" },
+            { "id": "opt-2", "value": "Neutral" },
+            { "id": "opt-3", "value": "Dissatisfied" },
+            { "id": "opt-4", "value": "Very dissatisfied" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "visit_overall_satisfaction",
+            "title": "Overall satisfaction with today’s visit",
+            "isRequired": true,
+            "choices": [
+              "Very satisfied",
+              "Satisfied",
+              "Neutral",
+              "Dissatisfied",
+              "Very dissatisfied"
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "staff_respect",
+          "fieldType": "radio",
+          "question": "Clinic staff treated me with respect.",
+          "options": [
+            { "id": "opt-0", "value": "Strongly agree" },
+            { "id": "opt-1", "value": "Agree" },
+            { "id": "opt-2", "value": "Neutral" },
+            { "id": "opt-3", "value": "Disagree" },
+            { "id": "opt-4", "value": "Strongly disagree" }
+          ],
+          "selected": null,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "staff_respect",
+            "title": "Staff respect",
+            "choices": [
+              "Strongly agree",
+              "Agree",
+              "Neutral",
+              "Disagree",
+              "Strongly disagree"
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "communication_clarity",
+          "fieldType": "radio",
+          "question": "The provider explained things in a way that was easy to understand.",
+          "options": [
+            { "id": "opt-0", "value": "Strongly agree" },
+            { "id": "opt-1", "value": "Agree" },
+            { "id": "opt-2", "value": "Neutral" },
+            { "id": "opt-3", "value": "Disagree" },
+            { "id": "opt-4", "value": "Strongly disagree" }
+          ],
+          "selected": null,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "communication_clarity",
+            "title": "Clarity of provider communication",
+            "choices": [
+              "Strongly agree",
+              "Agree",
+              "Neutral",
+              "Disagree",
+              "Strongly disagree"
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "patient_open_comment",
+          "fieldType": "longtext",
+          "question": "Is there anything else you’d like us to know about your experience today?",
+          "answer": "",
+          "_sourceData": {
+            "type": "comment",
+            "name": "patient_open_comment",
+            "title": "Additional comments about your visit",
+            "placeHolder": "Optional"
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "section_experience",
+        "title": "Experience With Today’s Visit",
+        "elements": [
+          "visit_overall_satisfaction",
+          "staff_respect",
+          "communication_clarity",
+          "patient_open_comment"
+        ]
+      },
+      "_conversionWarnings": []
+    }
+  ]
+}

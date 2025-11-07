@@ -1,0 +1,678 @@
+{
+  "schemaType": "mieforms-v1.0",
+  "title": "Patient Intake Form",
+  "description": "Basic intake form to collect patient demographics, contact information, medical history, and social history.",
+  "showProgressBar": "top",
+  "progressBarType": "questions",
+  "showQuestionNumbers": "onPage",
+  "completedHtml": "<h3>Thank you.</h3><p>Your information has been submitted.</p>",
+  "fields": [
+    {
+      "id": "sec_patient_info",
+      "fieldType": "section",
+      "title": "Patient Information",
+      "fields": [
+        {
+          "id": "full_name",
+          "fieldType": "text",
+          "question": "Full Name",
+          "answer": "",
+          "required": true,
+          "_sourceData": {
+            "type": "text",
+            "name": "full_name",
+            "title": "Full Name",
+            "isRequired": true
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "dob",
+          "fieldType": "text",
+          "question": "Date of Birth",
+          "answer": "",
+          "required": true,
+          "_sourceData": {
+            "type": "text",
+            "name": "dob",
+            "title": "Date of Birth",
+            "inputType": "date",
+            "isRequired": true
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "sex_at_birth",
+          "fieldType": "dropdown",
+          "question": "Sex at Birth",
+          "options": [
+            { "id": "opt-0", "value": "Female" },
+            { "id": "opt-1", "value": "Male" },
+            { "id": "opt-2", "value": "Intersex" },
+            { "id": "opt-3", "value": "Prefer not to say" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "dropdown",
+            "name": "sex_at_birth",
+            "title": "Sex at Birth",
+            "isRequired": true,
+            "choices": [
+              "Female",
+              "Male",
+              "Intersex",
+              "Prefer not to say"
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "gender_identity",
+          "fieldType": "dropdown",
+          "question": "Gender Identity (optional)",
+          "options": [
+            { "id": "opt-0", "value": "Woman" },
+            { "id": "opt-1", "value": "Man" },
+            { "id": "opt-2", "value": "Non-binary" },
+            { "id": "opt-3", "value": "Prefer not to say" }
+          ],
+          "selected": null,
+          "_sourceData": {
+            "type": "dropdown",
+            "name": "gender_identity",
+            "title": "Gender Identity (optional)",
+            "choices": [
+              "Woman",
+              "Man",
+              "Non-binary",
+              "Prefer not to say"
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "primary_language",
+          "fieldType": "text",
+          "question": "Primary Language",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "primary_language",
+            "title": "Primary Language"
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "sec_patient_info",
+        "title": "Patient Information",
+        "elements": [
+          "full_name",
+          "dob",
+          "sex_at_birth",
+          "gender_identity",
+          "primary_language"
+        ]
+      },
+      "_conversionWarnings": []
+    },
+    {
+      "id": "sec_contact",
+      "fieldType": "section",
+      "title": "Contact & Address",
+      "fields": [
+        {
+          "id": "phone",
+          "fieldType": "text",
+          "question": "Phone Number",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "phone",
+            "title": "Phone Number",
+            "inputType": "tel"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "email",
+          "fieldType": "text",
+          "question": "Email Address",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "email",
+            "title": "Email Address",
+            "inputType": "email"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "street_address",
+          "fieldType": "text",
+          "question": "Street Address",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "street_address",
+            "title": "Street Address"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "city",
+          "fieldType": "text",
+          "question": "City",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "city",
+            "title": "City"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "state",
+          "fieldType": "text",
+          "question": "State",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "state",
+            "title": "State"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "zip",
+          "fieldType": "text",
+          "question": "ZIP / Postal Code",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "zip",
+            "title": "ZIP / Postal Code",
+            "inputType": "text"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "preferred_contact_method",
+          "fieldType": "radio",
+          "question": "Preferred Contact Method",
+          "options": [
+            { "id": "opt-0", "value": "Phone call" },
+            { "id": "opt-1", "value": "Text message" },
+            { "id": "opt-2", "value": "Email" }
+          ],
+          "selected": null,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "preferred_contact_method",
+            "title": "Preferred Contact Method",
+            "choices": [
+              "Phone call",
+              "Text message",
+              "Email"
+            ]
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "sec_contact",
+        "title": "Contact & Address",
+        "elements": [
+          "phone",
+          "email",
+          "street_address",
+          "city",
+          "state",
+          "zip",
+          "preferred_contact_method"
+        ]
+      },
+      "_conversionWarnings": []
+    },
+    {
+      "id": "sec_emergency",
+      "fieldType": "section",
+      "title": "Emergency Contact",
+      "fields": [
+        {
+          "id": "emergency_name",
+          "fieldType": "text",
+          "question": "Emergency Contact Name",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "emergency_name",
+            "title": "Emergency Contact Name"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "emergency_relationship",
+          "fieldType": "text",
+          "question": "Relationship to You",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "emergency_relationship",
+            "title": "Relationship to You"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "emergency_phone",
+          "fieldType": "text",
+          "question": "Emergency Contact Phone",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "emergency_phone",
+            "title": "Emergency Contact Phone",
+            "inputType": "tel"
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "sec_emergency",
+        "title": "Emergency Contact",
+        "elements": [
+          "emergency_name",
+          "emergency_relationship",
+          "emergency_phone"
+        ]
+      },
+      "_conversionWarnings": []
+    },
+    {
+      "id": "sec_insurance",
+      "fieldType": "section",
+      "title": "Insurance Information",
+      "fields": [
+        {
+          "id": "has_insurance",
+          "fieldType": "radio",
+          "question": "Do you have health insurance?",
+          "options": [
+            { "id": "yes", "value": "Yes" },
+            { "id": "no", "value": "No" }
+          ],
+          "selected": null,
+          "_sourceData": {
+            "type": "boolean",
+            "name": "has_insurance",
+            "title": "Do you have health insurance?",
+            "labelTrue": "Yes",
+            "labelFalse": "No"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "insurance_provider",
+          "fieldType": "text",
+          "question": "Insurance Provider",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "insurance_provider",
+            "title": "Insurance Provider"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "insurance_member_id",
+          "fieldType": "text",
+          "question": "Member ID / Policy Number",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "insurance_member_id",
+            "title": "Member ID / Policy Number"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "insurance_group_number",
+          "fieldType": "text",
+          "question": "Group Number (if applicable)",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "insurance_group_number",
+            "title": "Group Number (if applicable)"
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "sec_insurance",
+        "title": "Insurance Information",
+        "elements": [
+          "has_insurance",
+          "insurance_provider",
+          "insurance_member_id",
+          "insurance_group_number"
+        ]
+      },
+      "_conversionWarnings": []
+    },
+    {
+      "id": "sec_reason_for_visit",
+      "fieldType": "section",
+      "title": "Reason for Visit",
+      "fields": [
+        {
+          "id": "visit_type",
+          "fieldType": "radio",
+          "question": "Is today’s visit mainly for:",
+          "options": [
+            { "id": "opt-0", "value": "New problem or concern" },
+            { "id": "opt-1", "value": "Ongoing / follow-up care" },
+            { "id": "opt-2", "value": "Check-up / preventive care" },
+            { "id": "opt-3", "value": "Other" }
+          ],
+          "selected": null,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "visit_type",
+            "title": "Is today’s visit mainly for:",
+            "choices": [
+              "New problem or concern",
+              "Ongoing / follow-up care",
+              "Check-up / preventive care",
+              "Other"
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "chief_complaint",
+          "fieldType": "longtext",
+          "question": "Briefly describe the main reason for today’s visit.",
+          "answer": "",
+          "_sourceData": {
+            "type": "comment",
+            "name": "chief_complaint",
+            "title": "Main reason for today’s visit",
+            "placeHolder": "Describe your main concern or symptom."
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "symptom_duration",
+          "fieldType": "text",
+          "question": "How long have you had this problem or concern?",
+          "answer": "",
+          "_sourceData": {
+            "type": "text",
+            "name": "symptom_duration",
+            "title": "How long have you had this problem or concern?"
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "sec_reason_for_visit",
+        "title": "Reason for Visit",
+        "elements": [
+          "visit_type",
+          "chief_complaint",
+          "symptom_duration"
+        ]
+      },
+      "_conversionWarnings": []
+    },
+    {
+      "id": "sec_medical_history",
+      "fieldType": "section",
+      "title": "Medical History",
+      "fields": [
+        {
+          "id": "medical_conditions",
+          "fieldType": "check",
+          "question": "Have you ever been told you have any of the following? (check all that apply)",
+          "options": [
+            { "id": "opt-0", "value": "Diabetes" },
+            { "id": "opt-1", "value": "High blood pressure (hypertension)" },
+            { "id": "opt-2", "value": "Heart disease" },
+            { "id": "opt-3", "value": "Asthma or COPD" },
+            { "id": "opt-4", "value": "Kidney disease" },
+            { "id": "opt-5", "value": "Cancer" },
+            { "id": "opt-6", "value": "Depression or anxiety" },
+            { "id": "opt-7", "value": "None of the above" }
+          ],
+          "selected": [],
+          "_sourceData": {
+            "type": "checkbox",
+            "name": "medical_conditions",
+            "title": "Medical conditions",
+            "choices": [
+              "Diabetes",
+              "High blood pressure (hypertension)",
+              "Heart disease",
+              "Asthma or COPD",
+              "Kidney disease",
+              "Cancer",
+              "Depression or anxiety",
+              "None of the above"
+            ],
+            "hasOther": true,
+            "otherText": "Other condition"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "medical_conditions_other",
+          "fieldType": "longtext",
+          "question": "Other medical conditions (if any):",
+          "answer": "",
+          "_sourceData": {
+            "type": "comment",
+            "name": "medical_conditions_other",
+            "title": "Other medical conditions",
+            "placeHolder": "List any other conditions you have been diagnosed with."
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "surgical_history",
+          "fieldType": "longtext",
+          "question": "Past surgeries or hospitalizations (with year, if known):",
+          "answer": "",
+          "_sourceData": {
+            "type": "comment",
+            "name": "surgical_history",
+            "title": "Past surgeries or hospitalizations"
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "sec_medical_history",
+        "title": "Medical History",
+        "elements": [
+          "medical_conditions",
+          "medical_conditions_other",
+          "surgical_history"
+        ]
+      },
+      "_conversionWarnings": []
+    },
+    {
+      "id": "sec_meds_allergies",
+      "fieldType": "section",
+      "title": "Medications & Allergies",
+      "fields": [
+        {
+          "id": "current_medications",
+          "fieldType": "longtext",
+          "question": "Please list all medications you are currently taking (include dose and how often, if you know).",
+          "answer": "",
+          "_sourceData": {
+            "type": "comment",
+            "name": "current_medications",
+            "title": "Current medications"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "medication_allergies",
+          "fieldType": "longtext",
+          "question": "Medication allergies (and reactions):",
+          "answer": "",
+          "_sourceData": {
+            "type": "comment",
+            "name": "medication_allergies",
+            "title": "Medication allergies (and reactions)"
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "other_allergies",
+          "fieldType": "longtext",
+          "question": "Other allergies (foods, environment, etc.):",
+          "answer": "",
+          "_sourceData": {
+            "type": "comment",
+            "name": "other_allergies",
+            "title": "Other allergies"
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "sec_meds_allergies",
+        "title": "Medications & Allergies",
+        "elements": [
+          "current_medications",
+          "medication_allergies",
+          "other_allergies"
+        ]
+      },
+      "_conversionWarnings": []
+    },
+    {
+      "id": "sec_social_history",
+      "fieldType": "section",
+      "title": "Social History",
+      "fields": [
+        {
+          "id": "tobacco_use",
+          "fieldType": "radio",
+          "question": "Do you currently use tobacco?",
+          "options": [
+            { "id": "opt-0", "value": "Never" },
+            { "id": "opt-1", "value": "Former user" },
+            { "id": "opt-2", "value": "Current user" }
+          ],
+          "selected": null,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "tobacco_use",
+            "title": "Tobacco use",
+            "choices": [
+              "Never",
+              "Former user",
+              "Current user"
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "alcohol_use",
+          "fieldType": "radio",
+          "question": "How often do you drink alcohol?",
+          "options": [
+            { "id": "opt-0", "value": "Never" },
+            { "id": "opt-1", "value": "Occasionally" },
+            { "id": "opt-2", "value": "Weekly" },
+            { "id": "opt-3", "value": "Daily or almost daily" }
+          ],
+          "selected": null,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "alcohol_use",
+            "title": "Alcohol use",
+            "choices": [
+              "Never",
+              "Occasionally",
+              "Weekly",
+              "Daily or almost daily"
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "housing_security",
+          "fieldType": "radio",
+          "question": "Do you currently have stable housing?",
+          "options": [
+            { "id": "opt-0", "value": "Yes" },
+            { "id": "opt-1", "value": "No" },
+            { "id": "opt-2", "value": "Prefer not to say" }
+          ],
+          "selected": null,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "housing_security",
+            "title": "Do you currently have stable housing?",
+            "choices": [
+              "Yes",
+              "No",
+              "Prefer not to say"
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "food_security",
+          "fieldType": "radio",
+          "question": "In the last 12 months, were you ever worried food would run out before you had money to buy more?",
+          "options": [
+            { "id": "opt-0", "value": "Often true" },
+            { "id": "opt-1", "value": "Sometimes true" },
+            { "id": "opt-2", "value": "Never true" },
+            { "id": "opt-3", "value": "Prefer not to say" }
+          ],
+          "selected": null,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "food_security",
+            "title": "In the last 12 months, were you ever worried food would run out before you had money to buy more?",
+            "choices": [
+              "Often true",
+              "Sometimes true",
+              "Never true",
+              "Prefer not to say"
+            ]
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "sec_social_history",
+        "title": "Social History",
+        "elements": [
+          "tobacco_use",
+          "alcohol_use",
+          "housing_security",
+          "food_security"
+        ]
+      },
+      "_conversionWarnings": []
+    }
+  ]
+}

@@ -16,7 +16,7 @@ function App() {
     fetch('/examples/surveyjs-sample.json')
       .then(res => res.json())
       .then(data => setFormData(data))
-      .catch(err => console.error('Failed to load initial form:', err));
+      .catch(() => {});
   }, []);
 
   // ESC to return to landing when not already there
@@ -29,48 +29,20 @@ function App() {
   }, [view]);
 
   const handleFormChange = (data) => {
-    console.log('Form data changed:', data)
+    // Renderer form change handler - currently unused but keeping for future functionality
   };
 
-  const loadSurveyJS = async () => {
-    try {
-      const response = await fetch('/examples/surveyjs-sample.json');
-      const data = await response.json();
-      // Pass SurveyJS data directly - will be auto-converted
-      setFormData(data);
-      setView('editor');
-    } catch (err) {
-      alert('Failed to load SurveyJS sample: ' + err.message);
-    }
-  };
-
-  const loadMIEFormsJSON = async () => {
-    try {
-      const response = await fetch('/examples/inhouse-sample.json');
-      const data = await response.json();
-      setFormData(data); // Pass complete form data with metadata
-      setView('editor');
-    } catch (err) {
-      alert('Failed to load MIE Forms JSON sample: ' + err.message);
-    }
-  };
-
-  const loadMIEFormsYAML = async () => {
-    try {
-      const response = await fetch('/examples/inhouse-sample.yaml');
-      const yamlText = await response.text();
-      // Pass YAML string directly - will be auto-parsed
-      setFormData(yamlText);
-      setView('editor');
-    } catch (err) {
-      alert('Failed to load MIE Forms YAML sample: ' + err.message);
-    }
-  };
+  React.useEffect(() => {
+    // Placeholder for future form change logic
+  }, [formData]);
 
   if (view === 'editor') {
     return (
       <div className="w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
+        <FloatingExamples 
+          onLoadData={setFormData}
+        />
         <FloatingFooter 
           view={view}
           hideUnsupportedFields={hideUnsupportedFields}
@@ -78,6 +50,7 @@ function App() {
         />
         <div className="absolute inset-0">
           <QuestionnaireEditor
+            key={formData ? JSON.stringify(formData).substring(0, 50) : 'empty'}
             initialFormData={formData}
             onChange={setFormData}
             hideUnsupportedFields={hideUnsupportedFields}
@@ -98,6 +71,9 @@ function App() {
     return (
       <div className="w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
+        <FloatingExamples 
+          onLoadData={setFormData}
+        />
         <FloatingFooter 
           view={view}
           hideUnsupportedFields={hideUnsupportedFields}
@@ -106,6 +82,7 @@ function App() {
         <div className="w-full">
           <form onSubmit={handleSubmit}>
             <QuestionnaireRenderer
+              key={formData ? JSON.stringify(formData).substring(0, 50) : 'empty'}
               formData={formData}
               onChange={handleFormChange}
               className="p-0 overflow-y-visible"
@@ -146,31 +123,6 @@ function App() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
           <DemoCard title="Editor" desc="Build & modify questionnaire structure." onClick={() => setView('editor')} />
           <DemoCard title="Renderer" desc="Fill out the questionnaire & submit." onClick={() => setView('renderer')} />
-        </div>
-
-        <div className="mb-8 p-6 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
-          <h2 className="m-0 mb-3 text-lg font-semibold text-slate-900 tracking-tight">Test Auto-Detection</h2>
-          <p className="mb-4 text-sm text-slate-600">Load example schemas to test YAML parsing and automatic format detection:</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <button
-              onClick={loadMIEFormsJSON}
-              className="px-4 py-2.5 bg-white text-slate-700 rounded-lg border border-slate-200 font-medium text-sm hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow"
-            >
-              📄 MIE Forms JSON
-            </button>
-            <button
-              onClick={loadMIEFormsYAML}
-              className="px-4 py-2.5 bg-white text-slate-700 rounded-lg border border-slate-200 font-medium text-sm hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow"
-            >
-              📝 MIE Forms YAML
-            </button>
-            <button
-              onClick={loadSurveyJS}
-              className="px-4 py-2.5 bg-white text-slate-700 rounded-lg border border-slate-200 font-medium text-sm hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm hover:shadow"
-            >
-              🔄 SurveyJS JSON
-            </button>
-          </div>
         </div>
 
         <Landing />
@@ -241,6 +193,86 @@ function FloatingFooter({ view, hideUnsupportedFields, setHideUnsupportedFields 
           </>
         )}
       </motion.div>
+    </div>
+  );
+}
+
+function FloatingExamples({ onLoadData }) {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [selectedExample, setSelectedExample] = React.useState(null);
+
+  const examples = [
+    // { label: '📄 MIE Forms JSON', url: '/examples/inhouse-sample.json', isJson: true / false  },
+    { label: '🎖️ NPS (Net Promoter Score) Forms', url: '/examples/netPromoterScoreForm.json', isJson: true},
+    { label: '🧑‍⚕️ Patient Survey Form', url: '/examples/patientSurveyForm.json', isJson: true},
+    { label: '📝 PHQ-9 Form', url: '/examples/patientHealthQuestionnaireForm.json', isJson: true},
+    { label: '📄 Patient Intake Form', url: '/examples/patientIntakeForm.json', isJson: true },
+
+
+
+  ];
+
+  const handleLoadExample = async (example) => {
+    try {
+      const response = await fetch(example.url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = example.isJson ? await response.json() : await response.text();
+      setSelectedExample(example);
+      onLoadData(data);
+      setIsOpen(false);
+    } catch (err) {
+      alert(`Failed to load ${example.label}: ${err.message}`);
+    }
+  };
+
+  return (
+    <div className="fixed left-5 top-5 z-50">
+      <div className="relative w-48">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full inline-flex items-center justify-between gap-2 bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-3 text-sm tracking-tight rounded-2xl cursor-pointer font-medium shadow-lg font-sans hover:bg-white/85 hover:border-white/50 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]"
+        >
+          <span className="font-medium truncate">{selectedExample ? selectedExample.label : '📚 Examples'}</span>
+          <svg 
+            width="16" 
+            height="16" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+            className={`transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+
+        {isOpen && (
+          <div className="absolute top-full mt-2 left-0 right-0 bg-white/70 backdrop-blur-xl backdrop-saturate-150 border border-white/30 rounded-2xl shadow-lg overflow-hidden z-[60]">
+            {examples.map((example, index) => (
+              <button
+                key={example.url}
+                onClick={() => handleLoadExample(example)}
+                className={`w-full px-4 py-3 text-left text-slate-700 hover:bg-white/60 transition-colors font-medium text-sm ${
+                  index < examples.length - 1 ? 'border-b border-white/30' : ''
+                } ${selectedExample?.url === example.url ? 'bg-blue-100/50 text-blue-900' : ''}`}
+              >
+                {example.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {isOpen && (
+          <div
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 z-40"
+          />
+        )}
+      </div>
     </div>
   );
 }

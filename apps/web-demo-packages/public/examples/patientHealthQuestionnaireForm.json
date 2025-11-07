@@ -1,0 +1,287 @@
+{
+  "schemaType": "mieforms-v1.0",
+  "title": "PHQ-9 Depression Screening",
+  "description": "Patient Health Questionnaire-9 for screening, diagnosing, monitoring, and measuring the severity of depression.",
+  "showProgressBar": "top",
+  "progressBarType": "questions",
+  "showQuestionNumbers": "onPage",
+  "completedHtml": "<h3>Thank you.</h3><p>Your responses have been recorded.</p>",
+  "calculatedValues": [
+    {
+      "name": "phq9_total",
+      "expression": "sum({phq9_item1}, {phq9_item2}, {phq9_item3}, {phq9_item4}, {phq9_item5}, {phq9_item6}, {phq9_item7}, {phq9_item8}, {phq9_item9})"
+    }
+  ],
+  "fields": [
+    {
+      "id": "sec_phq9",
+      "fieldType": "section",
+      "title": "PHQ-9 Depression Screening",
+      "fields": [
+        {
+          "id": "phq9_item1",
+          "fieldType": "radio",
+          "question": "Over the last 2 weeks, how often have you been bothered by little interest or pleasure in doing things?",
+          "options": [
+            { "id": "opt-0", "value": "Not at all (0)" },
+            { "id": "opt-1", "value": "Several days (1)" },
+            { "id": "opt-2", "value": "More than half the days (2)" },
+            { "id": "opt-3", "value": "Nearly every day (3)" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "phq9_item1",
+            "title": "Over the last 2 weeks, how often have you been bothered by little interest or pleasure in doing things?",
+            "isRequired": true,
+            "choices": [
+              { "value": 0, "text": "Not at all (0)" },
+              { "value": 1, "text": "Several days (1)" },
+              { "value": 2, "text": "More than half the days (2)" },
+              { "value": 3, "text": "Nearly every day (3)" }
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "phq9_item2",
+          "fieldType": "radio",
+          "question": "Over the last 2 weeks, how often have you been bothered by feeling down, depressed, or hopeless?",
+          "options": [
+            { "id": "opt-0", "value": "Not at all (0)" },
+            { "id": "opt-1", "value": "Several days (1)" },
+            { "id": "opt-2", "value": "More than half the days (2)" },
+            { "id": "opt-3", "value": "Nearly every day (3)" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "phq9_item2",
+            "title": "Over the last 2 weeks, how often have you been bothered by feeling down, depressed, or hopeless?",
+            "isRequired": true,
+            "choices": [
+              { "value": 0, "text": "Not at all (0)" },
+              { "value": 1, "text": "Several days (1)" },
+              { "value": 2, "text": "More than half the days (2)" },
+              { "value": 3, "text": "Nearly every day (3)" }
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "phq9_item3",
+          "fieldType": "radio",
+          "question": "Over the last 2 weeks, how often have you been bothered by trouble falling or staying asleep, or sleeping too much?",
+          "options": [
+            { "id": "opt-0", "value": "Not at all (0)" },
+            { "id": "opt-1", "value": "Several days (1)" },
+            { "id": "opt-2", "value": "More than half the days (2)" },
+            { "id": "opt-3", "value": "Nearly every day (3)" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "phq9_item3",
+            "title": "Over the last 2 weeks, how often have you been bothered by trouble falling or staying asleep, or sleeping too much?",
+            "isRequired": true,
+            "choices": [
+              { "value": 0, "text": "Not at all (0)" },
+              { "value": 1, "text": "Several days (1)" },
+              { "value": 2, "text": "More than half the days (2)" },
+              { "value": 3, "text": "Nearly every day (3)" }
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "phq9_item4",
+          "fieldType": "radio",
+          "question": "Over the last 2 weeks, how often have you been bothered by feeling tired or having little energy?",
+          "options": [
+            { "id": "opt-0", "value": "Not at all (0)" },
+            { "id": "opt-1", "value": "Several days (1)" },
+            { "id": "opt-2", "value": "More than half the days (2)" },
+            { "id": "opt-3", "value": "Nearly every day (3)" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "phq9_item4",
+            "title": "Over the last 2 weeks, how often have you been bothered by feeling tired or having little energy?",
+            "isRequired": true,
+            "choices": [
+              { "value": 0, "text": "Not at all (0)" },
+              { "value": 1, "text": "Several days (1)" },
+              { "value": 2, "text": "More than half the days (2)" },
+              { "value": 3, "text": "Nearly every day (3)" }
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "phq9_item5",
+          "fieldType": "radio",
+          "question": "Over the last 2 weeks, how often have you been bothered by poor appetite or overeating?",
+          "options": [
+            { "id": "opt-0", "value": "Not at all (0)" },
+            { "id": "opt-1", "value": "Several days (1)" },
+            { "id": "opt-2", "value": "More than half the days (2)" },
+            { "id": "opt-3", "value": "Nearly every day (3)" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "phq9_item5",
+            "title": "Over the last 2 weeks, how often have you been bothered by poor appetite or overeating?",
+            "isRequired": true,
+            "choices": [
+              { "value": 0, "text": "Not at all (0)" },
+              { "value": 1, "text": "Several days (1)" },
+              { "value": 2, "text": "More than half the days (2)" },
+              { "value": 3, "text": "Nearly every day (3)" }
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "phq9_item6",
+          "fieldType": "radio",
+          "question": "Over the last 2 weeks, how often have you been bothered by feeling bad about yourself — or that you are a failure or have let yourself or your family down?",
+          "options": [
+            { "id": "opt-0", "value": "Not at all (0)" },
+            { "id": "opt-1", "value": "Several days (1)" },
+            { "id": "opt-2", "value": "More than half the days (2)" },
+            { "id": "opt-3", "value": "Nearly every day (3)" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "phq9_item6",
+            "title": "Over the last 2 weeks, how often have you been bothered by feeling bad about yourself — or that you are a failure or have let yourself or your family down?",
+            "isRequired": true,
+            "choices": [
+              { "value": 0, "text": "Not at all (0)" },
+              { "value": 1, "text": "Several days (1)" },
+              { "value": 2, "text": "More than half the days (2)" },
+              { "value": 3, "text": "Nearly every day (3)" }
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "phq9_item7",
+          "fieldType": "radio",
+          "question": "Over the last 2 weeks, how often have you been bothered by trouble concentrating on things, such as reading the newspaper or watching television?",
+          "options": [
+            { "id": "opt-0", "value": "Not at all (0)" },
+            { "id": "opt-1", "value": "Several days (1)" },
+            { "id": "opt-2", "value": "More than half the days (2)" },
+            { "id": "opt-3", "value": "Nearly every day (3)" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "phq9_item7",
+            "title": "Over the last 2 weeks, how often have you been bothered by trouble concentrating on things, such as reading the newspaper or watching television?",
+            "isRequired": true,
+            "choices": [
+              { "value": 0, "text": "Not at all (0)" },
+              { "value": 1, "text": "Several days (1)" },
+              { "value": 2, "text": "More than half the days (2)" },
+              { "value": 3, "text": "Nearly every day (3)" }
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "phq9_item8",
+          "fieldType": "radio",
+          "question": "Over the last 2 weeks, how often have you been bothered by moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual?",
+          "options": [
+            { "id": "opt-0", "value": "Not at all (0)" },
+            { "id": "opt-1", "value": "Several days (1)" },
+            { "id": "opt-2", "value": "More than half the days (2)" },
+            { "id": "opt-3", "value": "Nearly every day (3)" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "phq9_item8",
+            "title": "Over the last 2 weeks, how often have you been bothered by moving or speaking so slowly that other people could have noticed? Or the opposite — being so fidgety or restless that you have been moving around a lot more than usual?",
+            "isRequired": true,
+            "choices": [
+              { "value": 0, "text": "Not at all (0)" },
+              { "value": 1, "text": "Several days (1)" },
+              { "value": 2, "text": "More than half the days (2)" },
+              { "value": 3, "text": "Nearly every day (3)" }
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "phq9_item9",
+          "fieldType": "radio",
+          "question": "Over the last 2 weeks, how often have you been bothered by thoughts that you would be better off dead, or of hurting yourself in some way?",
+          "options": [
+            { "id": "opt-0", "value": "Not at all (0)" },
+            { "id": "opt-1", "value": "Several days (1)" },
+            { "id": "opt-2", "value": "More than half the days (2)" },
+            { "id": "opt-3", "value": "Nearly every day (3)" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "radiogroup",
+            "name": "phq9_item9",
+            "title": "Over the last 2 weeks, how often have you been bothered by thoughts that you would be better off dead, or of hurting yourself in some way?",
+            "isRequired": true,
+            "choices": [
+              { "value": 0, "text": "Not at all (0)" },
+              { "value": 1, "text": "Several days (1)" },
+              { "value": 2, "text": "More than half the days (2)" },
+              { "value": 3, "text": "Nearly every day (3)" }
+            ]
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "phq9_score",
+          "fieldType": "unsupported",
+          "question": "PHQ-9 Score",
+          "unsupportedType": "html",
+          "unsupportedData": {
+            "type": "html",
+            "name": "phq9_score",
+            "title": "PHQ-9 Score"
+          }
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "sec_phq9",
+        "title": "PHQ-9 Depression Screening",
+        "elements": [
+          "phq9_item1",
+          "phq9_item2",
+          "phq9_item3",
+          "phq9_item4",
+          "phq9_item5",
+          "phq9_item6",
+          "phq9_item7",
+          "phq9_item8",
+          "phq9_item9",
+          "phq9_score"
+        ]
+      },
+      "_conversionWarnings": []
+    }
+  ]
+}

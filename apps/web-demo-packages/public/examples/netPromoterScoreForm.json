@@ -1,0 +1,67 @@
+{
+  "schemaType": "mieforms-v1.0",
+  "title": "Simple Net Promoter Score (NPS) Survey",
+  "description": "A short survey to measure customer loyalty and satisfaction.",
+  "showProgressBar": "off",
+  "progressBarType": "questions",
+  "showQuestionNumbers": "onPage",
+  "completedHtml": "<h3>Thank you for your feedback!</h3><p>Your response has been submitted.</p>",
+  "fields": [
+    {
+      "id": "section_nps",
+      "fieldType": "section",
+      "title": "Net Promoter Score",
+      "fields": [
+        {
+          "id": "nps_score",
+          "fieldType": "rating",
+          "question": "On a scale of 0 to 10, how likely are you to recommend our service to a friend or colleague?",
+          "options": [
+            { "id": "score_0", "value": "0" },
+            { "id": "score_1", "value": "1" },
+            { "id": "score_2", "value": "2" },
+            { "id": "score_3", "value": "3" },
+            { "id": "score_4", "value": "4" },
+            { "id": "score_5", "value": "5" },
+            { "id": "score_6", "value": "6" },
+            { "id": "score_7", "value": "7" },
+            { "id": "score_8", "value": "8" },
+            { "id": "score_9", "value": "9" },
+            { "id": "score_10", "value": "10" }
+          ],
+          "selected": null,
+          "required": true,
+          "_sourceData": {
+            "type": "rating",
+            "name": "nps_score",
+            "title": "Likelihood to Recommend",
+            "rateMin": 0,
+            "rateMax": 10,
+            "isRequired": true
+          },
+          "_conversionWarnings": []
+        },
+        {
+          "id": "nps_comment",
+          "fieldType": "longtext",
+          "question": "What is the primary reason for your score?",
+          "answer": "",
+          "_sourceData": {
+            "type": "comment",
+            "name": "nps_comment",
+            "title": "Reason for Score",
+            "placeHolder": "Please share any feedback or explanation for your rating"
+          },
+          "_conversionWarnings": []
+        }
+      ],
+      "_sourceData": {
+        "type": "panel",
+        "name": "section_nps",
+        "title": "Net Promoter Score",
+        "elements": ["nps_score", "nps_comment"]
+      },
+      "_conversionWarnings": []
+    }
+  ]
+}
