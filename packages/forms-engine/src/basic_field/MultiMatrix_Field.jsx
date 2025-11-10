@@ -8,7 +8,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f }) => {
+      {({ api, isPreview, insideSection, field: f, placeholder }) => {
         const fieldId = field.id || f.id || 'multimatrix';
         
         if (isPreview) {
@@ -100,7 +100,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder="Enter question"
+              placeholder={placeholder?.question || "Enter question"}
             />
 
             <div className="mb-4">
@@ -111,7 +111,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
                     type="text"
                     value={row.value}
                     onChange={(e) => api.row.update(row.id, e.target.value)}
-                    placeholder="Row text"
+                    placeholder={placeholder?.rows || "Row text"}
                     className="w-full py-2"
                   />
                   <button onClick={() => api.row.remove(row.id)}>
@@ -135,7 +135,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
                     type="text"
                     value={col.value}
                     onChange={(e) => api.column.update(col.id, e.target.value)}
-                    placeholder="Column text"
+                    placeholder={placeholder?.columns || "Column text"}
                     className="w-full py-2"
                   />
                   <button onClick={() => api.column.remove(col.id)}>

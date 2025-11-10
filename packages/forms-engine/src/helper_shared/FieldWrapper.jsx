@@ -48,6 +48,7 @@ export default function FieldWrapper({ ctrl, children }) {
             insideSection: ctrl.insideSection,
             sectionId: ctrl.sectionId,
             selected: ctrl.selected,
+            placeholder: ctrl.placeholder,
           })
           : children}
       </div>
@@ -108,6 +109,7 @@ export default function FieldWrapper({ ctrl, children }) {
               insideSection: ctrl.insideSection,
               sectionId: ctrl.sectionId,
               selected: ctrl.selected,
+              placeholder: ctrl.placeholder,
             })
             : children}
         </div>

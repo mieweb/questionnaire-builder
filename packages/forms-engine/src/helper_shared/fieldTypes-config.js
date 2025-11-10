@@ -22,6 +22,11 @@ const fieldTypes = {
       fieldType: "section",
       title: "",
       fields: [],
+    },
+    placeholder: {
+      title: "Enter section title...",
+      question: "Not applicable for section",
+      options: "Not applicable for section",
     }
   },
   text: {
@@ -32,6 +37,11 @@ const fieldTypes = {
       question: "",
       answer: "",
     },
+    placeholder: {
+      question: "Enter your question...",
+      answer: "Enter answer...",
+      options: "Not applicable for text field",
+    }
   },
   longtext: {
     label: "Long Text Field",
@@ -41,6 +51,11 @@ const fieldTypes = {
       question: "",
       answer: "",
     },
+    placeholder: {
+      question: "Enter your question...",
+      answer: "Enter detailed answer...",
+      options: "Not applicable for long text field",
+    }
   },
   multitext: {
     label: "Multi Text Field",
@@ -54,6 +69,10 @@ const fieldTypes = {
         { value: "" },
       ],
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   radio: {
     label: "Radio Field",
@@ -68,6 +87,10 @@ const fieldTypes = {
       ],
       selected: null,
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   check: {
     label: "Check Field",
@@ -82,6 +105,10 @@ const fieldTypes = {
       ],
       selected: [],
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   boolean: {
     label: "Boolean Field",
@@ -95,6 +122,10 @@ const fieldTypes = {
       ],
       selected: null,
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   dropdown: {
     label: "Dropdown Field",
@@ -109,6 +140,10 @@ const fieldTypes = {
       ],
       selected: null,
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   multiselectdropdown: {
     label: "Multi-Select Dropdown",
@@ -123,6 +158,10 @@ const fieldTypes = {
       ],
       selected: [],
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   rating: {
     label: "Rating Field",
@@ -139,6 +178,10 @@ const fieldTypes = {
       ],
       selected: null,
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter rating level...",
+    }
   },
   ranking: {
     label: "Ranking Field",
@@ -153,6 +196,10 @@ const fieldTypes = {
       ],
       selected: [],
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter item to rank...",
+    }
   },
   slider: {
     label: "Slider Field",
@@ -167,6 +214,10 @@ const fieldTypes = {
       ],
       selected: null,
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter scale label...",
+    }
   },
   multimatrix: {
     label: "Multi Matrix Field",
@@ -186,6 +237,11 @@ const fieldTypes = {
       ],
       selected: {},
     },
+    placeholder: {
+      question: "Enter your question...",
+      rows: "Enter row label...",
+      columns: "Enter column label...",
+    }
   },
   singlematrix: {
     label: "Single Matrix Field",
@@ -205,6 +261,11 @@ const fieldTypes = {
       ],
       selected: {},
     },
+    placeholder: {
+      question: "Enter your question...",
+      rows: "Enter row label...",
+      columns: "Enter column label...",
+    }
   },
   unsupported: {
     label: "Unsupported Field",
@@ -215,6 +276,10 @@ const fieldTypes = {
       unsupportedType: "unknown",
       unsupportedData: {},
     },
+    placeholder: {
+      question: "Unsupported field type",
+      options: "Cannot edit unsupported field",
+    }
   },
 };
 

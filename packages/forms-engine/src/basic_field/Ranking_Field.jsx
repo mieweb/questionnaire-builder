@@ -23,7 +23,7 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f }) => {
+      {({ api, isPreview, insideSection, field: f, placeholder }) => {
         // Sync selected array with options
         React.useEffect(() => {
           if (!f.options || f.options.length === 0) return;
@@ -107,7 +107,7 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder="Enter question"
+              placeholder={placeholder?.question || "Enter question"}
             />
 
             {(f.options || []).map((option) => (
@@ -117,7 +117,7 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
                   type="text"
                   value={option.value}
                   onChange={(e) => api.option.update(option.id, e.target.value)}
-                  placeholder="Option text"
+                  placeholder={placeholder?.options || "Option text"}
                   className="w-full py-2"
                 />
                 <button onClick={() => api.option.remove(option.id)}>

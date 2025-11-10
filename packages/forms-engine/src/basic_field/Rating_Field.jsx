@@ -9,7 +9,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f }) => {
+      {({ api, isPreview, insideSection, field: f, placeholder }) => {
         const options = f.options || [];
         const selectedIndex = options.findIndex(opt => opt.id === f.selected);
         
@@ -68,7 +68,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder="Enter question"
+              placeholder={placeholder?.question || "Enter question"}
             />
 
             <div className="mt-3 text-sm text-gray-600 mb-2">
@@ -82,7 +82,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                   type="text"
                   value={option.value}
                   onChange={(e) => api.option.update(option.id, e.target.value)}
-                  placeholder="Option label"
+                  placeholder={placeholder?.options || "Option label"}
                   className="w-full py-2"
                 />
                 <button onClick={() => api.option.remove(option.id)}>

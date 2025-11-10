@@ -8,7 +8,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f }) => {
+      {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
             <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
@@ -41,7 +41,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder="Enter question"
+              placeholder={placeholder?.question || "Enter question"}
             />
 
             <div className="mt-2">
@@ -64,7 +64,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
                   type="text"
                   value={option.value}
                   onChange={(e) => api.option.update(option.id, e.target.value)}
-                  placeholder="Option text"
+                  placeholder={placeholder?.options || "Option text"}
                   className="w-full"
                 />
                 <button onClick={() => api.option.remove(option.id)}>
