@@ -205,7 +205,7 @@ const fieldTypes = {
     label: "Slider Field",
     componentKey: "slider",
     defaultProps: {
-      fieldType: "",
+      fieldType: "slider",
       question: "",
       options: [
         { value: "" },
