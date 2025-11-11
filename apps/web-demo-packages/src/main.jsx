@@ -12,17 +12,6 @@ function App() {
   const [hideUnsupportedFields, setHideUnsupportedFields] = React.useState(true);
   const [formKey, setFormKey] = React.useState(0);
 
-  // Load initial form data from example
-  React.useEffect(() => {
-    fetch('/examples/surveyjs-sample.json')
-      .then(res => res.json())
-      .then(data => {
-        setFormData(data);
-        setFormKey(k => k + 1);
-      })
-      .catch(() => {});
-  }, []);
-
   // ESC to return to landing when not already there
   React.useEffect(() => {
     const handler = (e) => {
