@@ -1,54 +1,59 @@
 import React from "react";
-import { generateOptionId } from "@mieweb/forms-engine";
 
-export default function OptionListEditor({ field, onUpdateField }) {
+export default function OptionListEditor({ field, api }) {
   const opts = field.options || [];
+  const isBoolean = field.fieldType === "boolean";
 
-  const addOption = () => {
-    const existingIds = new Set(opts.map(o => o.id));
-    const newId = generateOptionId("", existingIds, field.id);
-    onUpdateField("options", [...opts, { id: newId, value: "" }]);
+  // Determine the label based on field type
+  const getLabel = () => {
+    if (field.fieldType === "multitext") {
+      return "Text Inputs";
+    }
+    if (isBoolean) {
+      return "Options";
+    }
+    return "Options";
   };
 
-  const updateOption = (id, value) => {
-    onUpdateField(
-      "options",
-      opts.map((o) => (o.id === id ? { ...o, value } : o))
-    );
+  const getPlaceholder = () => {
+    if (field.fieldType === "multitext") {
+      return "Input label";
+    }
+    return "Option text";
   };
 
-  const removeOption = (id) => {
-    onUpdateField(
-      "options",
-      opts.filter((o) => o.id !== id)
-    );
-  };
+  const label = getLabel();
+  const placeholder = getPlaceholder();
 
   return (
     <div className="mt-3">
-      <div className="text-sm font-medium mb-1">Options</div>
+      <div className="text-sm font-medium mb-1">{label}</div>
       {opts.map((opt) => (
         <div key={opt.id} className="flex items-center gap-2 mb-2">
           <input
             className="flex-1 px-3 py-2 border border-black/20 rounded"
             value={opt.value}
-            onChange={(e) => updateOption(opt.id, e.target.value)}
-            placeholder="Option text"
+            onChange={(e) => api.option.update(opt.id, e.target.value)}
+            placeholder={placeholder}
           />
-          <button
-            onClick={() => removeOption(opt.id)}
-            className="px-2 py-1 text-sm border border-black/20 rounded hover:bg-slate-50"
-          >
-            Remove
-          </button>
+          {!isBoolean && (
+            <button
+              onClick={() => api.option.remove(opt.id)}
+              className="px-2 py-1 text-sm border border-black/20 rounded hover:bg-slate-50"
+            >
+              Remove
+            </button>
+          )}
         </div>
       ))}
-      <button
-        onClick={addOption}
-        className="mt-1 px-3 py-2 text-sm border border-black/20 rounded hover:bg-slate-50"
-      >
-        + Add Option
-      </button>
+      {!isBoolean && (
+        <button
+          onClick={() => api.option.add("")}
+          className="mt-1 px-3 py-2 text-sm border border-black/20 rounded hover:bg-slate-50"
+        >
+          + Add {label.slice(0, -1)}
+        </button>
+      )}
     </div>
   );
 }
