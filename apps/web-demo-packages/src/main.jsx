@@ -32,10 +32,6 @@ function App() {
     // Renderer form change handler - currently unused but keeping for future functionality
   };
 
-  React.useEffect(() => {
-    // Placeholder for future form change logic
-  }, [formData]);
-
   if (view === 'editor') {
     return (
       <div className="w-full relative">
