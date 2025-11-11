@@ -3,27 +3,11 @@ import React from "react";
 export default function OptionListEditor({ field, api }) {
   const opts = field.options || [];
   const isBoolean = field.fieldType === "boolean";
+  const isMultitext = field.fieldType === "multitext";
 
-  // Determine the label based on field type
-  const getLabel = () => {
-    if (field.fieldType === "multitext") {
-      return "Text Inputs";
-    }
-    if (isBoolean) {
-      return "Options";
-    }
-    return "Options";
-  };
-
-  const getPlaceholder = () => {
-    if (field.fieldType === "multitext") {
-      return "Input label";
-    }
-    return "Option text";
-  };
-
-  const label = getLabel();
-  const placeholder = getPlaceholder();
+  const label = isMultitext ? "Text Inputs" : "Options";
+  const singular = isMultitext ? "Text Input" : "Option";
+  const placeholder = isMultitext ? "Input label" : "Option text";
 
   return (
     <div className="mt-3">
@@ -51,7 +35,7 @@ export default function OptionListEditor({ field, api }) {
           onClick={() => api.option.add("")}
           className="mt-1 px-3 py-2 text-sm border border-black/20 rounded hover:bg-slate-50"
         >
-          + Add {label.slice(0, -1)}
+          + Add {singular}
         </button>
       )}
     </div>
