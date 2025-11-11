@@ -10,12 +10,16 @@ function App() {
   const [submitted, setSubmitted] = React.useState(null);
   const [view, setView] = React.useState('landing');
   const [hideUnsupportedFields, setHideUnsupportedFields] = React.useState(true);
+  const [formKey, setFormKey] = React.useState(0);
 
   // Load initial form data from example
   React.useEffect(() => {
     fetch('/examples/surveyjs-sample.json')
       .then(res => res.json())
-      .then(data => setFormData(data))
+      .then(data => {
+        setFormData(data);
+        setFormKey(k => k + 1);
+      })
       .catch(() => {});
   }, []);
 
@@ -37,7 +41,10 @@ function App() {
       <div className="w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingExamples 
-          onLoadData={setFormData}
+          onLoadData={(data) => {
+            setFormData(data);
+            setFormKey(k => k + 1);
+          }}
         />
         <FloatingFooter 
           view={view}
@@ -46,9 +53,12 @@ function App() {
         />
         <div className="absolute inset-0">
           <QuestionnaireEditor
-            key={formData ? JSON.stringify(formData).substring(0, 50) : 'empty'}
+            key={formKey}
             initialFormData={formData}
-            onChange={setFormData}
+            onChange={(data) => {
+              setFormData(data);
+              setFormKey(k => k + 1);
+            }}
             hideUnsupportedFields={hideUnsupportedFields}
           />
         </div>
@@ -68,7 +78,10 @@ function App() {
       <div className="w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingExamples 
-          onLoadData={setFormData}
+          onLoadData={(data) => {
+            setFormData(data);
+            setFormKey(k => k + 1);
+          }}
         />
         <FloatingFooter 
           view={view}
@@ -78,7 +91,7 @@ function App() {
         <div className="w-full">
           <form onSubmit={handleSubmit}>
             <QuestionnaireRenderer
-              key={formData ? JSON.stringify(formData).substring(0, 50) : 'empty'}
+              key={formKey}
               formData={formData}
               onChange={handleFormChange}
               className="p-0 overflow-y-visible"
