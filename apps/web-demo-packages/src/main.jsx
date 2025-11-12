@@ -42,11 +42,9 @@ function App() {
         />
         <div className="absolute inset-0">
           <QuestionnaireEditor
-            key={formKey}
             initialFormData={formData}
             onChange={(data) => {
               setFormData(data);
-              setFormKey(k => k + 1);
             }}
             hideUnsupportedFields={hideUnsupportedFields}
           />
