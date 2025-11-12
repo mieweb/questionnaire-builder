@@ -293,6 +293,7 @@ const fieldTypes = {
       caption: "",
       size: "full",
       alignment: "center",
+      padding: "padded",
     },
     placeholder: {
       label: "Image Block",
