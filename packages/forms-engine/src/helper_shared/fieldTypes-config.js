@@ -11,6 +11,7 @@ import RankingField from "../basic_field/Ranking_Field"
 import SliderField from "../basic_field/Slider_Field"
 import MultiMatrixField from "../basic_field/MultiMatrix_Field"
 import SingleMatrixField from "../basic_field/SingleMatrix_Field"
+import SignatureField from "../adv_field/Signature_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 
 
@@ -267,6 +268,21 @@ const fieldTypes = {
       columns: "Enter column label...",
     }
   },
+  signature: {
+    label: "Signature Field",
+    componentKey: "signature",
+    defaultProps: {
+      fieldType: "signature",
+      question: "",
+      placeholder: "Please sign here",
+      answer: "",
+      required: false,
+    },
+    placeholder: {
+      question: "Enter your question...",
+      placeholder: "Enter placeholder text...",
+    }
+  },
   unsupported: {
     label: "Unsupported Field",
     componentKey: "unsupported",
@@ -297,6 +313,7 @@ const componentMap = {
   slider: SliderField,
   multimatrix: MultiMatrixField,
   singlematrix: SingleMatrixField,
+  signature: SignatureField,
   unsupported: UnsupportedField,
 };
 
