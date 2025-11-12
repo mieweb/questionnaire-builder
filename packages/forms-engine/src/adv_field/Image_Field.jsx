@@ -1,10 +1,14 @@
 import React from "react";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
+import { UPLOAD_ICON, X_ICON } from "../helper_shared/icons";
 
 const ImageField = React.memo(function ImageField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
   const [previewUrl, setPreviewUrl] = React.useState(field.imageUri || "");
+  const [fileName, setFileName] = React.useState(field.fileName || "");
+  const containerRef = React.useRef(null);
+  const fileInputRef = React.useRef(null);
 
   // Convert file to base64 when user selects image
   const handleImageUpload = (e) => {
@@ -15,14 +19,50 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
     reader.onload = (event) => {
       const base64String = event.target.result;
       setPreviewUrl(base64String);
+      setFileName(file.name);
       ctrl.api.field.update("imageUri", base64String);
+      ctrl.api.field.update("fileName", file.name);
     };
     reader.readAsDataURL(file); // Reads as data URL (base64 encoded)
   };
 
+  // Handle pasted images from clipboard
+  const handlePaste = React.useCallback((e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.type.startsWith("image/")) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const base64String = event.target.result;
+          setPreviewUrl(base64String);
+          setFileName(""); // Clear fileName for pasted images
+          ctrl.api.field.update("imageUri", base64String);
+          ctrl.api.field.update("fileName", "");
+        };
+        reader.readAsDataURL(file);
+        break;
+      }
+    }
+  }, [ctrl.api.field]);
+
+  React.useEffect(() => {
+    const container = containerRef.current;
+    if (!container || ctrl.isPreview) return;
+
+    container.addEventListener("paste", handlePaste);
+    return () => container.removeEventListener("paste", handlePaste);
+  }, [handlePaste, ctrl.isPreview]);
+
   return (
-    <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f, placeholder }) => {
+    <FieldWrapper ctrl={ctrl} noPadding={ctrl.isPreview && field.padding === "full-bleed"}>
+      {({ api, isPreview, field: f, placeholder }) => {
         if (isPreview) {
           const imageUri = f.imageUri || previewUrl;
           const sizeClass = {
@@ -37,20 +77,20 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
             right: "justify-end",
           }[f.alignment || "center"] || "justify-center";
 
+          const previewPaddingClass = f.padding === "full-bleed" ? "" : "pb-4";
+
           return (
-            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
-              <div className="pb-4">
-                {imageUri && (
-                  <div className={`flex ${alignmentClass} mb-4`}>
-                    <img
-                      src={imageUri}
-                      alt={f.altText || "Image"}
-                      className={`${sizeClass} h-auto object-contain`}
-                    />
-                  </div>
-                )}
-                {f.caption && <p className="text-sm text-gray-600 text-center mb-2">{f.caption}</p>}
-              </div>
+            <div className={previewPaddingClass}>
+              {imageUri && (
+                <div className={`flex ${alignmentClass} ${f.padding !== "full-bleed" ? "mb-4" : ""}`}>
+                  <img
+                    src={imageUri}
+                    alt={f.altText || "Image"}
+                    className={`${sizeClass} h-auto object-contain ${f.padding === "full-bleed" ? "w-full" : ""}`}
+                  />
+                </div>
+              )}
+              {f.caption && <p className="text-sm text-gray-600 text-center mb-2">{f.caption}</p>}
             </div>
           );
         }
@@ -69,47 +109,18 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
         }[f.alignment || "center"] || "justify-center";
 
         return (
-          <div className="space-y-3 w-full overflow-hidden">
+          <div ref={containerRef} tabIndex={-1} className="space-y-3 w-full overflow-hidden">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Label
+                Question / Title
               </label>
               <input
                 className="px-3 py-2 w-full border border-black/40 rounded"
                 type="text"
-                value={f.label || ""}
-                onChange={(e) => api.field.update("label", e.target.value)}
-                placeholder={placeholder?.label || "Image Block"}
+                value={f.question || ""}
+                onChange={(e) => api.field.update("question", e.target.value)}
+                placeholder={placeholder?.question || "Image Block Title"}
               />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Image (Upload or URL)
-              </label>
-              <div className="space-y-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="w-full px-3 py-2 border border-black/40 rounded text-sm"
-                />
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 border-t border-gray-300"></div>
-                  <span className="text-gray-500 text-sm px-2">or</span>
-                  <div className="flex-1 border-t border-gray-300"></div>
-                </div>
-                <input
-                  type="text"
-                  className="w-full px-3 py-2 border border-black/40 rounded text-sm"
-                  value={f.imageUri || ""}
-                  onChange={(e) => {
-                    api.field.update("imageUri", e.target.value);
-                    setPreviewUrl(e.target.value);
-                  }}
-                  placeholder="Image URL or base64 data"
-                />
-              </div>
             </div>
 
             <div>
@@ -140,11 +151,12 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
 
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className={`block text-sm font-medium mb-1 ${f.padding === "full-bleed" ? "text-gray-400" : "text-gray-700"}`}>
                   Size
                 </label>
                 <select
-                  className="px-3 py-2 w-full border border-black/40 rounded"
+                  disabled={f.padding === "full-bleed"}
+                  className={`px-3 py-2 w-full border rounded text-sm ${f.padding === "full-bleed" ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed" : "border-black/40"}`}
                   value={f.size || "full"}
                   onChange={(e) => api.field.update("size", e.target.value)}
                 >
@@ -159,7 +171,8 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                   Alignment
                 </label>
                 <select
-                  className="px-3 py-2 w-full border border-black/40 rounded"
+                  disabled={f.padding === "full-bleed"}
+                  className={`px-3 py-2 w-full border rounded text-sm ${f.padding === "full-bleed" ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed" : "border-black/40"}`}
                   value={f.alignment || "center"}
                   onChange={(e) => api.field.update("alignment", e.target.value)}
                 >
@@ -170,8 +183,36 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
               </div>
             </div>
 
-            {currentImageUri && (
-              <div className="mt-4 p-3 border border-gray-200 rounded bg-gray-50 w-full overflow-hidden">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Padding
+              </label>
+              <select
+                className="px-3 py-2 w-full border border-black/40 rounded"
+                value={f.padding || "padded"}
+                onChange={(e) => api.field.update("padding", e.target.value)}
+              >
+                <option value="padded">Padded (default)</option>
+                <option value="full-bleed">Full Bleed (no padding)</option>
+              </select>
+            </div>
+
+            {currentImageUri ? (
+              <div className="mt-4 p-3 border border-gray-200 rounded bg-gray-50 w-full overflow-hidden relative">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    api.field.update("imageUri", "");
+                    api.field.update("fileName", "");
+                    setPreviewUrl("");
+                    setFileName("");
+                  }}
+                  className="absolute top-2 right-2 text-gray-700 hover:text-gray-900 transition-colors"
+                  title="Delete image"
+                  aria-label="Delete image"
+                >
+                  <X_ICON className="w-5 h-5" />
+                </button>
                 <p className="text-sm font-medium text-gray-700 mb-2">Preview</p>
                 <div className={`flex ${alignmentClass} mb-2`}>
                   <img
@@ -180,8 +221,33 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                     className={`${sizeClass} h-auto object-contain max-w-full`}
                   />
                 </div>
-                {f.caption && <p className="text-sm text-gray-600 text-center">{f.caption}</p>}
+                {f.caption && <p className="text-sm text-gray-600 text-center mb-2">{f.caption}</p>}
+                {fileName && (
+                  <p className="text-xs text-gray-500 border-t pt-2">
+                    <span className="font-medium">Source:</span> {fileName}
+                  </p>
+                )}
               </div>
+            ) : (
+              <>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="mt-4 p-8 border-2 border-dashed border-blue-200 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 w-full overflow-hidden flex items-center justify-center min-h-64 cursor-pointer hover:from-gray-100 hover:to-gray-150 transition-all"
+                >
+                  <div className="text-center">
+                    <UPLOAD_ICON className="w-12 h-12 mx-auto mb-3 text-blue-500" />
+                    <p className="text-lg font-semibold text-gray-700 mb-2">Paste Image or Click to Upload</p>
+                    <p className="text-sm text-gray-500">Press Ctrl+V (Cmd+V on Mac) to paste an image from your clipboard, or click here to select a file</p>
+                  </div>
+                </div>
+              </>
             )}
           </div>
         );
