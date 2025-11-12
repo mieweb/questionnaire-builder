@@ -8,7 +8,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f }) => {
+      {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
             <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
@@ -59,7 +59,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder="Enter question"
+              placeholder={placeholder?.question || "Enter question"}
             />
 
             {options.map((opt, idx) => (
@@ -69,7 +69,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
                   type="text"
                   value={opt.value}
                   onChange={(e) => api.option.update(idx, "value", e.target.value)}
-                  placeholder={`Option ${idx + 1}`}
+                  placeholder={placeholder?.options || `Option ${idx + 1}`}
                   className="w-full py-2"
                 />
               </div>

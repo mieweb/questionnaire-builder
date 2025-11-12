@@ -7,7 +7,7 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f }) => {
+      {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
             <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
@@ -32,13 +32,13 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder="Enter question"
+              placeholder={placeholder?.question || "Enter question"}
             />
 
             <input
               type="text"
               value={f.answer || ""}
-              placeholder="Type your answer"
+              placeholder={placeholder?.answer || "Type your answer"}
               className="px-4 py-2 my-1.5 w-full border border-black/10 shadow-2xs rounded"
               disabled
             />

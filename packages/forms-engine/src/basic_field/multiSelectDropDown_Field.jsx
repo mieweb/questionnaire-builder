@@ -22,7 +22,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f }) => {
+      {({ api, isPreview, insideSection, field: f, placeholder }) => {
         const selectedIds = Array.isArray(f.selected) ? f.selected : [];
         const selectedOptions = (f.options || []).filter(opt => selectedIds.includes(opt.id));
         const availableOptions = (f.options || []).filter(opt => !selectedIds.includes(opt.id));
@@ -112,7 +112,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder="Enter question"
+              placeholder={placeholder?.question || "Enter question"}
             />
 
             <div className="mt-2">
@@ -130,7 +130,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
                   type="text"
                   value={option.value}
                   onChange={(e) => api.option.update(option.id, e.target.value)}
-                  placeholder="Option text"
+                  placeholder={placeholder?.options || "Option text"}
                   className="w-full"
                 />
                 <button onClick={() => api.option.remove(option.id)}>

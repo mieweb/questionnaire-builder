@@ -20,8 +20,13 @@ const fieldTypes = {
     componentKey: "section",
     defaultProps: {
       fieldType: "section",
-      title: "New section",
+      title: "",
       fields: [],
+    },
+    placeholder: {
+      title: "Enter section title...",
+      question: "Not applicable for section",
+      options: "Not applicable for section",
     }
   },
   text: {
@@ -32,6 +37,11 @@ const fieldTypes = {
       question: "",
       answer: "",
     },
+    placeholder: {
+      question: "Enter your question...",
+      answer: "Enter answer...",
+      options: "Not applicable for text field",
+    }
   },
   longtext: {
     label: "Long Text Field",
@@ -41,6 +51,11 @@ const fieldTypes = {
       question: "",
       answer: "",
     },
+    placeholder: {
+      question: "Enter your question...",
+      answer: "Enter detailed answer...",
+      options: "Not applicable for long text field",
+    }
   },
   multitext: {
     label: "Multi Text Field",
@@ -49,11 +64,15 @@ const fieldTypes = {
       fieldType: "multitext",
       question: "",
       options: [
-        { value: "Field 1" },
-        { value: "Field 2" },
-        { value: "Field 3" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   radio: {
     label: "Radio Field",
@@ -62,12 +81,16 @@ const fieldTypes = {
       fieldType: "radio",
       question: "",
       options: [
-        { value: "Option 1" },
-        { value: "Option 2" },
-        { value: "Option 3" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       selected: null,
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   check: {
     label: "Check Field",
@@ -76,12 +99,16 @@ const fieldTypes = {
       fieldType: "check",
       question: "",
       options: [
-        { value: "Option 1" },
-        { value: "Option 2" },
-        { value: "Option 3" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       selected: [],
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   boolean: {
     label: "Boolean Field",
@@ -90,11 +117,15 @@ const fieldTypes = {
       fieldType: "boolean",
       question: "",
       options: [
-        { id: "yes", value: "Yes" },
-        { id: "no", value: "No" },
+        { value: "" },
+        { value: "" },
       ],
       selected: null,
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   dropdown: {
     label: "Dropdown Field",
@@ -103,12 +134,16 @@ const fieldTypes = {
       fieldType: "dropdown",
       question: "",
       options: [
-        { value: "Option 1" },
-        { value: "Option 2" },
-        { value: "Option 3" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       selected: null,
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   multiselectdropdown: {
     label: "Multi-Select Dropdown",
@@ -117,12 +152,16 @@ const fieldTypes = {
       fieldType: "multiselectdropdown",
       question: "",
       options: [
-        { value: "Item 1" },
-        { value: "Item 2" },
-        { value: "Item 3" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       selected: [],
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter option text...",
+    }
   },
   rating: {
     label: "Rating Field",
@@ -131,14 +170,18 @@ const fieldTypes = {
       fieldType: "rating",
       question: "",
       options: [
-        { value: "1" },
-        { value: "2" },
-        { value: "3" },
-        { value: "4" },
-        { value: "5" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       selected: null,
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter rating level...",
+    }
   },
   ranking: {
     label: "Ranking Field",
@@ -147,12 +190,16 @@ const fieldTypes = {
       fieldType: "ranking",
       question: "",
       options: [
-        { value: "Item 1" },
-        { value: "Item 2" },
-        { value: "Item 3" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       selected: [],
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter item to rank...",
+    }
   },
   slider: {
     label: "Slider Field",
@@ -161,12 +208,16 @@ const fieldTypes = {
       fieldType: "slider",
       question: "",
       options: [
-        { value: "Low" },
-        { value: "Medium" },
-        { value: "High" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       selected: null,
     },
+    placeholder: {
+      question: "Enter your question...",
+      options: "Enter scale label...",
+    }
   },
   multimatrix: {
     label: "Multi Matrix Field",
@@ -175,17 +226,22 @@ const fieldTypes = {
       fieldType: "multimatrix",
       question: "",
       rows: [
-        { value: "Row 1" },
-        { value: "Row 2" },
-        { value: "Row 3" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       columns: [
-        { value: "Column 1" },
-        { value: "Column 2" },
-        { value: "Column 3" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       selected: {},
     },
+    placeholder: {
+      question: "Enter your question...",
+      rows: "Enter row label...",
+      columns: "Enter column label...",
+    }
   },
   singlematrix: {
     label: "Single Matrix Field",
@@ -194,17 +250,22 @@ const fieldTypes = {
       fieldType: "singlematrix",
       question: "",
       rows: [
-        { value: "Row 1" },
-        { value: "Row 2" },
-        { value: "Row 3" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       columns: [
-        { value: "Column 1" },
-        { value: "Column 2" },
-        { value: "Column 3" },
+        { value: "" },
+        { value: "" },
+        { value: "" },
       ],
       selected: {},
     },
+    placeholder: {
+      question: "Enter your question...",
+      rows: "Enter row label...",
+      columns: "Enter column label...",
+    }
   },
   unsupported: {
     label: "Unsupported Field",
@@ -215,6 +276,10 @@ const fieldTypes = {
       unsupportedType: "unknown",
       unsupportedData: {},
     },
+    placeholder: {
+      question: "Unsupported field type",
+      options: "Cannot edit unsupported field",
+    }
   },
 };
 

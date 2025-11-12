@@ -8,6 +8,7 @@ export default function useFieldController(field, sectionId) {
   const api = useFormApi(field.id, sectionId);
 
   const label = fieldTypes[field.fieldType]?.label ?? "Field";
+  const placeholder = fieldTypes[field.fieldType]?.placeholder;
   const insideSection = !!sectionId;
 
   const selected = ui.selectedFieldId.value === field.id;
@@ -37,6 +38,7 @@ export default function useFieldController(field, sectionId) {
     field,
     sectionId,
     label,
+    placeholder,
     insideSection,
 
     // ────────── ui flags ──────────
