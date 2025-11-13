@@ -18,6 +18,8 @@ const fieldTypes = {
   section: {
     label: "Section Field",
     componentKey: "section",
+    hasOptions: false,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "section",
       title: "",
@@ -32,6 +34,8 @@ const fieldTypes = {
   text: {
     label: "Text Field",
     componentKey: "text",
+    hasOptions: false,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "text",
       question: "",
@@ -46,6 +50,8 @@ const fieldTypes = {
   longtext: {
     label: "Long Text Field",
     componentKey: "longtext",
+    hasOptions: false,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "longtext",
       question: "",
@@ -60,6 +66,8 @@ const fieldTypes = {
   multitext: {
     label: "Multi Text Field",
     componentKey: "multitext",
+    hasOptions: true,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "multitext",
       question: "",
@@ -77,6 +85,8 @@ const fieldTypes = {
   radio: {
     label: "Radio Field",
     componentKey: "radio",
+    hasOptions: true,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "radio",
       question: "",
@@ -95,6 +105,8 @@ const fieldTypes = {
   check: {
     label: "Check Field",
     componentKey: "check",
+    hasOptions: true,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "check",
       question: "",
@@ -113,6 +125,8 @@ const fieldTypes = {
   boolean: {
     label: "Boolean Field",
     componentKey: "boolean",
+    hasOptions: true,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "boolean",
       question: "",
@@ -130,6 +144,8 @@ const fieldTypes = {
   dropdown: {
     label: "Dropdown Field",
     componentKey: "dropdown",
+    hasOptions: true,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "dropdown",
       question: "",
@@ -148,6 +164,8 @@ const fieldTypes = {
   multiselectdropdown: {
     label: "Multi-Select Dropdown",
     componentKey: "multiselectdropdown",
+    hasOptions: true,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "multiselectdropdown",
       question: "",
@@ -166,6 +184,8 @@ const fieldTypes = {
   rating: {
     label: "Rating Field",
     componentKey: "rating",
+    hasOptions: true,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "rating",
       question: "",
@@ -186,6 +206,8 @@ const fieldTypes = {
   ranking: {
     label: "Ranking Field",
     componentKey: "ranking",
+    hasOptions: true,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "ranking",
       question: "",
@@ -204,6 +226,8 @@ const fieldTypes = {
   slider: {
     label: "Slider Field",
     componentKey: "slider",
+    hasOptions: true,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "slider",
       question: "",
@@ -222,6 +246,8 @@ const fieldTypes = {
   multimatrix: {
     label: "Multi Matrix Field",
     componentKey: "multimatrix",
+    hasOptions: false,
+    hasMatrix: true,
     defaultProps: {
       fieldType: "multimatrix",
       question: "",
@@ -246,6 +272,8 @@ const fieldTypes = {
   singlematrix: {
     label: "Single Matrix Field",
     componentKey: "singlematrix",
+    hasOptions: false,
+    hasMatrix: true,
     defaultProps: {
       fieldType: "singlematrix",
       question: "",
@@ -270,6 +298,8 @@ const fieldTypes = {
   unsupported: {
     label: "Unsupported Field",
     componentKey: "unsupported",
+    hasOptions: false,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "unsupported",
       question: "Unsupported field type",

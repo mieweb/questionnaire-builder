@@ -118,7 +118,9 @@ export default function MobileToolBar() {
             <X_ICON />
           </button>
 
-          {Object.keys(fieldTypes).map((type) => (
+          {Object.keys(fieldTypes)
+            .filter((type) => type !== "unsupported")
+            .map((type) => (
             <button
               key={type}
               className="px-4 pl-6 py-2 text-black text-left rounded hover:bg-slate-50"

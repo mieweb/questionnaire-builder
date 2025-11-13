@@ -1,7 +1,8 @@
 import React from "react";
 import CommonEditor from "./CommonEditor";
 import OptionListEditor from "./OptionListEditor";
-import { useFormApi } from "@mieweb/forms-engine";
+import MatrixEditor from "./MatrixEditor";
+import { useFormApi, fieldTypes } from "@mieweb/forms-engine";
 
 function NonSectionEditor({ f }) {
   const api = useFormApi(f.id);
@@ -11,10 +12,9 @@ function NonSectionEditor({ f }) {
     [api]
   );
 
-  const isChoice = React.useMemo(
-    () => ["radio", "check", "selection"].includes(f.fieldType),
-    [f.fieldType]
-  );
+  const fieldConfig = fieldTypes[f.fieldType] || {};
+  const hasOptions = fieldConfig.hasOptions || false;
+  const hasMatrix = fieldConfig.hasMatrix || false;
 
   return (
     <>
@@ -33,7 +33,9 @@ function NonSectionEditor({ f }) {
         </div>
       )}
 
-      {isChoice && <OptionListEditor field={f} onUpdateField={onUpdateField} />}
+      {hasOptions && <OptionListEditor field={f} api={api} />}
+
+      {hasMatrix && <MatrixEditor field={f} api={api} />}
     </>
   );
 }

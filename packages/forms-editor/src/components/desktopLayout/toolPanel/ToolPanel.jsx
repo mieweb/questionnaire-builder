@@ -1,10 +1,12 @@
 import React, { useMemo } from "react";
 import { fieldTypes, useFormStore } from "@mieweb/forms-engine";
 
-const TOOL_ITEMS = Object.entries(fieldTypes).map(([type, cfg]) => ({
-  type,
-  label: cfg.label,
-}));
+const TOOL_ITEMS = Object.entries(fieldTypes)
+  .filter(([type]) => type !== "unsupported")
+  .map(([type, cfg]) => ({
+    type,
+    label: cfg.label,
+  }));
 
 const ToolPanelImpl = ({ isPreview = false }) => {
   if (isPreview) return null;
