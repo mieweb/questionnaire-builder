@@ -25,7 +25,7 @@
     "build:watch": "npm run build:css && vite build --watch"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.1.1",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
