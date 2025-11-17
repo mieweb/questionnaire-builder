@@ -27,6 +27,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                   <SignatureCanvas
                     onSignatureChange={handleSignatureChange}
                     existingSignature={f.answer}
+                    placeholder={f.placeholder || "Please sign here"}
                   />
                 </div>
               </div>
@@ -58,7 +59,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                     type="text"
                     value={f.placeholder || ""}
                     onChange={(e) => api.field.update("placeholder", e.target.value)}
-                    placeholder="e.g., Please sign here"
+                    placeholder={placeholder?.pad || "e.g., Please sign here"}
                     className="w-full px-3 py-2 border border-gray-200 rounded"
                   />
                 </div>
@@ -77,26 +78,6 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                 </div>
               </div>
             </div>
-
-            {f.answer && (
-              <div className="mt-4 p-3 border border-gray-200 rounded bg-blue-50">
-                <div className="text-sm font-medium text-gray-700 mb-2">Preview</div>
-                <div className="border border-gray-300 rounded p-2 bg-white">
-                  <img
-                    src={f.answer}
-                    alt="signature preview"
-                    className="w-full h-auto max-h-24 object-contain"
-                  />
-                </div>
-                <button
-                  onClick={() => handleClearSignature()}
-                  className="mt-2 px-2 py-1 text-sm bg-red-100 hover:bg-red-200 text-red-700 rounded transition flex items-center gap-1"
-                >
-                  <TRASHCANTWO_ICON className="h-4 w-4" />
-                  Clear Signature
-                </button>
-              </div>
-            )}
           </div>
         );
       }}

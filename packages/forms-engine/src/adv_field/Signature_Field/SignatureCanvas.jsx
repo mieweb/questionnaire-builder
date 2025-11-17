@@ -1,49 +1,40 @@
 import React from "react";
+import { X_ICON, CHECK_ICON } from "../../helper_shared/icons";
 
 const CANVAS_WIDTH = 450;
-const CANVAS_HEIGHT = 100;
+const CANVAS_HEIGHT = 125;
+const DPR = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
 
 export default function SignatureCanvas({
   onSignatureChange,
   existingSignature,
+  placeholder = "Please sign here",
 }) {
   const canvasRef = React.useRef(null);
   const containerRef = React.useRef(null);
   const isDrawingRef = React.useRef(false);
   const lastCoordRef = React.useRef({ x: 0, y: 0 });
   const [displaySize, setDisplaySize] = React.useState({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT });
-  
-  // Use device pixel ratio for crisp drawing
-  const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
+  const [hasSignature, setHasSignature] = React.useState(!!existingSignature);
+  const [tempSignature, setTempSignature] = React.useState(null);
 
-  // ────────── Helper: Get mouse position relative to canvas ──────────
+  // Get coordinates from mouse or touch event
   const getCoords = (e) => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
     const rect = canvas.getBoundingClientRect();
+    const clientX = e.clientX ?? e.touches?.[0]?.clientX;
+    const clientY = e.clientY ?? e.touches?.[0]?.clientY;
+    
     return {
-      x: (e.clientX - rect.left) / rect.width * displaySize.width,
-      y: (e.clientY - rect.top) / rect.height * displaySize.height,
+      x: (clientX - rect.left) / rect.width * displaySize.width,
+      y: (clientY - rect.top) / rect.height * displaySize.height,
     };
   };
 
-  // ────────── Helper: Get touch position relative to canvas ──────────
-  const getTouchCoords = (e) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return null;
-    const rect = canvas.getBoundingClientRect();
-    const touch = e.touches[0];
-    return {
-      x: (touch.clientX - rect.left) / rect.width * displaySize.width,
-      y: (touch.clientY - rect.top) / rect.height * displaySize.height,
-    };
-  };
-
-  // ────────── Draw a line on canvas ──────────
   const drawLine = (fromX, fromY, toX, toY) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvasRef.current?.getContext("2d");
+    if (!ctx) return;
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 2;
     ctx.lineCap = "round";
@@ -54,129 +45,102 @@ export default function SignatureCanvas({
     ctx.stroke();
   };
 
-  // ────────── Canvas Mouse Events ──────────
-  const handleMouseDown = (e) => {
+  const drawPlaceholder = (ctx) => {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#ccc";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(placeholder, displaySize.width / 2, displaySize.height / 2);
+  };
+
+  const drawFinalLabel = (ctx) => {
+    ctx.font = "14px Arial";
+    ctx.fillStyle = "#999";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+    ctx.fillText("Final Signature", displaySize.width / 2, displaySize.height - 10);
+  };
+
+  const handleDrawStart = (e) => {
+    if (existingSignature) return;
+    e.preventDefault?.();
     const coords = getCoords(e);
     if (!coords) return;
     isDrawingRef.current = true;
     lastCoordRef.current = coords;
+    setHasSignature(true);
   };
 
-  const handleMouseMove = (e) => {
+  const handleDrawMove = (e) => {
     if (!isDrawingRef.current) return;
+    e.preventDefault?.();
     const coords = getCoords(e);
     if (!coords) return;
-
     drawLine(lastCoordRef.current.x, lastCoordRef.current.y, coords.x, coords.y);
     lastCoordRef.current = coords;
   };
 
-  const handleMouseUp = () => {
+  const handleDrawEnd = () => {
     if (!isDrawingRef.current) return;
     isDrawingRef.current = false;
-    saveSignature();
+    const canvas = canvasRef.current;
+    if (canvas) setTempSignature(canvas.toDataURL("image/png"));
   };
 
-  // ────────── Canvas Touch Events ──────────
-  const handleTouchStart = (e) => {
-    e.preventDefault();
-    const coords = getTouchCoords(e);
-    if (!coords) return;
-    isDrawingRef.current = true;
-    lastCoordRef.current = coords;
-  };
-
-  const handleTouchMove = (e) => {
-    e.preventDefault();
-    if (!isDrawingRef.current) return;
-
-    const coords = getTouchCoords(e);
-    if (!coords) return;
-
-    drawLine(lastCoordRef.current.x, lastCoordRef.current.y, coords.x, coords.y);
-    lastCoordRef.current = coords;
-  };
-
-  const handleTouchEnd = () => {
-    if (!isDrawingRef.current) return;
-    isDrawingRef.current = false;
-    saveSignature();
-  };
-
-  // ────────── Save signature to parent as base64 ──────────
-  const saveSignature = () => {
+  const clearCanvas = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const base64 = canvas.toDataURL("image/png");
-    onSignatureChange(base64);
-  };
-
-  // ────────── Initialize canvas with existing signature ──────────
-  const initCanvas = React.useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    // Scale canvas for device pixel ratio
-    canvas.width = CANVAS_WIDTH * dpr;
-    canvas.height = CANVAS_HEIGHT * dpr;
-    
     const ctx = canvas.getContext("2d");
-    ctx.scale(dpr, dpr);
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    ctx.clearRect(0, 0, displaySize.width, displaySize.height);
     ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    ctx.fillRect(0, 0, displaySize.width, displaySize.height);
+    setHasSignature(false);
+    setTempSignature(null);
+    drawPlaceholder(ctx);
+    onSignatureChange("");
+  };
 
-    if (existingSignature) {
-      const img = new Image();
-      img.onload = () => {
-        ctx.drawImage(img, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-      };
-      img.src = existingSignature;
-    }
-  }, [existingSignature, dpr]);
-
-  // ────────── Update canvas resolution when display size changes ──────────
+  // Update canvas resolution and redraw
   React.useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || displaySize.width === 0) return;
 
-    // Set actual canvas resolution based on display size and DPR
-    const actualWidth = displaySize.width * dpr;
-    const actualHeight = displaySize.height * dpr;
+    const actualWidth = displaySize.width * DPR;
+    const actualHeight = displaySize.height * DPR;
 
     canvas.width = actualWidth;
     canvas.height = actualHeight;
 
     const ctx = canvas.getContext("2d");
-    ctx.scale(dpr, dpr);
+    ctx.scale(DPR, DPR);
     ctx.clearRect(0, 0, displaySize.width, displaySize.height);
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, displaySize.width, displaySize.height);
 
-    // Redraw existing signature if present
+    if (!hasSignature) {
+      drawPlaceholder(ctx);
+    }
+
     if (existingSignature) {
       const img = new Image();
       img.onload = () => {
         ctx.drawImage(img, 0, 0, displaySize.width, displaySize.height);
+        drawFinalLabel(ctx);
       };
       img.src = existingSignature;
     }
-  }, [displaySize, dpr, existingSignature]);
+  }, [displaySize, existingSignature, hasSignature, placeholder]);
 
-  // ────────── Handle responsive sizing ──────────
+  // Handle responsive sizing
   React.useEffect(() => {
     const handleResize = () => {
       if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const containerWidth = rect.width;
+      const containerWidth = containerRef.current.getBoundingClientRect().width;
       const aspectRatio = CANVAS_WIDTH / CANVAS_HEIGHT;
-      
-      // Scale proportionally without limiting to max size
-      const displayHeight = containerWidth / aspectRatio;
       
       setDisplaySize({
         width: containerWidth,
-        height: displayHeight,
+        height: containerWidth / aspectRatio,
       });
     };
 
@@ -189,55 +153,47 @@ export default function SignatureCanvas({
     return () => resizeObserver.disconnect();
   }, []);
 
-  // ────────── Clear canvas ──────────
-  const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, displaySize.width, displaySize.height);
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(0, 0, displaySize.width, displaySize.height);
-    onSignatureChange("");
-  };
-
   return (
-    <div ref={containerRef} className="flex flex-col gap-3 w-full">
-      <div className="border-2 border-gray-300 rounded bg-white overflow-hidden">
+    <div ref={containerRef} className="w-full">
+      <div className={`relative rounded bg-white overflow-hidden ${existingSignature ? "" : "border-2 border-gray-300"}`}>
         <canvas
           ref={canvasRef}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleDrawStart}
+          onMouseMove={handleDrawMove}
+          onMouseUp={handleDrawEnd}
+          onMouseLeave={handleDrawEnd}
+          onTouchStart={handleDrawStart}
+          onTouchMove={handleDrawMove}
+          onTouchEnd={handleDrawEnd}
           style={{
             width: `${displaySize.width}px`,
             height: `${displaySize.height}px`,
-            cursor: "crosshair",
+            cursor: existingSignature ? "default" : "crosshair",
             display: "block",
             border: "1px solid #e5e7eb",
           }}
         />
+        {(existingSignature || (hasSignature && !existingSignature)) && (
+          <div className="absolute top-2 right-2 flex gap-2">
+            {hasSignature && !existingSignature && (
+              <button
+                onClick={() => onSignatureChange(tempSignature)}
+                className="w-8 h-8 flex items-center justify-center bg-green-100 hover:bg-green-200 text-green-700 rounded transition"
+                title="Finalize"
+              >
+                <CHECK_ICON className="h-5 w-5" />
+              </button>
+            )}
+            <button
+              onClick={clearCanvas}
+              className="w-8 h-8 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-700 rounded transition"
+              title="Clear"
+            >
+              <X_ICON className="h-5 w-5" />
+            </button>
+          </div>
+        )}
       </div>
-
-      {existingSignature && (
-        <div className="border border-gray-200 rounded p-2 bg-gray-50">
-          <img
-            src={existingSignature}
-            alt="signature"
-            className="w-full h-auto max-h-32 object-contain"
-          />
-        </div>
-      )}
-
-      <button
-        onClick={clearCanvas}
-        className="px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded transition"
-      >
-        Clear
-      </button>
     </div>
   );
 }
