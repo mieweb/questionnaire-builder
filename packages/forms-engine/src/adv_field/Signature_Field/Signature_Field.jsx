@@ -21,8 +21,8 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
         if (isPreview) {
           return (
             <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light">{f.question || "Question"}</div>
+              <div className="pb-4">
+                <div className="font-light mb-2">{f.question || "Question"}</div>
                 <div>
                   <SignatureCanvas
                     onSignatureChange={handleSignatureChange}
