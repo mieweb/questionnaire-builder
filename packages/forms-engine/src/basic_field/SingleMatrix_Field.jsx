@@ -118,12 +118,16 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                   </button>
                 </div>
               ))}
-              <button
-                onClick={() => api.row.add(`Row ${(f.rows || []).length + 1}`)}
-                className="mt-2 ml-2 flex gap-3 justify-center"
-              >
-                <PLUSOPTION_ICON className="h-6 w-6" /> Add Row
-              </button>
+              {(f.rows || []).length >= 10 ? (
+                <div className="mt-2 ml-2 text-gray-500 text-sm">Max rows reached</div>
+              ) : (
+                <button
+                  onClick={() => api.row.add(`Row ${(f.rows || []).length + 1}`)}
+                  className="mt-2 ml-2 flex gap-3 justify-center"
+                >
+                  <PLUSOPTION_ICON className="h-6 w-6" /> Add Row
+                </button>
+              )}
             </div>
 
             <div className="mb-4">

@@ -25,12 +25,16 @@ export default function MatrixEditor({ field, api }) {
             </button>
           </div>
         ))}
-        <button
-          onClick={() => api.row.add("")}
-          className="mt-1 px-3 py-2 text-sm border border-black/20 rounded hover:bg-slate-50"
-        >
-          + Add Row
-        </button>
+        {rows.length >= 10 ? (
+          <div className="mt-1 px-3 py-2 text-sm text-gray-500">Max rows reached</div>
+        ) : (
+          <button
+            onClick={() => api.row.add("")}
+            className="mt-1 px-3 py-2 text-sm border border-black/20 rounded hover:bg-slate-50"
+          >
+            + Add Row
+          </button>
+        )}
       </div>
 
       {/* Columns Section */}

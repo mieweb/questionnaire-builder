@@ -41,7 +41,8 @@ function SectionEditor({ section, onActiveChildChange }) {
     [children, activeChildId]
   );
 
-  const childApi = activeChild ? useFormApi(activeChild.id, section.id) : null;
+  const childApi = useFormApi(activeChild?.id || '', section.id);
+  const validChildApi = activeChild && childApi ? childApi : null;
 
   const onUpdateChild = React.useCallback(
     (key, value) => {
@@ -160,9 +161,9 @@ function SectionEditor({ section, onActiveChildChange }) {
                   </div>
                 )}
 
-                {hasOptionsChild && childApi && <OptionListEditor field={activeChild} api={childApi} />}
+                {hasOptionsChild && validChildApi && <OptionListEditor field={activeChild} api={validChildApi} />}
 
-                {hasMatrixChild && childApi && <MatrixEditor field={activeChild} api={childApi} />}
+                {hasMatrixChild && validChildApi && <MatrixEditor field={activeChild} api={validChildApi} />}
 
                 <button
                   className="mt-3 px-3 py-2 text-sm text-red-400 border rounded"
