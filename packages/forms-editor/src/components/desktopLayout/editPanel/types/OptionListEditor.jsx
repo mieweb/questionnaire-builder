@@ -25,10 +25,11 @@ export default function OptionListEditor({ field, onUpdateField }) {
   };
 
   return (
-    <div className="mt-3">
+    <div className="option-list-editor-container mt-3">
       <div className="text-sm font-medium mb-1">Options</div>
+      <div className="option-list-editor-items">
       {opts.map((opt) => (
-        <div key={opt.id} className="flex items-center gap-2 mb-2">
+        <div key={opt.id} className="option-list-editor-item flex items-center gap-2 mb-2">
           <input
             className="flex-1 px-3 py-2 border border-black/20 rounded"
             value={opt.value}
@@ -43,6 +44,7 @@ export default function OptionListEditor({ field, onUpdateField }) {
           </button>
         </div>
       ))}
+      </div>
       <button
         onClick={addOption}
         className="mt-1 px-3 py-2 text-sm border border-black/20 rounded hover:bg-slate-50"

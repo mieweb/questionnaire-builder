@@ -7,8 +7,8 @@ function UnsupportedField({ field }) {
   const data = field.unsupportedData || field._sourceData || {};
   
   return (
-    <div className="border-2 border-dashed border-orange-500 rounded-lg p-4 bg-orange-50 mb-4">
-      <div className="flex items-center gap-2 mb-2">
+    <div className="unsupported-field-container border-2 border-dashed border-orange-500 rounded-lg p-4 bg-orange-50 mb-4">
+      <div className="unsupported-field-header flex items-center gap-2 mb-2">
         <span className="text-xl">⚠️</span>
         <div className="flex-1">
           <strong className="text-orange-700">Unsupported Field Type: {unsupportedType}</strong>
@@ -18,7 +18,7 @@ function UnsupportedField({ field }) {
         </div>
       </div>
       
-      <div className="mt-3 p-3 bg-white border border-gray-300 rounded text-sm">
+      <div className="mt-3 p-3 bg-white border border-gray-300 rounded text-sm unsupported-field-preview">
         <div className="text-xs text-gray-500 mb-2 font-semibold">Original Data Preview:</div>
         <div className="space-y-1 text-gray-700">
           {Object.entries(data).slice(0, 5).map(([key, value]) => {
@@ -52,7 +52,7 @@ function UnsupportedField({ field }) {
       </button>
       
       {showDetails && (
-        <div className="mt-3">
+        <div className="unsupported-field-details mt-3">
           <div className="text-xs text-gray-600 mb-2 font-semibold">
             Full SurveyJS data for manual conversion:
           </div>

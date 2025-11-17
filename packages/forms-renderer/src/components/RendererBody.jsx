@@ -15,7 +15,7 @@ export function RendererBody() {
   }, [visibleFields, hideUnsupportedFields]);
 
   return (
-    <div>
+    <div className="renderer-body-container">
       {visibleIds.map(id => (
         <FieldNode 
           key={id} 

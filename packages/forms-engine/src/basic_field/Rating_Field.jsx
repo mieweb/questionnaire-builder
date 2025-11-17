@@ -15,7 +15,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
         
         if (isPreview) {
           return (
-            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
+            <div className={`rating-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className={`grid gap-2 pb-4 ${options.length > 5 ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
                 <div className="font-light">{f.question || "Question"}</div>
                 <div className="py-2">
@@ -62,7 +62,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
         }
 
         return (
-          <div>
+          <div className="rating-field-edit">
             <input
               className="px-3 py-2 w-full border border-black/40 rounded"
               type="text"

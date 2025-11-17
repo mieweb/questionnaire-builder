@@ -3,7 +3,7 @@ import DraftIdEditor from "./DraftIdEditor"
 
 function CommonEditor({ f, onUpdateField }) {
   return (
-    <div className="space-y-3">
+    <div className="common-editor-container space-y-3">
       <DraftIdEditor
         id={f.id ?? ""}
         onCommit={(next) => onUpdateField?.("id", next)}

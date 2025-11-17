@@ -89,7 +89,7 @@ const SectionField = React.memo(function SectionField({ field }) {
 
         if (isPreview) {
           return (
-            <section className={insideSection ? "border-b border-gray-200" : "border-0"}>
+            <section className={`section-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
                 {f.title || "Section"}
               </div>
@@ -99,8 +99,8 @@ const SectionField = React.memo(function SectionField({ field }) {
         }
 
         return (
-          <div>
-            <div className="flex justify-between items-center mb-3 gap-2">
+          <div className="section-field-edit">
+            <div className="flex justify-between items-center mb-3 gap-2 section-field-header">
               <div className="flex-1">
                 <input
                   type="text"
@@ -114,9 +114,9 @@ const SectionField = React.memo(function SectionField({ field }) {
 
             <div>{children.map((c) => renderChildEdit(c, f.id))}</div>
 
-            <div className="mb-3">
-              <div className="text-sm font-medium text-gray-700 mb-2">Add a field</div>
-              <div className="flex flex-wrap gap-2">
+            <div className="section-field-add-field mb-3">
+              <div className="text-sm font-medium text-gray-700 mb-2 section-field-add-label">Add a field</div>
+              <div className="section-field-add-buttons flex flex-wrap gap-2">
                 {Object.keys(fieldTypes)
                   .filter((t) => t !== "section")
                   .map((t) => (

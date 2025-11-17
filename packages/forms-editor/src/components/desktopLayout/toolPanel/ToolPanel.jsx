@@ -18,9 +18,9 @@ const ToolPanelImpl = ({ isPreview = false }) => {
   }, [addField]);
 
   return (
-    <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
-      <h3 className="text-lg font-semibold mb-3">Tools</h3>
-      <div className="grid grid-cols-1 gap-2">
+    <div className="tool-panel-container p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+      <h3 className="tool-panel-title text-lg font-semibold mb-3">Tools</h3>
+      <div className="tool-panel-items grid grid-cols-1 gap-2">
         {TOOL_ITEMS.map(({ type, label }) => (
           <button
             key={type}

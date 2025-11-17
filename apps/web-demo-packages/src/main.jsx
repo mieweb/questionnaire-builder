@@ -27,7 +27,7 @@ function App() {
 
   if (view === 'editor') {
     return (
-      <div className="w-full relative">
+      <div className="demo-app-editor-view w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingExamples 
           onLoadData={(data) => {
@@ -40,7 +40,7 @@ function App() {
           hideUnsupportedFields={hideUnsupportedFields}
           setHideUnsupportedFields={setHideUnsupportedFields}
         />
-        <div className="absolute inset-0">
+        <div className="demo-app-editor-content absolute inset-0">
           <QuestionnaireEditor
             initialFormData={formData}
             onChange={(data) => {
@@ -62,7 +62,7 @@ function App() {
     };
 
     return (
-      <div className="w-full relative">
+      <div className="demo-app-renderer-view w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingExamples 
           onLoadData={(data) => {
@@ -75,8 +75,8 @@ function App() {
           hideUnsupportedFields={hideUnsupportedFields}
           setHideUnsupportedFields={setHideUnsupportedFields}
         />
-        <div className="w-full">
-          <form onSubmit={handleSubmit}>
+        <div className="demo-app-renderer-content w-full">
+          <form className="demo-app-renderer-form" onSubmit={handleSubmit}>
             <QuestionnaireRenderer
               key={formKey}
               formData={formData}
@@ -84,8 +84,8 @@ function App() {
               className="p-0 overflow-y-visible"
               hideUnsupportedFields={hideUnsupportedFields}
             />
-            <div className="flex w-full mb-10">
-              <div className="mx-auto py-4">
+            <div className="demo-app-renderer-submit-container flex w-full mb-10">
+              <div className="demo-app-renderer-submit-button-wrapper mx-auto py-4">
                 <button
                   type="submit"
                   className="px-6 py-2 rounded-xl bg-blue-500 text-white font-medium shadow-lg"
@@ -96,7 +96,7 @@ function App() {
             </div>
           </form>
           {submitted && (
-            <pre className="flex mx-auto mt-4 bg-neutral-100 p-4 rounded-lg overflow-auto max-h-96">{JSON.stringify(submitted, null, 2)}</pre>
+            <pre className="demo-app-response-display flex mx-auto mt-4 bg-neutral-100 p-4 rounded-lg overflow-auto max-h-96">{JSON.stringify(submitted, null, 2)}</pre>
           )}
         </div>
       </div>
@@ -105,9 +105,9 @@ function App() {
 
   // Landing
   return (
-    <div className="min-h-dvh px-6 md:px-12 py-16 bg-gradient-to-b from-white to-slate-50 text-slate-900 font-sans">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-14">
+    <div className="demo-app-landing min-h-dvh px-6 md:px-12 py-16 bg-gradient-to-b from-white to-slate-50 text-slate-900 font-sans">
+      <div className="demo-app-landing-wrapper max-w-5xl mx-auto">
+        <div className="demo-app-landing-hero text-center mb-14">
           <h1 className="m-0 mb-4 text-4xl md:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
             Questionnaire Builder
           </h1>
@@ -116,14 +116,14 @@ function App() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
+        <div className="demo-app-landing-cards grid grid-cols-1 md:grid-cols-2 gap-5 mb-12">
           <DemoCard title="Editor" desc="Build & modify questionnaire structure." onClick={() => setView('editor')} />
           <DemoCard title="Renderer" desc="Fill out the questionnaire & submit." onClick={() => setView('renderer')} />
         </div>
 
         <Landing />
 
-        <div className="mt-12 pt-8 border-t border-slate-200 text-center">
+        <div className="demo-app-landing-footer mt-12 pt-8 border-t border-slate-200 text-center">
           <p className="m-0 text-xs tracking-wider text-slate-400 font-medium">
             Press <kbd className="bg-slate-100 px-2 py-0.5 rounded border border-slate-200 font-mono text-xs font-semibold text-slate-600">ESC</kbd> to return
           </p>

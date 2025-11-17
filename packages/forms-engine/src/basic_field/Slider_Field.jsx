@@ -14,7 +14,7 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
         
         if (isPreview) {
           return (
-            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
+            <div className={`slider-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className={`grid gap-2 pb-4 ${options.length > 5 ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
                 <div className="font-light">{f.question || "Question"}</div>
                 <div className="py-2">
@@ -77,7 +77,7 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
         }
 
         return (
-          <div>
+          <div className="slider-field-edit">
             <input
               className="px-3 py-2 w-full border border-black/40 rounded"
               type="text"

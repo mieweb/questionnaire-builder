@@ -44,12 +44,12 @@ export default function MobileToolBar() {
   }, [isToolBarExpanded, isLogExpanded]);
 
   return (
-    <div className="MobileToolBar fixed bottom-0 left-0 w-full text-stone-900 shadow-lg z-10">
+    <div className="mobile-toolbar-container MobileToolBar fixed bottom-0 left-0 w-full text-stone-900 shadow-lg z-10">
       <motion.div
         initial={{ y: "100%" }}
         animate={{ y: "0%" }}
         transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-        className={`flex ${!isPreview ? "justify-around" : "justify-center"} pb-5 max-w-xl sm:max-w-4xl mx-auto`}
+        className={`mobile-toolbar-buttons flex ${!isPreview ? "justify-around" : "justify-center"} pb-5 max-w-xl sm:max-w-4xl mx-auto`}
       >
         <motion.button
           onClick={handlePreviewMode}
@@ -111,9 +111,9 @@ export default function MobileToolBar() {
           scale: isToolBarExpanded ? 1 : 0.6,
         }}
         transition={{ type: "spring", stiffness: 150, damping: 20 }}
-        className="MobileToolBar-Modal fixed bottom-0 w-full mx-auto bg-black/5 border-black/15 border px-9 py-4 mb-2 rounded-2xl backdrop-blur-xl overflow-y-scroll"
+        className="mobile-toolbar-menu MobileToolBar-Modal fixed bottom-0 w-full mx-auto bg-black/5 border-black/15 border px-9 py-4 mb-2 rounded-2xl backdrop-blur-xl overflow-y-scroll"
       >
-        <div className="grid grid-cols-1 gap-2">
+        <div className="mobile-toolbar-options grid grid-cols-1 gap-2">
           <button className="flex w-full justify-end" onClick={() => setIsToolBarExpanded(false)}>
             <X_ICON />
           </button>

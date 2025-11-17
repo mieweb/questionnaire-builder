@@ -31,8 +31,7 @@ export default function FieldWrapper({ ctrl, children }) {
         aria-selected={ctrl.selected || undefined}
         tabIndex={-1}
       >
-
-        {ctrl.isPreview ? null
+        <div className="field-wrapper-preview-content">
           : (
             <div>
               {ctrl.insideSection ? (`${ctrl.label}`) : (`(${ctrl.label})  ${ctrl.field.title}`)}
@@ -66,14 +65,14 @@ export default function FieldWrapper({ ctrl, children }) {
       aria-selected={ctrl.selected || undefined}
       tabIndex={-1}
     >
-      <div className={`flex justify-between items-center ${open ? "pb-2.5" : ""}`}>
+      <div className={`field-wrapper-edit-header flex justify-between items-center ${open ? "pb-2.5" : ""}`}>
         <div className="text-left w-full select-none">
           {ctrl.insideSection ? (`${ctrl.label}`) :
             (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title}`) : (`${ctrl.label} ${ctrl.field.question}`))}
         </div>
 
         {/* actions: Edit (mobile), Toggle (small/big view), Delete */}
-        <div className={`flex items-center gap-2 ml-2 ${ctrl.insideSection ? "hidden" : ""}`}>
+        <div className={`field-wrapper-actions flex items-center gap-2 ml-2 ${ctrl.insideSection ? "hidden" : ""}`}>
           <button onClick={onEditClick} className="block lg:hidden" title="Edit" aria-label="Edit field">
             <EDIT_ICON className="h-6 w-6" />
           </button>
@@ -100,7 +99,7 @@ export default function FieldWrapper({ ctrl, children }) {
       </div>
 
       {open && (
-        <div id={`fw-body-${ctrl.field?.id}`}>
+        <div id={`fw-body-${ctrl.field?.id}`} className="field-wrapper-body">
           {typeof children === "function"
             ? children({
               api: ctrl.api,

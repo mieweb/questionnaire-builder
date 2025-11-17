@@ -11,7 +11,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
       {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
-            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
+            <div className={`dropdown-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
                 <div className="font-light">{f.question || "Question"}</div>
                 <div>
@@ -35,7 +35,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
 
         // ────────── Edit Mode ──────────
         return (
-          <div>
+          <div className="dropdown-field-edit">
             <input
               className="px-3 py-2 w-full border border-black/40 rounded"
               type="text"

@@ -40,7 +40,7 @@ export default function DraftIdEditor({
   }, [draft, id, onCommit, validate]);
 
   return (
-    <div className={className}>
+    <div className={className ? `draft-id-editor-container ${className}` : "draft-id-editor-container"}>
       <label className="block text-sm mb-1">{label}</label>
       <input
         className="w-full px-3 py-2 border border-black/20 rounded"

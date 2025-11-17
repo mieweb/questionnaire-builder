@@ -46,7 +46,7 @@ function QuestionnaireRendererInner({
   }, [onChange, formStore]);
 
   const rootClasses = [
-    'qb-render-root font-titillium overflow-y-auto custom-scrollbar',
+    'qb-render-root renderer-container font-titillium overflow-y-auto custom-scrollbar',
     'max-w-4xl mx-auto px-2 pb-8 pt-4',
     fullHeight && 'max-h-screen my-9',
     className,

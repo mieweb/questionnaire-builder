@@ -88,7 +88,7 @@ function SectionEditor({ section, onActiveChildChange }) {
         onCommit={(next) => sectionApi.field.renameId(next)}
       />
 
-      <div className="mt-3">
+      <div className="section-editor-title mt-3">
         <label className="block text-sm mb-1">Section Title</label>
         <input
           className="w-full px-3 py-2 border border-black/20 rounded"
@@ -98,7 +98,7 @@ function SectionEditor({ section, onActiveChildChange }) {
         />
       </div>
 
-      <div className="mt-6">
+      <div className="section-editor-fields-list mt-6">
         <div className="text-sm font-semibold mb-2">Fields in this section</div>
         {children.length === 0 ? (
           <div className="text-sm text-gray-500">
@@ -106,7 +106,7 @@ function SectionEditor({ section, onActiveChildChange }) {
           </div>
         ) : (
           <>
-            <div className="flex flex-wrap gap-2 mb-3">
+            <div className="section-editor-buttons-wrapper flex flex-wrap gap-2 mb-3">
               {children.map((c) => (
                 <button
                   key={c.id}
@@ -125,7 +125,7 @@ function SectionEditor({ section, onActiveChildChange }) {
             </div>
 
             {activeChild && (
-              <div className="mt-2">
+              <div className="section-editor-active-child mt-2">
                 <div className="text-sm font-semibold mb-2">
                   Editing: {activeChild.question?.trim() || fieldTypes[activeChild.fieldType]?.label}
                 </div>
@@ -133,7 +133,7 @@ function SectionEditor({ section, onActiveChildChange }) {
                 <CommonEditor f={activeChild} onUpdateField={onUpdateChild} />
 
                 {activeChild.fieldType === "input" && (
-                  <div className="mt-4">
+                  <div className="section-editor-default-answer mt-4">
                     <div className="text-sm font-medium mb-1">Default Answer</div>
                     <input
                       className="w-full px-3 py-2 border border-black/20 rounded"
@@ -149,7 +149,7 @@ function SectionEditor({ section, onActiveChildChange }) {
                 )}
 
                 <button
-                  className="mt-3 px-3 py-2 text-sm text-red-400 border rounded"
+                  className="section-editor-delete-button mt-3 px-3 py-2 text-sm text-red-400 border rounded"
                   onClick={onDeleteChild}
                 >
                   Delete this field

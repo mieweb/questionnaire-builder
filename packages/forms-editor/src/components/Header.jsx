@@ -93,16 +93,16 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-49 bg-transparent mx-auto">
-      <div className="py-6 text-center">
+    <header className="editor-header sticky top-0 z-49 bg-transparent mx-auto">
+      <div className="header-title py-6 text-center">
         <h1 className="text-3xl sm:text-4xl tracking-tight">Questionnaire Builder</h1>
         <p className="mt-1 text-sm text-black/60">
           Build dynamic questionnaires with JSON config and FHIR export
         </p>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-2 rounded-xl border border-black/10 bg-white shadow-sm">
+      <div className="header-controls max-w-6xl mx-auto px-4">
+        <div className="header-mode-toggle grid grid-cols-2 rounded-xl border border-black/10 bg-white shadow-sm">
           <button
             className={`py-3 rounded-xl text-sm font-medium ${!isPreview ? "bg-black/10" : ""}`}
             onClick={onEdit}
@@ -117,8 +117,8 @@ export default function Header() {
           </button>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2 items-center justify-end">
-          <label className="px-4 py-2 rounded-xl border border-black/15 bg-white hover:bg-black/5 cursor-pointer text-sm">
+        <div className="header-actions mt-4 flex flex-wrap gap-2 items-center justify-end">
+          <label className="header-import-label px-4 py-2 rounded-xl border border-black/15 bg-white hover:bg-black/5 cursor-pointer text-sm">
             Import
             <input
               className="hidden"
@@ -155,9 +155,9 @@ export default function Header() {
 
       {/* Schema Type Confirmation Modal */}
       {showSchemaConfirm && pendingImport && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-            <div className="mb-6">
+        <div className="import-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="import-modal-content bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div className="import-modal-header mb-6">
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 Confirm Schema Type
               </h3>
@@ -171,7 +171,7 @@ export default function Header() {
               )}
             </div>
             
-            <div className="flex gap-3">
+            <div className="import-modal-actions flex gap-3">
               <button
                 onClick={() => confirmImport(pendingImport.detectedSchemaType)}
                 className="flex-1 px-6 py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors shadow-sm hover:shadow"

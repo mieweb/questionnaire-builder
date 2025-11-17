@@ -35,11 +35,11 @@ export default function EditPanel() {
 
   return (
     <div
-      className={`p-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar 
+      className={`edit-panel-container p-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar 
         ${selectedField ? "" : "max-h-32"} max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)]`}
     >
       <div
-        className="sticky top-0 z-30 mb-4 inline-flex rounded-md border border-gray-200 overflow-hidden bg-white"
+        className="edit-panel-tabs sticky top-0 z-30 mb-4 inline-flex rounded-md border border-gray-200 overflow-hidden bg-white"
         role="tablist"
       >
         <button type="button" onClick={() => setTab("EDIT")} aria-selected={tab === "EDIT"}
@@ -53,7 +53,7 @@ export default function EditPanel() {
       </div>
 
       {isNone && (
-        <div className="text-gray-600">
+        <div className="edit-panel-empty text-gray-600">
           <h3 className="text-lg font-semibold mb-2">Edit</h3>
           <p>Select a field in the center panel to edit its properties.</p>
         </div>

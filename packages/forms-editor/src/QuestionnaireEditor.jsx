@@ -98,9 +98,9 @@ function QuestionnaireEditorInner({
   );
 
   return (
-    <div className={`qb-editor-root min-h-screen bg-gray-100 font-titillium ${className}`}>
+    <div className={`qb-editor-root editor-container min-h-screen bg-gray-100 font-titillium ${className}`}>
       {showHeader && <Header />}
-      {showMobileToolbar && <div className="lg:hidden"><MobileToolBar /></div>}
+      {showMobileToolbar && <div className="editor-mobile-toolbar lg:hidden"><MobileToolBar /></div>}
       <Layout selectedField={selectedField} />
     </div>
   );

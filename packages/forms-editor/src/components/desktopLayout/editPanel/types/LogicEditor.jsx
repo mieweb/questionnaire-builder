@@ -210,10 +210,10 @@ export default function LogicEditor() {
   const isDisabled = !field || !effectiveId;
 
   return (
-    <div className="space-y-2">
+    <div className="logic-editor-container space-y-2">
       {/* Target picker when a section is selected */}
       {isSectionCtx && (
-        <div className="flex gap-2 items-center">
+        <div className="logic-editor-target flex gap-2 items-center">
           <label className="text-sm">Target:</label>
           <select
             className="border p-1 rounded"
@@ -230,7 +230,7 @@ export default function LogicEditor() {
         </div>
       )}
 
-      <div className="flex gap-2 items-center">
+      <div className="logic-editor-controls flex gap-2 items-center">
         <label className="text-sm">Logic:</label>
         <select
           value={ew.logic || "AND"}
@@ -250,6 +250,7 @@ export default function LogicEditor() {
       </div>
 
       {/* Conditions list (render safely even if disabled) */}
+      <div className="logic-editor-conditions space-y-2">
       {(Array.isArray(ew.conditions) ? ew.conditions : []).map((c, i) => {
         const meta = findTarget(c.targetId);
         const allowedOps = getOperatorsForFieldType(meta?.fieldType);
@@ -257,7 +258,7 @@ export default function LogicEditor() {
         const hasOptions = optList.length > 0;
 
         return (
-          <div key={i} className="grid grid-cols-1 sm:grid-cols-7 gap-2 items-center opacity-100">
+          <div key={i} className="logic-editor-condition-row grid grid-cols-1 sm:grid-cols-7 gap-2 items-center opacity-100">
             <button
               type="button"
               onClick={() => removeCond(i)}
@@ -321,6 +322,7 @@ export default function LogicEditor() {
           </div>
         );
       })}
+      </div>
     </div>
   );
 }
