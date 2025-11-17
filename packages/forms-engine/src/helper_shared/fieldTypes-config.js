@@ -12,6 +12,7 @@ import SliderField from "../basic_field/Slider_Field"
 import MultiMatrixField from "../basic_field/MultiMatrix_Field"
 import SingleMatrixField from "../basic_field/SingleMatrix_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
+import ImageField from "../adv_field/Image_Field"
 
 
 const fieldTypes = {
@@ -281,6 +282,25 @@ const fieldTypes = {
       options: "Cannot edit unsupported field",
     }
   },
+  image: {
+    label: "Image Field",
+    componentKey: "image",
+    defaultProps: {
+      fieldType: "image",
+      label: "",
+      imageUri: "",
+      altText: "",
+      caption: "",
+      size: "full",
+      alignment: "center",
+      padding: "padded",
+    },
+    placeholder: {
+      label: "Image Block",
+      altText: "Descriptive alt text for accessibility",
+      caption: "Optional caption below image",
+    }
+  },
 };
 
 const componentMap = {
@@ -298,6 +318,7 @@ const componentMap = {
   multimatrix: MultiMatrixField,
   singlematrix: SingleMatrixField,
   unsupported: UnsupportedField,
+  image: ImageField,
 };
 
 export function registerFieldComponent(key, component) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { EDIT_ICON, TRASHCAN_ICON, VIEWSMALL_ICON, VIEWBIG_ICON } from "./icons";
 
-export default function FieldWrapper({ ctrl, children }) {
+export default function FieldWrapper({ ctrl, children, noPadding }) {
   const [open, setOpen] = React.useState(true);
 
   const onEditClick = (e) => {
@@ -21,9 +21,13 @@ export default function FieldWrapper({ ctrl, children }) {
 
   // ────────── PREVIEW: no collapsible ──────────
   if (ctrl.isPreview || ctrl.insideSection) {
+    const wrapperClassName = noPadding && ctrl.isPreview
+      ? ctrl.wrapperClass.replace("p-6", "p-0")
+      : ctrl.wrapperClass;
+    
     return (
       <div
-        className={ctrl.wrapperClass}
+        className={wrapperClassName}
         onClick={!ctrl.insideSection ? ctrl.onRowClick : undefined}
         data-field-id={ctrl.field?.id}
         data-inside-section={ctrl.insideSection ? "true" : "false"}
@@ -56,9 +60,13 @@ export default function FieldWrapper({ ctrl, children }) {
   }
 
   // ────────── EDIT: collapsible  ──────────
+  const wrapperClassName = noPadding 
+    ? (ctrl.wrapperClass + " group").replace("p-6", "p-0")
+    : (ctrl.wrapperClass + " group");
+  
   return (
     <div
-      className={ctrl.wrapperClass + " group"}
+      className={wrapperClassName}
       onClick={onRowClick}
       data-field-id={ctrl.field?.id}
       data-inside-section={ctrl.insideSection ? "true" : "false"}
