@@ -213,10 +213,10 @@ export default function LogicEditor() {
     <div className="logic-editor-container space-y-2">
       {/* Target picker when a section is selected */}
       {isSectionCtx && (
-        <div className="logic-editor-target flex gap-2 items-center">
-          <label className="text-sm">Target:</label>
+        <div className="logic-editor-target flex gap-2 items-center min-w-0 overflow-hidden">
+          <label className="text-sm flex-shrink-0">Target:</label>
           <select
-            className="border p-1 rounded"
+            className="border p-1 rounded flex-1 min-w-0 max-w-full"
             value={target}
             onChange={(e) => setTarget(e.target.value)}
           >
@@ -230,12 +230,12 @@ export default function LogicEditor() {
         </div>
       )}
 
-      <div className="logic-editor-controls flex gap-2 items-center">
-        <label className="text-sm">Logic:</label>
+      <div className="logic-editor-controls flex gap-2 items-center min-w-0 overflow-hidden">
+        <label className="text-sm flex-shrink-0">Logic:</label>
         <select
           value={ew.logic || "AND"}
           onChange={(e) => writeEnableWhen({ ...ew, logic: e.target.value })}
-          className="border p-1 rounded"
+          className="border p-1 rounded flex-1 min-w-0 max-w-full"
           disabled={isDisabled}
         >
           <option value="AND">AND</option>
@@ -270,7 +270,7 @@ export default function LogicEditor() {
             </button>
 
             <select
-              className="border p-1 rounded sm:col-span-3"
+              className="border p-1 rounded sm:col-span-3 w-full min-w-0"
               value={c.targetId}
               onChange={(e) => updateCond(i, { targetId: e.target.value })}
               disabled={isDisabled}
@@ -284,7 +284,7 @@ export default function LogicEditor() {
             </select>
 
             <select
-              className="border p-1 rounded sm:col-span-1"
+              className="border p-1 rounded sm:col-span-1 w-full min-w-0"
               value={c.operator}
               onChange={(e) => updateCond(i, { operator: e.target.value })}
               disabled={isDisabled || !meta}
@@ -298,7 +298,7 @@ export default function LogicEditor() {
 
             {hasOptions ? (
               <select
-                className="border p-1 rounded sm:col-span-2"
+                className="border p-1 rounded sm:col-span-2 w-full min-w-0"
                 value={c.value}
                 onChange={(e) => updateCond(i, { value: e.target.value })}
                 disabled={isDisabled || !meta}
@@ -312,7 +312,7 @@ export default function LogicEditor() {
               </select>
             ) : (
               <input
-                className="border p-1 rounded sm:col-span-2"
+                className="border p-1 rounded sm:col-span-2 w-full min-w-0"
                 placeholder="Enter value"
                 value={c.value}
                 onChange={(e) => updateCond(i, { value: e.target.value })}
