@@ -15,7 +15,7 @@ export default function FormBuilderMain() {
 
   return (
     <div
-      className="form-builder-main w-full max-w-4xl mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)] custom-scrollbar pr-2"
+      className="form-builder-main w-full max-w-4xl mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-24rem)] lg:max-h-[calc(100dvh-20rem)] custom-scrollbar pr-2"
       onClick={() => !ui.state.isPreview && ui.selectedFieldId.clear()}
     >
       {visibleIds.length === 0
