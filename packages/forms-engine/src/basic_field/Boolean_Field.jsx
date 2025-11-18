@@ -68,7 +68,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
                 <input
                   type="text"
                   value={opt.value}
-                  onChange={(e) => api.option.update(idx, "value", e.target.value)}
+                  onChange={(e) => api.option.update(opt.id, e.target.value)}
                   placeholder={placeholder?.options || `Option ${idx + 1}`}
                   className="w-full py-2"
                 />

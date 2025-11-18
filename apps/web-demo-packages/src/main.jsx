@@ -11,6 +11,12 @@ function App() {
   const [view, setView] = React.useState('landing');
   const [hideUnsupportedFields, setHideUnsupportedFields] = React.useState(true);
   const [formKey, setFormKey] = React.useState(0);
+  const [selectedExample, setSelectedExample] = React.useState(null);
+
+  // Function to reset form key consistently
+  const resetFormKey = React.useCallback(() => {
+    setFormKey(prev => prev + 1);
+  }, []);
 
   // ESC to return to landing when not already there
   React.useEffect(() => {
@@ -30,9 +36,11 @@ function App() {
       <div className="demo-app-editor-view w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingExamples 
+          selectedExample={selectedExample}
+          onSelectExample={setSelectedExample}
           onLoadData={(data) => {
             setFormData(data);
-            setFormKey(k => k + 1);
+            resetFormKey();
           }}
         />
         <FloatingFooter 
@@ -42,6 +50,7 @@ function App() {
         />
         <div className="demo-app-editor-content absolute inset-0">
           <QuestionnaireEditor
+            key={formKey}
             initialFormData={formData}
             onChange={(data) => {
               setFormData(data);
@@ -65,9 +74,11 @@ function App() {
       <div className="demo-app-renderer-view w-full relative">
         <FloatingBack onExit={() => setView('landing')} />
         <FloatingExamples 
+          selectedExample={selectedExample}
+          onSelectExample={setSelectedExample}
           onLoadData={(data) => {
             setFormData(data);
-            setFormKey(k => k + 1);
+            resetFormKey();
           }}
         />
         <FloatingFooter 
@@ -193,9 +204,8 @@ function FloatingFooter({ view, hideUnsupportedFields, setHideUnsupportedFields 
   );
 }
 
-function FloatingExamples({ onLoadData }) {
+function FloatingExamples({ selectedExample, onSelectExample, onLoadData }) {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [selectedExample, setSelectedExample] = React.useState(null);
 
   const examples = [
     // { label: '📄 MIE Forms JSON', url: '/examples/inhouse-sample.json', isJson: true / false  },
@@ -215,7 +225,7 @@ function FloatingExamples({ onLoadData }) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = example.isJson ? await response.json() : await response.text();
-      setSelectedExample(example);
+      onSelectExample(example);
       onLoadData(data);
       setIsOpen(false);
     } catch (err) {
@@ -224,11 +234,11 @@ function FloatingExamples({ onLoadData }) {
   };
 
   return (
-    <div className="fixed left-5 top-5 z-50">
-      <div className="relative w-48">
+    <div className="floating-examples fixed left-5 top-5 z-50">
+      <div className="floating-examples-dropdown relative w-48">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full inline-flex items-center justify-between gap-2 bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-3 text-sm tracking-tight rounded-2xl cursor-pointer font-medium shadow-lg font-sans hover:bg-white/85 hover:border-white/50 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]"
+          className="floating-examples-button w-full inline-flex items-center justify-between gap-2 bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-3 text-sm tracking-tight rounded-2xl cursor-pointer font-medium shadow-lg font-sans hover:bg-white/85 hover:border-white/50 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]"
         >
           <span className="font-medium truncate">{selectedExample ? selectedExample.label : '📚 Examples'}</span>
           <svg 
@@ -247,12 +257,12 @@ function FloatingExamples({ onLoadData }) {
         </button>
 
         {isOpen && (
-          <div className="absolute top-full mt-2 left-0 right-0 bg-white/70 backdrop-blur-xl backdrop-saturate-150 border border-white/30 rounded-2xl shadow-lg overflow-hidden z-[60]">
+          <div className="floating-examples-menu absolute top-full mt-2 left-0 right-0 bg-white/70 backdrop-blur-xl backdrop-saturate-150 border border-white/30 rounded-2xl shadow-lg overflow-hidden z-[60]">
             {examples.map((example, index) => (
               <button
                 key={example.url}
                 onClick={() => handleLoadExample(example)}
-                className={`w-full px-4 py-3 text-left text-slate-700 hover:bg-white/60 transition-colors font-medium text-sm ${
+                className={`floating-examples-menu-item w-full px-4 py-3 text-left text-slate-700 hover:bg-white/60 transition-colors font-medium text-sm ${
                   index < examples.length - 1 ? 'border-b border-white/30' : ''
                 } ${selectedExample?.url === example.url ? 'bg-blue-100/50 text-blue-900' : ''}`}
               >
@@ -265,7 +275,7 @@ function FloatingExamples({ onLoadData }) {
         {isOpen && (
           <div
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-40"
+            className="floating-examples-backdrop fixed inset-0 z-40"
           />
         )}
       </div>

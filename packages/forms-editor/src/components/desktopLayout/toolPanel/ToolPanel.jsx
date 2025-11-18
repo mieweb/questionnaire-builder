@@ -18,8 +18,8 @@ const ToolPanelImpl = ({ isPreview = false }) => {
   }, [addField]);
 
   return (
-    <div className="tool-panel-container p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
-      <h3 className="tool-panel-title text-lg font-semibold mb-3">Tools</h3>
+    <div className="tool-panel-container pb-4 px-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar max-h-[calc(100svh-19rem)] lg:max-h-[calc(100dvh-15rem)]">
+      <h3 className="tool-panel-title sticky top-0 z-10 bg-white text-lg font-semibold mb-3 pb-2 pt-2 border-b border-gray-200">Tools</h3>
       <div className="tool-panel-items grid grid-cols-1 gap-2">
         {TOOL_ITEMS.map(({ type, label }) => (
           <button

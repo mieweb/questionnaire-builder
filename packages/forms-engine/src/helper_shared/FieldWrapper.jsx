@@ -32,12 +32,16 @@ export default function FieldWrapper({ ctrl, children }) {
         tabIndex={-1}
       >
         <div className="field-wrapper-preview-content">
-          : (
+          {ctrl.insideSection ? (
             <div>
-              {ctrl.insideSection ? (`${ctrl.label}`) : (`(${ctrl.label})  ${ctrl.field.title}`)}
+              {ctrl.label}
+            </div>
+          ) : (
+            <div>
+              {`(${ctrl.label})  ${ctrl.field.title}`}
             </div>
           )}
-
+        </div>
 
         {typeof children === "function"
           ? children({
