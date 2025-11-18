@@ -1,5 +1,6 @@
 import React from "react";
 import OptionListEditor from "./OptionListEditor";
+import MatrixEditor from "./MatrixEditor";
 import CommonEditor from "./CommonEditor";
 import { fieldTypes, FormStoreContext, useFormApi } from "@mieweb/forms-engine";
 import DraftIdEditor from "./DraftIdEditor"
@@ -40,6 +41,9 @@ function SectionEditor({ section, onActiveChildChange }) {
     [children, activeChildId]
   );
 
+  const childApi = useFormApi(activeChild?.id || '', section.id);
+  const validChildApi = activeChild && childApi ? childApi : null;
+
   const onUpdateChild = React.useCallback(
     (key, value) => {
       if (!activeChild) return;
@@ -74,8 +78,21 @@ function SectionEditor({ section, onActiveChildChange }) {
     formStore.getState().deleteField(activeChild.id, { sectionId: section.id });
   }, [activeChild, section.id, formStore]);
 
-  const isChoiceChild = React.useMemo(
-    () => activeChild && ["radio", "check", "selection"].includes(activeChild.fieldType),
+  const hasOptionsChild = React.useMemo(
+    () => {
+      if (!activeChild) return false;
+      const childConfig = fieldTypes[activeChild.fieldType] || {};
+      return childConfig.hasOptions || false;
+    },
+    [activeChild]
+  );
+
+  const hasMatrixChild = React.useMemo(
+    () => {
+      if (!activeChild) return false;
+      const childConfig = fieldTypes[activeChild.fieldType] || {};
+      return childConfig.hasMatrix || false;
+    },
     [activeChild]
   );
 
@@ -144,9 +161,9 @@ function SectionEditor({ section, onActiveChildChange }) {
                   </div>
                 )}
 
-                {isChoiceChild && (
-                  <OptionListEditor field={activeChild} onUpdateField={onUpdateChild} />
-                )}
+                {hasOptionsChild && validChildApi && <OptionListEditor field={activeChild} api={validChildApi} />}
+
+                {hasMatrixChild && validChildApi && <MatrixEditor field={activeChild} api={validChildApi} />}
 
                 <button
                   className="section-editor-delete-button mt-3 px-3 py-2 text-sm text-red-400 border rounded"
