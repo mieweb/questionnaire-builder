@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { fieldTypes, useFormStore, TEXTINPUT_ICON, FOLDERS_ICON, SELECTINPUT_ICON, RANKING_ICON, MATRIX_ICON, PAPERCLIP_ICON, TOOLS_ICON } from "@mieweb/forms-engine";
+import React, { useMemo, useCallback } from "react";
+import { fieldTypes, useFormStore, useUIApi, TEXTINPUT_ICON, FOLDERS_ICON, SELECTINPUT_ICON, RANKING_ICON, MATRIX_ICON, PAPERCLIP_ICON, TOOLS_ICON, X_ICON } from "@mieweb/forms-engine";
 
 const getCategoryIcon = (categoryName) => {
   switch (categoryName) {
@@ -24,6 +24,37 @@ const ToolPanelImpl = ({ isPreview = false }) => {
   if (isPreview) return null;
 
   const addField = useFormStore((s) => s.addField);
+  const ui = useUIApi();
+  
+  // Get the selected field (same as EditPanel)
+  const selectedField = useFormStore(
+    useCallback(
+      (s) => (ui.selectedFieldId.value ? s.byId[ui.selectedFieldId.value] : null),
+      [ui.selectedFieldId.value]
+    )
+  );
+
+  const isSectionSelected = selectedField?.fieldType === "section";
+  const sectionTitle = selectedField?.title || "Section";
+  
+  const [isHovering, setIsHovering] = React.useState(false);
+  
+  const handleClearSelection = React.useCallback(() => {
+    ui.selectedFieldId.set(null);
+  }, [ui.selectedFieldId]);
+
+  // Handle Escape key to clear any selection
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+        handleClearSelection();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleClearSelection]);
 
   const categories = useMemo(() => {
     const result = {};
@@ -46,17 +77,40 @@ const ToolPanelImpl = ({ isPreview = false }) => {
     const m = {};
     Object.values(categories).forEach(items => {
       items.forEach(({ type }) => {
-        m[type] = () => addField(type);
+        m[type] = () => {
+          if (isSectionSelected && selectedField?.id) {
+            // Add to section by passing sectionId in options
+            addField(type, { sectionId: selectedField.id });
+          } else {
+            addField(type);
+          }
+        };
       });
     });
     return m;
-  }, [categories, addField]);
+  }, [categories, addField, isSectionSelected, selectedField?.id]);
 
   return (
-    <div className="tool-panel-container pb-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar max-h-[calc(100svh-24rem)] lg:max-h-[calc(100dvh-20rem)]">
-      <h3 className="tool-panel-title sticky top-0 z-20 bg-white text-lg font-semibold pb-2 pt-4 px-4 border-b border-gray-200 flex items-center gap-2">
-        <TOOLS_ICON className="w-5 h-5 text-gray-700" />
-        Tools
+    <div 
+      className="tool-panel-container pb-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar max-h-[calc(100svh-24rem)] lg:max-h-[calc(100dvh-20rem)]"
+      tabIndex="-1"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
+      <h3 className="tool-panel-title sticky top-0 z-20 bg-white text-lg font-semibold pb-2 pt-4 px-4 border-b border-gray-200 flex items-center justify-between gap-2">
+        <span className="flex items-center gap-2 min-w-0">
+          <TOOLS_ICON className="w-5 h-5 text-gray-700 flex-shrink-0" />
+          <span className="truncate">{isSectionSelected ? `Add to "${sectionTitle}"` : "Tools"}</span>
+        </span>
+        {isSectionSelected && (
+          <button
+            onClick={handleClearSelection}
+            className="text-gray-600 hover:text-red-600 hover:bg-red-50 p-1 rounded transition-colors flex-shrink-0"
+            title="Unselect section"
+          >
+            <X_ICON className="w-5 h-5" />
+          </button>
+        )}
       </h3>
       
       {Object.entries(categories).map(([categoryName, items]) => (
@@ -69,16 +123,25 @@ const ToolPanelImpl = ({ isPreview = false }) => {
             {categoryName}
           </h4>
           <div className="tool-items grid grid-cols-1 gap-2 px-4 py-3">
-            {items.map(({ type, label }) => (
-              <button
-                key={type}
-                className="px-3 py-2.5 text-sm text-left border border-gray-300 rounded-md hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700 transition-colors duration-150"
-                onClick={handlers[type]}
-                title={`Add ${label}`}
-              >
-                + {label}
-              </button>
-            ))}
+            {items.map(({ type, label }) => {
+              // Disable section field when adding to a section
+              const isDisabled = isSectionSelected && type === "section";
+              return (
+                <button
+                  key={type}
+                  disabled={isDisabled}
+                  className={`px-3 py-2.5 text-sm text-left border rounded-md transition-colors duration-150 ${
+                    isDisabled
+                      ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
+                      : "border-gray-300 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700"
+                  }`}
+                  onClick={handlers[type]}
+                  title={isDisabled ? "Cannot add section to a section" : `Add ${label}`}
+                >
+                  + {label}
+                </button>
+              );
+            })}
           </div>
         </div>
       ))}

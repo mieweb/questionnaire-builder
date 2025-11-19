@@ -2,6 +2,12 @@
 @import "tailwindcss/utilities";
 @import "tailwindcss/theme";
 
+/* Remove focus-visible outline on divs and buttons to prevent Escape key outline */
+div:focus-visible,
+button:focus-visible {
+  outline: none;
+}
+
 /* Dark mode support - when inside a Bootstrap dark theme parent */
 [data-bs-theme="dark"] .qb-editor-root {
   color-scheme: dark;
@@ -28,5 +34,5 @@
   [&::-webkit-scrollbar-track]:rounded-full
   [&::-webkit-scrollbar-track]:bg-gray-100
   [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-gray-500
+  [&::-webkit-scrollbar-thumb]:bg-gray-300
 }

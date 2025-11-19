@@ -2,17 +2,27 @@ import React from "react";
 import OptionListEditor from "./OptionListEditor";
 import MatrixEditor from "./MatrixEditor";
 import CommonEditor from "./CommonEditor";
-import { fieldTypes, FormStoreContext, useFormApi } from "@mieweb/forms-engine";
+import { fieldTypes, FormStoreContext, useFormApi, useUIApi } from "@mieweb/forms-engine";
 import DraftIdEditor from "./DraftIdEditor"
 
 function SectionEditor({ section, onActiveChildChange }) {
   const sectionApi = useFormApi(section.id);
   const formStore = React.useContext(FormStoreContext);
+  const ui = useUIApi();
 
   if (!formStore) throw new Error('Missing FormStoreContext.Provider in the tree');
 
   const children = Array.isArray(section.fields) ? section.fields : [];
   const [activeChildId, setActiveChildId] = React.useState(children[0]?.id || null);
+
+  // Sync with global selectedChildId from section
+  React.useEffect(() => {
+    const globalParentId = ui.selectedChildId.ParentId;
+    const globalChildId = ui.selectedChildId.ChildId;
+    if (globalParentId === section.id && globalChildId) {
+      setActiveChildId(globalChildId);
+    }
+  }, [ui.selectedChildId.ParentId, ui.selectedChildId.ChildId, section.id]);
 
   React.useEffect(() => {
     setActiveChildId(children[0]?.id || null);
@@ -30,6 +40,15 @@ function SectionEditor({ section, onActiveChildChange }) {
   React.useEffect(() => {
     onActiveChildChange?.(section.id, activeChildId || null);
   }, [section.id, activeChildId, onActiveChildChange]);
+
+  const handleChildSelect = React.useCallback(
+    (childId) => {
+      setActiveChildId(childId);
+      // Also update the global UI state for highlighting in the section
+      ui.selectedChildId.set(section.id, childId);
+    },
+    [section.id, ui.selectedChildId]
+  );
 
   const onUpdateSection = React.useCallback(
     (key, value) => sectionApi.field.update(key, value),
@@ -133,7 +152,7 @@ function SectionEditor({ section, onActiveChildChange }) {
                       ? "bg-black/5 border-black/20"
                       : "bg-white border-black/10 hover:bg-slate-50",
                   ].join(" ")}
-                  onClick={() => setActiveChildId(c.id)}
+                  onClick={() => handleChildSelect(c.id)}
                   title={c.question || c.fieldType}
                 >
                   {c.question?.trim() || fieldTypes[c.fieldType]?.label || "Field"}

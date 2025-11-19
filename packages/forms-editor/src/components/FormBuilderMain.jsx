@@ -54,8 +54,8 @@ function EmptyState() {
     >
       <div className="empty-state-title text-xl font-semibold text-gray-700 mb-2">Start building your questionnaire</div>
       <div className="empty-state-description text-base text-gray-500">
-        Add tools with <span className="font-semibold text-blue-500">Tool Panel</span> on the left.<br />
-        Select fields to edit on the <span className="font-semibold text-blue-500">Edit Panel</span> on the left.
+        Add fields using the <span className="font-semibold text-blue-500">Tool Panel</span> on the left.<br />
+        Edit field properties using the <span className="font-semibold text-blue-500">Edit Panel</span> on the right.
       </div>
     </div>
   );
