@@ -14,10 +14,51 @@ import SingleMatrixField from "../basic_field/SingleMatrix_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 import ImageField from "../adv_field/Image_Field"
 
+/**
+ * Field Type Configuration Schema
+ * 
+ * Each field type is configured with the following properties:
+ * 
+ * @property {string} label - Display name for the field type (shown in UI)
+ * @property {string} category - Category grouping for the tool panel
+ *   Available categories:
+ *   - "Text Fields" - Single/long/multi text input fields
+ *   - "Selection Fields" - Radio, checkbox, dropdown selections
+ *   - "Rating & Ranking" - Rating scales, ranking, sliders
+ *   - "Matrix Fields" - Single/multi matrix questions
+ *   - "Rich Content" - Images, HTML, signature pads, and other rich media content
+ *   - "Organization" - Sections and field grouping
+ *   - "Other" - Miscellaneous fields
+ * 
+ * @property {string} componentKey - Internal key for component mapping
+ * @property {boolean} hasOptions - If true, field has selectable answer options (radio, check, dropdown)
+ * @property {boolean} hasMatrix - If true, field has matrix structure with rows/columns
+ * 
+ * @property {Object} defaultProps - Default properties when field is created
+ *   Structure varies by field type:
+ *   - Text fields: fieldType, question, answer
+ *   - Option fields: fieldType, question, options[], selected
+ *   - Matrix fields: fieldType, question, rows[], columns[], selected{}
+ *   - Media fields: fieldType, label, imageUri, altText, etc.
+ *   - Section: fieldType, title, fields[]
+ * 
+ * @property {Object} placeholder - Placeholder text/help text for form editors
+ *   Keys: question, answer, options, rows, columns, altText, caption, etc.
+ * 
+ * Available Categories:
+ * - Text Fields: text, longtext, multitext
+ * - Selection Fields: radio, check, boolean, dropdown, multiselectdropdown
+ * - Rating & Ranking: rating, slider, ranking
+ * - Matrix Fields: singlematrix, multimatrix
+ * - Rich Content: image
+ * - Organization: section
+ * - Other: unsupported
+ */
 
 const fieldTypes = {
   section: {
     label: "Section Field",
+    category: "Organization",
     componentKey: "section",
     hasOptions: false,
     hasMatrix: false,
@@ -34,6 +75,7 @@ const fieldTypes = {
   },
   text: {
     label: "Text Field",
+    category: "Text Fields",
     componentKey: "text",
     hasOptions: false,
     hasMatrix: false,
@@ -50,6 +92,7 @@ const fieldTypes = {
   },
   longtext: {
     label: "Long Text Field",
+    category: "Text Fields",
     componentKey: "longtext",
     hasOptions: false,
     hasMatrix: false,
@@ -66,6 +109,7 @@ const fieldTypes = {
   },
   multitext: {
     label: "Multi Text Field",
+    category: "Text Fields",
     componentKey: "multitext",
     hasOptions: true,
     hasMatrix: false,
@@ -85,6 +129,7 @@ const fieldTypes = {
   },
   radio: {
     label: "Radio Field",
+    category: "Selection Fields",
     componentKey: "radio",
     hasOptions: true,
     hasMatrix: false,
@@ -105,6 +150,7 @@ const fieldTypes = {
   },
   check: {
     label: "Check Field",
+    category: "Selection Fields",
     componentKey: "check",
     hasOptions: true,
     hasMatrix: false,
@@ -125,6 +171,7 @@ const fieldTypes = {
   },
   boolean: {
     label: "Boolean Field",
+    category: "Selection Fields",
     componentKey: "boolean",
     hasOptions: true,
     hasMatrix: false,
@@ -144,6 +191,7 @@ const fieldTypes = {
   },
   dropdown: {
     label: "Dropdown Field",
+    category: "Selection Fields",
     componentKey: "dropdown",
     hasOptions: true,
     hasMatrix: false,
@@ -164,6 +212,7 @@ const fieldTypes = {
   },
   multiselectdropdown: {
     label: "Multi-Select Dropdown",
+    category: "Selection Fields",
     componentKey: "multiselectdropdown",
     hasOptions: true,
     hasMatrix: false,
@@ -184,6 +233,7 @@ const fieldTypes = {
   },
   rating: {
     label: "Rating Field",
+    category: "Rating & Ranking",
     componentKey: "rating",
     hasOptions: true,
     hasMatrix: false,
@@ -206,6 +256,7 @@ const fieldTypes = {
   },
   ranking: {
     label: "Ranking Field",
+    category: "Rating & Ranking",
     componentKey: "ranking",
     hasOptions: true,
     hasMatrix: false,
@@ -226,6 +277,7 @@ const fieldTypes = {
   },
   slider: {
     label: "Slider Field",
+    category: "Rating & Ranking",
     componentKey: "slider",
     hasOptions: true,
     hasMatrix: false,
@@ -246,6 +298,7 @@ const fieldTypes = {
   },
   multimatrix: {
     label: "Multi Matrix Field",
+    category: "Matrix Fields",
     componentKey: "multimatrix",
     hasOptions: false,
     hasMatrix: true,
@@ -272,6 +325,7 @@ const fieldTypes = {
   },
   singlematrix: {
     label: "Single Matrix Field",
+    category: "Matrix Fields",
     componentKey: "singlematrix",
     hasOptions: false,
     hasMatrix: true,
@@ -298,6 +352,7 @@ const fieldTypes = {
   },
   unsupported: {
     label: "Unsupported Field",
+    category: "Other",
     componentKey: "unsupported",
     hasOptions: false,
     hasMatrix: false,
@@ -314,6 +369,7 @@ const fieldTypes = {
   },
   image: {
     label: "Image Field",
+    category: "Rich Content",
     componentKey: "image",
     defaultProps: {
       fieldType: "image",

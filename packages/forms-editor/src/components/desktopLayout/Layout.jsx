@@ -12,25 +12,22 @@ export default function Layout({ selectedField }) {
   const panelResetKey   = ui.state.panelResetKey;
 
   const editMode = !isPreview;
-  const cols = editMode
-    ? "lg:grid-cols-[280px_minmax(0,1fr)_320px]"
-    : "lg:grid-cols-[minmax(0,1fr)]";
 
   return (
-    <div className="layout-container w-full max-w-6xl mx-auto px-4 h-fit rounded-lg mt-2">
-      <div className={`layout-grid grid grid-cols-1 ${cols} gap-3 h-full items-start`}>
+    <div className="layout-container w-full max-w-7xl mx-auto px-4 h-fit rounded-lg mt-2">
+      <div className={`layout-grid flex gap-3 h-full items-start`}>
         {editMode && (
-          <div className="layout-tool-panel hidden lg:block">
+          <div className="layout-tool-panel hidden lg:block lg:w-72">
             <ToolPanel />
           </div>
         )}
 
-        <div className="layout-main-content">
+        <div className="layout-main-content flex-1 ">
           <FormBuilderMain />
         </div>
 
         {editMode && (
-          <div className="layout-edit-panel hidden lg:block">
+          <div className="layout-edit-panel hidden lg:block lg:w-90 md:w-80">
             <EditPanel key={panelResetKey} />
           </div>
         )}

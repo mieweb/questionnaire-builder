@@ -26,7 +26,7 @@ export function EditorView() {
       />
       <div className="demo-app-editor-content flex-1 pt-20 bg-gray-100">
         <div className="w-full h-full flex justify-center px-5 min-h-[calc(100vh-10rem)]">
-          <div className="w-full max-w-6xl">
+          <div className="w-full">
             <QuestionnaireEditor
               key={formKey}
               initialFormData={formData}

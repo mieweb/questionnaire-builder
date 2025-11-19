@@ -101,7 +101,7 @@ export default function Header() {
         </p>
       </div>
 
-      <div className="header-controls max-w-6xl mx-auto px-4">
+      <div className="header-controls max-w-7xl mx-auto px-4">
         <div className="header-mode-toggle grid grid-cols-2 rounded-xl border border-black/10 bg-white shadow-sm">
           <button
             className={`py-3 rounded-xl text-sm font-medium ${!isPreview ? "bg-black/10" : ""}`}
