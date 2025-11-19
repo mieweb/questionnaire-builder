@@ -92,12 +92,13 @@ const ToolPanelImpl = ({ isPreview = false }) => {
 
   return (
     <div 
-      className="tool-panel-container pb-4 bg-white border border-gray-200 rounded-lg shadow-sm overflow-y-auto custom-scrollbar max-h-[calc(100svh-24rem)] lg:max-h-[calc(100dvh-20rem)]"
+      className="rounded-lg overflow-y-auto custom-scrollbar max-h-[calc(100svh-24rem)] lg:max-h-[calc(100dvh-20rem)] p-1.5 pt-0"
       tabIndex="-1"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <h3 className="tool-panel-title sticky top-0 z-20 bg-white text-lg font-semibold pb-2 pt-4 px-4 border-b border-gray-200 flex items-center justify-between gap-2">
+      <div className="tool-panel-container px-2 pb-4 bg-white rounded-lg shadow-sm">
+      <h3 className="tool-panel-title sticky top-0 z-20 bg-white text-lg font-semibold pb-2 pt-3 px-4 border-b border-gray-200 flex items-center justify-between gap-2">
         <span className="flex items-center gap-2 min-w-0">
           <TOOLS_ICON className="w-5 h-5 text-gray-700 flex-shrink-0" />
           <span className="truncate">{isSectionSelected ? `Add to "${sectionTitle}"` : "Tools"}</span>
@@ -115,7 +116,7 @@ const ToolPanelImpl = ({ isPreview = false }) => {
       
       {Object.entries(categories).map(([categoryName, items]) => (
         <div key={categoryName} className="tool-category">
-          <h4 className="sticky top-13 z-10 bg-gray-50 text-sm font-semibold text-gray-700 px-4 py-2 border-b border-gray-100 uppercase tracking-wide flex items-center gap-2">
+          <h4 className="sticky top-11.5 z-10 bg-gray-50 text-sm font-semibold text-gray-700 px-4 py-3 border-b border-gray-100 uppercase tracking-wide flex items-center gap-2">
             {(() => {
               const IconComponent = getCategoryIcon(categoryName);
               return IconComponent ? <IconComponent className="w-4 h-4 text-gray-600" /> : null;
@@ -145,6 +146,7 @@ const ToolPanelImpl = ({ isPreview = false }) => {
           </div>
         </div>
       ))}
+      </div>
     </div>
   );
 };

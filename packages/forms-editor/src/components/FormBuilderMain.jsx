@@ -5,6 +5,8 @@ export default function FormBuilderMain() {
   const ui = useUIApi();
   const { fields: visibleFields } = useVisibleFields(ui.state.isPreview);
   const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
+  const containerRef = React.useRef(null);
+  const previousLengthRef = React.useRef(0);
 
   const visibleIds = useMemo(() => {
     const filtered = hideUnsupportedFields
@@ -13,8 +15,23 @@ export default function FormBuilderMain() {
     return filtered.map(f => f.id);
   }, [visibleFields, hideUnsupportedFields]);
 
+  // Auto-scroll and auto-select newly added field
+  React.useEffect(() => {
+    if (visibleIds.length > previousLengthRef.current) {
+      // A field was added, scroll to the last one and select it
+      const lastFieldId = visibleIds[visibleIds.length - 1];
+      const lastField = containerRef.current?.querySelector(`[data-field-id="${lastFieldId}"]`);
+      if (lastField) {
+        lastField.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        ui.selectedFieldId.set(lastFieldId);
+      }
+    }
+    previousLengthRef.current = visibleIds.length;
+  }, [visibleIds, ui.selectedFieldId]);
+
   return (
     <div
+      ref={containerRef}
       className={
         `form-builder-main w-full 
         ${ui.state.isPreview ? `max-w-4xl` : `max-w-xl`} 

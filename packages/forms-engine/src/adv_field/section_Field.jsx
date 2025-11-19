@@ -92,7 +92,9 @@ const SectionField = React.memo(function SectionField({ field }) {
         ].join(" ")}
         onClick={(e) => {
           e.stopPropagation();
+          ui.selectedFieldId.set(sectionId);
           ui.selectedChildId.set(sectionId, child.id);
+
         }}
       >
         <ChildField field={child} sectionId={sectionId} />
