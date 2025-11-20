@@ -4,6 +4,11 @@ function getValueOf(field) {
     case "text":
     case "longtext":
       return field.answer ?? "";
+    case "multitext":
+      if (Array.isArray(field.options)) {
+        return field.options.map(o => o.answer ?? "");
+      }
+      return [];
     case "radio":
     case "dropdown":
     case "boolean":
