@@ -163,23 +163,6 @@ export const UPLOAD_ICON = React.memo(
   propsEqual
 );
 
-export const CODE_ICON = React.memo(
-  ({ className = "" }) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={className}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M7 8l-4 4l4 4" />
-      <path d="M17 8l4 4l-4 4" />
-      <path d="M14 4l-4 16" />
-    </svg>
-  ),
-  propsEqual
-);
-
-
 export const VIEWBIG_ICON = React.memo(({ className = "" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -365,3 +348,29 @@ export const TOOLS_ICON = React.memo(
   ),
   propsEqual
 );
+
+
+export const CODE_ICON = React.memo(({ className = "" }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
+    <path d="m7 8 -4 4 4 4" strokeWidth="2" />
+    <path d="m17 8 4 4 -4 4" strokeWidth="2" />
+    <path d="m14 4 -4 16" strokeWidth="2" />
+  </svg>
+), propsEqual);
+
+export const VEDITOR_ICON = React.memo(({ className = "" }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" id="Pencil-Bolt--Streamline-Tabler" height="24" width="24">
+    <path d="M4 20h4L18.5 9.5a2.828 2.828 0 1 0 -4 -4L4 16v4" strokeWidth="2"></path>
+    <path d="m13.5 6.5 4 4" strokeWidth="2"></path>
+    <path d="m19 16 -2 3h4l-2 3" strokeWidth="2"></path>
+  </svg>
+), propsEqual);
+
+export const PICTURE_ICON = React.memo(({ className = "" }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
+    <path d="M15 8h0.01" strokeWidth="2" />
+    <path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3H6a3 3 0 0 1 -3 -3V6z" strokeWidth="2" />
+    <path d="m3 16 5 -5c0.928 -0.893 2.072 -0.893 3 0l5 5" strokeWidth="2" />
+    <path d="m14 14 1 -1c0.928 -0.893 2.072 -0.893 3 0l3 3" strokeWidth="2" />
+  </svg>
+), propsEqual);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { CHECK_ICON, X_ICON } from '../../assets/icon';
 
 export function HideUnsupportedToggle({ hideUnsupportedFields, setHideUnsupportedFields }) {
   return (
@@ -9,7 +10,7 @@ export function HideUnsupportedToggle({ hideUnsupportedFields, setHideUnsupporte
       whileHover={{ y: -1, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-      className="inline-flex items-center justify-center cursor-pointer bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-3 text-xs tracking-tight rounded-2xl font-medium shadow-lg font-sans hover:bg-white/85 hover:border-white/50 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)]"
+      className="w-full inline-flex items-center gap-2 cursor-pointer bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-3 text-xs tracking-tight rounded-2xl font-medium shadow-lg font-sans hover:bg-white/85 hover:border-white/50 hover:shadow-xl"
     >
       <input
         type="checkbox"
@@ -17,8 +18,12 @@ export function HideUnsupportedToggle({ hideUnsupportedFields, setHideUnsupporte
         onChange={(e) => setHideUnsupportedFields(e.target.checked)}
         className="hidden"
       />
-      <span className="hidden sm:inline text-slate-600 whitespace-nowrap" title={hideUnsupportedFields ? 'Show unsupported fields' : 'Hide unsupported fields'}>{hideUnsupportedFields ? 'Hide unsupported' : 'Show unsupported'}</span>
-      <span className="text-md">{hideUnsupportedFields ? '✅' : '❌'}</span>
+      {hideUnsupportedFields ? (
+        <CHECK_ICON className="w-4 h-4 text-green-600 flex-shrink-0" />
+      ) : (
+        <X_ICON className="w-4 h-4 text-red-600 flex-shrink-0" />
+      )}
+      <span className="text-slate-600 whitespace-nowrap" title={hideUnsupportedFields ? 'Show unsupported fields' : 'Hide unsupported fields'}>{hideUnsupportedFields ? 'Hide unsupported' : 'Show unsupported'}</span>
     </motion.label>
   );
 }

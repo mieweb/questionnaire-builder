@@ -35,9 +35,9 @@ export default function FormBuilderMain() {
     <div
       ref={containerRef}
       className={
-        `form-builder-main w-full 
+        `form-builder-main 
         ${ui.state.isPreview ? `max-w-4xl` : `max-w-xl`} 
-        mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-24rem)] lg:max-h-[calc(100dvh-20rem)] custom-scrollbar pr-2`
+        mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-13rem)] lg:max-h-[calc(100dvh-11rem)] custom-scrollbar pr-2`
       }
       onClick={() => !ui.state.isPreview && ui.selectedFieldId.clear()}
     >

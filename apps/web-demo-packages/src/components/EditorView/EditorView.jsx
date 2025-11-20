@@ -1,6 +1,6 @@
 import React from 'react';
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
-import { TopControls } from '../Shared';
+import { MenuDropdown } from '../Shared';
 
 export function EditorView() {
   const [formData, setFormData] = React.useState(null);
@@ -14,7 +14,7 @@ export function EditorView() {
 
   return (
     <div className="demo-app-editor-view w-full h-screen flex flex-col">
-      <TopControls
+      <MenuDropdown
         selectedExample={selectedExample}
         onSelectExample={setSelectedExample}
         onLoadData={(data) => {
@@ -24,18 +24,16 @@ export function EditorView() {
         hideUnsupportedFields={hideUnsupportedFields}
         setHideUnsupportedFields={setHideUnsupportedFields}
       />
-      <div className="demo-app-editor-content flex-1 pt-20 bg-gray-100">
-        <div className="w-full h-full flex justify-center px-5 min-h-[calc(100vh-10rem)]">
-          <div className="w-full">
-            <QuestionnaireEditor
-              key={formKey}
-              initialFormData={formData}
-              onChange={(data) => {
-                setFormData(data);
-              }}
-              hideUnsupportedFields={hideUnsupportedFields}
-            />
-          </div>
+      <div className="demo-app-editor-content flex-1 overflow-y-auto bg-gray-100">
+        <div className="w-full flex justify-center px-5 pt-5">
+          <QuestionnaireEditor
+            key={formKey}
+            initialFormData={formData}
+            onChange={(data) => {
+              setFormData(data);
+            }}
+            hideUnsupportedFields={hideUnsupportedFields}
+          />
         </div>
       </div>
     </div>

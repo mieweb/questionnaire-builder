@@ -1,6 +1,6 @@
 import React from 'react';
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
-import { TopControls } from '../Shared';
+import { MenuDropdown } from '../Shared';
 
 export function RendererView() {
   const [formData, setFormData] = React.useState(null);
@@ -41,14 +41,14 @@ export function RendererView() {
 
   return (
     <div className="demo-app-renderer-view w-full relative">
-      <TopControls
+      <MenuDropdown
         selectedExample={selectedExample}
         onSelectExample={setSelectedExample}
         onLoadData={(data) => {
           setFormData(data);
           resetFormKey();
         }}
-        hideUnsupportedFields={hideUnsupportedFields} 
+        hideUnsupportedFields={hideUnsupportedFields}
         setHideUnsupportedFields={setHideUnsupportedFields}
       />
       <div className="demo-app-renderer-content w-full pt-20 pb-20 bg-gray-100">

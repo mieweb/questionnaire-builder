@@ -4,6 +4,7 @@ import { createStore, useStore } from "zustand";
 export const createUIStore = (initProps = {}) => {
   const DEFAULT_PROPS = {
     isPreview: false,
+    isCodeEditor: false,
     isEditModalOpen: false,
     panelResetKey: 0,
     selectedFieldId: null,
@@ -20,6 +21,11 @@ export const createUIStore = (initProps = {}) => {
   isPreview: false,
   setPreview: (v) => set({ isPreview: !!v }),
   togglePreview: () => set((s) => ({ isPreview: !s.isPreview })),
+
+  // ────────── Code Editor mode ──────────
+  isCodeEditor: false,
+  setCodeEditor: (v) => set({ isCodeEditor: !!v }),
+  toggleCodeEditor: () => set((s) => ({ isCodeEditor: !s.isCodeEditor })),
 
   // ────────── Edit modal (mobile) ──────────
   isEditModalOpen: false,

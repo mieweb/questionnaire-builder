@@ -92,13 +92,14 @@ const ToolPanelImpl = ({ isPreview = false }) => {
 
   return (
     <div 
-      className="rounded-lg overflow-y-auto custom-scrollbar max-h-[calc(100svh-24rem)] lg:max-h-[calc(100dvh-20rem)] p-1.5 pt-0"
+    
+      className=" border border-gray-200 rounded-lg  bg-white overflow-y-auto custom-scrollbar max-h-[calc(100svh-24rem)] lg:max-h-[calc(100dvh-20rem)]"
       tabIndex="-1"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <div className="tool-panel-container px-2 pb-4 bg-white rounded-lg shadow-sm">
-      <h3 className="tool-panel-title sticky top-0 z-20 bg-white text-lg font-semibold pb-2 pt-3 px-4 border-b border-gray-200 flex items-center justify-between gap-2">
+      <div className="tool-panel-container pb-4 rounded-lg shadow-sm">
+      <h3 className="tool-panel-title sticky top-0 z-20 bg-white text-base font-semibold pb-2 pt-3 px-4 border-b border-gray-200 flex items-center justify-between gap-2">
         <span className="flex items-center gap-2 min-w-0">
           <TOOLS_ICON className="w-5 h-5 text-gray-700 flex-shrink-0" />
           <span className="truncate">{isSectionSelected ? `Add to "${sectionTitle}"` : "Tools"}</span>
@@ -131,7 +132,7 @@ const ToolPanelImpl = ({ isPreview = false }) => {
                 <button
                   key={type}
                   disabled={isDisabled}
-                  className={`px-3 py-2.5 text-sm text-left border rounded-md transition-colors duration-150 ${
+                  className={`px-3 py-2 text-sm text-left border rounded-md transition-colors duration-150 ${
                     isDisabled
                       ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
                       : "border-gray-300 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700"
