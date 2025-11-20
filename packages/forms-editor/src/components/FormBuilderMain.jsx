@@ -5,8 +5,9 @@ export default function FormBuilderMain() {
   const ui = useUIApi();
   const { fields: visibleFields } = useVisibleFields(ui.state.isPreview);
   const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
+  const order = useFormStore((s) => s.order);
   const containerRef = React.useRef(null);
-  const previousLengthRef = React.useRef(0);
+  const previousOrderLengthRef = React.useRef(0);
 
   const visibleIds = useMemo(() => {
     const filtered = hideUnsupportedFields
@@ -15,19 +16,20 @@ export default function FormBuilderMain() {
     return filtered.map(f => f.id);
   }, [visibleFields, hideUnsupportedFields]);
 
-  // Auto-scroll and auto-select newly added field
+  // Auto-scroll and auto-select newly added field (only in edit mode, only when order length increases)
   React.useEffect(() => {
-    if (visibleIds.length > previousLengthRef.current) {
-      // A field was added, scroll to the last one and select it
-      const lastFieldId = visibleIds[visibleIds.length - 1];
+    if (ui.state.isPreview) return; // Don't auto-select in preview mode
+    if (order.length > previousOrderLengthRef.current) {
+      // A field was actually added to the form (order array increased)
+      const lastFieldId = order[order.length - 1];
       const lastField = containerRef.current?.querySelector(`[data-field-id="${lastFieldId}"]`);
       if (lastField) {
         lastField.scrollIntoView({ behavior: "smooth", block: "nearest" });
         ui.selectedFieldId.set(lastFieldId);
       }
     }
-    previousLengthRef.current = visibleIds.length;
-  }, [visibleIds, ui.selectedFieldId]);
+    previousOrderLengthRef.current = order.length;
+  }, [order, ui.selectedFieldId, ui.state.isPreview]);
 
   return (
     <div

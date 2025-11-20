@@ -6,12 +6,22 @@ function getValueOf(field) {
       return field.answer ?? "";
     case "radio":
     case "dropdown":
+    case "boolean":
+    case "slider":
+    case "rating":
       return field.selected ?? null;
     case "check":
+    case "multiselectdropdown":
+    case "multiselect":
+    case "ranking":
       if (Array.isArray(field.selected)) return field.selected;
       return Array.isArray(field.options)
         ? field.options.filter(o => o?.selected).map(o => o.id ?? o.value)
         : [];
+    case "multimatrix":
+    case "singlematrix":
+      // Matrix fields store selected as an object: { rowId: colId } (single) or { rowId: [colIds...] } (multi)
+      return field.selected ?? {};
     default:
       return null;
   }
