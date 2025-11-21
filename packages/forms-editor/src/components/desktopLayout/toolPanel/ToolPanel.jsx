@@ -117,7 +117,7 @@ const ToolPanelImpl = ({ isPreview = false }) => {
       
       {Object.entries(categories).map(([categoryName, items]) => (
         <div key={categoryName} className="tool-category">
-          <h4 className="sticky top-11.5 z-10 bg-gray-50 text-sm font-semibold text-gray-700 px-4 py-3 border-b border-gray-100 uppercase tracking-wide flex items-center gap-2">
+          <h4 className="sticky top-11 z-10 bg-gray-50 text-sm font-semibold text-gray-700 px-4 py-3 border-b border-gray-100 uppercase tracking-wide flex items-center gap-2">
             {(() => {
               const IconComponent = getCategoryIcon(categoryName);
               return IconComponent ? <IconComponent className="w-4 h-4 text-gray-600" /> : null;
