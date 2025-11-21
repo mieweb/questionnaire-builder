@@ -8,6 +8,7 @@ export const useUIApi = () => {
   
   // ────────── Base state ──────────
   const isPreview        = useStore(uiStore, (s) => s.isPreview);
+  const isCodeEditor     = useStore(uiStore, (s) => s.isCodeEditor);
   const panelResetKey    = useStore(uiStore, (s) => s.panelResetKey);
   const selectedFieldVal = useStore(uiStore, (s) => s.selectedFieldId);
   const isEditModalOpen  = useStore(uiStore, (s) => s.isEditModalOpen);
@@ -16,6 +17,8 @@ export const useUIApi = () => {
   // ────────── Base actions ──────────
   const setPreview            = useStore(uiStore, (s) => s.setPreview);
   const togglePreview         = useStore(uiStore, (s) => s.togglePreview);
+  const setCodeEditor         = useStore(uiStore, (s) => s.setCodeEditor);
+  const toggleCodeEditor      = useStore(uiStore, (s) => s.toggleCodeEditor);
 
   const setSelectField        = useStore(uiStore, (s) => s.setSelectField);
   const clearSelectedField    = useStore(uiStore, (s) => s.clearSelectedField);
@@ -43,11 +46,13 @@ export const useUIApi = () => {
   const toggleEdit = React.useCallback(() => setEditModalOpen((v) => !v), [setEditModalOpen]);
 
   return React.useMemo(() => ({
-    state: { isPreview, isEditModalOpen, panelResetKey },
+    state: { isPreview, isCodeEditor, isEditModalOpen, panelResetKey },
 
     isPreview,
+    isCodeEditor,
 
     preview: { set: setPreview, toggle: togglePreview },
+    codeEditor: { set: setCodeEditor, toggle: toggleCodeEditor },
     
     modal: { set: setEditModalOpen, open: openEdit, close: closeEdit, toggle: toggleEdit },
 
@@ -78,8 +83,8 @@ export const useUIApi = () => {
     // ────────── Hide unsupported fields ──────────
     setHideUnsupportedFields,
   }), [
-    isPreview, isEditModalOpen, panelResetKey,
-    setPreview, togglePreview,
+    isPreview, isCodeEditor, isEditModalOpen, panelResetKey,
+    setPreview, togglePreview, setCodeEditor, toggleCodeEditor,
     selectedFieldVal, setSelectField, clearSelectedField, renameSelectedFieldId,
     setEditModalOpen, openEdit, closeEdit, toggleEdit,
     selectedChild, setSelectedChildId, clearSelectedChildId,

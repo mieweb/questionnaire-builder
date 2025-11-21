@@ -12,7 +12,7 @@ export default function MatrixEditor({ field, api }) {
         {rows.map((row) => (
           <div key={row.id} className="flex items-center gap-2 mb-2">
             <input
-              className="flex-1 px-3 py-2 border border-black/20 rounded"
+              className="flex-1 min-w-0 px-3 py-2 border border-black/20 rounded"
               value={row.value}
               onChange={(e) => api.row.update(row.id, e.target.value)}
               placeholder="Row text"
@@ -43,7 +43,7 @@ export default function MatrixEditor({ field, api }) {
         {columns.map((col) => (
           <div key={col.id} className="flex items-center gap-2 mb-2">
             <input
-              className="flex-1 px-3 py-2 border border-black/20 rounded"
+              className="flex-1 min-w-0 px-3 py-2 border border-black/20 rounded"
               value={col.value}
               onChange={(e) => api.column.update(col.id, e.target.value)}
               placeholder="Column text"

@@ -137,10 +137,12 @@ export default function SignatureCanvas({
       if (!containerRef.current) return;
       const containerWidth = containerRef.current.getBoundingClientRect().width;
       const aspectRatio = CANVAS_WIDTH / CANVAS_HEIGHT;
+      const maxHeight = 200; // Prevent canvas from getting too tall
+      let height = Math.min(containerWidth / aspectRatio, maxHeight);
       
       setDisplaySize({
         width: containerWidth,
-        height: containerWidth / aspectRatio,
+        height: height,
       });
     };
 
@@ -154,7 +156,7 @@ export default function SignatureCanvas({
   }, []);
 
   return (
-    <div ref={containerRef} className="w-full">
+    <div ref={containerRef} className="max-w-[80svw] md:max-w-[75svw] lg:max-w-full">
       <div className={`relative rounded bg-white overflow-hidden ${existingSignature ? "" : "border-2 border-gray-300"}`}>
         <canvas
           ref={canvasRef}

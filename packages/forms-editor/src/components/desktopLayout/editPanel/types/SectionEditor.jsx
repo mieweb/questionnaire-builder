@@ -2,17 +2,27 @@ import React from "react";
 import OptionListEditor from "./OptionListEditor";
 import MatrixEditor from "./MatrixEditor";
 import CommonEditor from "./CommonEditor";
-import { fieldTypes, FormStoreContext, useFormApi } from "@mieweb/forms-engine";
+import { fieldTypes, FormStoreContext, useFormApi, useUIApi } from "@mieweb/forms-engine";
 import DraftIdEditor from "./DraftIdEditor"
 
 function SectionEditor({ section, onActiveChildChange }) {
   const sectionApi = useFormApi(section.id);
   const formStore = React.useContext(FormStoreContext);
+  const ui = useUIApi();
 
   if (!formStore) throw new Error('Missing FormStoreContext.Provider in the tree');
 
   const children = Array.isArray(section.fields) ? section.fields : [];
   const [activeChildId, setActiveChildId] = React.useState(children[0]?.id || null);
+
+  // Sync with global selectedChildId from section
+  React.useEffect(() => {
+    const globalParentId = ui.selectedChildId.ParentId;
+    const globalChildId = ui.selectedChildId.ChildId;
+    if (globalParentId === section.id && globalChildId) {
+      setActiveChildId(globalChildId);
+    }
+  }, [ui.selectedChildId.ParentId, ui.selectedChildId.ChildId, section.id]);
 
   React.useEffect(() => {
     setActiveChildId(children[0]?.id || null);
@@ -30,6 +40,15 @@ function SectionEditor({ section, onActiveChildChange }) {
   React.useEffect(() => {
     onActiveChildChange?.(section.id, activeChildId || null);
   }, [section.id, activeChildId, onActiveChildChange]);
+
+  const handleChildSelect = React.useCallback(
+    (childId) => {
+      setActiveChildId(childId);
+      // Also update the global UI state for highlighting in the section
+      ui.selectedChildId.set(section.id, childId);
+    },
+    [section.id, ui.selectedChildId]
+  );
 
   const onUpdateSection = React.useCallback(
     (key, value) => sectionApi.field.update(key, value),
@@ -105,7 +124,7 @@ function SectionEditor({ section, onActiveChildChange }) {
         onCommit={(next) => sectionApi.field.renameId(next)}
       />
 
-      <div className="mt-3">
+      <div className="section-editor-title mt-3">
         <label className="block text-sm mb-1">Section Title</label>
         <input
           className="w-full px-3 py-2 border border-black/20 rounded"
@@ -115,7 +134,7 @@ function SectionEditor({ section, onActiveChildChange }) {
         />
       </div>
 
-      <div className="mt-6">
+      <div className="section-editor-fields-list mt-6">
         <div className="text-sm font-semibold mb-2">Fields in this section</div>
         {children.length === 0 ? (
           <div className="text-sm text-gray-500">
@@ -123,7 +142,7 @@ function SectionEditor({ section, onActiveChildChange }) {
           </div>
         ) : (
           <>
-            <div className="flex flex-wrap gap-2 mb-3">
+            <div className="section-editor-buttons-wrapper flex flex-wrap gap-2 mb-3">
               {children.map((c) => (
                 <button
                   key={c.id}
@@ -133,7 +152,7 @@ function SectionEditor({ section, onActiveChildChange }) {
                       ? "bg-black/5 border-black/20"
                       : "bg-white border-black/10 hover:bg-slate-50",
                   ].join(" ")}
-                  onClick={() => setActiveChildId(c.id)}
+                  onClick={() => handleChildSelect(c.id)}
                   title={c.question || c.fieldType}
                 >
                   {c.question?.trim() || fieldTypes[c.fieldType]?.label || "Field"}
@@ -142,7 +161,7 @@ function SectionEditor({ section, onActiveChildChange }) {
             </div>
 
             {activeChild && (
-              <div className="mt-2">
+              <div className="section-editor-active-child mt-2">
                 <div className="text-sm font-semibold mb-2">
                   Editing: {activeChild.question?.trim() || fieldTypes[activeChild.fieldType]?.label}
                 </div>
@@ -150,7 +169,7 @@ function SectionEditor({ section, onActiveChildChange }) {
                 <CommonEditor f={activeChild} onUpdateField={onUpdateChild} />
 
                 {activeChild.fieldType === "input" && (
-                  <div className="mt-4">
+                  <div className="section-editor-default-answer mt-4">
                     <div className="text-sm font-medium mb-1">Default Answer</div>
                     <input
                       className="w-full px-3 py-2 border border-black/20 rounded"
@@ -166,7 +185,7 @@ function SectionEditor({ section, onActiveChildChange }) {
                 {hasMatrixChild && validChildApi && <MatrixEditor field={activeChild} api={validChildApi} />}
 
                 <button
-                  className="mt-3 px-3 py-2 text-sm text-red-400 border rounded"
+                  className="section-editor-delete-button mt-3 px-3 py-2 text-sm text-red-400 border rounded"
                   onClick={onDeleteChild}
                 >
                   Delete this field

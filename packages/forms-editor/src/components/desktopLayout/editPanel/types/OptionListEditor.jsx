@@ -13,9 +13,9 @@ export default function OptionListEditor({ field, api }) {
     <div className="mt-3">
       <div className="text-sm font-medium mb-1">{label}</div>
       {opts.map((opt) => (
-        <div key={opt.id} className="flex items-center gap-2 mb-2">
+        <div key={opt.id} className="option-list-editor-item flex items-center gap-2 mb-2">
           <input
-            className="flex-1 px-3 py-2 border border-black/20 rounded"
+            className="flex-1 min-w-0 px-3 py-2 border border-black/20 rounded"
             value={opt.value}
             onChange={(e) => api.option.update(opt.id, e.target.value)}
             placeholder={placeholder}

@@ -30,6 +30,7 @@
 	},
 	"dependencies": {
 		"@mieweb/forms-engine": "^0.1.15",
+		"@monaco-editor/react": "^4.6.0",
 		"framer-motion": "^12.4.2",
 		"js-yaml": "^4.1.0"
 	},

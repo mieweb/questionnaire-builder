@@ -37,13 +37,13 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
 
         if (isPreview) {
           return (
-            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
+            <div className={`multiselect-dropdown-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
                 <div className="font-light">{f.question || "Question"}</div>
-                <div ref={dropdownRef} className="relative">
+                <div ref={dropdownRef} className="multiselect-dropdown-field relative">
                   {/* Selected items display as pills */}
                   <div
-                    className="w-full min-h-10 px-3 py-2 shadow border border-black/10 rounded-lg cursor-pointer bg-white flex flex-wrap gap-2 items-center"
+                    className="multiselect-dropdown-selection w-full min-h-10 px-3 py-2 shadow border border-black/10 rounded-lg cursor-pointer bg-white flex flex-wrap gap-2 items-center"
                     onClick={() => setIsOpen(!isOpen)}
                   >
                     {selectedOptions.length === 0 ? (
@@ -52,7 +52,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
                       selectedOptions.map((option) => (
                         <span
                           key={option.id}
-                          className="inline-flex items-center gap-1 px-3 py-1 bg-[#0076a8] text-white rounded text-sm"
+                          className="multiselect-dropdown-pill inline-flex items-center gap-1 px-3 py-1 bg-[#0076a8] text-white rounded text-sm"
                         >
                           {option.value}
                           <button
@@ -84,7 +84,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
 
                   {/* Dropdown menu */}
                   {isOpen && availableOptions.length > 0 && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    <div className="multiselect-dropdown-menu absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                       {availableOptions.map((option) => (
                         <div
                           key={option.id}
@@ -106,7 +106,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
 
         // ────────── Edit Mode ──────────
         return (
-          <div>
+          <div className="multiselect-dropdown-edit">
             <input
               className="px-3 py-2 w-full border border-black/40 rounded"
               type="text"

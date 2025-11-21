@@ -65,7 +65,6 @@ function App() {
 - `startInPreview` - Start in preview mode (default: false)
 - `hideUnsupportedFields` - Hide unsupported field types (default: false)
 - `showHeader` - Show editor header (default: true)
-- `showMobileToolbar` - Show mobile toolbar (default: true)
 - `className` - Additional CSS classes
 
 ## 🔄 Breaking Changes (v0.1.1)

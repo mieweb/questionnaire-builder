@@ -35,12 +35,12 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
           };
 
           return (
-            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
+            <div className={`multimatrix-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="pb-4">
                 <div className="font-light mb-3">{f.question || "Question"}</div>
                 
                 {rows.length > 0 && columns.length > 0 ? (
-                  <div className="space-y-1 border-t border-gray-200 pt-3">
+                  <div className="multimatrix-field-grid space-y-1 border-t border-gray-200 pt-3">
                     {/* Column Headers - Hidden on mobile */}
                     <div className="hidden lg:flex items-center gap-4 pl-32">
                       {columns.map((col) => (
@@ -94,7 +94,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
         }
 
         return (
-          <div>
+          <div className="multimatrix-field-edit">
             <input
               className="px-3 py-2 w-full border border-black/40 rounded mb-4"
               type="text"
