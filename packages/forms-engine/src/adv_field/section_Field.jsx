@@ -110,7 +110,7 @@ const SectionField = React.memo(function SectionField({ field }) {
         if (isPreview) {
           return (
             <section className={`section-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
-              <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
+              <div className="bg-blue-500 text-white text-xl px-4 py-2 rounded-t-lg">
                 {f.title || "Section"}
               </div>
               {children.map((c) => renderChildPreview(c, f.id))}

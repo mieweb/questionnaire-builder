@@ -37,7 +37,7 @@ export default function FormBuilderMain() {
       className={
         `form-builder-main 
         ${ui.state.isPreview ? `max-w-4xl` : `max-w-xl`} 
-        mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-13rem)] lg:max-h-[calc(100dvh-11rem)] custom-scrollbar pr-2`
+        mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-13rem)] lg:max-h-[calc(100dvh-11rem)] custom-scrollbar lg:pr-2`
       }
       onClick={() => !ui.state.isPreview && ui.selectedFieldId.clear()}
     >
@@ -71,10 +71,15 @@ function EmptyState() {
                     to-gray-100 border-2 border-dashed border-blue-200 rounded-xl 
                     shadow-md text-center px-8 py-10"
     >
-      <div className="empty-state-title text-xl font-semibold text-gray-700 mb-2">Start building your questionnaire</div>
+      <div className="empty-state-title text-xl font-semibold text-gray-700 mb-2">Forms</div>
       <div className="empty-state-description text-base text-gray-500">
-        Add fields using the <span className="font-semibold text-blue-500">Tool Panel</span> on the left.<br />
-        Edit field properties using the <span className="font-semibold text-blue-500">Edit Panel</span> on the right.
+        <div className="lg:hidden">
+          Tap the <span className="font-semibold text-blue-500">Tool Panel</span> button to add fields.
+        </div>
+        <div className="hidden lg:block">
+          Add fields using the <span className="font-semibold text-blue-500">Tool Panel</span> on the left.<br />
+          Edit field properties using the <span className="font-semibold text-blue-500">Edit Panel</span> on the right.
+        </div>
       </div>
     </div>
   );

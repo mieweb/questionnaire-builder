@@ -16,20 +16,20 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
   };
 
   return (
-    <FieldWrapper ctrl={ctrl}>
+    <FieldWrapper ctrl={ctrl} noPadding={ ctrl.isPreview === true ? true : false }>
       {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
             <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
-              <div className="pb-4">
+              <div className="px-6 pt-6 pb-2">
                 <div className="font-light mb-2">{f.question || "Question"}</div>
-                <div>
-                  <SignatureCanvas
-                    onSignatureChange={handleSignatureChange}
-                    existingSignature={f.answer}
-                    placeholder={f.placeholder || "Please sign here"}
-                  />
-                </div>
+              </div>
+              <div className="flex justify-center mx-auto px-2 pb-2 lg:px-6 lg:pb-4">
+                <SignatureCanvas
+                  onSignatureChange={handleSignatureChange}
+                  existingSignature={f.answer}
+                  placeholder={f.placeholder || "Please sign here"}
+                />
               </div>
             </div>
           );

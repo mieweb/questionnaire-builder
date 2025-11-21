@@ -353,6 +353,7 @@ const fieldTypes = {
   },
   signature: {
     label: "Signature Field",
+    category: "Rich Content",
     componentKey: "signature",
     defaultProps: {
       fieldType: "signature",
