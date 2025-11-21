@@ -11,6 +11,7 @@ import RankingField from "../basic_field/Ranking_Field"
 import SliderField from "../basic_field/Slider_Field"
 import MultiMatrixField from "../basic_field/MultiMatrix_Field"
 import SingleMatrixField from "../basic_field/SingleMatrix_Field"
+import SignatureField from "../adv_field/Signature_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 import ImageField from "../adv_field/Image_Field"
 
@@ -117,9 +118,9 @@ const fieldTypes = {
       fieldType: "multitext",
       question: "",
       options: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Option 1" },
+        { value: "Option 2" },
+        { value: "Option 3" },
       ],
     },
     placeholder: {
@@ -137,9 +138,9 @@ const fieldTypes = {
       fieldType: "radio",
       question: "",
       options: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Option 1" },
+        { value: "Option 2" },
+        { value: "Option 3" },
       ],
       selected: null,
     },
@@ -158,11 +159,11 @@ const fieldTypes = {
       fieldType: "check",
       question: "",
       options: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Option 1" },
+        { value: "Option 2" },
+        { value: "Option 3" },
       ],
-      selected: [],
+      answer: [],
     },
     placeholder: {
       question: "Enter your question...",
@@ -179,8 +180,8 @@ const fieldTypes = {
       fieldType: "boolean",
       question: "",
       options: [
-        { value: "" },
-        { value: "" },
+        { value: "Yes" },
+        { value: "No" },
       ],
       selected: null,
     },
@@ -199,9 +200,9 @@ const fieldTypes = {
       fieldType: "dropdown",
       question: "",
       options: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Option 1" },
+        { value: "Option 2" },
+        { value: "Option 3" },
       ],
       selected: null,
     },
@@ -220,9 +221,9 @@ const fieldTypes = {
       fieldType: "multiselectdropdown",
       question: "",
       options: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Option 1" },
+        { value: "Option 2" },
+        { value: "Option 3" },
       ],
       selected: [],
     },
@@ -241,11 +242,11 @@ const fieldTypes = {
       fieldType: "rating",
       question: "",
       options: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "1" },
+        { value: "2" },
+        { value: "3" },
+        { value: "4" },
+        { value: "5" },
       ],
       selected: null,
     },
@@ -264,9 +265,9 @@ const fieldTypes = {
       fieldType: "ranking",
       question: "",
       options: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Item 1" },
+        { value: "Item 2" },
+        { value: "Item 3" },
       ],
       selected: [],
     },
@@ -285,9 +286,9 @@ const fieldTypes = {
       fieldType: "slider",
       question: "",
       options: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Low" },
+        { value: "Medium" },
+        { value: "High" },
       ],
       selected: null,
     },
@@ -306,14 +307,14 @@ const fieldTypes = {
       fieldType: "multimatrix",
       question: "",
       rows: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Row 1" },
+        { value: "Row 2" },
+        { value: "Row 3" },
       ],
       columns: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Column 1" },
+        { value: "Column 2" },
+        { value: "Column 3" },
       ],
       selected: {},
     },
@@ -333,14 +334,14 @@ const fieldTypes = {
       fieldType: "singlematrix",
       question: "",
       rows: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Row 1" },
+        { value: "Row 2" },
+        { value: "Row 3" },
       ],
       columns: [
-        { value: "" },
-        { value: "" },
-        { value: "" },
+        { value: "Column 1" },
+        { value: "Column 2" },
+        { value: "Column 3" },
       ],
       selected: {},
     },
@@ -348,6 +349,21 @@ const fieldTypes = {
       question: "Enter your question...",
       rows: "Enter row label...",
       columns: "Enter column label...",
+    }
+  },
+  signature: {
+    label: "Signature Field",
+    componentKey: "signature",
+    defaultProps: {
+      fieldType: "signature",
+      question: "",
+      placeholder: "Sign here",
+      answer: "",
+      required: false,
+    },
+    placeholder: {
+      question: "Enter your question...",
+      pad: "Enter placeholder text for signature pad...",
     }
   },
   unsupported: {
@@ -403,6 +419,7 @@ const componentMap = {
   slider: SliderField,
   multimatrix: MultiMatrixField,
   singlematrix: SingleMatrixField,
+  signature: SignatureField,
   unsupported: UnsupportedField,
   image: ImageField,
 };
