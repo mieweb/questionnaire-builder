@@ -53,6 +53,16 @@ const SectionField = React.memo(function SectionField({ field }) {
     previousChildCountRef.current = currentChildCount;
   }, [field.fields, field.id, ui.selectedChildId]);
 
+  // Auto-scroll when selected child changes (e.g., from SectionEditor dropdown)
+  React.useEffect(() => {
+    if (selectedChildId && childRefs.current[selectedChildId]) {
+      setTimeout(() => {
+        const el = childRefs.current[selectedChildId];
+        el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+      }, 0);
+    }
+  }, [selectedChildId]);
+
   // ────────── Helper: Check if child should be hidden ──────────
   const shouldHideChild = (child) => {
     return hideUnsupportedFields && child.fieldType === 'unsupported';
