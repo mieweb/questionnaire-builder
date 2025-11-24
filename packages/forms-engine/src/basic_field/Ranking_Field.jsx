@@ -6,6 +6,27 @@ import useFieldController from "../helper_shared/useFieldController";
 const RankingField = React.memo(function RankingField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
 
+  // Sync selected array with options - moved outside render function
+  React.useEffect(() => {
+    if (!ctrl.field.options || ctrl.field.options.length === 0) return;
+    
+    const optionIds = ctrl.field.options.map(opt => opt.id);
+    const currentSelected = Array.isArray(ctrl.field.selected) ? ctrl.field.selected : [];
+    
+    // Remove deleted options from selected
+    const validSelected = currentSelected.filter(id => optionIds.includes(id));
+    
+    // Add new options to the end
+    const newOptions = optionIds.filter(id => !validSelected.includes(id));
+    const updatedSelected = [...validSelected, ...newOptions];
+    
+    // Only update if something changed
+    if (updatedSelected.length !== currentSelected.length || 
+        !updatedSelected.every((id, idx) => id === currentSelected[idx])) {
+      ctrl.api.field.update("selected", updatedSelected);
+    }
+  }, [ctrl.field.options, ctrl.field.selected, ctrl.api]);
+
   const moveItem = (api, optId, direction) => {
     const currentRanking = Array.isArray(field.selected) ? field.selected : [];
     const currentIndex = currentRanking.indexOf(optId);
@@ -24,27 +45,6 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
   return (
     <FieldWrapper ctrl={ctrl}>
       {({ api, isPreview, insideSection, field: f, placeholder }) => {
-        // Sync selected array with options
-        React.useEffect(() => {
-          if (!f.options || f.options.length === 0) return;
-          
-          const optionIds = f.options.map(opt => opt.id);
-          const currentSelected = Array.isArray(f.selected) ? f.selected : [];
-          
-          // Remove deleted options from selected
-          const validSelected = currentSelected.filter(id => optionIds.includes(id));
-          
-          // Add new options to the end
-          const newOptions = optionIds.filter(id => !validSelected.includes(id));
-          const updatedSelected = [...validSelected, ...newOptions];
-          
-          // Only update if something changed
-          if (updatedSelected.length !== currentSelected.length || 
-              !updatedSelected.every((id, idx) => id === currentSelected[idx])) {
-            api.field.update("selected", updatedSelected);
-          }
-        }, [f.options, f.selected, api]);
-
         if (isPreview) {
           const ranking = Array.isArray(f.selected) && f.selected.length > 0 
             ? f.selected 

@@ -4,21 +4,6 @@ import { EDIT_ICON, TRASHCAN_ICON, VIEWSMALL_ICON, VIEWBIG_ICON } from "./icons"
 export default function FieldWrapper({ ctrl, children, noPadding }) {
   const [open, setOpen] = React.useState(true);
 
-  const onEditClick = (e) => {
-    e.stopPropagation();
-    if (!ctrl.selected) ctrl.onRowClick?.(e);
-    ctrl.toggleEdit();
-  };
-
-  const onRemoveClick = (e) => {
-    e.stopPropagation();
-    ctrl.remove();
-  };
-
-  const onRowClick = (e) => {
-    if (!ctrl.insideSection) ctrl.onRowClick?.(e);
-  };
-
   // ────────── PREVIEW: no collapsible ──────────
   if (ctrl.isPreview || ctrl.insideSection) {
     const wrapperClassName = noPadding && ctrl.isPreview
@@ -61,6 +46,20 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
   }
 
   // ────────── EDIT: collapsible  ──────────
+  const onEditClick = (e) => {
+    e.stopPropagation();
+    if (!ctrl.selected) ctrl.onRowClick?.(e);
+    ctrl.toggleEdit();
+  };
+
+  const onRemoveClick = (e) => {
+    e.stopPropagation();
+    ctrl.remove();
+  };
+
+  const onRowClick = (e) => {
+    if (!ctrl.insideSection) ctrl.onRowClick?.(e);
+  };
   let wrapperClassName = noPadding 
     ? (ctrl.wrapperClass + " group").replace("p-6", "p-0")
     : (ctrl.wrapperClass + " group");
@@ -83,7 +82,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
       <div className={`field-wrapper-edit-header flex justify-between items-center gap-3 px-3 py-2.5 ${open ? "-mx-6 -mt-6 mb-4" : "m-0"} bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 ${open ? "rounded-t-lg" : "rounded-lg"} ${ctrl.insideSection ? "hidden" : ""}`}>
         <div className="text-left flex-1 select-none text-sm font-medium text-gray-700 truncate">
           {ctrl.insideSection ? (`${ctrl.label}`) :
-            (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title}`) : (`${ctrl.label} ${ctrl.field.question}`))}
+            (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title || ""}`) : (`${ctrl.label} ${ctrl.field.question || ""}`))}
         </div>
 
         {/* actions: Edit (mobile), Toggle (small/big view), Delete */}

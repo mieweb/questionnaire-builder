@@ -2,6 +2,17 @@
 
 Core state management and field components for FHIR-compatible questionnaires.
 
+## 🎨 Version 1.0 - UI/UX Refinement
+
+All field components now feature a modern blue theme with enhanced interactions:
+- Blue focus states on all inputs (`focus:border-blue-400 focus:ring-1 focus:ring-blue-400`)
+- Selection highlights in preview mode (`bg-blue-600` for selected states)
+- Improved FieldWrapper with collapsible sections and gradient headers
+- Consistent spacing, hover effects, and transitions throughout
+- Enhanced Signature and Image field components
+
+See the [main CHANGELOG](../../CHANGELOG.md) for complete details.
+
 ```bash
 npm install @mieweb/forms-engine react react-dom
 ```
