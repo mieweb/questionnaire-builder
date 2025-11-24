@@ -61,9 +61,14 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
   }
 
   // ────────── EDIT: collapsible  ──────────
-  const wrapperClassName = noPadding 
+  let wrapperClassName = noPadding 
     ? (ctrl.wrapperClass + " group").replace("p-6", "p-0")
     : (ctrl.wrapperClass + " group");
+  
+  // Remove padding when collapsed
+  if (!open) {
+    wrapperClassName = wrapperClassName.replace("p-6", "p-0");
+  }
   
   return (
     <div
@@ -75,35 +80,36 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
       aria-selected={ctrl.selected || undefined}
       tabIndex={-1}
     >
-      <div className={`field-wrapper-edit-header flex justify-between items-center ${open ? "pb-2.5" : ""}`}>
-        <div className="text-left w-full select-none">
+      <div className={`field-wrapper-edit-header flex justify-between items-center gap-3 px-3 py-2.5 ${open ? "-mx-6 -mt-6 mb-4" : "m-0"} bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 ${open ? "rounded-t-lg" : "rounded-lg"} ${ctrl.insideSection ? "hidden" : ""}`}>
+        <div className="text-left flex-1 select-none text-sm font-medium text-gray-700 truncate">
           {ctrl.insideSection ? (`${ctrl.label}`) :
             (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title}`) : (`${ctrl.label} ${ctrl.field.question}`))}
         </div>
 
         {/* actions: Edit (mobile), Toggle (small/big view), Delete */}
-        <div className={`field-wrapper-actions flex items-center gap-2 ml-2 ${ctrl.insideSection ? "hidden" : ""}`}>
-          <button onClick={onEditClick} className="block lg:hidden" title="Edit" aria-label="Edit field">
-            <EDIT_ICON className="h-6 w-6" />
+        <div className="field-wrapper-actions flex items-center gap-1 flex-shrink-0">
+          <button onClick={onEditClick} className="block lg:hidden p-1.5 hover:bg-white rounded transition-colors" title="Edit" aria-label="Edit field">
+            <EDIT_ICON className="h-5 w-5 text-gray-600" />
           </button>
 
           <button
             type="button"
             onClick={(e) => {
               e.stopPropagation();
+              if (!ctrl.selected) ctrl.onRowClick?.(e);
               setOpen((v) => !v);
             }}
             aria-expanded={open}
             aria-controls={`fw-body-${ctrl.field?.id}`}
             title={open ? "Collapse" : "Expand"}
             aria-label={open ? "Collapse field" : "Expand field"}
-            className="p-1"
+            className="p-1.5 hover:bg-white rounded transition-colors"
           >
-            {open ? <VIEWSMALL_ICON className="h-5 w-5" /> : <VIEWBIG_ICON className="h-5 w-5" />}
+            {open ? <VIEWSMALL_ICON className="h-5 w-5 text-gray-600" /> : <VIEWBIG_ICON className="h-5 w-5 text-gray-600" />}
           </button>
 
-          <button onClick={onRemoveClick} title="Delete" aria-label="Delete field">
-            <TRASHCAN_ICON className="h-6 w-6" />
+          <button onClick={onRemoveClick} className="p-1.5 hover:bg-red-50 rounded transition-colors" title="Delete" aria-label="Delete field">
+            <TRASHCAN_ICON className="h-5 w-5 text-gray-600 hover:text-red-600" />
           </button>
         </div>
       </div>

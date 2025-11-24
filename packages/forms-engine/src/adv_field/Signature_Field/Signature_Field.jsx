@@ -36,17 +36,17 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
         }
 
         return (
-          <div>
+          <div className="space-y-3">
             <input
-              className="px-3 py-2 w-full border border-black/40 rounded"
+              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
 
-            <div className="mt-4 p-4 border border-gray-200 rounded bg-gray-50">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-sm">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
                 Signature Pad Settings
               </label>
 
@@ -60,7 +60,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                     value={f.placeholder || ""}
                     onChange={(e) => api.field.update("placeholder", e.target.value)}
                     placeholder={placeholder?.pad || "e.g., Please sign here"}
-                    className="w-full px-3 py-2 border border-gray-200 rounded"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors bg-white"
                   />
                 </div>
 
@@ -70,9 +70,9 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                     id="required-sig"
                     checked={f.required === true}
                     onChange={(e) => api.field.update("required", e.target.checked)}
-                    className="w-4 h-4"
+                    className="w-4 h-4 cursor-pointer"
                   />
-                  <label htmlFor="required-sig" className="text-sm text-gray-700">
+                  <label htmlFor="required-sig" className="text-sm text-gray-700 cursor-pointer">
                     Required signature
                   </label>
                 </div>

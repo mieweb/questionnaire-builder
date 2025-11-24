@@ -24,7 +24,7 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
                       <label
                         key={option.id}
                         htmlFor={inputId}
-                        className="flex items-center px-3 py-1 my-2 cursor-pointer"
+                        className="flex items-center px-3 py-2 my-2 cursor-pointer rounded-lg hover:bg-blue-50 transition-colors"
                       >
                         <UnselectableRadio
                           id={inputId}
@@ -46,33 +46,42 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
         }
 
         return (
-          <div className="radio-field-edit">
+          <div className="radio-field-edit space-y-3">
             <input
-              className="px-3 py-2 w-full border border-black/40 rounded"
+              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
 
-            {(f.options || []).map((option) => (
-              <div key={option.id} className="flex items-center px-4 my-1.5 shadow border border-black/10 rounded-lg">
-                <input type="radio" disabled className="mr-2" />
-                <input
-                  type="text"
-                  value={option.value}
-                  onChange={(e) => api.option.update(option.id, e.target.value)}
-                  placeholder={placeholder?.options || "Option text"}
-                  className="w-full py-2"
-                />
-                <button onClick={() => api.option.remove(option.id)}>
-                  <TRASHCANTWO_ICON className="h-5 w-5" />
-                </button>
-              </div>
-            ))}
+            <div className="space-y-2">
+              {(f.options || []).map((option) => (
+                <div key={option.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
+                  <input type="radio" disabled className="flex-shrink-0" />
+                  <input
+                    type="text"
+                    value={option.value}
+                    onChange={(e) => api.option.update(option.id, e.target.value)}
+                    placeholder={placeholder?.options || "Option text"}
+                    className="flex-1 min-w-0 outline-none bg-transparent"
+                  />
+                  <button 
+                    onClick={() => api.option.remove(option.id)}
+                    className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                    title="Remove option"
+                  >
+                    <TRASHCANTWO_ICON className="w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+            </div>
 
-            <button onClick={() => api.option.add()} className="mt-2 ml-2 flex gap-3 justify-center">
-              <PLUSOPTION_ICON className="h-6 w-6" /> Add Option
+            <button 
+              onClick={() => api.option.add()} 
+              className="w-full px-3 py-2 text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+            >
+              <PLUSOPTION_ICON className="w-5 h-5" /> Add Option
             </button>
           </div>
         );

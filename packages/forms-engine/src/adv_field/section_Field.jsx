@@ -136,7 +136,7 @@ const SectionField = React.memo(function SectionField({ field }) {
               <div className="flex-1">
                 <input
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
                   value={f.title || ""}
                   onChange={(e) => api.field.update("title", e.target.value)}
                   placeholder="Section title (e.g., Data Consent)"
