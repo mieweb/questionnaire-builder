@@ -6,7 +6,7 @@ export function generateFieldId(fieldType = '', existingIds = new Set(), parentI
   if (!existingIds.has(baseId)) return baseId;
   
   // Find highest number used for this baseId pattern
-  const pattern = new RegExp(`^${baseId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}-\\d+$`);
+  const pattern = new RegExp(`^${baseId.replace(/[\\.*+?^${}()|[\]]/g, '\\$&')}-\\d+$`);
   let maxNumber = 0;
   existingIds.forEach(id => {
     if (pattern.test(id)) {
@@ -25,7 +25,7 @@ export function generateOptionId(existingIds = new Set(), fieldId = '') {
   if (!existingIds.has(prefix)) return prefix;
   
   // Find highest number used for this prefix pattern
-  const pattern = new RegExp(`^${prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}-\\d+$`);
+  const pattern = new RegExp(`^${prefix.replace(/[\\.*+?^${}()|[\]]/g, '\\$&')}-\\d+$`);
   let maxNumber = 0;
   existingIds.forEach(id => {
     if (pattern.test(id)) {
