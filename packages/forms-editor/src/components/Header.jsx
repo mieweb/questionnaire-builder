@@ -110,7 +110,7 @@ export default function Header() {
   };
 
   return (
-    <header className="editor-header w-full bg-white border-b border-gray-200 shadow-sm">
+    <header className="editor-header w-full bg-white border border-gray-200 rounded-lg shadow-sm">
       <div className="px-4 py-4">
         {/* Top row: Logo/Title */}
         <div className="mb-4">
