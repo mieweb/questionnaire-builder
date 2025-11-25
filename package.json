@@ -25,7 +25,7 @@
     "release:editor": "npm run build && npm run version:editor && npm publish --workspace=packages/forms-editor",
     "release:renderer": "npm run build && npm run version:renderer && npm publish --workspace=packages/forms-renderer",
     "release:all": "npm run build && npm run version:all && npm run sync-deps && npm run publish:packages",
-    "publish:packages": "npm publish --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "publish:packages": "npm run build && npm publish --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
     "lint": "eslint ."
   },
   "devDependencies": {
