@@ -1,9 +1,7 @@
 import React from "react";
-import { useFormStore, useFormData, useUIApi, adaptSchema, parseAndDetect } from "@mieweb/forms-engine";
-import DataViewer from "./DataViewer.jsx";
+import { useFormStore, useFormData, useUIApi, adaptSchema, parseAndDetect, CODE_ICON, VEDITOR_ICON, PICTURE_ICON, UPLOAD_ICON, DOWNLOAD_ICON } from "@mieweb/forms-engine";
 
 export default function Header() {
-  const [showData, setShowData] = React.useState(false);
   const [showSchemaConfirm, setShowSchemaConfirm] = React.useState(false);
   const [pendingImport, setPendingImport] = React.useState(null);
   const replaceAll = useFormStore((s) => s.replaceAll);
@@ -11,18 +9,19 @@ export default function Header() {
 
   const ui = useUIApi();
   const isPreview = ui.state.isPreview;
+  const isCodeEditor = ui.state.isCodeEditor ?? false;
 
   // ────────── Import handler with auto-detection ──────────
   const handleFileSelect = (fileContent) => {
     try {
       const text = String(fileContent).replace(/^\uFEFF/, "").trim();
       const { data, schemaType } = parseAndDetect(text);
-      
+
       if (schemaType !== 'mieforms' && schemaType !== 'surveyjs') {
         alert(`Unsupported or invalid schema format.\n\nExpected: MIE Forms or SurveyJS\nDetected: ${schemaType}`);
         return;
       }
-      
+
       setPendingImport({ data, detectedSchemaType: schemaType });
       setShowSchemaConfirm(true);
     } catch (err) {
@@ -32,25 +31,25 @@ export default function Header() {
 
   const confirmImport = (confirmedSchemaType) => {
     if (!pendingImport) return;
-    
+
     try {
       const { data } = pendingImport;
       const result = adaptSchema(data, confirmedSchemaType);
       const fields = result.fields || [];
-      
+
       if (!Array.isArray(fields)) {
         throw new Error("Expected array of fields");
       }
-      
+
       if (result.conversionReport) {
         ui.setConversionReport(result.conversionReport);
       }
-      
+
       const schemaObject = {
         schemaType: confirmedSchemaType === 'surveyjs' ? 'mieforms-v1.0' : (data.schemaType || 'mieforms-v1.0'),
         fields
       };
-      
+
       // Preserve original metadata for SurveyJS schemas
       if (confirmedSchemaType === 'surveyjs' && result.conversionReport?.surveyMetadata) {
         Object.assign(schemaObject, result.conversionReport.surveyMetadata);
@@ -61,13 +60,13 @@ export default function Header() {
           Object.assign(schemaObject, metadata);
         }
       }
-      
+
       replaceAll(schemaObject);
       ui.selectedFieldId.clear();
       ui.preview.set(false);
-      
+
       alert(`✅ Import successful!\n\nFormat: ${confirmedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}\nLoaded ${fields.length} field(s)`);
-      
+
       setShowSchemaConfirm(false);
       setPendingImport(null);
     } catch (err) {
@@ -83,81 +82,115 @@ export default function Header() {
   };
 
   // ────────── Preview/Edit toggles ──────────
-  const onPreview = () => {
-    ui.preview.set(true);
-    ui.selectedFieldId.clear();
-  };
-  
   const onEdit = () => {
     ui.preview.set(false);
+    ui.codeEditor.set(false);
+  };
+
+  const onCodeEditor = () => {
+    ui.preview.set(false);
+    ui.codeEditor.set(true);
+  };
+
+  const onPreview = () => {
+    ui.preview.set(true);
+    ui.codeEditor.set(false);
+    ui.selectedFieldId.clear();
+  };
+
+  const onExport = () => {
+    const json = JSON.stringify(formData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "questionnaire.json";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
-    <header className="sticky top-0 z-49 bg-transparent mx-auto">
-      <div className="py-6 text-center">
-        <h1 className="text-3xl sm:text-4xl tracking-tight">Questionnaire Builder</h1>
-        <p className="mt-1 text-sm text-black/60">
-          Build dynamic questionnaires with JSON config and FHIR export
-        </p>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="grid grid-cols-2 rounded-xl border border-black/10 bg-white shadow-sm">
-          <button
-            className={`py-3 rounded-xl text-sm font-medium ${!isPreview ? "bg-black/10" : ""}`}
-            onClick={onEdit}
-          >
-            Builder
-          </button>
-          <button
-            className={`py-3 rounded-xl text-sm font-medium ${isPreview ? "bg-black/10" : ""}`}
-            onClick={onPreview}
-          >
-            Preview
-          </button>
+    <header className="editor-header w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+      <div className="px-4 py-4">
+        {/* Top row: Logo/Title */}
+        <div className="mb-4">
+          <h1 className="text-lg lg:text-2xl font-bold text-slate-900">Editor</h1>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2 items-center justify-end">
-          <label className="px-4 py-2 rounded-xl border border-black/15 bg-white hover:bg-black/5 cursor-pointer text-sm">
-            Import
-            <input
-              className="hidden"
-              type="file"
-              accept=".json,.yaml,.yml,application/json,text/yaml"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (ev) => handleFileSelect(ev.target?.result ?? "");
-                reader.readAsText(file);
-                e.target.value = "";
-              }}
-            />
-          </label>
+        {/* Bottom row: View Mode Tabs + Import/Export */}
+        <div className="flex items-center max-[474px]:items-start justify-between gap-3">
+          <div className="header-mode-toggle flex gap-1 rounded-lg border border-black/10 bg-black/5 p-1 w-fit max-[474px]:h-[4.5rem]">
+            <button
+              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${!isPreview && !isCodeEditor
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+                }`}
+              onClick={onEdit}
+              title="Visual Editor"
+            >
+              <VEDITOR_ICON className="w-5 h-5" />
+              <span>Visual Editor</span>
+            </button>
+            <button
+              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${isCodeEditor
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+                }`}
+              onClick={onCodeEditor}
+              title="Code Editor"
+            >
+              <CODE_ICON className="w-5 h-5" />
+              <span>Code Editor</span>
+            </button>
+            <button
+              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${isPreview
+                  ? "bg-white text-slate-900 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+                }`}
+              onClick={onPreview}
+              title="Preview"
+            >
+              <PICTURE_ICON className="w-5 h-5" />
+              <span>Preview</span>
+            </button>
+          </div>
 
-          <button
-            className="px-4 py-2 rounded-xl border border-black/15 bg-white hover:bg-black/5 text-sm"
-            onClick={() => setShowData(true)}
-          >
-            Data Viewer
-          </button>
+          <div className="header-actions flex flex-col min-[475px]:flex-row gap-1 items-end min-[475px]:items-center">
+            <label className="header-import-label px-2 py-2 lg:px-3 lg:py-2 rounded-lg border border-black/15 bg-white hover:bg-black/5 cursor-pointer text-xs lg:text-sm font-medium transition-colors flex items-center lg:gap-2 gap-0">
+              <UPLOAD_ICON className="w-4 h-4 lg:w-4 lg:h-4" />
+              <span className="hidden min-[540px]:inline">Import</span>
+              <input
+                className="hidden"
+                type="file"
+                accept=".json,.yaml,.yml,application/json,text/yaml"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const reader = new FileReader();
+                  reader.onload = (ev) => handleFileSelect(ev.target?.result ?? "");
+                  reader.readAsText(file);
+                  e.target.value = "";
+                }}
+              />
+            </label>
+
+            <button
+              className="px-2 py-2 lg:px-3 lg:py-2 rounded-lg border border-black/15 bg-white hover:bg-black/5 text-xs lg:text-sm font-medium transition-colors flex items-center lg:gap-2 gap-0"
+              onClick={onExport}
+              title="Export"
+            >
+              <DOWNLOAD_ICON className="w-4 h-4 lg:w-4 lg:h-4" />
+              <span className="hidden min-[540px]:inline">Export</span>
+            </button>
+          </div>
         </div>
       </div>
-
-      <DataViewer
-        open={showData}
-        onClose={() => setShowData(false)}
-        data={formData}
-        title="Form Data"
-        placement="bottom"
-        contentClassName="custom-scrollbar"
-      />
 
       {/* Schema Type Confirmation Modal */}
       {showSchemaConfirm && pendingImport && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-            <div className="mb-6">
+        <div className="import-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="import-modal-content bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div className="import-modal-header mb-6">
               <h3 className="text-xl font-semibold text-slate-900 mb-2">
                 Confirm Schema Type
               </h3>
@@ -170,15 +203,15 @@ export default function Header() {
                 </p>
               )}
             </div>
-            
-            <div className="flex gap-3">
+
+            <div className="import-modal-actions flex gap-3">
               <button
                 onClick={() => confirmImport(pendingImport.detectedSchemaType)}
                 className="flex-1 px-6 py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors shadow-sm hover:shadow"
               >
                 Yes, Import
               </button>
-              
+
               <button
                 onClick={cancelImport}
                 className="flex-1 px-6 py-3 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold transition-colors"

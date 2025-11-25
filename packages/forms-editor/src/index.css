@@ -1,6 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
 @import "tailwindcss/utilities";
 @import "tailwindcss/theme";
-@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+
+/* Remove focus-visible outline on divs and buttons to prevent Escape key outline */
+div:focus-visible,
+button:focus-visible {
+  outline: none;
+}
 
 /* Dark mode support - when inside a Bootstrap dark theme parent */
 [data-bs-theme="dark"] .qb-editor-root {
@@ -23,10 +29,3 @@
   --font-titillium: "Titillium Web", sans-serif;
 }
 
-@utility custom-scrollbar {
-  @apply [&::-webkit-scrollbar]:w-1.5
-  [&::-webkit-scrollbar-track]:rounded-full
-  [&::-webkit-scrollbar-track]:bg-gray-100
-  [&::-webkit-scrollbar-thumb]:rounded-full
-  [&::-webkit-scrollbar-thumb]:bg-gray-500
-}

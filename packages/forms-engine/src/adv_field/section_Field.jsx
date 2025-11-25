@@ -15,11 +15,12 @@ const SectionField = React.memo(function SectionField({ field }) {
   const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
 
   const parentId = ui.selectedChildId.ParentId;
-  const childId  = ui.selectedChildId.ChildId;
+  const childId = ui.selectedChildId.ChildId;
 
   const selectedChildId = parentId === field.id ? childId : null;
 
   const childRefs = React.useRef({});
+  const previousChildCountRef = React.useRef(0);
 
   const byId = useFormStore((s) => s.byId);
   const allFlat = React.useMemo(() => {
@@ -33,11 +34,34 @@ const SectionField = React.memo(function SectionField({ field }) {
     return out;
   }, [byId]);
 
+  // Auto-scroll to newly added field
   React.useEffect(() => {
-    if (ctrl.isPreview || !selectedChildId) return;
-    const el = childRefs.current[selectedChildId];
-    el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
-  }, [selectedChildId, ctrl.isPreview]);
+    const currentChildCount = Array.isArray(field.fields) ? field.fields.length : 0;
+    if (currentChildCount > previousChildCountRef.current && currentChildCount > 0) {
+      // A field was added, scroll to the last one and select it
+      const lastChild = field.fields[field.fields.length - 1];
+      if (lastChild) {
+        // Select the newly added field
+        ui.selectedChildId.set(field.id, lastChild.id);
+        
+        setTimeout(() => {
+          const el = childRefs.current[lastChild.id];
+          el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+        }, 0);
+      }
+    }
+    previousChildCountRef.current = currentChildCount;
+  }, [field.fields, field.id, ui.selectedChildId]);
+
+  // Auto-scroll when selected child changes (e.g., from SectionEditor dropdown)
+  React.useEffect(() => {
+    if (selectedChildId && childRefs.current[selectedChildId]) {
+      setTimeout(() => {
+        const el = childRefs.current[selectedChildId];
+        el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
+      }, 0);
+    }
+  }, [selectedChildId]);
 
   // ────────── Helper: Check if child should be hidden ──────────
   const shouldHideChild = (child) => {
@@ -73,9 +97,15 @@ const SectionField = React.memo(function SectionField({ field }) {
         key={child.id}
         ref={(el) => el && (childRefs.current[child.id] = el)}
         className={[
-          "rounded-lg mb-3",
+          "rounded-lg mb-3 cursor-pointer",
           isHighlighted ? "border-2 border-blue-400 border-dashed" : "border border-transparent",
         ].join(" ")}
+        onClick={(e) => {
+          e.stopPropagation();
+          ui.selectedFieldId.set(sectionId);
+          ui.selectedChildId.set(sectionId, child.id);
+
+        }}
       >
         <ChildField field={child} sectionId={sectionId} />
       </div>
@@ -89,8 +119,8 @@ const SectionField = React.memo(function SectionField({ field }) {
 
         if (isPreview) {
           return (
-            <section className={insideSection ? "border-b border-gray-200" : "border-0"}>
-              <div className="bg-[#0076a8] text-white text-xl px-4 py-2 rounded-t-lg">
+            <section className={`section-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
+              <div className="bg-blue-500 text-white text-xl px-4 py-2 rounded-t-lg">
                 {f.title || "Section"}
               </div>
               {children.map((c) => renderChildPreview(c, f.id))}
@@ -98,43 +128,33 @@ const SectionField = React.memo(function SectionField({ field }) {
           );
         }
 
+        const isEmpty = children.length === 0;
+
         return (
-          <div>
-            <div className="flex justify-between items-center mb-3 gap-2">
+          <div className="section-field-edit">
+            <div className="flex justify-between items-center mb-3 gap-2 section-field-header">
               <div className="flex-1">
                 <input
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
                   value={f.title || ""}
                   onChange={(e) => api.field.update("title", e.target.value)}
                   placeholder="Section title (e.g., Data Consent)"
                 />
               </div>
             </div>
-
-            <div>{children.map((c) => renderChildEdit(c, f.id))}</div>
-
-            <div className="mb-3">
-              <div className="text-sm font-medium text-gray-700 mb-2">Add a field</div>
-              <div className="flex flex-wrap gap-2">
-                {Object.keys(fieldTypes)
-                  .filter((t) => t !== "section")
-                  .map((t) => (
-                    <button
-                      key={t}
-                      className="inline-flex items-center gap-2 px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50"
-                      onClick={() =>
-                        api.section?.addChild
-                          ? api.section.addChild(t)
-                          : api.field.add?.(t, undefined, undefined)
-                      }
-                    >
-                      <PLUSSQUARE_ICON className="h-4 w-4" />
-                      Add {fieldTypes[t].label}
-                    </button>
-                  ))}
+            {isEmpty ? (
+              <div className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-blue-200 rounded-lg shadow-md text-center">
+                <p className="text-sm font-semibold text-gray-700 mb-2">No fields in this section</p>
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  Use the <span className="font-semibold text-blue-500">Tool Panel</span> on the left to add fields.
+                  <br />
+                  Press <span className="font-semibold text-blue-500">ESC</span> or click <span className="font-semibold text-blue-500">X</span> to unselect.
+                </p>
               </div>
-            </div>
+            ) : (
+              <div>{children.map((c) => renderChildEdit(c, f.id))}</div>
+            )}
           </div>
         );
       }}

@@ -26,33 +26,31 @@ const normalize = (arr) => {
   const existingIds = new Set();
   
   (arr || []).forEach((f) => {
-    let id = f.id;
-    if (!id) {
+    let parentId = f.id;
+    if (!parentId) {
       // Generate meaningful ID if missing
-      const question = f.question || f.title || '';
       const fieldType = f.fieldType || 'field';
-      id = generateFieldId(question, fieldType, existingIds);
+      parentId = generateFieldId(fieldType, existingIds);
     }
-    existingIds.add(id);
+    existingIds.add(parentId);
     
-    const init = initializeField({ ...f, id });
+    const init = initializeField({ ...f, id: parentId });
     
     // Initialize nested children in sections and generate IDs for them too
     if (init.fieldType === "section" && Array.isArray(init.fields)) {
       init.fields = init.fields.map(child => {
         let childId = child.id;
         if (!childId) {
-          const childQuestion = child.question || child.title || '';
           const childFieldType = child.fieldType || 'field';
-          childId = generateFieldId(childQuestion, childFieldType, existingIds);
-          existingIds.add(childId);
+          childId = generateFieldId(childFieldType, existingIds, parentId);
         }
+        existingIds.add(childId);
         return initializeField({ ...child, id: childId });
       });
     }
     
-    byId[id] = init;
-    order.push(id);
+    byId[parentId] = init;
+    order.push(parentId);
   });
   return { byId, order };
 };
@@ -159,16 +157,17 @@ export const createFormStore = (initProps = {}) => {
       const tpl = fieldTypes[type]?.defaultProps;
       if (!tpl) return state;;
       
-      // Collect existing IDs for collision detection
+      // Collect ALL existing IDs for collision detection (root + all children in sections)
       const existingIds = new Set(Object.keys(state.byId));
-      if (sectionId && state.byId[sectionId]?.fields) {
-        state.byId[sectionId].fields.forEach(f => existingIds.add(f.id));
-      }
+      Object.values(state.byId).forEach(field => {
+        if (field?.fieldType === 'section' && Array.isArray(field.fields)) {
+          field.fields.forEach(child => existingIds.add(child.id));
+        }
+      });
       
       const question = initialPatch?.question || tpl.question || '';
       const title = initialPatch?.title || tpl.title || '';
-      const text = type === 'section' ? title : question;
-      const id = generateFieldId(text, type, existingIds);
+      const id = generateFieldId(type, existingIds, sectionId);
       
       const f = initializeField({ ...tpl, ...initialPatch, id });
 
@@ -233,7 +232,7 @@ export const createFormStore = (initProps = {}) => {
       const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
         const opts = Array.isArray(f.options) ? f.options : [];
         const existingIds = new Set(opts.map(o => o.id));
-        const optionId = generateOptionId(value, existingIds, fieldId);
+        const optionId = generateOptionId(existingIds, fieldId);
         const next = [...opts, { id: optionId, value }];
         return { ...f, options: next };
       });
@@ -302,7 +301,7 @@ export const createFormStore = (initProps = {}) => {
       const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
         const rows = Array.isArray(f.rows) ? f.rows : [];
         const existingIds = new Set(rows.map(r => r.id));
-        const rowId = generateOptionId(value, existingIds, `${fieldId}-row`);
+        const rowId = generateOptionId(existingIds, `${fieldId}-row`);
         const next = [...rows, { id: rowId, value }];
         return { ...f, rows: next };
       });
@@ -355,7 +354,7 @@ export const createFormStore = (initProps = {}) => {
       const res = updateFieldHelper(state, fieldId, sectionId, (f) => {
         const columns = Array.isArray(f.columns) ? f.columns : [];
         const existingIds = new Set(columns.map(c => c.id));
-        const colId = generateOptionId(value, existingIds, `${fieldId}-col`);
+        const colId = generateOptionId(existingIds, `${fieldId}-col`);
         const next = [...columns, { id: colId, value }];
         return { ...f, columns: next };
       });

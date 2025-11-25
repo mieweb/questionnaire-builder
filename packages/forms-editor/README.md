@@ -2,6 +2,17 @@
 
 Embeddable questionnaire editor with FHIR export and conditional logic.
 
+## 🎨 Version 1.0 - UI/UX Refinement
+
+The editor now features a complete visual overhaul with modern blue theme:
+- All field components use consistent blue color palette
+- Enhanced focus states and hover interactions
+- Improved field selection and editing experience
+- Better visual hierarchy with updated FieldWrapper
+- Mobile-responsive with polished interactions
+
+See the [main CHANGELOG](../../CHANGELOG.md) for complete details.
+
 ```bash
 npm install @mieweb/forms-editor react react-dom
 ```
@@ -65,7 +76,6 @@ function App() {
 - `startInPreview` - Start in preview mode (default: false)
 - `hideUnsupportedFields` - Hide unsupported field types (default: false)
 - `showHeader` - Show editor header (default: true)
-- `showMobileToolbar` - Show mobile toolbar (default: true)
 - `className` - Additional CSS classes
 
 ## 🔄 Breaking Changes (v0.1.1)

@@ -170,23 +170,6 @@ export const UPLOAD_ICON = React.memo(
   propsEqual
 );
 
-export const CODE_ICON = React.memo(
-  ({ className = "" }) => (
-    <svg
-      xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-      className={className}
-    >
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M7 8l-4 4l4 4" />
-      <path d="M17 8l4 4l-4 4" />
-      <path d="M14 4l-4 16" />
-    </svg>
-  ),
-  propsEqual
-);
-
-
 export const VIEWBIG_ICON = React.memo(({ className = "" }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -284,3 +267,117 @@ export const UPDOWNARROW_ICON = React.memo(
   ),
   propsEqual
 );
+
+export const TEXT_ICON = React.memo(
+  ({ className = "" }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 7V5h13v2" />
+      <path d="M10 5v14" />
+      <path d="M12 19H8" />
+      <path d="M15 13v-1h6v1" />
+      <path d="M18 12v7" />
+      <path d="M17 19h2" />
+    </svg>
+  ),
+  propsEqual
+);
+
+export const SELECTION_ICON = React.memo(
+  ({ className = "" }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 12a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+      <path d="M11 19a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+      <path d="M11 5a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+    </svg>
+  ),
+  propsEqual
+);
+
+export const FOLDERS_ICON = React.memo(
+  ({ className = "" }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M9 4h3l2 2h5a2 2 0 0 1 2 2v7a2 2 0 0 1 -2 2H9a2 2 0 0 1 -2 -2V6a2 2 0 0 1 2 -2" />
+      <path d="M17 17v2a2 2 0 0 1 -2 2H5a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h2" />
+    </svg>
+  ),
+  propsEqual
+);
+
+export const RANKING_ICON = React.memo(
+  ({ className = "" }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 6h9" />
+      <path d="M11 12h9" />
+      <path d="M12 18h8" />
+      <path d="M4 16a2 2 0 1 1 4 0c0 0.591 -0.5 1 -1 1.5L4 20h4" />
+      <path d="M6 10V4L4 6" />
+    </svg>
+  ),
+  propsEqual
+);
+
+export const MATRIX_ICON = React.memo(
+  ({ className = "" }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 5a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+      <path d="M11 5a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+      <path d="M18 5a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+      <path d="M4 12a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+      <path d="M11 12a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+      <path d="M18 12a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+      <path d="M4 19a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+      <path d="M11 19a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+      <path d="M18 19a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" />
+    </svg>
+  ),
+  propsEqual
+);
+
+export const PAPERCLIP_ICON = React.memo(
+  ({ className = "" }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m15 7 -6.5 6.5a1.5 1.5 0 0 0 3 3L18 10a3 3 0 0 0 -6 -6l-6.5 6.5a4.5 4.5 0 0 0 9 9L21 13" />
+    </svg>
+  ),
+  propsEqual
+);
+
+export const TOOLS_ICON = React.memo(
+  ({ className = "" }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 21h4L20 8a1.5 1.5 0 0 0 -4 -4L3 17v4" />
+      <path d="m14.5 5.5 4 4" />
+      <path d="M12 8 7 3 3 7l5 5" />
+      <path d="M7 8 5.5 9.5" />
+      <path d="m16 12 5 5 -4 4 -5 -5" />
+      <path d="m16 17 -1.5 1.5" />
+    </svg>
+  ),
+  propsEqual
+);
+
+
+export const CODE_ICON = React.memo(({ className = "" }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
+    <path d="m7 8 -4 4 4 4" strokeWidth="2" />
+    <path d="m17 8 4 4 -4 4" strokeWidth="2" />
+    <path d="m14 4 -4 16" strokeWidth="2" />
+  </svg>
+), propsEqual);
+
+export const VEDITOR_ICON = React.memo(({ className = "" }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" id="Pencil-Bolt--Streamline-Tabler">
+    <path d="M4 20h4L18.5 9.5a2.828 2.828 0 1 0 -4 -4L4 16v4" strokeWidth="2"></path>
+    <path d="m13.5 6.5 4 4" strokeWidth="2"></path>
+    <path d="m19 16 -2 3h4l-2 3" strokeWidth="2"></path>
+  </svg>
+), propsEqual);
+
+export const PICTURE_ICON = React.memo(({ className = "" }) => (
+  <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M15 8h0.01" strokeWidth="2" />
+    <path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3H6a3 3 0 0 1 -3 -3V6z" strokeWidth="2" />
+    <path d="m3 16 5 -5c0.928 -0.893 2.072 -0.893 3 0l5 5" strokeWidth="2" />
+    <path d="m14 14 1 -1c0.928 -0.893 2.072 -0.893 3 0l3 3" strokeWidth="2" />
+  </svg>
+), propsEqual);

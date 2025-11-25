@@ -10,14 +10,14 @@ const LongTextField = React.memo(function LongTextField({ field, sectionId }) {
       {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
-            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
+            <div className={`longtext-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
                 <div className="font-light">{f.question || "Question"}</div>
                 <textarea
                   value={f.answer || ""}
                   onChange={(e) => api.field.update("answer", e.target.value)}
                   placeholder="Type your answer"
-                  className="px-3 py-2 w-full border border-black/10 shadow-2xs rounded min-h-24 max-h-60 resize-y"
+                  className="px-3 py-2 w-full border border-gray-300 shadow-sm rounded-lg min-h-24 max-h-60 resize-y focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
                   rows={4}
                 />
               </div>
@@ -26,9 +26,9 @@ const LongTextField = React.memo(function LongTextField({ field, sectionId }) {
         }
 
         return (
-          <div>
+          <div className="longtext-field-edit space-y-2">
             <input
-              className="px-3 py-2 w-full border border-black/40 rounded"
+              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
@@ -38,7 +38,7 @@ const LongTextField = React.memo(function LongTextField({ field, sectionId }) {
             <textarea
               value={f.answer || ""}
               placeholder={placeholder?.answer || "Type your answer"}
-              className="px-3 py-2 my-1.5 w-full border border-black/10 shadow-2xs rounded min-h-24 max-h-56 resize-y"
+              className="px-3 py-2 w-full border border-gray-300 shadow-sm rounded-lg min-h-24 max-h-56 resize-y bg-gray-50"
               rows={4}
               disabled
             />

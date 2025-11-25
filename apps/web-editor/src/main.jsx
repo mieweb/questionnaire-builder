@@ -6,8 +6,10 @@ import { QuestionnaireEditor } from '@mieweb/forms-editor';
 function App() {
 
   return (
-    <div className="w-full h-dvh bg-slate-100">
-        <QuestionnaireEditor/>
+    <div className="app-root w-full h-dvh bg-slate-100">
+        <div className="app-editor-container">
+          <QuestionnaireEditor/>
+        </div>
     </div>
   );
 }

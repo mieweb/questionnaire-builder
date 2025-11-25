@@ -1,6 +1,5 @@
 import React from 'react';
 import Header from './components/Header.jsx';
-import MobileToolBar from './components/MobileToolBar.jsx';
 import Layout from './components/desktopLayout/Layout.jsx';
 
 import {
@@ -22,7 +21,6 @@ import './index.css';
  * @param {function} [onChange] - Callback fired when form data changes
  * @param {string} [className] - Additional CSS classes
  * @param {boolean} [showHeader=true] - Show editor header
- * @param {boolean} [showMobileToolbar=true] - Show mobile toolbar
  * @param {boolean} [startInPreview=false] - Start in preview mode
  * @param {boolean} [hideUnsupportedFields=false] - Hide unsupported field types
  */
@@ -32,10 +30,10 @@ function QuestionnaireEditorInner({
   onChange,
   className = '',
   showHeader = true,
-  showMobileToolbar = true,
   startInPreview = false,
   hideUnsupportedFields = false,
 }) {
+  const [codeFormat, setCodeFormat] = React.useState("json");
   const ui = useUIApi();
   const formStoreInitialized = React.useRef(false);
   const formStore = React.useContext(FormStoreContext);
@@ -98,10 +96,9 @@ function QuestionnaireEditorInner({
   );
 
   return (
-    <div className={`qb-editor-root min-h-screen bg-gray-100 font-titillium ${className}`}>
-      {showHeader && <Header />}
-      {showMobileToolbar && <div className="lg:hidden"><MobileToolBar /></div>}
-      <Layout selectedField={selectedField} />
+    <div className={`qb-editor-root editor-container w-full max-w-7xl mx-auto bg-gray-100 font-titillium ${className}`}>
+      {showHeader && <Header codeFormat={codeFormat} onCodeFormatChange={setCodeFormat} />}
+      <Layout selectedField={selectedField} codeFormat={codeFormat} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { useUIApi, useFormStore } from "@mieweb/forms-engine";
+import { useUIApi, useFormStore, TRASHCANTWO_ICON } from "@mieweb/forms-engine";
 
 // ────────── Operators by field type ──────────
 function getOperatorsForFieldType(fieldType) {
@@ -210,13 +210,13 @@ export default function LogicEditor() {
   const isDisabled = !field || !effectiveId;
 
   return (
-    <div className="space-y-2">
+    <div className="logic-editor-container space-y-4">
       {/* Target picker when a section is selected */}
       {isSectionCtx && (
-        <div className="flex gap-2 items-center">
-          <label className="text-sm">Target:</label>
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">Target Field</label>
           <select
-            className="border p-1 rounded"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white"
             value={target}
             onChange={(e) => setTarget(e.target.value)}
           >
@@ -230,97 +230,135 @@ export default function LogicEditor() {
         </div>
       )}
 
-      <div className="flex gap-2 items-center">
-        <label className="text-sm">Logic:</label>
-        <select
-          value={ew.logic || "AND"}
-          onChange={(e) => writeEnableWhen({ ...ew, logic: e.target.value })}
-          className="border p-1 rounded"
-          disabled={isDisabled}
-        >
-          <option value="AND">AND</option>
-          <option value="OR">OR</option>
-        </select>
-        <button type="button" className="px-2 py-1 border rounded" onClick={addCond} disabled={isDisabled}>
-          + Condition
-        </button>
-        <button type="button" className="px-2 py-1 border rounded" onClick={clear} disabled={isDisabled}>
-          Clear
-        </button>
+      <div className="space-y-3">
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">Logic Operator</label>
+          <select
+            value={ew.logic || "AND"}
+            onChange={(e) => writeEnableWhen({ ...ew, logic: e.target.value })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white"
+            disabled={isDisabled}
+          >
+            <option value="AND">AND — All conditions must be true</option>
+            <option value="OR">OR — Any condition must be true</option>
+          </select>
+        </div>
+        
+        <div className="flex gap-2">
+          <button 
+            type="button" 
+            className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+            onClick={addCond} 
+            disabled={isDisabled}
+          >
+            + Add Condition
+          </button>
+          <button 
+            type="button" 
+            className="px-3 py-2 text-sm font-medium text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+            onClick={clear} 
+            disabled={isDisabled}
+          >
+            Clear All
+          </button>
+        </div>
       </div>
 
-      {/* Conditions list (render safely even if disabled) */}
-      {(Array.isArray(ew.conditions) ? ew.conditions : []).map((c, i) => {
-        const meta = findTarget(c.targetId);
-        const allowedOps = getOperatorsForFieldType(meta?.fieldType);
-        const optList = Array.isArray(meta?.options) ? meta.options.map(normOption) : [];
-        const hasOptions = optList.length > 0;
+      {/* Conditions list */}
+      {ew.conditions.length > 0 && (
+        <div className="space-y-3">
+          <h4 className="text-sm font-medium text-gray-700">Conditions ({ew.conditions.length})</h4>
+          <div className="space-y-3">
+            {ew.conditions.map((c, i) => {
+              const meta = findTarget(c.targetId);
+              const allowedOps = getOperatorsForFieldType(meta?.fieldType);
+              const optList = Array.isArray(meta?.options) ? meta.options.map(normOption) : [];
+              const hasOptions = optList.length > 0;
 
-        return (
-          <div key={i} className="grid grid-cols-1 sm:grid-cols-7 gap-2 items-center opacity-100">
-            <button
-              type="button"
-              onClick={() => removeCond(i)}
-              className="px-2 py-1 border rounded sm:col-span-1"
-              title="Remove condition"
-              disabled={isDisabled}
-            >
-              ✕
-            </button>
+              return (
+                <div key={i} className="p-3 bg-gray-50 border border-gray-200 rounded-lg space-y-2">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Condition {i + 1}</span>
+                    <button
+                      type="button"
+                      onClick={() => removeCond(i)}
+                      className="text-gray-400 hover:text-red-600 transition-colors"
+                      title="Remove condition"
+                      disabled={isDisabled}
+                    >
+                      <TRASHCANTWO_ICON className="w-4 h-4" />
+                    </button>
+                  </div>
 
-            <select
-              className="border p-1 rounded sm:col-span-3"
-              value={c.targetId}
-              onChange={(e) => updateCond(i, { targetId: e.target.value })}
-              disabled={isDisabled}
-            >
-              <option value="">— Select field —</option>
-              {filteredTargets.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
+                  <div className="space-y-2">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">When Field</label>
+                      <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white text-sm"
+                        value={c.targetId}
+                        onChange={(e) => updateCond(i, { targetId: e.target.value })}
+                        disabled={isDisabled}
+                      >
+                        <option value="">— Select field —</option>
+                        {filteredTargets.map((t) => (
+                          <option key={t.id} value={t.id}>
+                            {t.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-            <select
-              className="border p-1 rounded sm:col-span-1"
-              value={c.operator}
-              onChange={(e) => updateCond(i, { operator: e.target.value })}
-              disabled={isDisabled || !meta}
-            >
-              {(meta ? allowedOps : ["equals"]).map((op) => (
-                <option key={op} value={op}>
-                  {op}
-                </option>
-              ))}
-            </select>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Operator</label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white text-sm"
+                          value={c.operator}
+                          onChange={(e) => updateCond(i, { operator: e.target.value })}
+                          disabled={isDisabled || !meta}
+                        >
+                          {(meta ? allowedOps : ["equals"]).map((op) => (
+                            <option key={op} value={op}>
+                              {op}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
 
-            {hasOptions ? (
-              <select
-                className="border p-1 rounded sm:col-span-2"
-                value={c.value}
-                onChange={(e) => updateCond(i, { value: e.target.value })}
-                disabled={isDisabled || !meta}
-              >
-                <option value="">— Select option —</option>
-                {optList.map((opt) => (
-                  <option key={opt.id} value={opt.id}>
-                    {opt.value}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <input
-                className="border p-1 rounded sm:col-span-2"
-                placeholder="Enter value"
-                value={c.value}
-                onChange={(e) => updateCond(i, { value: e.target.value })}
-                disabled={isDisabled || !meta}
-              />
-            )}
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Value</label>
+                        {hasOptions ? (
+                          <select
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white text-sm"
+                            value={c.value}
+                            onChange={(e) => updateCond(i, { value: e.target.value })}
+                            disabled={isDisabled || !meta}
+                          >
+                            <option value="">— Select option —</option>
+                            {optList.map((opt) => (
+                              <option key={opt.id} value={opt.id}>
+                                {opt.value}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <input
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none text-sm"
+                            placeholder="Enter value"
+                            value={c.value}
+                            onChange={(e) => updateCond(i, { value: e.target.value })}
+                            disabled={isDisabled || !meta}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
+        </div>
+      )}
     </div>
   );
 }

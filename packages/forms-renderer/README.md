@@ -2,6 +2,17 @@
 
 Questionnaire renderer with three distribution options: React component, standalone Web Component, or Blaze component for Meteor.
 
+## 🎨 Version 1.0 - UI/UX Refinement
+
+All rendered field components now feature modern blue theme styling:
+- Blue selection highlights and focus states throughout
+- Improved hover effects for better user feedback
+- Consistent visual design across all field types
+- Enhanced accessibility with clear focus indicators
+- Polished interactions in preview mode
+
+See the [main CHANGELOG](../../CHANGELOG.md) for complete details.
+
 ## 🆕 New Features
 
 ### YAML & JSON Auto-Parsing

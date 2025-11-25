@@ -11,7 +11,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
       {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
-            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
+            <div className={`boolean-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
                 <div className="font-light">{f.question || "Question"}</div>
                 <div className="flex gap-2">
@@ -19,8 +19,8 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
                     const inputId = `${f.id}-${option.id}`;
                     const isSelected = f.selected === option.id;
                     const labelClasses = isSelected
-                      ? "flex-1 flex items-center justify-center px-4 py-2 border rounded-lg cursor-pointer bg-[#0076a8] text-white border-[#0076a8]"
-                      : "flex-1 flex items-center justify-center px-4 py-2 border rounded-lg cursor-pointer border-black/10 hover:bg-gray-50";
+                      ? "flex-1 flex items-center justify-center px-4 py-2 border-2 rounded-lg cursor-pointer bg-blue-600 text-white border-blue-600 transition-all"
+                      : "flex-1 flex items-center justify-center px-4 py-2 border-2 rounded-lg cursor-pointer border-gray-300 hover:bg-blue-50 hover:border-blue-300 transition-all";
                     
                     return (
                       <label
@@ -53,27 +53,29 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
         ];
 
         return (
-          <div>
+          <div className="boolean-field-edit space-y-2">
             <input
-              className="px-3 py-2 w-full border border-black/40 rounded"
+              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
 
-            {options.map((opt, idx) => (
-              <div key={opt.id} className="flex items-center px-4 my-1.5 shadow border border-black/10 rounded-lg">
-                <input type="radio" name={`${f.fieldId}-edit`} disabled className="mr-2" />
+            <div className="space-y-2">
+            {options.map((opt) => (
+              <div key={opt.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
+                <input type="radio" name={`${f.fieldId}-edit`} disabled className="flex-shrink-0" />
                 <input
                   type="text"
                   value={opt.value}
-                  onChange={(e) => api.option.update(idx, "value", e.target.value)}
-                  placeholder={placeholder?.options || `Option ${idx + 1}`}
-                  className="w-full py-2"
+                  onChange={(e) => api.option.update(opt.id, e.target.value)}
+                  placeholder={placeholder?.options || `Option ${opt.id}`}
+                  className="flex-1 min-w-0 outline-none bg-transparent"
                 />
               </div>
             ))}
+            </div>
           </div>
         );
       }}

@@ -7,11 +7,11 @@ export const initializeFieldOptions = (options, fieldId = '') => {
   
   return options.map((option) => {
     if (typeof option === "string") {
-      const id = generateOptionId(option, existingIds, fieldId);
+      const id = generateOptionId(existingIds, fieldId);
       existingIds.add(id);
       return { id, value: option };
     } else {
-      const id = option.id || generateOptionId(option.value, existingIds, fieldId);
+      const id = option.id || generateOptionId(existingIds, fieldId);
       existingIds.add(id);
       return { id, ...option };
     }

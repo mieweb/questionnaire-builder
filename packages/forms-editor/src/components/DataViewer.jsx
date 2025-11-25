@@ -50,7 +50,7 @@ export default function DataViewer({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[60] flex items-center justify-center"
+          className="data-viewer-overlay fixed inset-0 z-[60] flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -58,7 +58,7 @@ export default function DataViewer({
           aria-modal="true"
           role="dialog"
         >
-          <div className="w-full h-full flex items-end sm:items-center justify-center sm:max-w-4xl">
+          <div className="data-viewer-wrapper w-full h-full flex items-end sm:items-center justify-center sm:max-w-4xl">
             <motion.div
               onMouseDown={stop}
               initial={{ y: isCenter ? 20 : "100%", opacity: isCenter ? 0 : 1, scale: isCenter ? 0.98 : 1 }}
@@ -67,17 +67,17 @@ export default function DataViewer({
               transition={{ type: "spring", stiffness: 160, damping: 20 }}
               className={
                 isCenter
-                  ? "w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl bg-white shadow-lg border border-black/10 max-h-[80vh] overflow-hidden"
-                  : "w-full mx-auto bg-black/5 border border-black/15 px-6 py-4 rounded-2xl backdrop-blur-xl overflow-hidden"
+                  ? "data-viewer-modal w-full sm:max-w-2xl sm:rounded-2xl rounded-t-2xl bg-white shadow-lg border border-black/10 max-h-[80vh] overflow-hidden"
+                  : "data-viewer-panel w-full mx-auto bg-black/5 border border-black/15 px-6 py-4 rounded-2xl backdrop-blur-xl overflow-hidden"
               }
             >
-              <div className={`flex items-center justify-between ${isCenter ? "px-4 py-3 border-b border-black/10" : ""}`}>
+              <div className={`data-viewer-header flex items-center justify-between ${isCenter ? "px-4 py-3 border-b border-black/10" : ""}`}>
                 <h3 className="font-semibold">
                   {title} ({mode.toUpperCase()})
                 </h3>
                 <div className="flex items-center gap-2">
                   {/* Toggle */}
-                                <div className="inline-flex rounded-lg border border-black/10 overflow-hidden">
+                                <div className="data-viewer-mode-toggle inline-flex rounded-lg border border-black/10 overflow-hidden">
                     <button
                       className={`px-3 py-1 text-sm ${mode === "yaml" ? "bg-black/6" : "bg-gray-200 hover:bg-black/5"}`}
                       aria-pressed={mode === "yaml"}
@@ -109,11 +109,11 @@ export default function DataViewer({
                 </div>
               </div>
 
-              <div className={
+              <div className={`data-viewer-content ${
                 isCenter
                   ? `p-4 overflow-auto max-h-[70vh] ${contentClassName}`
                   : `mt-2 p-2 rounded-lg overflow-y-auto max-h-96 ${contentClassName}`
-              }>
+              }`}>
                 <pre className="whitespace-pre-wrap break-words text-sm text-gray-700">{viewerText}</pre>
               </div>
             </motion.div>

@@ -116,7 +116,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                 Question / Title
               </label>
               <input
-                className="px-3 py-2 w-full border border-black/40 rounded"
+                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
                 type="text"
                 value={f.question || ""}
                 onChange={(e) => api.field.update("question", e.target.value)}
@@ -130,7 +130,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
               </label>
               <input
                 type="text"
-                className="px-3 py-2 w-full border border-black/40 rounded"
+                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
                 value={f.altText || ""}
                 onChange={(e) => api.field.update("altText", e.target.value)}
                 placeholder={placeholder?.altText || "Descriptive alt text for accessibility"}
@@ -143,21 +143,21 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
               </label>
               <input
                 type="text"
-                className="px-3 py-2 w-full border border-black/40 rounded"
+                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
                 value={f.caption || ""}
                 onChange={(e) => api.field.update("caption", e.target.value)}
                 placeholder={placeholder?.caption || "Optional caption below image"}
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className={`block text-sm font-medium mb-1 ${f.padding === "full-bleed" ? "text-gray-400" : "text-gray-700"}`}>
                   Size
                 </label>
                 <select
                   disabled={f.padding === "full-bleed"}
-                  className={`px-3 py-2 w-full border rounded text-sm ${f.padding === "full-bleed" ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed" : "border-black/40"}`}
+                  className={`px-3 py-2 w-full border rounded-lg text-sm transition-colors ${f.padding === "full-bleed" ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed" : "border-gray-300 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer"}`}
                   value={f.size || "full"}
                   onChange={(e) => api.field.update("size", e.target.value)}
                 >
@@ -173,7 +173,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                 </label>
                 <select
                   disabled={f.padding === "full-bleed"}
-                  className={`px-3 py-2 w-full border rounded text-sm ${f.padding === "full-bleed" ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed" : "border-black/40"}`}
+                  className={`px-3 py-2 w-full border rounded-lg text-sm transition-colors ${f.padding === "full-bleed" ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed" : "border-gray-300 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer"}`}
                   value={f.alignment || "center"}
                   onChange={(e) => api.field.update("alignment", e.target.value)}
                 >
@@ -189,7 +189,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                 Padding
               </label>
               <select
-                className="px-3 py-2 w-full border border-black/40 rounded"
+                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer transition-colors"
                 value={f.padding || "padded"}
                 onChange={(e) => api.field.update("padding", e.target.value)}
               >
@@ -199,7 +199,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
             </div>
 
             {currentImageUri ? (
-              <div className="mt-4 p-3 border border-gray-200 rounded bg-gray-50 w-full overflow-hidden relative">
+              <div className="p-4 border border-gray-300 rounded-lg bg-gray-50 w-full overflow-hidden relative shadow-sm">
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -208,13 +208,13 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                     setPreviewUrl("");
                     setFileName("");
                   }}
-                  className="absolute top-2 right-2 text-gray-700 hover:text-gray-900 transition-colors"
+                  className="absolute top-3 right-3 text-gray-400 hover:text-red-600 transition-colors"
                   title="Delete image"
                   aria-label="Delete image"
                 >
                   <X_ICON className="w-5 h-5" />
                 </button>
-                <p className="text-sm font-medium text-gray-700 mb-2">Preview</p>
+                <p className="text-sm font-semibold text-gray-700 mb-3">Preview</p>
                 <div className={`flex ${alignmentClass} mb-2`}>
                   <img
                     src={currentImageUri}
@@ -240,10 +240,10 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                 />
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="mt-4 p-8 border-2 border-dashed border-blue-200 rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 w-full overflow-hidden flex items-center justify-center min-h-64 cursor-pointer hover:from-gray-100 hover:to-gray-150 transition-all"
+                  className="p-8 border-2 border-dashed border-blue-300 rounded-lg bg-gradient-to-br from-blue-50 to-gray-50 w-full overflow-hidden flex items-center justify-center min-h-64 cursor-pointer hover:border-blue-400 hover:from-blue-100 hover:to-gray-100 transition-all shadow-sm"
                 >
                   <div className="text-center">
-                    <UPLOAD_ICON className="w-12 h-12 mx-auto mb-3 text-blue-500" />
+                    <UPLOAD_ICON className="w-12 h-12 mx-auto mb-3 text-blue-600" />
                     <p className="text-lg font-semibold text-gray-700 mb-2">Paste Image or Click to Upload</p>
                     <p className="text-sm text-gray-500">Press Ctrl+V (Cmd+V on Mac) to paste an image from your clipboard, or click here to select a file</p>
                   </div>
