@@ -2,17 +2,6 @@
 
 FHIR-compatible questionnaire system built with React, Tailwind CSS, and Zustand.
 
-## 🎨 Version 1.0 - UI/UX Refinement
-
-The latest version features a complete visual overhaul with a modern blue theme:
-- **Blue Theme Design System** - Consistent color palette across all components
-- **Enhanced Focus States** - Clear blue focus rings on all interactive elements
-- **Improved Field Wrapper** - Collapsible sections with gradient headers
-- **Better Preview Mode** - Blue selection highlights and hover states
-- **Polished Components** - All 10+ field types updated with modern styling
-
-See [CHANGELOG.md](./CHANGELOG.md) for complete details.
-
 ## 📦 Packages
 
 ### 🔧 [@mieweb/forms-engine](./packages/forms-engine)
