@@ -100,7 +100,7 @@ export default function CodeEditor() {
   };
 
   return (
-    <div ref={containerRef} className="code-editor-container flex flex-col bg-gray-50 max-w-7xl w" style={{ height: `${editorHeight}px` }}>
+    <div ref={containerRef} className="code-editor-container flex flex-col bg-gray-50 max-w-7xl w-full" style={{ height: `${editorHeight}px` }}>
       {/* Header with format toggle and save button */}
       <div className="code-editor-header flex items-center justify-between gap-3 p-4 bg-white border-b border-black/10">
         <div className="flex items-center gap-2">

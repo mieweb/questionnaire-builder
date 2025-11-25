@@ -167,7 +167,6 @@ export const createFormStore = (initProps = {}) => {
       
       const question = initialPatch?.question || tpl.question || '';
       const title = initialPatch?.title || tpl.title || '';
-      const text = type === 'section' ? title : question;
       const id = generateFieldId(type, existingIds, sectionId);
       
       const f = initializeField({ ...tpl, ...initialPatch, id });

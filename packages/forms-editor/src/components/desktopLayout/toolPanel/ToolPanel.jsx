@@ -37,8 +37,6 @@ const ToolPanelImpl = ({ isPreview = false }) => {
   const isSectionSelected = selectedField?.fieldType === "section";
   const sectionTitle = selectedField?.title || "Section";
   
-  const [isHovering, setIsHovering] = React.useState(false);
-  
   const handleClearSelection = React.useCallback(() => {
     ui.selectedFieldId.set(null);
   }, [ui.selectedFieldId]);
@@ -92,11 +90,8 @@ const ToolPanelImpl = ({ isPreview = false }) => {
 
   return (
     <div 
-    
       className=" border border-gray-200 rounded-lg  bg-white overflow-y-auto custom-scrollbar max-h-[calc(100svh-24rem)] lg:max-h-[calc(100dvh-20rem)]"
       tabIndex="-1"
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
     >
       <div className="tool-panel-container pb-4 rounded-lg shadow-sm">
       <h3 className="tool-panel-title sticky top-0 z-20 bg-white text-base font-semibold pb-2 pt-3 px-4 border-b border-gray-200 flex items-center justify-between gap-2">
