@@ -158,7 +158,8 @@ export default function DrawingCanvas({
       drawPlaceholder(ctx);
     }
 
-    ctx.drawImage(drawingCanvas, 0, 0);
+    // Draw the drawing canvas to display canvas at the correct size
+    ctx.drawImage(drawingCanvas, 0, 0, displaySize.width * DPR, displaySize.height * DPR, 0, 0, displaySize.width, displaySize.height);
   }, [displaySize.width, displaySize.height, backgroundColor, backgroundLoaded, hasDrawing, existingDrawing, placeholder]);
 
   // Load background image
