@@ -1,18 +1,13 @@
 import React from "react";
-import FieldWrapper from "../../helper_shared/FieldWrapper";
-import useFieldController from "../../helper_shared/useFieldController";
-import SignatureCanvas from "./SignatureCanvas";
-import { TRASHCANTWO_ICON } from "../../helper_shared/icons";
+import FieldWrapper from "../helper_shared/FieldWrapper";
+import useFieldController from "../helper_shared/useFieldController";
+import DrawingCanvas from "../helper_shared/DrawingCanvas";
 
 const SignatureField = React.memo(function SignatureField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
 
   const handleSignatureChange = (base64) => {
     ctrl.api.field.update("answer", base64);
-  };
-
-  const handleClearSignature = () => {
-    ctrl.api.field.update("answer", "");
   };
 
   return (
@@ -25,11 +20,22 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                 <div className="font-light mb-2">{f.question || "Question"}</div>
               </div>
               <div className="flex justify-center mx-auto px-2 pb-2 lg:px-6 lg:pb-4">
-                <SignatureCanvas
-                  onSignatureChange={handleSignatureChange}
-                  existingSignature={f.answer}
-                  placeholder={f.placeholder || "Please sign here"}
-                />
+                <div style={{ width: '100%', maxWidth: '80vw' }} className="md:max-w-[75vw] lg:max-w-full">
+                  <DrawingCanvas
+                    onDrawingChange={handleSignatureChange}
+                    existingDrawing={f.answer}
+                    placeholder={f.placeholder || "Please sign here"}
+                    config={{
+                      width: 450,
+                      height: 125,
+                      strokeColor: "#000000",
+                      strokeWidth: 2,
+                      hasEraser: false,
+                      showControls: true,
+                      backgroundColor: "#FFFFFF",
+                    }}
+                  />
+                </div>
               </div>
             </div>
           );
