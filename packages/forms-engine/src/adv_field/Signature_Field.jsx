@@ -27,7 +27,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                     placeholder={f.placeholder || "Please sign here"}
                     config={{
                       width: 450,
-                      height: 125,
+                      height: 150,
                       strokeColor: "#000000",
                       strokeWidth: 2,
                       hasEraser: false,

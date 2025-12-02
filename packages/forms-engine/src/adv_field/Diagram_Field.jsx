@@ -77,7 +77,7 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                     backgroundImage={f.diagramImage}
                     placeholder={f.placeholder || "Draw on the diagram"}
                     config={{
-                      width: 600,
+                      width: 640,
                       height: 400,
                       strokeColor: "#FF0000",
                       strokeWidth: 3,

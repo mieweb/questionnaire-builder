@@ -69,14 +69,8 @@ export default function DrawingCanvas({
   const [currentTool, setCurrentTool] = React.useState("pen");
   const [currentColor, setCurrentColor] = React.useState("#000000");
   const [currentSize, setCurrentSize] = React.useState(2);
-  const [customColor, setCustomColor] = React.useState(null);
-  const [customSize, setCustomSize] = React.useState(null);
-  const [showSizePicker, setShowSizePicker] = React.useState(false);
-  const [tempSize, setTempSize] = React.useState(10);
-  const colorPickerRef = React.useRef(null);
-  const sizePickerRef = React.useRef(null);
   
-  // Predefined color palette (3 colors + 1 custom slot)
+  // Predefined color palette
   const colorPalette = ["#000000", "#FF0000", "#0000FF"];
   const sizePalette = [1, 2, 3];
 
@@ -96,7 +90,9 @@ export default function DrawingCanvas({
   };
 
   const drawPlaceholder = (ctx) => {
-    ctx.font = "20px Arial";
+    // Scale font size based on canvas dimensions (responsive)
+    const fontSize = Math.max(12, Math.min(20, displaySize.width / 30));
+    ctx.font = `${fontSize}px Arial`;
     ctx.fillStyle = "#ccc";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -114,28 +110,28 @@ export default function DrawingCanvas({
   const drawBackgroundImage = (ctx, img) => {
     if (!img) return;
     
-    const padding = { top: 48, right: 8, bottom: 8, left: 8 };
-    const availableW = displaySize.width - padding.left - padding.right;
-    const availableH = displaySize.height - padding.top - padding.bottom;
+    const padding = 6; // Padding around the image
+    const availableW = displaySize.width - (padding * 2);
+    const availableH = displaySize.height - (padding * 2);
     const imgW = img.naturalWidth || img.width;
     const imgH = img.naturalHeight || img.height;
     const imgRatio = imgW / imgH;
     const availableRatio = availableW / availableH;
     
     let drawW, drawH;
-    if (imgW <= availableW && imgH <= availableH) {
-      drawW = imgW;
-      drawH = imgH;
-    } else if (imgRatio > availableRatio) {
+    if (imgRatio > availableRatio) {
+      // Image is wider, fit to available width
       drawW = availableW;
       drawH = availableW / imgRatio;
     } else {
+      // Image is taller, fit to available height
       drawH = availableH;
       drawW = availableH * imgRatio;
     }
     
-    const x = padding.left + (availableW - drawW) / 2;
-    const y = padding.top + (availableH - drawH) / 2;
+    // Center the image with padding
+    const x = padding + (availableW - drawW) / 2;
+    const y = padding + (availableH - drawH) / 2;
     ctx.drawImage(img, x, y, drawW, drawH);
   };
 
@@ -183,18 +179,6 @@ export default function DrawingCanvas({
   }, [backgroundImage]);
 
   // Close size picker on click outside
-  React.useEffect(() => {
-    if (!showSizePicker) return;
-    
-    const handleClickOutside = (e) => {
-      if (sizePickerRef.current && !sizePickerRef.current.contains(e.target)) {
-        setShowSizePicker(false);
-      }
-    };
-    
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showSizePicker]);
 
   // Get coordinates from mouse or touch event
   const getCoords = (e) => {
@@ -273,6 +257,14 @@ export default function DrawingCanvas({
 
   const unlockDrawing = () => {
     if (existingDrawing) {
+      const drawingCanvas = drawingCanvasRef.current;
+      if (drawingCanvas) {
+        const ctx = drawingCanvas.getContext("2d");
+        ctx.clearRect(0, 0, displaySize.width, displaySize.height);
+      }
+      compositeDisplay();
+      setHasDrawing(false);
+      setTempDrawing(null);
       onDrawingChange("");
     }
   };
@@ -384,177 +376,16 @@ export default function DrawingCanvas({
           style={{ display: "none" }}
         />
 
-        {/* Tool Controls - Left Side (only when not completed) */}
-        {!existingDrawing && (
-          <div className="tool-controls-toolbar absolute top-2 left-2 flex gap-2 bg-white/90 backdrop-blur-sm rounded shadow-md p-1">
-            {/* Tool Selector */}
-            <button
-              onClick={() => setCurrentTool("pen")}
-              className={`tool-btn tool-btn-pen w-7 h-7 flex items-center justify-center rounded transition-colors touch-manipulation ${
-                currentTool === "pen"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
-              title="Pen"
-            >
-              <PEN_ICON className="w-4 h-4" />
-            </button>
-            {hasEraser && (
-              <button
-                onClick={() => setCurrentTool("eraser")}
-                className={`tool-btn tool-btn-eraser w-7 h-7 flex items-center justify-center rounded transition-colors touch-manipulation ${
-                  currentTool === "eraser"
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-                title="Eraser"
-              >
-                <ERASER_ICON className="w-4 h-4" />
-              </button>
-            )}
-
-            {/* Divider */}
-            {currentTool === "pen" && <div className="toolbar-divider w-px bg-gray-300" />}
-
-            {/* Color Selector */}
-            {currentTool === "pen" && (
-              <>
-                {colorPalette.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() => {
-                      setCurrentColor(color);
-                    }}
-                    className={`color-btn w-7 h-7 rounded transition-all touch-manipulation ${
-                      currentColor === color && currentColor !== customColor
-                        ? "ring-2 ring-blue-500 ring-offset-2"
-                        : "hover:ring-2 hover:ring-gray-300"
-                    }`}
-                    style={{ backgroundColor: color }}
-                    title={color}
-                  />
-                ))}
-                {/* Custom Color Slot */}
-                <div className="custom-color-slot relative">
-                  <input
-                    ref={colorPickerRef}
-                    type="color"
-                    value={customColor || "#808080"}
-                    onChange={(e) => {
-                      setCustomColor(e.target.value);
-                      setCurrentColor(e.target.value);
-                    }}
-                    className="color-picker-input absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    title="Custom color"
-                  />
-                  <button
-                    className={`custom-color-btn w-7 h-7 rounded transition-all touch-manipulation flex items-center justify-center ${
-                      currentColor === customColor && customColor !== null
-                        ? "ring-2 ring-blue-500 ring-offset-2"
-                        : "hover:ring-2 hover:ring-gray-300"
-                    }`}
-                    style={{
-                      backgroundColor: customColor || "#f3f4f6",
-                      border: customColor ? "none" : "2px dashed #9ca3af"
-                    }}
-                    title="Custom color"
-                  >
-                    {!customColor && <span className="text-xs text-gray-500">+</span>}
-                  </button>
-                </div>
-
-                {/* Divider */}
-                <div className="toolbar-divider w-px bg-gray-300" />
-
-                {/* Size Selector */}
-                {sizePalette.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => {
-                      setCurrentSize(size);
-                    }}
-                    className={`size-btn w-7 h-7 flex items-center justify-center rounded transition-all touch-manipulation ${
-                      currentSize === size && currentSize !== customSize
-                        ? "bg-blue-500 ring-2 ring-blue-500 ring-offset-2"
-                        : "bg-gray-100 hover:bg-gray-200"
-                    }`}
-                    title={`Size ${size}px`}
-                  >
-                    <div
-                      className={`size-indicator rounded-full ${currentSize === size && currentSize !== customSize ? "bg-white" : "bg-gray-700"}`}
-                      style={{ width: `${size * 2}px`, height: `${size * 2}px` }}
-                    />
-                  </button>
-                ))}
-                {/* Custom Size Slot */}
-                <div className="custom-size-slot relative" ref={sizePickerRef}>
-                  <button
-                    onClick={() => {
-                      setTempSize(customSize || 5);
-                      setShowSizePicker(!showSizePicker);
-                    }}
-                    className={`custom-size-btn w-7 h-7 flex items-center justify-center rounded transition-colors touch-manipulation ${
-                      currentSize === customSize && customSize !== null
-                        ? "bg-blue-500 ring-2 ring-blue-500 ring-offset-2"
-                        : "bg-gray-100 hover:bg-gray-200 border-2 border-dashed border-gray-300"
-                    }`}
-                    title="Custom size"
-                  >
-                    {customSize ? (
-                      <div
-                        className={`size-indicator rounded-full ${currentSize === customSize ? "bg-white" : "bg-gray-700"}`}
-                        style={{ width: `${Math.min(customSize * 1.5, 20)}px`, height: `${Math.min(customSize * 1.5, 20)}px` }}
-                      />
-                    ) : (
-                      <span className="text-xs text-gray-500">+</span>
-                    )}
-                  </button>
-
-                  {/* Size Picker Modal */}
-                  {showSizePicker && (
-                    <div className="size-picker-modal absolute top-full left-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 p-3 z-50 min-w-[200px]">
-                      <div className="modal-content flex flex-col gap-3">
-                        <div className="size-preview flex items-center justify-center">
-                          <div
-                            className="size-preview-dot rounded-full bg-gray-700 transition-all"
-                            style={{ width: `${tempSize * 2}px`, height: `${tempSize * 2}px` }}
-                          />
-                        </div>
-                        <input
-                          type="range"
-                          min="4"
-                          max="20"
-                          value={tempSize}
-                          onChange={(e) => setTempSize(parseInt(e.target.value))}
-                          className="size-slider w-full"
-                        />
-                        <div className="size-labels flex justify-between items-center text-xs text-gray-600">
-                          <span>4px</span>
-                          <span className="font-medium">{tempSize}px</span>
-                          <span>20px</span>
-                        </div>
-                        <button
-                          onClick={() => {
-                            setCustomSize(tempSize);
-                            setCurrentSize(tempSize);
-                            setShowSizePicker(false);
-                          }}
-                          className="apply-btn w-full py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded transition-colors"
-                        >
-                          Apply
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-        )}
-
         {/* Action Buttons - Right Side */}
         {showControls && (existingDrawing || (hasDrawing && !existingDrawing)) && (
-          <div className="action-buttons absolute top-2 right-2 flex gap-2">
+          <div className="action-buttons absolute top-2 right-2 flex flex-col md:flex-row gap-2">
+            <button
+              onClick={existingDrawing ? unlockDrawing : clearCanvas}
+              className="clear-btn w-7 h-7 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-700 rounded shadow-md transition touch-manipulation"
+              title={existingDrawing ? "Edit" : "Clear"}
+            >
+              <X_ICON className="h-4 w-4" />
+            </button>
             {hasDrawing && !existingDrawing && (
               <button
                 onClick={() => onDrawingChange(tempDrawing)}
@@ -564,16 +395,89 @@ export default function DrawingCanvas({
                 <CHECK_ICON className="h-4 w-4" />
               </button>
             )}
-            <button
-              onClick={existingDrawing ? unlockDrawing : clearCanvas}
-              className="clear-btn w-7 h-7 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-700 rounded shadow-md transition touch-manipulation"
-              title={existingDrawing ? "Edit" : "Clear"}
-            >
-              <X_ICON className="h-4 w-4" />
-            </button>
           </div>
         )}
       </div>
+
+      {/* Tool Controls - Below Canvas (only when not completed) */}
+      {!existingDrawing && (
+        <div className="tool-controls-toolbar flex gap-2 rounded mt-2 px-0.5">
+          {/* Tool Selector */}
+          <button
+            onClick={() => setCurrentTool("pen")}
+            className={`tool-btn tool-btn-pen w-7 h-7 flex items-center justify-center rounded transition-colors touch-manipulation ${
+              currentTool === "pen"
+                ? "bg-blue-500 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+            title="Pen"
+          >
+            <PEN_ICON className="w-4 h-4" />
+          </button>
+          {hasEraser && (
+            <button
+              onClick={() => setCurrentTool("eraser")}
+              className={`tool-btn tool-btn-eraser w-7 h-7 flex items-center justify-center rounded transition-colors touch-manipulation ${
+                currentTool === "eraser"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+              title="Eraser"
+            >
+              <ERASER_ICON className="w-4 h-4" />
+            </button>
+          )}
+
+          {/* Divider */}
+          {currentTool === "pen" && <div className="toolbar-divider w-px bg-gray-300" />}
+
+          {/* Color Selector */}
+          {currentTool === "pen" && (
+            <>
+              {colorPalette.map((color) => (
+                <button
+                  key={color}
+                  onClick={() => {
+                    setCurrentColor(color);
+                  }}
+                  className={`color-btn w-7 h-7 rounded transition-all touch-manipulation ${
+                    currentColor === color
+                      ? "ring-2 ring-blue-500 ring-offset-2"
+                      : "hover:ring-2 hover:ring-gray-300"
+                  }`}
+                  style={{ backgroundColor: color }}
+                  title={color}
+                />
+              ))}
+
+              {/* Divider */}
+              <div className="toolbar-divider w-px bg-gray-300" />
+
+              {/* Size Selector */}
+              {sizePalette.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => {
+                    setCurrentSize(size);
+                  }}
+                  className={`size-btn w-7 h-7 flex items-center justify-center rounded transition-all touch-manipulation ${
+                    currentSize === size
+                      ? "bg-blue-500 ring-2 ring-blue-500 ring-offset-2"
+                      : "bg-gray-100 hover:bg-gray-200"
+                  }`}
+                  title={`Size ${size}px`}
+                >
+                  <div
+                    className={`size-indicator rounded-full ${currentSize === size ? "bg-white" : "bg-gray-700"}`}
+                    style={{ width: `${size * 2}px`, height: `${size * 2}px` }}
+                  />
+                </button>
+              ))}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }
+
