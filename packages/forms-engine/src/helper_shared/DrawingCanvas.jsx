@@ -15,6 +15,11 @@ const DPR = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
  * - Finalize and clear controls
  * - TypeScript-ready JSDoc
  * 
+ * Implementation note:
+ * Uses a two-layer canvas system: a drawing layer for user strokes and a display layer that
+ * composites the background image and drawings. This ensures the eraser only affects user
+ * drawings, not background images.
+ * 
  * @component
  * @param {Object} props
  * @param {Function} props.onDrawingChange - Callback when drawing is finalized (receives base64 string)
@@ -49,7 +54,6 @@ export default function DrawingCanvas({
     height = 400,
     strokeColor = "#000000",
     strokeWidth = 2,
-    eraserColor = "#FFFFFF",
     eraserWidth = 20,
     hasEraser = true,
     showControls = true,
@@ -69,6 +73,15 @@ export default function DrawingCanvas({
   const [currentTool, setCurrentTool] = React.useState("pen");
   const [currentColor, setCurrentColor] = React.useState("#000000");
   const [currentSize, setCurrentSize] = React.useState(2);
+  const [customColor, setCustomColor] = React.useState(null);
+  const [customSize, setCustomSize] = React.useState(null);
+  const [showSizePicker, setShowSizePicker] = React.useState(false);
+  const [tempSize, setTempSize] = React.useState(10);
+  const [showColorPicker, setShowColorPicker] = React.useState(false);
+  const [tempRgb, setTempRgb] = React.useState({ r: 128, g: 128, b: 128 });
+  const colorPickerRef = React.useRef(null);
+  const sizePickerRef = React.useRef(null);
+  const colorModalRef = React.useRef(null);
   
   // Predefined color palette
   const colorPalette = ["#000000", "#FF0000", "#0000FF"];
@@ -99,15 +112,25 @@ export default function DrawingCanvas({
     ctx.fillText(placeholder, displaySize.width / 2, displaySize.height / 2);
   };
 
-  const drawFinalLabel = (ctx) => {
-    ctx.font = "14px Arial";
-    ctx.fillStyle = "#999";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "bottom";
-    ctx.fillText("Completed", displaySize.width / 2, displaySize.height - 10);
+  // Helper: convert hex to RGB
+  const hexToRgb = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : { r: 128, g: 128, b: 128 };
   };
 
-  const drawBackgroundImage = (ctx, img) => {
+  // Helper: convert RGB to hex
+  const rgbToHex = (r, g, b) => {
+    return "#" + [r, g, b].map(x => {
+      const hex = x.toString(16);
+      return hex.length === 1 ? "0" + hex : hex;
+    }).join("").toUpperCase();
+  };
+
+  const drawBackgroundImage = React.useCallback((ctx, img) => {
     if (!img) return;
     
     const padding = 6; // Padding around the image
@@ -133,7 +156,7 @@ export default function DrawingCanvas({
     const x = padding + (availableW - drawW) / 2;
     const y = padding + (availableH - drawH) / 2;
     ctx.drawImage(img, x, y, drawW, drawH);
-  };
+  }, [displaySize.width, displaySize.height]);
 
   // Helper: composite display from background + drawing layer
   const compositeDisplay = React.useCallback(() => {
@@ -178,7 +201,38 @@ export default function DrawingCanvas({
     img.src = backgroundImage;
   }, [backgroundImage]);
 
-  // Close size picker on click outside
+  // Close size picker when clicking outside and apply the selected size
+  React.useEffect(() => {
+    if (!showSizePicker) return;
+    
+    const handleClickOutside = (e) => {
+      if (sizePickerRef.current && !sizePickerRef.current.contains(e.target)) {
+        setCustomSize(tempSize);
+        setCurrentSize(tempSize);
+        setShowSizePicker(false);
+      }
+    };
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showSizePicker, tempSize]);
+
+  // Close color picker when clicking outside
+  React.useEffect(() => {
+    if (!showColorPicker) return;
+    
+    const handleClickOutside = (e) => {
+      if (colorModalRef.current && !colorModalRef.current.contains(e.target)) {
+        const hexColor = rgbToHex(tempRgb.r, tempRgb.g, tempRgb.b);
+        setCustomColor(hexColor);
+        setCurrentColor(hexColor);
+        setShowColorPicker(false);
+      }
+    };
+    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showColorPicker, tempRgb]);
 
   // Get coordinates from mouse or touch event
   const getCoords = (e) => {
@@ -219,13 +273,12 @@ export default function DrawingCanvas({
   };
 
   const handleDrawStart = React.useCallback((e) => {
-    if (existingDrawing) return;
     const coords = getCoords(e);
     if (!coords) return;
     isDrawingRef.current = true;
     lastCoordRef.current = coords;
     setHasDrawing(true);
-  }, [existingDrawing, displaySize.width, displaySize.height]);
+  }, [displaySize.width, displaySize.height, getCoords]);
 
   const handleDrawMove = React.useCallback((e) => {
     if (!isDrawingRef.current) return;
@@ -233,16 +286,21 @@ export default function DrawingCanvas({
     if (!coords) return;
     drawLine(lastCoordRef.current.x, lastCoordRef.current.y, coords.x, coords.y, currentTool);
     lastCoordRef.current = coords;
-  }, [currentTool, displaySize.width, displaySize.height, currentColor, currentSize, eraserWidth, compositeDisplay]);
+  }, [currentTool, displaySize.width, displaySize.height, currentColor, currentSize, eraserWidth, drawLine, getCoords]);
 
   const handleDrawEnd = React.useCallback(() => {
     if (!isDrawingRef.current) return;
     isDrawingRef.current = false;
     const displayCanvas = canvasRef.current;
-    if (displayCanvas) setTempDrawing(displayCanvas.toDataURL("image/png"));
-  }, []);
+    if (displayCanvas) {
+      const base64Drawing = displayCanvas.toDataURL("image/png");
+      setTempDrawing(base64Drawing);
+      // Auto-save drawing when user releases mouse/touch
+      onDrawingChange(base64Drawing);
+    }
+  }, [onDrawingChange]);
 
-  const clearCanvas = () => {
+  const clearCanvas = React.useCallback(() => {
     const drawingCanvas = drawingCanvasRef.current;
     if (!drawingCanvas) return;
     
@@ -253,21 +311,7 @@ export default function DrawingCanvas({
     setHasDrawing(false);
     setTempDrawing(null);
     onDrawingChange("");
-  };
-
-  const unlockDrawing = () => {
-    if (existingDrawing) {
-      const drawingCanvas = drawingCanvasRef.current;
-      if (drawingCanvas) {
-        const ctx = drawingCanvas.getContext("2d");
-        ctx.clearRect(0, 0, displaySize.width, displaySize.height);
-      }
-      compositeDisplay();
-      setHasDrawing(false);
-      setTempDrawing(null);
-      onDrawingChange("");
-    }
-  };
+  }, [displaySize.width, displaySize.height, compositeDisplay, onDrawingChange]);
 
   // Update canvas resolution and redraw
   React.useEffect(() => {
@@ -288,7 +332,6 @@ export default function DrawingCanvas({
       img.onload = () => {
         drawingCtx.drawImage(img, 0, 0, displaySize.width, displaySize.height);
         displayCtx.drawImage(img, 0, 0, displaySize.width, displaySize.height);
-        drawFinalLabel(displayCtx);
       };
       img.src = existingDrawing;
     }
@@ -364,7 +407,7 @@ export default function DrawingCanvas({
           style={{
             width: `${displaySize.width}px`,
             height: `${displaySize.height}px`,
-            cursor: existingDrawing ? "default" : currentTool === "eraser" ? eraserCursor : penCursor,
+            cursor: currentTool === "eraser" ? eraserCursor : penCursor,
             display: "block",
             border: "1px solid #e5e7eb",
             touchAction: "none",
@@ -377,30 +420,21 @@ export default function DrawingCanvas({
         />
 
         {/* Action Buttons - Right Side */}
-        {showControls && (existingDrawing || (hasDrawing && !existingDrawing)) && (
+        {showControls && hasDrawing && (
           <div className="action-buttons absolute top-2 right-2 flex flex-col md:flex-row gap-2">
             <button
-              onClick={existingDrawing ? unlockDrawing : clearCanvas}
+              onClick={clearCanvas}
               className="clear-btn w-7 h-7 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-700 rounded shadow-md transition touch-manipulation"
-              title={existingDrawing ? "Edit" : "Clear"}
+              title="Clear"
             >
               <X_ICON className="h-4 w-4" />
             </button>
-            {hasDrawing && !existingDrawing && (
-              <button
-                onClick={() => onDrawingChange(tempDrawing)}
-                className="finalize-btn w-7 h-7 flex items-center justify-center bg-green-100 hover:bg-green-200 text-green-700 rounded shadow-md transition touch-manipulation"
-                title="Finalize"
-              >
-                <CHECK_ICON className="h-4 w-4" />
-              </button>
-            )}
           </div>
         )}
       </div>
 
-      {/* Tool Controls - Below Canvas (only when not completed) */}
-      {!existingDrawing && (
+      {/* Tool Controls - Below Canvas */}
+      {showControls && (
         <div className="tool-controls-toolbar flex gap-2 rounded mt-2 px-0.5">
           {/* Tool Selector */}
           <button
@@ -450,6 +484,107 @@ export default function DrawingCanvas({
                 />
               ))}
 
+              {/* Custom Color Slot */}
+              <div className="custom-color-slot relative" ref={colorModalRef}>
+                <button
+                  onClick={() => {
+                    setTempRgb(customColor ? hexToRgb(customColor) : { r: 128, g: 128, b: 128 });
+                    setShowColorPicker(!showColorPicker);
+                  }}
+                  className={`custom-color-btn w-7 h-7 rounded transition-all touch-manipulation flex items-center justify-center ${
+                    currentColor === customColor && customColor !== null
+                      ? "ring-2 ring-blue-500 ring-offset-2"
+                      : "hover:ring-2 hover:ring-gray-300"
+                  }`}
+                  style={{
+                    backgroundColor: customColor || "#f3f4f6",
+                    border: customColor ? "none" : "2px dashed #9ca3af"
+                  }}
+                  title="Custom color"
+                >
+                  {!customColor && <span className="text-xs text-gray-500">+</span>}
+                </button>
+
+                {/* RGB Color Picker Modal */}
+                {showColorPicker && (
+                  <div className="color-picker-modal absolute bottom-full -left-14 sm:-left-4 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 p-3 pt-1 z-50 w-fit">
+                    <div className="rgb-picker flex flex-col gap-3">
+                      {/* Close Button */}
+                      <div className="flex justify-end">
+                        <button
+                          onClick={() => setShowColorPicker(false)}
+                          className="close-btn w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-600 rounded hover:bg-gray-100"
+                          title="Close"
+                        >
+                          <span className="text-lg leading-none">×</span>
+                        </button>
+                      </div>
+
+                      {/* R Slider */}
+                      <div className="rgb-slider-group flex items-center gap-2">
+                        <label className="text-xs font-medium text-gray-600 w-6">R</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="255"
+                          value={tempRgb.r}
+                          onChange={(e) => {
+                            const newR = parseInt(e.target.value);
+                            // Prevent pure red (255,0,0)
+                            if (newR === 255 && tempRgb.g === 0 && tempRgb.b === 0) return;
+                            setTempRgb({ ...tempRgb, r: newR });
+                          }}
+                          className="flex-1"
+                        />
+                        <span className="text-xs text-gray-600 w-8 text-right">{tempRgb.r}</span>
+                      </div>
+
+                      {/* G Slider */}
+                      <div className="rgb-slider-group flex items-center gap-2">
+                        <label className="text-xs font-medium text-gray-600 w-6">G</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="255"
+                          value={tempRgb.g}
+                          onChange={(e) => {
+                            const newG = parseInt(e.target.value);
+                            // Prevent pure red (255,0,0) and blue (0,0,255)
+                            if ((tempRgb.r === 255 && newG === 0 && tempRgb.b === 0) ||
+                                (tempRgb.r === 0 && newG === 0 && tempRgb.b === 255)) return;
+                            setTempRgb({ ...tempRgb, g: newG });
+                          }}
+                          className="flex-1"
+                        />
+                        <span className="text-xs text-gray-600 w-8 text-right">{tempRgb.g}</span>
+                      </div>
+
+                      {/* B Slider */}
+                      <div className="rgb-slider-group flex items-center gap-2">
+                        <label className="text-xs font-medium text-gray-600 w-6">B</label>
+                        <input
+                          type="range"
+                          min="0"
+                          max="255"
+                          value={tempRgb.b}
+                          onChange={(e) => {
+                            const newB = parseInt(e.target.value);
+                            // Prevent pure blue (0,0,255)
+                            if (tempRgb.r === 0 && tempRgb.g === 0 && newB === 255) return;
+                            setTempRgb({ ...tempRgb, b: newB });
+                          }}
+                          className="flex-1"
+                        />
+                        <span className="text-xs text-gray-600 w-8 text-right">{tempRgb.b}</span>
+                      </div>
+
+                      {/* Color Preview */}
+                      <div className="color-preview flex items-center justify-center h-8 rounded border border-gray-300" style={{ backgroundColor: rgbToHex(tempRgb.r, tempRgb.g, tempRgb.b) }} />
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* Divider */}
               <div className="toolbar-divider w-px bg-gray-300" />
 
@@ -473,6 +608,66 @@ export default function DrawingCanvas({
                   />
                 </button>
               ))}
+
+              {/* Custom Size Slot */}
+              <div className="custom-size-slot relative" ref={sizePickerRef}>
+                <button
+                  onClick={() => {
+                    setTempSize(customSize || 5);
+                    setShowSizePicker(!showSizePicker);
+                  }}
+                  className={`custom-size-btn w-7 h-7 flex items-center justify-center rounded transition-colors touch-manipulation ${
+                    currentSize === customSize && customSize !== null
+                      ? "bg-blue-500 ring-2 ring-blue-500 ring-offset-2"
+                      : "bg-gray-100 hover:bg-gray-200 border-2 border-dashed border-gray-300"
+                  }`}
+                  title="Custom size"
+                >
+                  {customSize ? (
+                    <div
+                      className={`size-indicator rounded-full ${currentSize === customSize ? "bg-white" : "bg-gray-700"}`}
+                      style={{ width: `${Math.min(customSize * 1.5, 20)}px`, height: `${Math.min(customSize * 1.5, 20)}px` }}
+                    />
+                  ) : (
+                    <span className="text-xs text-gray-500">+</span>
+                  )}
+                </button>
+
+                {/* Size Picker Modal - Vertical Slider */}
+                {showSizePicker && (
+                  <div className="size-picker-modal absolute bottom-full -left-2 mb-2 flex flex-col items-center gap-1 bg-white rounded-lg shadow-lg border border-gray-200 p-2 z-50 w-fit">
+                    <input
+                      type="range"
+                      min="4"
+                      max="20"
+                      value={tempSize}
+                      onChange={(e) => setTempSize(parseInt(e.target.value))}
+                      onMouseUp={() => {
+                        setCustomSize(tempSize);
+                        setCurrentSize(tempSize);
+                        setShowSizePicker(false);
+                      }}
+                      onTouchEnd={() => {
+                        setCustomSize(tempSize);
+                        setCurrentSize(tempSize);
+                        setShowSizePicker(false);
+                      }}
+                      className="size-slider h-24 w-5"
+                      style={{
+                        writingMode: 'bt-lr',
+                        WebkitAppearance: 'slider-vertical'
+                      }}
+                    />
+                    <div className="size-preview flex items-center justify-center w-6 h-6">
+                      <div
+                        className="size-preview-dot rounded-full bg-gray-700 transition-all"
+                        style={{ width: `${tempSize}px`, height: `${tempSize}px` }}
+                      />
+                    </div>
+                    <span className="text-xs font-medium text-gray-600">{tempSize}px</span>
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>
@@ -480,4 +675,3 @@ export default function DrawingCanvas({
     </div>
   );
 }
-

@@ -70,7 +70,7 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                 <div className="font-light mb-2">{f.question || "Question"}</div>
               </div>
               <div className="flex justify-center mx-auto px-2 pb-2 lg:px-6 lg:pb-4">
-                <div style={{ width: '100%', maxWidth: '80vw' }} className="md:max-w-[75vw] lg:max-w-full">
+                <div className="w-full max-w-[80vw] md:max-w-[75vw] lg:max-w-full">
                   <DrawingCanvas
                     onDrawingChange={handleDiagramChange}
                     existingDrawing={f.answer}
