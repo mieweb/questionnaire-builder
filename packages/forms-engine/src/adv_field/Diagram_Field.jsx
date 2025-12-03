@@ -11,10 +11,27 @@ import handsChart from "../assets/hands.png";
 import feetChart from "../assets/feet.png";
 import dentalChart from "../assets/dental_chart.webp";
 
+// Preset diagrams configuration
+const DIAGRAM_PRESETS = [
+  { id: "male", label: "Male Body", image: maleChart },
+  { id: "female", label: "Female Body", image: femaleChart },
+  { id: "neutral", label: "Neutral Body", image: neutralChart },
+  { id: "head", label: "Head", image: headChart },
+  { id: "hands", label: "Hands", image: handsChart },
+  { id: "feet", label: "Feet", image: feetChart },
+  { id: "dental", label: "Dental", image: dentalChart },
+];
+
 const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
   const fileInputRef = React.useRef(null);
   const containerRef = React.useRef(null);
+
+  // Helper to determine which preset is selected
+  const getSelectedPreset = () => {
+    const preset = DIAGRAM_PRESETS.find(p => p.image === field.diagramImage);
+    return preset?.id || "";
+  };
 
   const handleDiagramChange = (base64) => {
     ctrl.api.field.update("answer", base64);
@@ -136,42 +153,22 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                       Quick Presets
                     </label>
                     <select
+                      value={getSelectedPreset()}
                       onChange={(e) => {
-                        if (e.target.value === "male") {
-                          api.field.update("diagramImage", maleChart);
-                          api.field.update("fileName", "Male Body Chart");
-                        } else if (e.target.value === "female") {
-                          api.field.update("diagramImage", femaleChart);
-                          api.field.update("fileName", "Female Body Chart");
-                        } else if (e.target.value === "neutral") {
-                          api.field.update("diagramImage", neutralChart);
-                          api.field.update("fileName", "Neutral Body Chart");
-                        } else if (e.target.value === "head") {
-                          api.field.update("diagramImage", headChart);
-                          api.field.update("fileName", "Head Chart");
-                        } else if (e.target.value === "hands") {
-                          api.field.update("diagramImage", handsChart);
-                          api.field.update("fileName", "Hands Chart");
-                        } else if (e.target.value === "feet") {
-                          api.field.update("diagramImage", feetChart);
-                          api.field.update("fileName", "Feet Chart");
-                        } else if (e.target.value === "dental") {
-                          api.field.update("diagramImage", dentalChart);
-                          api.field.update("fileName", "Dental Chart");
+                        const preset = DIAGRAM_PRESETS.find(p => p.id === e.target.value);
+                        if (preset) {
+                          api.field.update("diagramImage", preset.image);
+                          api.field.update("fileName", preset.label);
                         }
-                        e.target.value = "";
                       }}
-                      defaultValue=""
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer transition-colors bg-white"
                     >
                       <option value="">Select a diagram...</option>
-                      <option value="male">Male Body</option>
-                      <option value="female">Female Body</option>
-                      <option value="neutral">Neutral Body</option>
-                      <option value="head">Head</option>
-                      <option value="hands">Hands</option>
-                      <option value="feet">Feet</option>
-                      <option value="dental">Dental</option>
+                      {DIAGRAM_PRESETS.map(preset => (
+                        <option key={preset.id} value={preset.id}>
+                          {preset.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   
