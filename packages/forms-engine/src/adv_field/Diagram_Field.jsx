@@ -3,8 +3,8 @@ import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 import DrawingCanvas from "../helper_shared/DrawingCanvas";
 import { UPLOAD_ICON, X_ICON } from "../helper_shared/icons";
-import maleChart from "../assets/male_chart.webp";
-import femaleChart from "../assets/female_chart.webp";
+import maleChart from "../assets/body-female.png";
+import femaleChart from "../assets/body-female.png";
 import dentalChart from "../assets/dental_chart.webp";
 
 const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
