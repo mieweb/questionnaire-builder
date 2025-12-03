@@ -3,7 +3,7 @@ import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 import DrawingCanvas from "../helper_shared/DrawingCanvas";
 import { UPLOAD_ICON, X_ICON } from "../helper_shared/icons";
-import maleChart from "../assets/body-female.png";
+import maleChart from "../assets/body-male.png";
 import femaleChart from "../assets/body-female.png";
 import dentalChart from "../assets/dental_chart.webp";
 
