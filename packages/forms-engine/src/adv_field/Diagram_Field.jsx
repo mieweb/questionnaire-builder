@@ -5,6 +5,10 @@ import DrawingCanvas from "../helper_shared/DrawingCanvas";
 import { UPLOAD_ICON, X_ICON } from "../helper_shared/icons";
 import maleChart from "../assets/body-male.png";
 import femaleChart from "../assets/body-female.png";
+import neutralChart from "../assets/body-neutral.png";
+import headChart from "../assets/head.png";
+import handsChart from "../assets/hands.png";
+import feetChart from "../assets/feet.png";
 import dentalChart from "../assets/dental_chart.webp";
 
 const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
@@ -127,43 +131,49 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                     Background Diagram Image
                   </label>
 
-                  {!f.diagramImage && (
-                    <div className="mb-3">
-                      <p className="text-xs text-gray-500 mb-2">Quick presets:</p>
-                      <div className="preset-buttons flex gap-2 flex-wrap">
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            api.field.update("diagramImage", maleChart);
-                            api.field.update("fileName", "Male Body Chart");
-                          }}
-                          className="preset-btn px-3 py-1.5 text-xs border border-gray-300 rounded hover:bg-blue-50 hover:border-blue-400 transition-colors"
-                        >
-                          Male Body
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            api.field.update("diagramImage", femaleChart);
-                            api.field.update("fileName", "Female Body Chart");
-                          }}
-                          className="preset-btn px-3 py-1.5 text-xs border border-gray-300 rounded hover:bg-blue-50 hover:border-blue-400 transition-colors"
-                        >
-                          Female Body
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.preventDefault();
-                            api.field.update("diagramImage", dentalChart);
-                            api.field.update("fileName", "Dental Chart");
-                          }}
-                          className="preset-btn px-3 py-1.5 text-xs border border-gray-300 rounded hover:bg-blue-50 hover:border-blue-400 transition-colors"
-                        >
-                          Dental
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                  <div className="mb-3">
+                    <label className="block text-sm text-gray-600 mb-2">
+                      Quick Presets
+                    </label>
+                    <select
+                      onChange={(e) => {
+                        if (e.target.value === "male") {
+                          api.field.update("diagramImage", maleChart);
+                          api.field.update("fileName", "Male Body Chart");
+                        } else if (e.target.value === "female") {
+                          api.field.update("diagramImage", femaleChart);
+                          api.field.update("fileName", "Female Body Chart");
+                        } else if (e.target.value === "neutral") {
+                          api.field.update("diagramImage", neutralChart);
+                          api.field.update("fileName", "Neutral Body Chart");
+                        } else if (e.target.value === "head") {
+                          api.field.update("diagramImage", headChart);
+                          api.field.update("fileName", "Head Chart");
+                        } else if (e.target.value === "hands") {
+                          api.field.update("diagramImage", handsChart);
+                          api.field.update("fileName", "Hands Chart");
+                        } else if (e.target.value === "feet") {
+                          api.field.update("diagramImage", feetChart);
+                          api.field.update("fileName", "Feet Chart");
+                        } else if (e.target.value === "dental") {
+                          api.field.update("diagramImage", dentalChart);
+                          api.field.update("fileName", "Dental Chart");
+                        }
+                        e.target.value = "";
+                      }}
+                      defaultValue=""
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer transition-colors bg-white"
+                    >
+                      <option value="">Select a diagram...</option>
+                      <option value="male">Male Body</option>
+                      <option value="female">Female Body</option>
+                      <option value="neutral">Neutral Body</option>
+                      <option value="head">Head</option>
+                      <option value="hands">Hands</option>
+                      <option value="feet">Feet</option>
+                      <option value="dental">Dental</option>
+                    </select>
+                  </div>
                   
                   {f.diagramImage ? (
                     <div className="p-3 border border-gray-300 rounded-lg bg-white relative">
