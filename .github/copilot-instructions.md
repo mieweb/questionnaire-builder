@@ -39,6 +39,8 @@ When proposing code, **adhere to all of the following**:
 
 3. **No New Files by Default**
    - Do not create new modules/components/hooks unless duplication or complexity becomes worse without them.
+   - Never create standalone markdown documentation files (e.g., PR tickets, feature docs, summaries).
+   - Embed all information directly into code comments, existing docs, or verbally respond to user.
 
 4. **Zero Surprises**
    - Avoid side effects, global state changes, or cross-cutting refactors.
