@@ -143,33 +143,48 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
     ctrl.api.field.update("sampleDataFields", newFields);
   };
 
+  // Memoize the computed result for preview mode
+  const computedResult = React.useMemo(() => {
+    if (!ctrl.isPreview || !field.expression) return "";
+    
+    // Build actual data from form fields
+    const actualData = {};
+    order.forEach((fieldId) => {
+      const fld = byId[fieldId];
+      if (fld && fld.id !== field.id) {
+        if (fld.answer !== undefined && fld.answer !== null && fld.answer !== "") {
+          actualData[fld.id] = isNaN(fld.answer) ? fld.answer : parseFloat(fld.answer);
+        }
+        // Also check nested fields
+        if (fld.fieldType === "section" && Array.isArray(fld.fields)) {
+          fld.fields.forEach((child) => {
+            if (child.id !== field.id) {
+              if (child.answer !== undefined && child.answer !== null && child.answer !== "") {
+                actualData[child.id] = isNaN(child.answer) ? child.answer : parseFloat(child.answer);
+              }
+            }
+          });
+        }
+      }
+    });
+
+    return evaluateExpression(field.expression, actualData);
+  }, [ctrl.isPreview, field.expression, order, byId, field.id, evaluateExpression]);
+
+  // Store the computed result in field.answer only when it changes
+  React.useEffect(() => {
+    if (computedResult && computedResult !== field.answer) {
+      // Use a microtask to defer the update
+      Promise.resolve().then(() => {
+        ctrl.api.field.update("answer", computedResult);
+      });
+    }
+  }, [computedResult, field.answer, ctrl.api.field]);
+
   return (
     <FieldWrapper ctrl={ctrl}>
       {({ api, isPreview, field: f }) => {
         if (isPreview) {
-          // In preview mode, use actual form field answers
-          const actualData = {};
-          order.forEach((fieldId) => {
-            const fld = byId[fieldId];
-            if (fld && fld.id !== field.id) {
-              if (fld.answer !== undefined && fld.answer !== null && fld.answer !== "") {
-                actualData[fld.id] = isNaN(fld.answer) ? fld.answer : parseFloat(fld.answer);
-              }
-              // Also check nested fields
-              if (fld.fieldType === "section" && Array.isArray(fld.fields)) {
-                fld.fields.forEach((child) => {
-                  if (child.id !== field.id) {
-                    if (child.answer !== undefined && child.answer !== null && child.answer !== "") {
-                      actualData[child.id] = isNaN(child.answer) ? child.answer : parseFloat(child.answer);
-                    }
-                  }
-                });
-              }
-            }
-          });
-
-          const result = evaluateExpression(f.expression, actualData);
-
           return (
             <div className="space-y-2 pb-4">
               {f.label && <div className="font-light text-sm text-gray-600">{f.label}</div>}
@@ -177,10 +192,10 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                 <p className="text-sm text-gray-600 mb-1">
                   <span className="font-medium">Expression:</span> {f.expression || "No expression defined"}
                 </p>
-                {result && (
+                {computedResult && (
                   <p className="text-lg font-semibold text-blue-600 mt-2">
                     <span className="text-sm text-gray-600">Result: </span>
-                    {result}
+                    {computedResult}
                   </p>
                 )}
                 {evaluationError && (

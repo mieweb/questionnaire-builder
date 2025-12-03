@@ -416,6 +416,7 @@ const fieldTypes = {
       displayFormat: "number",
       decimalPlaces: 2,
       sampleDataFields: [],
+      answer: "",
     },
     placeholder: {
       label: "Expression Field",
