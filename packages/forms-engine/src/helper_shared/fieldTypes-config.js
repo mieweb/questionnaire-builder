@@ -360,7 +360,8 @@ const fieldTypes = {
       fieldType: "signature",
       question: "",
       placeholder: "Sign here",
-      answer: "",
+      signatureData: "",
+      signatureImage: "",
       required: false,
     },
     placeholder: {
@@ -377,7 +378,8 @@ const fieldTypes = {
       question: "",
       placeholder: "Draw on the diagram",
       diagramImage: "",
-      answer: "",
+      markupData: "",
+      markupImage: "",
       required: false,
     },
     placeholder: {

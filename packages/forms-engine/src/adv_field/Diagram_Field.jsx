@@ -33,8 +33,17 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
     return preset?.id || "";
   };
 
-  const handleDiagramChange = (base64) => {
-    ctrl.api.field.update("answer", base64);
+  const handleMarkupChange = (data) => {
+    // data is { strokes: string, image: string }
+    if (typeof data === "string") {
+      // Legacy format or clear
+      ctrl.api.field.update("markupData", data);
+      ctrl.api.field.update("markupImage", "");
+    } else {
+      // New hybrid format
+      ctrl.api.field.update("markupData", data.strokes);
+      ctrl.api.field.update("markupImage", data.image);
+    }
   };
 
   const handleImageUpload = (e) => {
@@ -93,10 +102,11 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
               <div className="flex justify-center mx-auto px-2 pb-2 lg:px-6 lg:pb-4">
                 <div className="w-full max-w-[80vw] md:max-w-[75vw] lg:max-w-full">
                   <DrawingCanvas
-                    onDrawingChange={handleDiagramChange}
-                    existingDrawing={f.answer}
+                    onDrawingChange={handleMarkupChange}
+                    existingDrawing={f.markupData}
                     backgroundImage={f.diagramImage}
                     placeholder={f.placeholder || "Draw on the diagram"}
+                    mode="diagram"
                     config={{
                       width: 640,
                       height: 400,

@@ -22,8 +22,8 @@ const DPR = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
  * 
  * @component
  * @param {Object} props
- * @param {Function} props.onDrawingChange - Callback when drawing is finalized (receives base64 string)
- * @param {string} [props.existingDrawing] - Existing drawing as base64 (readonly mode)
+ * @param {Function} props.onDrawingChange - Callback when drawing changes (receives { strokes: string, image: string })
+ * @param {string} [props.existingDrawing] - Existing drawing data (legacy: base64, or JSON strokes)
  * @param {string} [props.backgroundImage] - Optional background image as base64 or URL
  * @param {string} [props.placeholder] - Placeholder text when canvas is empty
  * @param {Object} [props.config] - Canvas configuration
@@ -36,7 +36,7 @@ const DPR = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
  * @param {boolean} [props.config.hasEraser=true] - Show eraser tool
  * @param {boolean} [props.config.showControls=true] - Show finalize/clear buttons
  * @param {string} [props.config.backgroundColor="#FFFFFF"] - Canvas background color
- * @param {string} [props.mode] - "draw" (default), "signature", or "diagram"
+ * @param {string} [props.mode] - "draw" (default), "signature", or "diagram" (legacy, all use same approach now)
  * 
  * @returns {React.ReactElement} Drawing canvas component
  */
@@ -77,11 +77,12 @@ export default function DrawingCanvas({
   const [customSize, setCustomSize] = React.useState(null);
   const [showSizePicker, setShowSizePicker] = React.useState(false);
   const [tempSize, setTempSize] = React.useState(10);
-  const [showColorPicker, setShowColorPicker] = React.useState(false);
-  const [tempRgb, setTempRgb] = React.useState({ r: 128, g: 128, b: 128 });
-  const colorPickerRef = React.useRef(null);
+  const [canUndo, setCanUndo] = React.useState(false);
+  const [canRedo, setCanRedo] = React.useState(false);
   const sizePickerRef = React.useRef(null);
-  const colorModalRef = React.useRef(null);
+  const strokesRef = React.useRef([]);
+  const undoStackRef = React.useRef([]);
+  const [cursorPosition, setCursorPosition] = React.useState(null);
   
   // Predefined color palette
   const colorPalette = ["#000000", "#FF0000", "#0000FF"];
@@ -110,24 +111,6 @@ export default function DrawingCanvas({
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(placeholder, displaySize.width / 2, displaySize.height / 2);
-  };
-
-  // Helper: convert hex to RGB
-  const hexToRgb = (hex) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : { r: 128, g: 128, b: 128 };
-  };
-
-  // Helper: convert RGB to hex
-  const rgbToHex = (r, g, b) => {
-    return "#" + [r, g, b].map(x => {
-      const hex = x.toString(16);
-      return hex.length === 1 ? "0" + hex : hex;
-    }).join("").toUpperCase();
   };
 
   const drawBackgroundImage = React.useCallback((ctx, img) => {
@@ -217,23 +200,6 @@ export default function DrawingCanvas({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showSizePicker, tempSize]);
 
-  // Close color picker when clicking outside
-  React.useEffect(() => {
-    if (!showColorPicker) return;
-    
-    const handleClickOutside = (e) => {
-      if (colorModalRef.current && !colorModalRef.current.contains(e.target)) {
-        const hexColor = rgbToHex(tempRgb.r, tempRgb.g, tempRgb.b);
-        setCustomColor(hexColor);
-        setCurrentColor(hexColor);
-        setShowColorPicker(false);
-      }
-    };
-    
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showColorPicker, tempRgb]);
-
   // Get coordinates from mouse or touch event
   const getCoords = (e) => {
     const canvas = canvasRef.current;
@@ -278,27 +244,97 @@ export default function DrawingCanvas({
     isDrawingRef.current = true;
     lastCoordRef.current = coords;
     setHasDrawing(true);
-  }, [displaySize.width, displaySize.height, getCoords]);
+    
+    // Start new stroke with normalized coordinates (0-1)
+    strokesRef.current.push({
+      tool: currentTool,
+      color: currentColor,
+      size: currentSize,
+      points: [{
+        x: coords.x / displaySize.width,
+        y: coords.y / displaySize.height
+      }]
+    });
+  }, [displaySize.width, displaySize.height, getCoords, currentTool, currentColor, currentSize]);
 
   const handleDrawMove = React.useCallback((e) => {
-    if (!isDrawingRef.current) return;
     const coords = getCoords(e);
     if (!coords) return;
+    setCursorPosition(coords);
+    if (!isDrawingRef.current) return;
     drawLine(lastCoordRef.current.x, lastCoordRef.current.y, coords.x, coords.y, currentTool);
     lastCoordRef.current = coords;
-  }, [currentTool, displaySize.width, displaySize.height, currentColor, currentSize, eraserWidth, drawLine, getCoords]);
+    
+    // Add normalized point to current stroke
+    if (strokesRef.current.length > 0) {
+      const currentStroke = strokesRef.current[strokesRef.current.length - 1];
+      currentStroke.points.push({
+        x: coords.x / displaySize.width,
+        y: coords.y / displaySize.height
+      });
+    }
+  }, [currentTool, displaySize.width, displaySize.height, drawLine, getCoords]);
 
   const handleDrawEnd = React.useCallback(() => {
+    setCursorPosition(null);
     if (!isDrawingRef.current) return;
     isDrawingRef.current = false;
+    
+    // Clear redo stack when new stroke is added
+    undoStackRef.current = [];
+    setCanUndo(true);
+    setCanRedo(false);
+    
+    // Always save both strokes (for editing) and PNG (for export)
     const displayCanvas = canvasRef.current;
-    if (displayCanvas) {
-      const base64Drawing = displayCanvas.toDataURL("image/png");
-      setTempDrawing(base64Drawing);
-      // Auto-save drawing when user releases mouse/touch
-      onDrawingChange(base64Drawing);
+    const base64Image = displayCanvas ? displayCanvas.toDataURL("image/png") : "";
+    
+    const markupData = JSON.stringify({
+      strokes: strokesRef.current,
+      canvasSize: { width: displaySize.width, height: displaySize.height }
+    });
+    
+    if (onDrawingChange) {
+      onDrawingChange({ strokes: markupData, image: base64Image });
     }
-  }, [onDrawingChange]);
+  }, [onDrawingChange, displaySize.width, displaySize.height]);
+
+  // Helper to redraw strokes from markup data (diagram mode)
+  const redrawMarkup = React.useCallback(() => {
+    if (strokesRef.current.length === 0) return;
+    
+    const drawingCanvas = drawingCanvasRef.current;
+    if (!drawingCanvas) return;
+    const ctx = drawingCanvas.getContext("2d");
+    
+    strokesRef.current.forEach(stroke => {
+      if (stroke.tool === "eraser") {
+        stroke.points.forEach(normalizedPt => {
+          const pt = {
+            x: normalizedPt.x * displaySize.width,
+            y: normalizedPt.y * displaySize.height
+          };
+          const half = eraserWidth / 2;
+          ctx.clearRect(pt.x - half, pt.y - half, eraserWidth, eraserWidth);
+        });
+      } else {
+        ctx.strokeStyle = stroke.color;
+        ctx.lineWidth = stroke.size;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.beginPath();
+        stroke.points.forEach((normalizedPt, i) => {
+          const pt = {
+            x: normalizedPt.x * displaySize.width,
+            y: normalizedPt.y * displaySize.height
+          };
+          if (i === 0) ctx.moveTo(pt.x, pt.y);
+          else ctx.lineTo(pt.x, pt.y);
+        });
+        ctx.stroke();
+      }
+    });
+  }, [mode, displaySize.width, displaySize.height, eraserWidth]);
 
   const clearCanvas = React.useCallback(() => {
     const drawingCanvas = drawingCanvasRef.current;
@@ -310,8 +346,88 @@ export default function DrawingCanvas({
 
     setHasDrawing(false);
     setTempDrawing(null);
-    onDrawingChange("");
+    strokesRef.current = [];
+    undoStackRef.current = [];
+    setCanUndo(false);
+    setCanRedo(false);
+    
+    if (onDrawingChange) {
+      onDrawingChange({ strokes: "", image: "" });
+    }
   }, [displaySize.width, displaySize.height, compositeDisplay, onDrawingChange]);
+
+  const undo = React.useCallback(() => {
+    if (strokesRef.current.length === 0) return;
+    
+    const lastStroke = strokesRef.current.pop();
+    undoStackRef.current.push(lastStroke);
+    
+    const drawingCanvas = drawingCanvasRef.current;
+    if (!drawingCanvas) return;
+    const ctx = drawingCanvas.getContext("2d");
+    ctx.clearRect(0, 0, displaySize.width, displaySize.height);
+    
+    redrawMarkup();
+    compositeDisplay();
+    
+    const displayCanvas = canvasRef.current;
+    const base64Image = displayCanvas ? displayCanvas.toDataURL("image/png") : "";
+    
+    const markupData = JSON.stringify({
+      strokes: strokesRef.current,
+      canvasSize: { width: displaySize.width, height: displaySize.height }
+    });
+    onDrawingChange?.({ strokes: markupData, image: base64Image });
+    
+    setHasDrawing(strokesRef.current.length > 0);
+    setCanUndo(strokesRef.current.length > 0);
+    setCanRedo(true);
+  }, [displaySize.width, displaySize.height, onDrawingChange, redrawMarkup, compositeDisplay]);
+
+  const redo = React.useCallback(() => {
+    if (undoStackRef.current.length === 0) return;
+    
+    const stroke = undoStackRef.current.pop();
+    strokesRef.current.push(stroke);
+    
+    const drawingCanvas = drawingCanvasRef.current;
+    if (!drawingCanvas) return;
+    const ctx = drawingCanvas.getContext("2d");
+    ctx.clearRect(0, 0, displaySize.width, displaySize.height);
+    
+    redrawMarkup();
+    compositeDisplay();
+    
+    const displayCanvas = canvasRef.current;
+    const base64Image = displayCanvas ? displayCanvas.toDataURL("image/png") : "";
+    
+    const markupData = JSON.stringify({
+      strokes: strokesRef.current,
+      canvasSize: { width: displaySize.width, height: displaySize.height }
+    });
+    onDrawingChange?.({ strokes: markupData, image: base64Image });
+    
+    setHasDrawing(strokesRef.current.length > 0);
+    setCanUndo(true);
+    setCanRedo(undoStackRef.current.length > 0);
+  }, [displaySize.width, displaySize.height, onDrawingChange, redrawMarkup, compositeDisplay]);
+
+  // Load existing drawing data (strokes JSON)
+  React.useEffect(() => {
+    if (!existingDrawing) return;
+    
+    try {
+      const data = JSON.parse(existingDrawing);
+      if (data.strokes && Array.isArray(data.strokes)) {
+        strokesRef.current = data.strokes;
+        setHasDrawing(data.strokes.length > 0);
+        setCanUndo(data.strokes.length > 0);
+      }
+    } catch (e) {
+      // Not JSON, might be legacy base64 - ignore
+      console.warn("Existing drawing is not JSON stroke data");
+    }
+  }, [existingDrawing]);
 
   // Update canvas resolution and redraw
   React.useEffect(() => {
@@ -325,17 +441,10 @@ export default function DrawingCanvas({
     displayCtx.clearRect(0, 0, displaySize.width, displaySize.height);
     drawingCtx.clearRect(0, 0, displaySize.width, displaySize.height);
 
+    // Redraw markup from strokes
+    redrawMarkup();
     compositeDisplay();
-
-    if (existingDrawing) {
-      const img = new Image();
-      img.onload = () => {
-        drawingCtx.drawImage(img, 0, 0, displaySize.width, displaySize.height);
-        displayCtx.drawImage(img, 0, 0, displaySize.width, displaySize.height);
-      };
-      img.src = existingDrawing;
-    }
-  }, [displaySize, existingDrawing, hasDrawing, backgroundLoaded, placeholder, backgroundColor]);
+  }, [displaySize, hasDrawing, backgroundLoaded, placeholder, backgroundColor, redrawMarkup, compositeDisplay]);
 
   // Handle responsive sizing
   React.useEffect(() => {
@@ -419,9 +528,46 @@ export default function DrawingCanvas({
           style={{ display: "none" }}
         />
 
+        {/* Cursor dot overlay */}
+        {cursorPosition && (
+          <div
+            className="cursor-dot pointer-events-none absolute rounded-full border-2"
+            style={{
+              left: `${cursorPosition.x}px`,
+              top: `${cursorPosition.y}px`,
+              width: `${currentTool === "eraser" ? eraserWidth : currentSize * 2}px`,
+              height: `${currentTool === "eraser" ? eraserWidth : currentSize * 2}px`,
+              borderColor: currentTool === "eraser" ? "#ef4444" : currentColor,
+              backgroundColor: currentTool === "eraser" ? "rgba(239, 68, 68, 0.1)" : `${currentColor}20`,
+              transform: "translate(-50%, -50%)",
+              transition: "width 0.1s, height 0.1s",
+            }}
+          />
+        )}
+
         {/* Action Buttons - Right Side */}
         {showControls && hasDrawing && (
           <div className="action-buttons absolute top-2 right-2 flex flex-col md:flex-row gap-2">
+            <button
+              onClick={undo}
+              disabled={!canUndo}
+              className="undo-btn w-7 h-7 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded shadow-md transition touch-manipulation disabled:opacity-40 disabled:cursor-not-allowed"
+              title="Undo"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+              </svg>
+            </button>
+            <button
+              onClick={redo}
+              disabled={!canRedo}
+              className="redo-btn w-7 h-7 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded shadow-md transition touch-manipulation disabled:opacity-40 disabled:cursor-not-allowed"
+              title="Redo"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10H11a8 8 0 00-8 8v2m18-10l-6 6m6-6l-6-6" />
+              </svg>
+            </button>
             <button
               onClick={clearCanvas}
               className="clear-btn w-7 h-7 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-700 rounded shadow-md transition touch-manipulation"
@@ -485,104 +631,24 @@ export default function DrawingCanvas({
               ))}
 
               {/* Custom Color Slot */}
-              <div className="custom-color-slot relative" ref={colorModalRef}>
-                <button
-                  onClick={() => {
-                    setTempRgb(customColor ? hexToRgb(customColor) : { r: 128, g: 128, b: 128 });
-                    setShowColorPicker(!showColorPicker);
+              <div
+                className={`custom-color-slot w-7 h-7 rounded cursor-pointer transition-all touch-manipulation ${
+                  customColor && currentColor === customColor
+                    ? "ring-2 ring-blue-500 ring-offset-2"
+                    : "hover:ring-2 hover:ring-gray-300"
+                }`}
+                style={{ backgroundColor: customColor || "#808080" }}
+              >
+                <input
+                  type="color"
+                  value={customColor || "#808080"}
+                  onChange={(e) => {
+                    setCustomColor(e.target.value);
+                    setCurrentColor(e.target.value);
                   }}
-                  className={`custom-color-btn w-7 h-7 rounded transition-all touch-manipulation flex items-center justify-center ${
-                    currentColor === customColor && customColor !== null
-                      ? "ring-2 ring-blue-500 ring-offset-2"
-                      : "hover:ring-2 hover:ring-gray-300"
-                  }`}
-                  style={{
-                    backgroundColor: customColor || "#f3f4f6",
-                    border: customColor ? "none" : "2px dashed #9ca3af"
-                  }}
+                  className="w-full h-full opacity-0 cursor-pointer"
                   title="Custom color"
-                >
-                  {!customColor && <span className="text-xs text-gray-500">+</span>}
-                </button>
-
-                {/* RGB Color Picker Modal */}
-                {showColorPicker && (
-                  <div className="color-picker-modal absolute bottom-full -left-14 sm:-left-4 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 p-3 pt-1 z-50 w-fit">
-                    <div className="rgb-picker flex flex-col gap-3">
-                      {/* Close Button */}
-                      <div className="flex justify-end">
-                        <button
-                          onClick={() => setShowColorPicker(false)}
-                          className="close-btn w-5 h-5 flex items-center justify-center text-gray-400 hover:text-gray-600 rounded hover:bg-gray-100"
-                          title="Close"
-                        >
-                          <span className="text-lg leading-none">×</span>
-                        </button>
-                      </div>
-
-                      {/* R Slider */}
-                      <div className="rgb-slider-group flex items-center gap-2">
-                        <label className="text-xs font-medium text-gray-600 w-6">R</label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="255"
-                          value={tempRgb.r}
-                          onChange={(e) => {
-                            const newR = parseInt(e.target.value);
-                            // Prevent pure red (255,0,0)
-                            if (newR === 255 && tempRgb.g === 0 && tempRgb.b === 0) return;
-                            setTempRgb({ ...tempRgb, r: newR });
-                          }}
-                          className="flex-1"
-                        />
-                        <span className="text-xs text-gray-600 w-8 text-right">{tempRgb.r}</span>
-                      </div>
-
-                      {/* G Slider */}
-                      <div className="rgb-slider-group flex items-center gap-2">
-                        <label className="text-xs font-medium text-gray-600 w-6">G</label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="255"
-                          value={tempRgb.g}
-                          onChange={(e) => {
-                            const newG = parseInt(e.target.value);
-                            // Prevent pure red (255,0,0) and blue (0,0,255)
-                            if ((tempRgb.r === 255 && newG === 0 && tempRgb.b === 0) ||
-                                (tempRgb.r === 0 && newG === 0 && tempRgb.b === 255)) return;
-                            setTempRgb({ ...tempRgb, g: newG });
-                          }}
-                          className="flex-1"
-                        />
-                        <span className="text-xs text-gray-600 w-8 text-right">{tempRgb.g}</span>
-                      </div>
-
-                      {/* B Slider */}
-                      <div className="rgb-slider-group flex items-center gap-2">
-                        <label className="text-xs font-medium text-gray-600 w-6">B</label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="255"
-                          value={tempRgb.b}
-                          onChange={(e) => {
-                            const newB = parseInt(e.target.value);
-                            // Prevent pure blue (0,0,255)
-                            if (tempRgb.r === 0 && tempRgb.g === 0 && newB === 255) return;
-                            setTempRgb({ ...tempRgb, b: newB });
-                          }}
-                          className="flex-1"
-                        />
-                        <span className="text-xs text-gray-600 w-8 text-right">{tempRgb.b}</span>
-                      </div>
-
-                      {/* Color Preview */}
-                      <div className="color-preview flex items-center justify-center h-8 rounded border border-gray-300" style={{ backgroundColor: rgbToHex(tempRgb.r, tempRgb.g, tempRgb.b) }} />
-                    </div>
-                  </div>
-                )}
+                />
               </div>
 
               {/* Divider */}
