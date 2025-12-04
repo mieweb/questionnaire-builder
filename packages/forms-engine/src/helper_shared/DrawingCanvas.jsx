@@ -546,7 +546,7 @@ export default function DrawingCanvas({
         )}
 
         {/* Action Buttons - Right Side */}
-        {showControls && hasDrawing && (
+        {showControls && (hasDrawing || canUndo || canRedo) && (
           <div className="action-buttons absolute top-2 right-2 flex flex-col md:flex-row gap-2">
             <button
               onClick={undo}
