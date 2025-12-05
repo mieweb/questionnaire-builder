@@ -4,6 +4,9 @@ function getValueOf(field) {
     case "text":
     case "longtext":
       return field.answer ?? "";
+    case "expression":
+      // Expression fields store their answer as the evaluation result
+      return field.answer ?? "";
     case "multitext":
       if (Array.isArray(field.options)) {
         return field.options.map(o => o.answer ?? "");

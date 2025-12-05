@@ -15,6 +15,7 @@ import SignatureField from "../adv_field/Signature_Field"
 import DiagramField from "../adv_field/Diagram_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 import ImageField from "../adv_field/Image_Field"
+import ExpressionField from "../adv_field/Expression_Field"
 
 /**
  * Field Type Configuration Schema
@@ -424,6 +425,24 @@ const fieldTypes = {
       caption: "Optional caption below image",
     }
   },
+  expression: {
+    label: "Expression Field",
+    category: "Rich Content",
+    componentKey: "expression",
+    defaultProps: {
+      fieldType: "expression",
+      label: "Calculated Result",
+      expression: "",
+      displayFormat: "number",
+      decimalPlaces: 2,
+      sampleDataFields: [],
+      answer: "",
+    },
+    placeholder: {
+      label: "Expression Field",
+      expression: "{fieldId1} + {fieldId2}",
+    }
+  },
 };
 
 const componentMap = {
@@ -444,6 +463,7 @@ const componentMap = {
   diagram: DiagramField,
   unsupported: UnsupportedField,
   image: ImageField,
+  expression: ExpressionField,
 };
 
 export function registerFieldComponent(key, component) {
