@@ -381,3 +381,33 @@ export const PICTURE_ICON = React.memo(({ className = "" }) => (
     <path d="m14 14 1 -1c0.928 -0.893 2.072 -0.893 3 0l3 3" strokeWidth="2" />
   </svg>
 ), propsEqual);
+
+
+export const PEN_ICON = React.memo(
+  ({ className = "" }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 20h4L18.5 9.5a2.828 2.828 0 1 0 -4 -4L4 16v4" />
+      <path d="m13.5 6.5 4 4" />
+    </svg>
+  ),
+  propsEqual
+);
+
+export const ERASER_ICON = React.memo(
+  ({ className = "" }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19 20H8.5l-4.21 -4.3a1 1 0 0 1 0 -1.41l10 -10a1 1 0 0 1 1.41 0l5 5a1 1 0 0 1 0 1.41L11.5 20" />
+      <path d="M18 13.3 11.7 7" />
+    </svg>
+  ),
+  propsEqual
+);
+
+export const CLEAR_ICON = React.memo(
+  ({ className = "" }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M19.95 11a8 8 0 1 0 -0.5 4m0.5 5v-5h-5" />
+    </svg>
+  ),
+  propsEqual
+);

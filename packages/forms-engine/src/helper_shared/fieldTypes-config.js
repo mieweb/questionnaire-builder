@@ -12,6 +12,7 @@ import SliderField from "../basic_field/Slider_Field"
 import MultiMatrixField from "../basic_field/MultiMatrix_Field"
 import SingleMatrixField from "../basic_field/SingleMatrix_Field"
 import SignatureField from "../adv_field/Signature_Field"
+import DiagramField from "../adv_field/Diagram_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 import ImageField from "../adv_field/Image_Field"
 import ExpressionField from "../adv_field/Expression_Field"
@@ -360,12 +361,31 @@ const fieldTypes = {
       fieldType: "signature",
       question: "",
       placeholder: "Sign here",
-      answer: "",
+      signatureData: "",
+      signatureImage: "",
       required: false,
     },
     placeholder: {
       question: "Enter your question...",
       pad: "Enter placeholder text for signature pad...",
+    }
+  },
+  diagram: {
+    label: "Diagram Field",
+    category: "Rich Content",
+    componentKey: "diagram",
+    defaultProps: {
+      fieldType: "diagram",
+      question: "",
+      placeholder: "Draw on the diagram",
+      diagramImage: "",
+      markupData: "",
+      markupImage: "",
+      required: false,
+    },
+    placeholder: {
+      question: "Enter your question...",
+      pad: "Enter placeholder text for diagram pad...",
     }
   },
   unsupported: {
@@ -440,6 +460,7 @@ const componentMap = {
   multimatrix: MultiMatrixField,
   singlematrix: SingleMatrixField,
   signature: SignatureField,
+  diagram: DiagramField,
   unsupported: UnsupportedField,
   image: ImageField,
   expression: ExpressionField,
