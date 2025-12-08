@@ -409,6 +409,8 @@ const fieldTypes = {
     label: "Image Field",
     category: "Rich Content",
     componentKey: "image",
+    hasOptions: false,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "image",
       label: "",
@@ -429,6 +431,8 @@ const fieldTypes = {
     label: "Expression Field",
     category: "Rich Content",
     componentKey: "expression",
+    hasOptions: false,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "expression",
       label: "Calculated Result",

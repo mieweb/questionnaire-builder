@@ -3,116 +3,95 @@ import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 import { useFormStore } from "../state/formStore";
 
+// Helper: Substitute field references with values
+const substituteFields = (expression, data) => 
+  expression.replace(/{(\w+)}/g, (_, fieldId) => data[fieldId] ?? 0);
+
+// Helper: Validate expression syntax
+const validateExpression = (expr) => {
+  if (/(?<![=!<>])=(?!=)/.test(expr)) {
+    throw new Error("Single = is not allowed. Use == for comparison.");
+  }
+  if (!/^[0-9+\-*/(). =!><]+$/.test(expr)) {
+    console.log("Invalid expression:", expr);
+    throw new Error("Expression contains invalid characters.");
+  }
+};
+
+// Helper: Format result based on display type
+const formatResult = (value, format, decimals = 2) => {
+  if (value === undefined || value === null) return "";
+  if (format === "boolean") return value ? "true" : "false";
+  if (format === "currency") return `$${parseFloat(value).toFixed(decimals)}`;
+  if (format === "percentage") return `${parseFloat(value).toFixed(decimals)}%`;
+  return parseFloat(value).toFixed(decimals);
+};
+
+// Helper: Build data object from form fields
+const buildFieldData = (order, byId, excludeId) => {
+  const data = {};
+  order.forEach((id) => {
+    const fld = byId[id];
+    if (!fld || fld.id === excludeId) return;
+    
+    if (fld.answer != null && fld.answer !== "") {
+      data[fld.id] = isNaN(fld.answer) ? fld.answer : parseFloat(fld.answer);
+    }
+    
+    if (fld.fieldType === "section" && fld.fields) {
+      fld.fields.forEach((child) => {
+        if (child.id !== excludeId && child.answer != null && child.answer !== "") {
+          data[child.id] = isNaN(child.answer) ? child.answer : parseFloat(child.answer);
+        }
+      });
+    }
+  });
+  return data;
+};
+
 const ExpressionField = React.memo(function ExpressionField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
   const [evaluationError, setEvaluationError] = React.useState("");
   const [sampleDataFields, setSampleDataFields] = React.useState(field.sampleDataFields || []);
-  
-  // States for sample data preview (editor only)
-  const [samplePreviewResult, setSamplePreviewResult] = React.useState("");
-  const [samplePreviewError, setSamplePreviewError] = React.useState("");
-  
-  // Get all fields from the form store to access their answers in preview mode
   const order = useFormStore((s) => s.order);
   const byId = useFormStore((s) => s.byId);
-
-  // Evaluate expression - for actual form rendering (uses real field answers)
+  
+  // Evaluate expression
   const evaluateExpression = React.useCallback((expression, data = {}) => {
     if (!expression) return "";
-    
     try {
       setEvaluationError("");
-      
-      // Replace field references {fieldId} with their values
-      let evaluatedExpr = expression.replace(/{(\w+)}/g, (match, fieldId) => {
-        const value = data[fieldId];
-        // Return the value or 0 if undefined/null for numeric operations
-        return value !== undefined && value !== null ? value : 0;
-      });
-
-      // Validate expression contains only safe characters (including comparison operators)
-      // Check for disallowed single = (assignment) - must be part of ==, !=, <=, or >=
-      if (/(?<![=!<>])=(?!=)/.test(evaluatedExpr)) {
-        throw new Error("Single = is not allowed. Use == for comparison instead.");
-      }
-      const allowedChars = /^[0-9+\-*/(). =!><]+$/;
-      if (!allowedChars.test(evaluatedExpr)) {
-        throw new Error("Expression contains invalid characters. Only numbers, operators (+, -, *, /, ==, !=, >, <, >=, <=), and parentheses are allowed.");
-      }
-
-      // Evaluate the expression
-      // eslint-disable-next-line no-eval
-      const result = Function('"use strict"; return (' + evaluatedExpr + ')')();
-      
-      // Format result based on displayFormat
-      if (field.displayFormat === "boolean") {
-        return result ? "true" : "false";
-      } else if (field.displayFormat === "currency") {
-        return `$${parseFloat(result).toFixed(2)}`;
-      } else if (field.displayFormat === "percent") {
-        return `${parseFloat(result).toFixed(2)}%`;
-      } else if (field.displayFormat === "decimal") {
-        return parseFloat(result).toFixed(field.decimalPlaces || 2);
-      }
-      
-      return String(result);
+      const evaluatedExpr = substituteFields(expression, data);
+      validateExpression(evaluatedExpr);
+      return Function('"use strict"; return (' + evaluatedExpr + ')')();
     } catch (error) {
       setEvaluationError(error.message || "Invalid expression");
       return "";
     }
-  }, [field.displayFormat, field.decimalPlaces]);
+  }, []);
 
-  // Update sample preview when sample data changes (for editor preview only)
-  React.useEffect(() => {
-    if (!field.expression) {
-      setSamplePreviewResult("");
-      return;
-    }
-
+  // Sample preview for editor mode
+  const samplePreview = React.useMemo(() => {
+    if (!field.expression || !sampleDataFields?.length) return { result: "", error: "" };
+    
     try {
-      setSamplePreviewError("");
       const sampleData = {};
-      
-      // Build data from sample fields only
-      (sampleDataFields || []).forEach((f) => {
+      sampleDataFields.forEach((f) => {
         if (f.fieldName && f.sampleValue) {
           sampleData[f.fieldName] = isNaN(f.sampleValue) ? f.sampleValue : parseFloat(f.sampleValue);
         }
       });
-
-      // Evaluate with sample data
-      let evaluatedExpr = field.expression.replace(/{(\w+)}/g, (match, fieldId) => {
-        const value = sampleData[fieldId];
-        return value !== undefined && value !== null ? value : 0;
-      });
-
-      // Check for disallowed single = (assignment) - must be part of ==, !=, <=, or >=
-      if (/(?<![=!<>])=(?!=)/.test(evaluatedExpr)) {
-        throw new Error("Single = is not allowed. Use == for comparison instead.");
-      }
-      const allowedChars = /^[0-9+\-*/(). =!><]+$/;
-      if (!allowedChars.test(evaluatedExpr)) {
-        throw new Error("Expression contains invalid characters.");
-      }
-
-      // eslint-disable-next-line no-eval
+      
+      const evaluatedExpr = substituteFields(field.expression, sampleData);
+      validateExpression(evaluatedExpr);
       const result = Function('"use strict"; return (' + evaluatedExpr + ')')();
-
-      // Format result
-      if (field.displayFormat === "boolean") {
-        setSamplePreviewResult(result ? "true" : "false");
-      } else if (field.displayFormat === "currency") {
-        setSamplePreviewResult(`$${parseFloat(result).toFixed(2)}`);
-      } else if (field.displayFormat === "percent") {
-        setSamplePreviewResult(`${parseFloat(result).toFixed(2)}%`);
-      } else if (field.displayFormat === "decimal") {
-        setSamplePreviewResult(parseFloat(result).toFixed(field.decimalPlaces || 2));
-      } else {
-        setSamplePreviewResult(String(result));
-      }
+      
+      return { 
+        result: formatResult(result, field.displayFormat, field.decimalPlaces), 
+        error: "" 
+      };
     } catch (error) {
-      setSamplePreviewError(error.message || "Invalid expression");
-      setSamplePreviewResult("");
+      return { result: "", error: error.message || "Invalid expression" };
     }
   }, [sampleDataFields, field.expression, field.displayFormat, field.decimalPlaces]);
 
@@ -143,37 +122,16 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
     ctrl.api.field.update("sampleDataFields", newFields);
   };
 
-  // Memoize the computed result for preview mode
+  // Computed result for preview mode
   const computedResult = React.useMemo(() => {
     if (!ctrl.isPreview || !field.expression) return "";
-    
-    // Build actual data from form fields
-    const actualData = {};
-    order.forEach((fieldId) => {
-      const fld = byId[fieldId];
-      if (fld && fld.id !== field.id) {
-        if (fld.answer !== undefined && fld.answer !== null && fld.answer !== "") {
-          actualData[fld.id] = isNaN(fld.answer) ? fld.answer : parseFloat(fld.answer);
-        }
-        // Also check nested fields
-        if (fld.fieldType === "section" && Array.isArray(fld.fields)) {
-          fld.fields.forEach((child) => {
-            if (child.id !== field.id) {
-              if (child.answer !== undefined && child.answer !== null && child.answer !== "") {
-                actualData[child.id] = isNaN(child.answer) ? child.answer : parseFloat(child.answer);
-              }
-            }
-          });
-        }
-      }
-    });
-
+    const actualData = buildFieldData(order, byId, field.id);
     return evaluateExpression(field.expression, actualData);
   }, [ctrl.isPreview, field.expression, order, byId, field.id, evaluateExpression]);
 
-  // Store the computed result in field.answer only when it changes
+  // Store the computed numeric result in field.answer
   React.useEffect(() => {
-    if (computedResult && computedResult !== field.answer) {
+    if (computedResult !== undefined && computedResult !== null && computedResult !== field.answer) {
       // Use a microtask to defer the update
       Promise.resolve().then(() => {
         ctrl.api.field.update("answer", computedResult);
@@ -192,10 +150,10 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                 <p className="text-sm text-gray-600 mb-1">
                   <span className="font-medium">Expression:</span> {f.expression || "No expression defined"}
                 </p>
-                {computedResult && (
+                {computedResult != null && (
                   <p className="text-lg font-semibold text-blue-600 mt-2">
                     <span className="text-sm text-gray-600">Result: </span>
-                    {computedResult}
+                    {formatResult(computedResult, f.displayFormat, f.decimalPlaces)}
                   </p>
                 )}
                 {evaluationError && (
@@ -234,10 +192,8 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                 placeholder="{fieldId1} + {fieldId2}"
                 rows={4}
               />
-              {samplePreviewError ? (
-                <p className="text-xs text-red-600 mt-1">
-                  Error: {samplePreviewError}
-                </p>
+              {samplePreview.error ? (
+                <p className="text-xs text-red-600 mt-1">Error: {samplePreview.error}</p>
               ) : (
                 <p className="text-xs text-gray-500 mt-1">
                   Use {'{fieldId}'} to reference other fields. Arithmetic: {'{price} * {quantity}'}. Comparison: {'{age} >= 18'} → true/false.
@@ -331,14 +287,14 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
             </div>
 
             {/* Preview Result */}
-            {(sampleDataFields || []).length > 0 && (
+            {sampleDataFields?.length > 0 && (
               <div className="p-3 bg-blue-50 border border-blue-300 rounded-lg">
                 <p className="text-sm font-medium text-gray-700 mb-2">Preview Result:</p>
-                {samplePreviewError ? (
-                  <p className="text-sm text-red-600">Error: {samplePreviewError}</p>
+                {samplePreview.error ? (
+                  <p className="text-sm text-red-600">Error: {samplePreview.error}</p>
                 ) : (
                   <p className="text-lg font-semibold text-blue-600">
-                    {samplePreviewResult || "No result"}
+                    {samplePreview.result || "No result"}
                   </p>
                 )}
               </div>
