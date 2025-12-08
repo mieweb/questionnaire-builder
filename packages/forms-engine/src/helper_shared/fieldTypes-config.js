@@ -14,6 +14,7 @@ import SingleMatrixField from "../basic_field/SingleMatrix_Field"
 import SignatureField from "../adv_field/Signature_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 import ImageField from "../adv_field/Image_Field"
+import HTMLField from "../adv_field/HTML_Field"
 
 /**
  * Field Type Configuration Schema
@@ -404,6 +405,19 @@ const fieldTypes = {
       caption: "Optional caption below image",
     }
   },
+  html: {
+    label: "HTML Block",
+    category: "Rich Content",
+    componentKey: "html",
+    defaultProps: {
+      fieldType: "html",
+      htmlContent: "",
+      iframeHeight: 400,
+    },
+    placeholder: {
+      htmlContent: "<p>Enter your HTML content here...</p>",
+    }
+  },
 };
 
 const componentMap = {
@@ -423,6 +437,7 @@ const componentMap = {
   signature: SignatureField,
   unsupported: UnsupportedField,
   image: ImageField,
+  html: HTMLField,
 };
 
 export function registerFieldComponent(key, component) {
