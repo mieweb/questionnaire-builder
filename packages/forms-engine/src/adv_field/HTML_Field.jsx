@@ -7,7 +7,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
   const [editMode, setEditMode] = React.useState(false);
   const [renderError, setRenderError] = React.useState(null);
   const iframeRef = React.useRef(null);
-  const [iframeHeight, setIframeHeight] = React.useState(field.iframeHeight || 400);
+  const [iframeHeight, setIframeHeight] = React.useState(field.iframeHeight || 25);
 
   /**
    * Wrap HTML in a complete document for iframe rendering
@@ -61,7 +61,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
       {({ api, isPreview, field: f }) => {
         if (isPreview) {
           // Render mode - display in sandboxed iframe with saved height
-          const displayHeight = f.iframeHeight || 400;
+          const displayHeight = f.iframeHeight || 25;
           return (
             <>
               <iframe
@@ -72,7 +72,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                   width: "100%",
                   border: "none",
                   borderRadius: "4px",
-                  height: `${displayHeight}px`,
+                  height: `${displayHeight}rem`,
                   maxHeight: "50vh",
                 }}
                 title="HTML Content"
@@ -114,17 +114,17 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
             {/* Height Control */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Preview Height (px)
+                Preview Height (rem)
               </label>
               <div className="flex gap-2 items-center">
                 <input
                   type="range"
-                  min="200"
-                  max="800"
-                  step="10"
+                  min="3"
+                  max="50"
+                  step="0.5"
                   value={iframeHeight}
                   onChange={(e) => {
-                    const height = parseInt(e.target.value);
+                    const height = parseFloat(e.target.value);
                     setIframeHeight(height);
                     api.field.update("iframeHeight", height);
                   }}
@@ -132,17 +132,18 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                 />
                 <input
                   type="number"
-                  min="200"
-                  max="800"
+                  min="3"
+                  max="50"
+                  step="0.5"
                   value={iframeHeight}
                   onChange={(e) => {
-                    const height = parseInt(e.target.value) || 400;
-                    setIframeHeight(Math.max(200, Math.min(800, height)));
-                    api.field.update("iframeHeight", Math.max(200, Math.min(800, height)));
+                    const height = parseFloat(e.target.value) || 25;
+                    setIframeHeight(Math.max(3, Math.min(50, height)));
+                    api.field.update("iframeHeight", Math.max(3, Math.min(50, height)));
                   }}
                   className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
                 />
-                <span className="text-sm text-gray-500">px</span>
+                <span className="text-sm text-gray-500">rem</span>
               </div>
             </div>
 
@@ -160,7 +161,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                     width: "100%",
                     border: "1px solid #ddd",
                     borderRadius: "4px",
-                    height: `${iframeHeight}px`,
+                    height: `${iframeHeight}rem`,
                     maxHeight: "50vh",
                     background: "#fafafa",
                   }}
