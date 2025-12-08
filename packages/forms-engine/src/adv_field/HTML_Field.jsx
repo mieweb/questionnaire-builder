@@ -121,7 +121,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                   type="range"
                   min="200"
                   max="800"
-                  step="50"
+                  step="10"
                   value={iframeHeight}
                   onChange={(e) => {
                     const height = parseInt(e.target.value);
