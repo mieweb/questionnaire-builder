@@ -412,7 +412,7 @@ const fieldTypes = {
     defaultProps: {
       fieldType: "html",
       htmlContent: "",
-      iframeHeight: 25,
+      iframeHeight: 400,
     },
     placeholder: {
       htmlContent: "<p>Enter your HTML content here...</p>",

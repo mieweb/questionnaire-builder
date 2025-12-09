@@ -12,7 +12,7 @@
           "fieldType": "html",
           "id": "welcome_html",
           "htmlContent": "<div style='background: #f0f9ff; padding: 20px; border-radius: 8px; border-left: 4px solid #3b82f6;'><h2 style='color: #1e40af; margin-top: 0;'>Welcome to Our Survey</h2><p style='color: #374151; line-height: 1.6;'>Thank you for taking the time to complete this form. Your feedback is important to us and will help us improve our services.</p></div>",
-          "iframeHeight": 15.5
+          "iframeHeight": 250
         },
         {
           "id": "name",
@@ -39,7 +39,7 @@
           "fieldType": "html",
           "id": "instructions_html",
           "htmlContent": "<div style='background: #fefce8; padding: 15px; border-radius: 6px; border: 1px solid #facc15;'><h3 style='color: #854d0e; margin-top: 0; display: flex; align-items: center;'><span style='font-size: 24px; margin-right: 8px;'>⚠️</span> Important Instructions</h3><ul style='color: #713f12; margin-bottom: 0;'><li>Please answer all required questions marked with an asterisk (*)</li><li>Take your time to read each question carefully</li><li>You can save your progress and return later</li><li>All information is kept confidential</li></ul></div>",
-          "iframeHeight": 15
+          "iframeHeight": 250
         },
         {
           "id": "agreement",
@@ -69,7 +69,7 @@
           "fieldType": "html",
           "id": "rating_intro_html",
           "htmlContent": "<div style='padding: 15px; background: white; border: 1px solid #e5e7eb; border-radius: 6px;'><p style='color: #6b7280; margin: 0; font-style: italic;'>Please rate your experience with our services on the following aspects:</p></div>",
-          "iframeHeight": 7.5
+          "iframeHeight": 130
         },
         {
           "id": "service_quality",
@@ -133,7 +133,7 @@
           "fieldType": "html",
           "id": "rating_scale_html",
           "htmlContent": "<div style='background: #f9fafb; padding: 10px 15px; border-radius: 4px; margin-top: 10px;'><small style='color: #6b7280;'><strong>Rating Scale:</strong> 1 = Very Poor, 2 = Poor, 3 = Average, 4 = Good, 5 = Excellent</small></div>",
-          "iframeHeight": 7
+          "iframeHeight": 120
         }
       ]
     },
@@ -146,7 +146,7 @@
           "fieldType": "html",
           "id": "feedback_prompt_html",
           "htmlContent": "<div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 8px; color: white;'><h3 style='margin-top: 0; font-weight: 600;'>We Value Your Opinion</h3><p style='margin-bottom: 0; opacity: 0.95;'>Share your thoughts, suggestions, or any concerns you may have. Your feedback helps us serve you better.</p></div>",
-          "iframeHeight": 11
+          "iframeHeight": 180
         },
         {
           "id": "comments",
@@ -195,7 +195,7 @@
           "fieldType": "html",
           "id": "thank_you_html",
           "htmlContent": "<div style='text-align: center; padding: 30px; background: #ecfdf5; border-radius: 8px; border: 2px solid #10b981;'><div style='font-size: 48px; margin-bottom: 10px;'>🎉</div><h2 style='color: #065f46; margin: 10px 0;'>Almost Done!</h2><p style='color: #047857; font-size: 16px; margin-bottom: 0;'>Click the submit button below to send your responses. Thank you for your time!</p></div>",
-          "iframeHeight": 17.5
+          "iframeHeight": 290
         }
       ]
     }

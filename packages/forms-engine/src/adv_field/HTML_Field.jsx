@@ -7,7 +7,20 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
   const [editMode, setEditMode] = React.useState(false);
   const [renderError, setRenderError] = React.useState(null);
   const iframeRef = React.useRef(null);
-  const [iframeHeight, setIframeHeight] = React.useState(field.iframeHeight || 25);
+  const [iframeHeight, setIframeHeight] = React.useState(field.iframeHeight || 400);
+  const [viewportWidth, setViewportWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+
+  // Base height is set for desktop (~1024px width). As viewport narrows, content wraps more and needs more height.
+  const getResponsiveHeight = React.useCallback((baseHeight) => {
+    const referenceWidth = 1024;
+    // Calculate how much narrower we are than reference
+    // Narrower viewport = more text wrapping = need more height
+    const widthRatio = referenceWidth / Math.max(viewportWidth, 320);
+    // Scale height up as viewport gets smaller, dampen to ~0.35 for reduced scaling
+    // At 1024px: multiplier = 1.0, at 512px: multiplier = 1.35, at 375px: ~1.61, at 320px: ~1.78
+    const scaleFactor = 1 + (widthRatio - 1) * 0.35;
+    return Math.round(baseHeight * Math.max(1, scaleFactor));
+  }, [viewportWidth]);
 
   /**
    * Wrap HTML in a complete document for iframe rendering
@@ -24,7 +37,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: inherit; margin: 0; padding: 16px; line-height: 1.5; }
+    html, body { font-family: inherit; margin: 0; padding: 8px; line-height: 1.5; }
     img { max-width: 100%; height: auto; }
     table { border-collapse: collapse; width: 100%; }
     th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
@@ -36,7 +49,6 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
 </html>`;
   }, []);
 
-  // Listen for iframe errors
   React.useEffect(() => {
     const handleIframeError = (event) => {
       if (iframeRef.current && event.target === iframeRef.current) {
@@ -51,17 +63,22 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
     }
   }, []);
 
-  // Clear error when content changes
+  // Track viewport width for responsive height scaling
+  React.useEffect(() => {
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   React.useEffect(() => {
     setRenderError(null);
   }, [field.htmlContent]);
 
   return (
-    <FieldWrapper ctrl={ctrl}>
+    <FieldWrapper ctrl={ctrl} noPadding={ctrl.isPreview}>
       {({ api, isPreview, field: f }) => {
         if (isPreview) {
-          // Render mode - display in sandboxed iframe with saved height
-          const displayHeight = f.iframeHeight || 25;
+          const displayHeight = getResponsiveHeight(f.iframeHeight || 400);
           return (
             <>
               <iframe
@@ -71,9 +88,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                 style={{
                   width: "100%",
                   border: "none",
-                  borderRadius: "4px",
-                  height: `${displayHeight}rem`,
-                  maxHeight: "50vh",
+                  height: `${displayHeight}px`,
                 }}
                 title="HTML Content"
               />
@@ -94,8 +109,8 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
               <button
                 onClick={() => setEditMode(false)}
                 className={`px-4 py-2 rounded transition-colors ${!editMode
-                    ? "bg-blue-500 hover:bg-blue-600 text-white"
-                    : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                  ? "bg-blue-500 hover:bg-blue-600 text-white"
+                  : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                   }`}
               >
                 Edit
@@ -103,8 +118,8 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
               <button
                 onClick={() => setEditMode(true)}
                 className={`px-4 py-2 rounded transition-colors ${editMode
-                    ? "bg-blue-500 hover:bg-blue-600 text-white"
-                    : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                  ? "bg-blue-500 hover:bg-blue-600 text-white"
+                  : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                   }`}
               >
                 Preview
@@ -114,17 +129,17 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
             {/* Height Control */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Preview Height (rem)
+                Preview Height (px)
               </label>
               <div className="flex gap-2 items-center">
                 <input
                   type="range"
-                  min="3"
-                  max="50"
-                  step="0.5"
+                  min="50"
+                  max="800"
+                  step="10"
                   value={iframeHeight}
                   onChange={(e) => {
-                    const height = parseFloat(e.target.value);
+                    const height = parseInt(e.target.value);
                     setIframeHeight(height);
                     api.field.update("iframeHeight", height);
                   }}
@@ -132,18 +147,18 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                 />
                 <input
                   type="number"
-                  min="3"
-                  max="50"
-                  step="0.5"
+                  min="50"
+                  max="800"
+                  step="10"
                   value={iframeHeight}
                   onChange={(e) => {
-                    const height = parseFloat(e.target.value) || 25;
-                    setIframeHeight(Math.max(3, Math.min(50, height)));
-                    api.field.update("iframeHeight", Math.max(3, Math.min(50, height)));
+                    const height = parseInt(e.target.value) || 400;
+                    setIframeHeight(Math.max(50, Math.min(800, height)));
+                    api.field.update("iframeHeight", Math.max(50, Math.min(800, height)));
                   }}
                   className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
                 />
-                <span className="text-sm text-gray-500">rem</span>
+                <span className="text-sm text-gray-500">px</span>
               </div>
             </div>
 
@@ -160,9 +175,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                   style={{
                     width: "100%",
                     border: "1px solid #ddd",
-                    borderRadius: "4px",
-                    height: `${iframeHeight}rem`,
-                    maxHeight: "50vh",
+                    height: `${iframeHeight}px`,
                     background: "#fafafa",
                   }}
                   title="HTML Preview"
