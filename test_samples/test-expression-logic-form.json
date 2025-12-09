@@ -1,0 +1,500 @@
+{
+  "schemaType": "mieforms-v1.0",
+  "title": "Expression Field Logic Test",
+  "description": "Test conditional visibility based on expression field results",
+  "fields": [
+    {
+      "id": "section1",
+      "fieldType": "section",
+      "title": "BMI Calculator with Conditional Advice",
+      "fields": [
+        {
+          "id": "weight",
+          "fieldType": "text",
+          "question": "Your Weight (kg)",
+          "answer": "",
+          "required": true
+        },
+        {
+          "id": "height",
+          "fieldType": "text",
+          "question": "Your Height (m)",
+          "answer": "",
+          "required": true
+        },
+        {
+          "id": "bmi",
+          "fieldType": "expression",
+          "label": "BMI (Body Mass Index)",
+          "expression": "{weight} / ({height} * {height})",
+          "displayFormat": "number",
+          "decimalPlaces": 1,
+          "sampleDataFields": [
+            {"fieldId": "weight", "value": "70"},
+            {"fieldId": "height", "value": "1.75"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "underweight_advice",
+          "fieldType": "longtext",
+          "question": "Health Advisory - Underweight",
+          "answer": "Your BMI indicates you may be underweight. Consider consulting a healthcare provider for nutritional advice.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "bmi",
+                "operator": "contains",
+                "value": "18"
+              }
+            ]
+          }
+        },
+        {
+          "id": "healthy_advice",
+          "fieldType": "longtext",
+          "question": "Health Advisory - Healthy Weight",
+          "answer": "Your BMI is in the healthy range. Keep up your current lifestyle habits!",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "bmi",
+                "operator": "contains",
+                "value": "22"
+              }
+            ]
+          }
+        },
+        {
+          "id": "overweight_advice",
+          "fieldType": "longtext",
+          "question": "Health Advisory - Overweight",
+          "answer": "Your BMI indicates you may be overweight. Consider speaking with a healthcare provider about healthy weight management strategies.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "bmi",
+                "operator": "contains",
+                "value": "26"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "section2",
+      "fieldType": "section",
+      "title": "Shopping Cart with Discount Eligibility",
+      "fields": [
+        {
+          "id": "cart_subtotal",
+          "fieldType": "text",
+          "question": "Cart Subtotal ($)",
+          "answer": "",
+          "required": true
+        },
+        {
+          "id": "member_discount_rate",
+          "fieldType": "text",
+          "question": "Member Discount Rate (%)",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "discount_amount",
+          "fieldType": "expression",
+          "label": "Discount Amount",
+          "expression": "{cart_subtotal} * ({member_discount_rate} / 100)",
+          "displayFormat": "currency",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "cart_subtotal", "value": "100"},
+            {"fieldId": "member_discount_rate", "value": "15"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "final_total",
+          "fieldType": "expression",
+          "label": "Final Total",
+          "expression": "{cart_subtotal} - {discount_amount}",
+          "displayFormat": "currency",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "cart_subtotal", "value": "100"},
+            {"fieldId": "discount_amount", "value": "15"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "free_shipping_notice",
+          "fieldType": "longtext",
+          "question": "🎉 Free Shipping Unlocked!",
+          "answer": "Congratulations! Your order qualifies for FREE standard shipping.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "final_total",
+                "operator": "contains",
+                "value": "50"
+              }
+            ]
+          }
+        },
+        {
+          "id": "add_more_notice",
+          "fieldType": "longtext",
+          "question": "💡 Tip: Almost There!",
+          "answer": "Add a bit more to your cart to qualify for free shipping (minimum $50).",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "final_total",
+                "operator": "contains",
+                "value": "4"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "section3",
+      "fieldType": "section",
+      "title": "Loan Eligibility Calculator",
+      "fields": [
+        {
+          "id": "monthly_income",
+          "fieldType": "text",
+          "question": "Monthly Income ($)",
+          "answer": "",
+          "required": true
+        },
+        {
+          "id": "monthly_expenses",
+          "fieldType": "text",
+          "question": "Monthly Expenses ($)",
+          "answer": "",
+          "required": true
+        },
+        {
+          "id": "disposable_income",
+          "fieldType": "expression",
+          "label": "Disposable Income",
+          "expression": "{monthly_income} - {monthly_expenses}",
+          "displayFormat": "currency",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "monthly_income", "value": "5000"},
+            {"fieldId": "monthly_expenses", "value": "3000"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "max_loan_amount",
+          "fieldType": "expression",
+          "label": "Maximum Loan Amount (3x Disposable Income)",
+          "expression": "{disposable_income} * 3",
+          "displayFormat": "currency",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "disposable_income", "value": "2000"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "high_eligibility",
+          "fieldType": "longtext",
+          "question": "✅ Excellent Loan Eligibility",
+          "answer": "Based on your income, you qualify for our premium loan options with competitive rates.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "disposable_income",
+                "operator": "contains",
+                "value": "2000"
+              }
+            ]
+          }
+        },
+        {
+          "id": "medium_eligibility",
+          "fieldType": "longtext",
+          "question": "✅ Standard Loan Eligibility",
+          "answer": "You qualify for our standard loan options. A financial advisor can discuss terms with you.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "disposable_income",
+                "operator": "contains",
+                "value": "1000"
+              }
+            ]
+          }
+        },
+        {
+          "id": "low_eligibility",
+          "fieldType": "longtext",
+          "question": "⚠️ Limited Loan Eligibility",
+          "answer": "Your current income-to-expense ratio may limit loan options. Consider speaking with a financial advisor.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "disposable_income",
+                "operator": "contains",
+                "value": "500"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "section4",
+      "fieldType": "section",
+      "title": "Academic GPA with Grade Recommendations",
+      "fields": [
+        {
+          "id": "total_points",
+          "fieldType": "text",
+          "question": "Total Grade Points Earned",
+          "answer": "",
+          "required": true
+        },
+        {
+          "id": "total_credits",
+          "fieldType": "text",
+          "question": "Total Credit Hours",
+          "answer": "",
+          "required": true
+        },
+        {
+          "id": "gpa",
+          "fieldType": "expression",
+          "label": "Current GPA",
+          "expression": "{total_points} / {total_credits}",
+          "displayFormat": "number",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "total_points", "value": "120"},
+            {"fieldId": "total_credits", "value": "40"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "honors_eligible",
+          "fieldType": "longtext",
+          "question": "🏆 Honors Eligible",
+          "answer": "Congratulations! Your GPA qualifies you for honors distinction. Keep up the excellent work!",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "gpa",
+                "operator": "contains",
+                "value": "3.5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "good_standing",
+          "fieldType": "longtext",
+          "question": "✅ Good Academic Standing",
+          "answer": "Your GPA is in good standing. Continue working hard to maintain or improve your grades.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "gpa",
+                "operator": "contains",
+                "value": "2.5"
+              }
+            ]
+          }
+        },
+        {
+          "id": "academic_probation",
+          "fieldType": "longtext",
+          "question": "⚠️ Academic Probation Warning",
+          "answer": "Your GPA is below the required threshold. Please meet with an academic advisor to discuss improvement strategies.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "gpa",
+                "operator": "contains",
+                "value": "2.0"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "section5",
+      "fieldType": "section",
+      "title": "Temperature Converter with Weather Advice",
+      "fields": [
+        {
+          "id": "celsius",
+          "fieldType": "text",
+          "question": "Temperature (Celsius)",
+          "answer": "",
+          "required": true
+        },
+        {
+          "id": "fahrenheit",
+          "fieldType": "expression",
+          "label": "Temperature (Fahrenheit)",
+          "expression": "({celsius} * 9 / 5) + 32",
+          "displayFormat": "number",
+          "decimalPlaces": 1,
+          "sampleDataFields": [
+            {"fieldId": "celsius", "value": "25"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "hot_weather_advice",
+          "fieldType": "longtext",
+          "question": "☀️ Hot Weather Advisory",
+          "answer": "It's quite warm! Stay hydrated and avoid prolonged sun exposure.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "fahrenheit",
+                "operator": "contains",
+                "value": "86"
+              }
+            ]
+          }
+        },
+        {
+          "id": "mild_weather_advice",
+          "fieldType": "longtext",
+          "question": "🌤️ Pleasant Weather",
+          "answer": "Perfect weather! Great day for outdoor activities.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "fahrenheit",
+                "operator": "contains",
+                "value": "68"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cold_weather_advice",
+          "fieldType": "longtext",
+          "question": "❄️ Cold Weather Advisory",
+          "answer": "It's cold outside! Bundle up and wear warm layers.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "fahrenheit",
+                "operator": "contains",
+                "value": "40"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "section6",
+      "fieldType": "section",
+      "title": "Compound Logic: Multiple Expression Dependencies",
+      "fields": [
+        {
+          "id": "age",
+          "fieldType": "text",
+          "question": "Your Age",
+          "answer": "",
+          "required": true
+        },
+        {
+          "id": "years_experience",
+          "fieldType": "text",
+          "question": "Years of Work Experience",
+          "answer": "",
+          "required": true
+        },
+        {
+          "id": "experience_ratio",
+          "fieldType": "expression",
+          "label": "Experience Ratio (Experience/Age)",
+          "expression": "{years_experience} / {age}",
+          "displayFormat": "percentage",
+          "decimalPlaces": 1,
+          "sampleDataFields": [
+            {"fieldId": "years_experience", "value": "10"},
+            {"fieldId": "age", "value": "30"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "senior_professional",
+          "fieldType": "longtext",
+          "question": "👔 Senior Professional Profile",
+          "answer": "You have significant professional experience relative to your age. You may qualify for senior-level positions.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "experience_ratio",
+                "operator": "contains",
+                "value": "0.4"
+              }
+            ]
+          }
+        },
+        {
+          "id": "early_career",
+          "fieldType": "longtext",
+          "question": "🌱 Early Career Profile",
+          "answer": "You're in the early stages of your career. Focus on skill development and gaining diverse experience.",
+          "required": false,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "experience_ratio",
+                "operator": "contains",
+                "value": "0.1"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
