@@ -26,7 +26,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
           return (
             <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
               <div className="px-6 pt-6 pb-2">
-                <div className="font-light mb-2">{f.question || "Question"}</div>
+                <div className="font-light mb-2 break-words overflow-hidden">{f.question || "Question"}</div>
               </div>
               <div className="flex justify-center mx-auto px-2 pb-2 lg:px-6 lg:pb-4">
                 <div style={{ width: '100%', maxWidth: '80vw' }} className="md:max-w-[75vw] lg:max-w-full">
@@ -36,7 +36,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                     placeholder={f.placeholder || "Please sign here"}
                     config={{
                       width: 450,
-                      height: 150,
+                      height: 200,
                       strokeColor: "#000000",
                       strokeWidth: 2,
                       hasEraser: false,

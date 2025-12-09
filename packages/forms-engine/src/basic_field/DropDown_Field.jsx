@@ -13,7 +13,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
           return (
             <div className={`dropdown-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
                 <div>
                   <select
                     className="w-full px-4 shadow border border-gray-300 rounded-lg h-10 cursor-pointer focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"

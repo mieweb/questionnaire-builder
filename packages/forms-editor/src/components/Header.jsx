@@ -118,8 +118,8 @@ export default function Header() {
         </div>
 
         {/* Bottom row: View Mode Tabs + Import/Export */}
-        <div className="flex items-center max-[474px]:items-start justify-between gap-3">
-          <div className="header-mode-toggle flex gap-1 rounded-lg border border-black/10 bg-black/5 p-1 w-fit max-[474px]:h-[4.5rem]">
+        <div className="flex items-center justify-between gap-3">
+          <div className="header-mode-toggle flex gap-1 rounded-lg border border-black/10 bg-black/5 p-1 w-fit">
             <button
               className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${!isPreview && !isCodeEditor
                   ? "bg-white text-slate-900 shadow-sm"
@@ -129,7 +129,7 @@ export default function Header() {
               title="Visual Editor"
             >
               <VEDITOR_ICON className="w-5 h-5" />
-              <span>Visual Editor</span>
+              <span>Build</span>
             </button>
             <button
               className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${isCodeEditor
@@ -140,7 +140,7 @@ export default function Header() {
               title="Code Editor"
             >
               <CODE_ICON className="w-5 h-5" />
-              <span>Code Editor</span>
+              <span>Code</span>
             </button>
             <button
               className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${isPreview
@@ -155,10 +155,10 @@ export default function Header() {
             </button>
           </div>
 
-          <div className="header-actions flex flex-col min-[475px]:flex-row gap-1 items-end min-[475px]:items-center">
+          <div className="header-actions flex gap-1 items-center">
             <label className="header-import-label px-2 py-2 lg:px-3 lg:py-2 rounded-lg border border-black/15 bg-white hover:bg-black/5 cursor-pointer text-xs lg:text-sm font-medium transition-colors flex items-center lg:gap-2 gap-0">
               <UPLOAD_ICON className="w-4 h-4 lg:w-4 lg:h-4" />
-              <span className="hidden min-[540px]:inline">Import</span>
+              <span className="hidden min-[445px]:inline">Import</span>
               <input
                 className="hidden"
                 type="file"
@@ -180,7 +180,7 @@ export default function Header() {
               title="Export"
             >
               <DOWNLOAD_ICON className="w-4 h-4 lg:w-4 lg:h-4" />
-              <span className="hidden min-[540px]:inline">Export</span>
+              <span className="hidden min-[445px]:inline">Export</span>
             </button>
           </div>
         </div>

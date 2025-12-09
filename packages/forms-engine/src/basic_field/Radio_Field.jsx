@@ -14,7 +14,7 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
           return (
             <div className={`radio-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
                 <div>
                   {(f.options || []).map((option) => {
                     const inputId = `${f.id}-${option.id}`;

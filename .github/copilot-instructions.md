@@ -99,7 +99,25 @@ If any box is unchecked, **simplify**.
   // ✅ GOOD - stable identifier
   {items.map((item) => <div key={item.id}>{item.name}</div>)}
   ```
-  This prevents inefficient re-renders and preserves component state correctly during list mutations.
+
+- **Mobile Overflow Prevention for Form Fields**: All text inputs, textareas, and long text content in preview mode must include overflow safeguards to prevent mobile layout breakage:
+  - Add `break-words overflow-hidden` to question text divs
+  - Add `min-w-0` to inputs/textareas in flex or grid layouts to prevent content from expanding parent
+  - Never let user input expand container width on mobile
+  ```jsx
+  // ❌ BAD - question can overflow, input can expand
+  <div className="flex">
+    <div className="font-light">{f.question}</div>
+    <input className="w-full px-4 py-2 border..." />
+  </div>
+  
+  // ✅ GOOD - constrained and safe on mobile
+  <div className="flex">
+    <div className="font-light break-words overflow-hidden">{f.question}</div>
+    <input className="w-full min-w-0 px-4 py-2 border..." />
+  </div>
+  ```
+  **Why `min-w-0`?** In flexbox, `min-width: auto` (default) prevents flex items from shrinking below their content width. Adding `min-w-0` allows the input to respect the `w-full` constraint instead of expanding the parent. Always add `min-w-0` to width-constrained elements in flex containers.
 
 ---
 

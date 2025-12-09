@@ -13,17 +13,17 @@ const CheckField = React.memo(function CheckField({ field, sectionId }) {
           return (
             <div className={`check-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
                 <div>
                   {(f.options || []).map((option) => (
-                    <label key={option.id} className="flex items-center px-3 py-2 my-2 cursor-pointer rounded-lg hover:bg-blue-50 transition-colors">
+                    <label key={option.id} className="flex items-start px-3 py-2 my-2 cursor-pointer rounded-lg hover:bg-blue-50 transition-colors gap-2">
                       <input
                         type="checkbox"
-                        className="mr-2 w-9 h-9 cursor-pointer"
+                        className="flex-shrink-0 w-9 h-9 cursor-pointer mt-1"
                         checked={Array.isArray(f.selected) && f.selected.includes(option.id)}
                         onChange={() => api.selection.multiToggle(option.id)}
                       />
-                      {option.value}
+                      <span className="break-words overflow-hidden">{option.value}</span>
                     </label>
                   ))}
                 </div>

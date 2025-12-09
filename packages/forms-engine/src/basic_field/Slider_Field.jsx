@@ -14,9 +14,9 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
         
         if (isPreview) {
           return (
-            <div className={`slider-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
+              <div className={`slider-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className={`grid gap-2 pb-4 ${options.length > 5 ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
                 <div className="py-2">
                   {options.length > 0 && (
                     <div className="relative pt-1">
@@ -41,26 +41,28 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                             <span key={option.id}>╹</span>
                           ))}
                         </div>
-                        <div className="flex justify-between mt-1">
+                        <div className="flex justify-between gap-2 mt-1">
                           {options.map((option, index) => (
-                            <button
+                            <div
                               key={option.id}
-                              type="button"
-                              onClick={() => api.selection.single(option.id)}
-                              className={`transition-all cursor-pointer ${
-                                selectedIndex === index ? 'scale-105' : 'hover:scale-105'
-                              }`}
+                              className="flex-1 min-w-0"
                             >
-                              <span
-                                className={`text-sm transition-all whitespace-nowrap ${
-                                  selectedIndex === index
-                                    ? 'font-semibold text-blue-600'
-                                    : 'text-gray-500 hover:text-blue-600'
-                                }`}
+                              <button
+                                type="button"
+                                onClick={() => api.selection.single(option.id)}
+                                className="w-full text-left cursor-pointer focus:outline-none"
                               >
-                                {option.value}
-                              </span>
-                            </button>
+                                <span
+                                  className={`text-sm break-words overflow-hidden inline-block max-w-full ${
+                                    selectedIndex === index
+                                      ? 'text-blue-600'
+                                      : 'text-gray-500 hover:text-blue-600'
+                                  }`}
+                                >
+                                  {option.value}
+                                </span>
+                              </button>
+                            </div>
                           ))}
                         </div>
                       </div>

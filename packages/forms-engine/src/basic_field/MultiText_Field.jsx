@@ -13,7 +13,7 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
           return (
             <div className={`multitext-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
                 <div className="space-y-2">
                   {(f.options || []).map((option) => (
                     <div key={option.id} className="flex items-center border border-black/10 shadow-2xs rounded overflow-hidden">
@@ -25,7 +25,7 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
                         value={option.answer || ""}
                         onChange={(e) => api.option.updateAnswer(option.id, e.target.value)}
                         placeholder=""
-                        className="flex-1 px-4 py-2 border-0 outline-none focus:ring-0"
+                        className="flex-1 min-w-0 px-4 py-2 border-0 outline-none focus:ring-0"
                       />
                     </div>
                   ))}

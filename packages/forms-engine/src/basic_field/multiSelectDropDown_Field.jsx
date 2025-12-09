@@ -39,7 +39,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
           return (
             <div className={`multiselect-dropdown-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
                 <div ref={dropdownRef} className="multiselect-dropdown-field relative">
                   {/* Selected items display as pills */}
                   <div

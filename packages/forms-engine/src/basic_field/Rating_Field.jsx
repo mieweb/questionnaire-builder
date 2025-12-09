@@ -17,7 +17,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
           return (
             <div className={`rating-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className={`grid gap-2 pb-4 ${options.length > 5 ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
                 <div className="py-2">
                   {options.length > 0 && (
                     <div className="flex flex-wrap justify-evenly gap-2">
