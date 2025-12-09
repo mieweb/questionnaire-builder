@@ -193,7 +193,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                   HTML Content
                 </label>
                 <textarea
-                  className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors font-mono text-sm"
+                  className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors font-mono text-sm max-h-64 overflow-y-auto"
                   value={f.htmlContent || ""}
                   onChange={(e) => api.field.update("htmlContent", e.target.value)}
                   placeholder="Enter your HTML content here... (e.g., &lt;p&gt;text&lt;/p&gt;)"
