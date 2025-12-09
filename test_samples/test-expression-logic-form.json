@@ -46,8 +46,8 @@
             "conditions": [
               {
                 "targetId": "bmi",
-                "operator": "contains",
-                "value": "18"
+                "operator": "lessThan",
+                "value": "18.5"
               }
             ]
           }
@@ -63,8 +63,13 @@
             "conditions": [
               {
                 "targetId": "bmi",
-                "operator": "contains",
-                "value": "22"
+                "operator": "greaterThanOrEqual",
+                "value": "18.5"
+              },
+              {
+                "targetId": "bmi",
+                "operator": "lessThan",
+                "value": "25"
               }
             ]
           }
@@ -80,8 +85,8 @@
             "conditions": [
               {
                 "targetId": "bmi",
-                "operator": "contains",
-                "value": "26"
+                "operator": "greaterThanOrEqual",
+                "value": "25"
               }
             ]
           }
@@ -144,7 +149,7 @@
             "conditions": [
               {
                 "targetId": "final_total",
-                "operator": "contains",
+                "operator": "greaterThanOrEqual",
                 "value": "50"
               }
             ]
@@ -161,8 +166,8 @@
             "conditions": [
               {
                 "targetId": "final_total",
-                "operator": "contains",
-                "value": "4"
+                "operator": "lessThan",
+                "value": "50"
               }
             ]
           }
@@ -224,7 +229,7 @@
             "conditions": [
               {
                 "targetId": "disposable_income",
-                "operator": "contains",
+                "operator": "greaterThanOrEqual",
                 "value": "2000"
               }
             ]
@@ -241,8 +246,13 @@
             "conditions": [
               {
                 "targetId": "disposable_income",
-                "operator": "contains",
+                "operator": "greaterThanOrEqual",
                 "value": "1000"
+              },
+              {
+                "targetId": "disposable_income",
+                "operator": "lessThan",
+                "value": "2000"
               }
             ]
           }
@@ -258,93 +268,8 @@
             "conditions": [
               {
                 "targetId": "disposable_income",
-                "operator": "contains",
-                "value": "500"
-              }
-            ]
-          }
-        }
-      ]
-    },
-    {
-      "id": "section4",
-      "fieldType": "section",
-      "title": "Academic GPA with Grade Recommendations",
-      "fields": [
-        {
-          "id": "total_points",
-          "fieldType": "text",
-          "question": "Total Grade Points Earned",
-          "answer": "",
-          "required": true
-        },
-        {
-          "id": "total_credits",
-          "fieldType": "text",
-          "question": "Total Credit Hours",
-          "answer": "",
-          "required": true
-        },
-        {
-          "id": "gpa",
-          "fieldType": "expression",
-          "label": "Current GPA",
-          "expression": "{total_points} / {total_credits}",
-          "displayFormat": "number",
-          "decimalPlaces": 2,
-          "sampleDataFields": [
-            {"fieldId": "total_points", "value": "120"},
-            {"fieldId": "total_credits", "value": "40"}
-          ],
-          "answer": ""
-        },
-        {
-          "id": "honors_eligible",
-          "fieldType": "longtext",
-          "question": "🏆 Honors Eligible",
-          "answer": "Congratulations! Your GPA qualifies you for honors distinction. Keep up the excellent work!",
-          "required": false,
-          "enableWhen": {
-            "logic": "AND",
-            "conditions": [
-              {
-                "targetId": "gpa",
-                "operator": "contains",
-                "value": "3.5"
-              }
-            ]
-          }
-        },
-        {
-          "id": "good_standing",
-          "fieldType": "longtext",
-          "question": "✅ Good Academic Standing",
-          "answer": "Your GPA is in good standing. Continue working hard to maintain or improve your grades.",
-          "required": false,
-          "enableWhen": {
-            "logic": "AND",
-            "conditions": [
-              {
-                "targetId": "gpa",
-                "operator": "contains",
-                "value": "2.5"
-              }
-            ]
-          }
-        },
-        {
-          "id": "academic_probation",
-          "fieldType": "longtext",
-          "question": "⚠️ Academic Probation Warning",
-          "answer": "Your GPA is below the required threshold. Please meet with an academic advisor to discuss improvement strategies.",
-          "required": false,
-          "enableWhen": {
-            "logic": "AND",
-            "conditions": [
-              {
-                "targetId": "gpa",
-                "operator": "contains",
-                "value": "2.0"
+                "operator": "lessThan",
+                "value": "1000"
               }
             ]
           }
@@ -386,7 +311,7 @@
             "conditions": [
               {
                 "targetId": "fahrenheit",
-                "operator": "contains",
+                "operator": "greaterThanOrEqual",
                 "value": "86"
               }
             ]
@@ -403,8 +328,13 @@
             "conditions": [
               {
                 "targetId": "fahrenheit",
-                "operator": "contains",
-                "value": "68"
+                "operator": "greaterThanOrEqual",
+                "value": "60"
+              },
+              {
+                "targetId": "fahrenheit",
+                "operator": "lessThan",
+                "value": "86"
               }
             ]
           }
@@ -420,8 +350,8 @@
             "conditions": [
               {
                 "targetId": "fahrenheit",
-                "operator": "contains",
-                "value": "40"
+                "operator": "lessThan",
+                "value": "60"
               }
             ]
           }
@@ -471,7 +401,7 @@
             "conditions": [
               {
                 "targetId": "experience_ratio",
-                "operator": "contains",
+                "operator": "greaterThanOrEqual",
                 "value": "0.4"
               }
             ]
@@ -488,8 +418,8 @@
             "conditions": [
               {
                 "targetId": "experience_ratio",
-                "operator": "contains",
-                "value": "0.1"
+                "operator": "lessThan",
+                "value": "0.25"
               }
             ]
           }

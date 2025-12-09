@@ -5,7 +5,7 @@ function getValueOf(field) {
     case "longtext":
       return field.answer ?? "";
     case "expression":
-      // Expression fields store their answer as the evaluation result
+      // Expression fields return their answer as-is (may be numeric)
       return field.answer ?? "";
     case "multitext":
       if (Array.isArray(field.options)) {
@@ -35,6 +35,13 @@ function getValueOf(field) {
   }
 }
 
+// ────────── Check if field is numeric expression ──────────
+function isNumericExpression(field) {
+  if (field?.fieldType !== "expression") return false;
+  const fmt = field?.displayFormat;
+  return fmt === "number" || fmt === "currency" || fmt === "percentage";
+}
+
 function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
 
 // ────────── Evaluate a single condition ──────────
@@ -45,6 +52,37 @@ function evaluate(cond, byId) {
   const actual = getValueOf(target);
   const expected = cond?.value;
 
+  // For numeric expressions, use numeric comparisons
+  const isNumeric = isNumericExpression(target);
+  if (isNumeric) {
+    const actualNum = parseFloat(actual);
+    const expectedNum = parseFloat(expected);
+    
+    // Handle invalid numbers
+    if (isNaN(actualNum) || isNaN(expectedNum)) {
+      return false;
+    }
+
+    switch (cond?.operator) {
+      case "equals":
+        return actualNum === expectedNum;
+      case "greaterThan":
+        return actualNum > expectedNum;
+      case "greaterThanOrEqual":
+        return actualNum >= expectedNum;
+      case "lessThan":
+        return actualNum < expectedNum;
+      case "lessThanOrEqual":
+        return actualNum <= expectedNum;
+      case "contains":
+        // For numeric fields, "contains" acts like range check (value starts with prefix)
+        return String(actualNum).startsWith(String(expectedNum));
+      default:
+        return false;
+    }
+  }
+
+  // Non-numeric comparison (original logic)
   switch (cond?.operator) {
     case "equals":
       if (Array.isArray(actual)) return false;
