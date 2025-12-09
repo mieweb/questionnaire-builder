@@ -37,7 +37,8 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    html, body { font-family: inherit; margin: 0; padding: 8px; line-height: 1.5; }
+    html { padding: 24px 24px 0px 24px; margin: 0; }
+    body { font-family: inherit; margin: 0; line-height: 1.5; }
     img { max-width: 100%; height: auto; }
     table { border-collapse: collapse; width: 100%; }
     th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
