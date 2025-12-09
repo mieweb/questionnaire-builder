@@ -1,4 +1,5 @@
 import React from "react";
+import CustomDropdown from "../helper_shared/CustomDropdown";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 import { UPLOAD_ICON, X_ICON } from "../helper_shared/icons";
@@ -116,11 +117,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                 Question / Title
               </label>
               <input
-                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
-                type="text"
-                value={f.question || ""}
-                onChange={(e) => api.field.update("question", e.target.value)}
-                placeholder={placeholder?.question || "Image Block Title"}
+                className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
               />
             </div>
 
@@ -155,32 +152,32 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                 <label className={`block text-sm font-medium mb-1 ${f.padding === "full-bleed" ? "text-gray-400" : "text-gray-700"}`}>
                   Size
                 </label>
-                <select
-                  disabled={f.padding === "full-bleed"}
-                  className={`px-3 py-2 w-full border rounded-lg text-sm transition-colors ${f.padding === "full-bleed" ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed" : "border-gray-300 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer"}`}
+                <CustomDropdown
+                  options={[
+                    { id: "small", value: "Small (50% width)" },
+                    { id: "medium", value: "Medium (75% width)" },
+                    { id: "full", value: "Full (100% width)" }
+                  ]}
                   value={f.size || "full"}
-                  onChange={(e) => api.field.update("size", e.target.value)}
-                >
-                  <option value="small">Small (50% width)</option>
-                  <option value="medium">Medium (75% width)</option>
-                  <option value="full">Full (100% width)</option>
-                </select>
+                  onChange={(id) => api.field.update("size", id)}
+                  placeholder="Select size"
+                />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Alignment
                 </label>
-                <select
-                  disabled={f.padding === "full-bleed"}
-                  className={`px-3 py-2 w-full border rounded-lg text-sm transition-colors ${f.padding === "full-bleed" ? "border-gray-300 bg-gray-100 text-gray-500 cursor-not-allowed" : "border-gray-300 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer"}`}
+                <CustomDropdown
+                  options={[
+                    { id: "left", value: "Left" },
+                    { id: "center", value: "Center" },
+                    { id: "right", value: "Right" }
+                  ]}
                   value={f.alignment || "center"}
-                  onChange={(e) => api.field.update("alignment", e.target.value)}
-                >
-                  <option value="left">Left</option>
-                  <option value="center">Center</option>
-                  <option value="right">Right</option>
-                </select>
+                  onChange={(id) => api.field.update("alignment", id)}
+                  placeholder="Select alignment"
+                />
               </div>
             </div>
 
@@ -188,14 +185,15 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Padding
               </label>
-              <select
-                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer transition-colors"
+              <CustomDropdown
+                options={[
+                  { id: "padded", value: "Padded (default)" },
+                  { id: "full-bleed", value: "Full Bleed (no padding)" }
+                ]}
                 value={f.padding || "padded"}
-                onChange={(e) => api.field.update("padding", e.target.value)}
-              >
-                <option value="padded">Padded (default)</option>
-                <option value="full-bleed">Full Bleed (no padding)</option>
-              </select>
+                onChange={(id) => api.field.update("padding", id)}
+                placeholder="Select padding"
+              />
             </div>
 
             {currentImageUri ? (

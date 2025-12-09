@@ -53,11 +53,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
         return (
           <div className="space-y-3">
             <input
-              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
-              type="text"
-              value={f.question || ""}
-              onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder={placeholder?.question || "Enter question"}
+              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
             />
 
             <div className="p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-sm">

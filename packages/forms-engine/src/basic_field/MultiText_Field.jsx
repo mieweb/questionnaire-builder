@@ -38,7 +38,7 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
         return (
           <div className="multitext-field-edit space-y-3">
             <input
-              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
+              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}

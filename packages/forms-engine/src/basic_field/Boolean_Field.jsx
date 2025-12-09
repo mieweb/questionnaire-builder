@@ -19,8 +19,8 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
                     const inputId = `${f.id}-${option.id}`;
                     const isSelected = f.selected === option.id;
                     const labelClasses = isSelected
-                      ? "flex-1 flex items-center justify-center px-4 py-2 border-2 rounded-lg cursor-pointer bg-blue-600 text-white border-blue-600 transition-all"
-                      : "flex-1 flex items-center justify-center px-4 py-2 border-2 rounded-lg cursor-pointer border-gray-300 hover:bg-blue-50 hover:border-blue-300 transition-all";
+                      ? "flex-1 flex items-center justify-center px-4 py-2 h-10 border-2 rounded-lg cursor-pointer bg-blue-600 text-white border-blue-600 transition-all"
+                      : "flex-1 flex items-center justify-center px-4 py-2 h-10 border-2 rounded-lg cursor-pointer border-gray-300 hover:bg-blue-50 hover:border-blue-300 transition-all";
                     
                     return (
                       <label
@@ -55,7 +55,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
         return (
           <div className="boolean-field-edit space-y-2">
             <input
-              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}

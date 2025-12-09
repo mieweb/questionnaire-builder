@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { PLUSOPTION_ICON, TRASHCANTWO_ICON } from "../helper_shared/icons";
+import CustomDropdown from "../helper_shared/CustomDropdown";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 
@@ -14,20 +15,13 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
             <div className={`dropdown-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
                 <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
-                <div>
-                  <select
-                    className="w-full px-4 shadow border border-gray-300 rounded-lg h-10 cursor-pointer focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
-                    value={f.selected || ""}
-                    onChange={(e) => api.selection.single(e.target.value)}
-                  >
-                    <option value="">Select an option</option>
-                    {(f.options || []).map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.value}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                <CustomDropdown
+                  options={f.options || []}
+                  value={f.selected || null}
+                  onChange={(selectedId) => api.selection.single(selectedId)}
+                  placeholder="Select an option"
+                  showClearOption={true}
+                />
               </div>
             </div>
           );
@@ -37,7 +31,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
         return (
           <div className="dropdown-field-edit space-y-3">
             <input
-              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
+              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
@@ -45,14 +39,13 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
             />
 
             <div>
-              <select className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 outline-none" disabled>
-                <option value="">Select an option</option>
-                {(f.options || []).map((option) => (
-                  <option key={option.id} value={option.id}>
-                    {option.value}
-                  </option>
-                ))}
-              </select>
+              <CustomDropdown
+                options={f.options || []}
+                value={f.selected || null}
+                onChange={(selectedId) => api.selection.single(selectedId)}
+                placeholder="Select an option"
+                disabled={true}
+              />
             </div>
 
             <div className="space-y-2">

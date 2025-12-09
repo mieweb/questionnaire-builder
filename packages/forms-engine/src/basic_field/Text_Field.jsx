@@ -18,7 +18,7 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
                   value={f.answer || ""}
                   onChange={(e) => api.field.update("answer", e.target.value)}
                   placeholder="Type your answer"
-                  className="px-4 py-2 w-full min-w-0 border border-gray-300 shadow-sm rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+                  className="px-4 py-2 h-10 w-full min-w-0 border border-gray-300 shadow-sm rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
                 />
               </div>
             </div>
@@ -28,7 +28,7 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
         return (
           <div className="text-field-edit space-y-2">
             <input
-              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
