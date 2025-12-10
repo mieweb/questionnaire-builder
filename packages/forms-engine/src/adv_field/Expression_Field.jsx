@@ -9,12 +9,35 @@ const substituteFields = (expression, data) =>
 
 // Helper: Validate expression syntax
 const validateExpression = (expr) => {
+  // Disallow single = (not part of ==, >=, <=, etc.)
   if (/(?<![=!<>])=(?!=)/.test(expr)) {
     throw new Error("Single = is not allowed. Use == for comparison.");
   }
-  if (!/^[0-9+\-*/(). =!><]+$/.test(expr)) {
+  // Disallow spaces and restrict allowed characters
+  if (!/^[0-9+\-*/().=!><]+$/.test(expr)) {
     console.log("Invalid expression:", expr);
-    throw new Error("Expression contains invalid characters.");
+    throw new Error("Expression contains invalid characters. Only digits, operators (+-*/), parentheses, and comparison operators are allowed. No spaces.");
+  }
+  // Disallow exponential operator **
+  if (/\*\*/.test(expr)) {
+    throw new Error("Exponential operator (**) is not allowed.");
+  }
+  // Length limit
+  if (expr.length > 200) {
+    throw new Error("Expression is too long (max 200 characters).");
+  }
+  // Parentheses nesting limit
+  let maxDepth = 0, depth = 0;
+  for (let i = 0; i < expr.length; i++) {
+    if (expr[i] === '(') {
+      depth++;
+      if (depth > maxDepth) maxDepth = depth;
+    } else if (expr[i] === ')') {
+      depth--;
+    }
+  }
+  if (maxDepth > 10) {
+    throw new Error("Expression has too many nested parentheses (max 10).");
   }
 };
 
