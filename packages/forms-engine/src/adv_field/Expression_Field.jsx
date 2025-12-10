@@ -100,8 +100,8 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
     try {
       const sampleData = {};
       sampleDataFields.forEach((f) => {
-        if (f.fieldName && f.sampleValue) {
-          sampleData[f.fieldName] = isNaN(f.sampleValue) ? f.sampleValue : parseFloat(f.sampleValue);
+        if (f.fieldId && f.value !== undefined) {
+          sampleData[f.fieldId] = isNaN(f.value) ? f.value : parseFloat(f.value);
         }
       });
       
