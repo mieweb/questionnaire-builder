@@ -180,7 +180,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                   title="HTML Preview"
                 />
                 {renderError && (
-                  <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
+                  <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700" role="alert">
                     {renderError}
                   </div>
                 )}
