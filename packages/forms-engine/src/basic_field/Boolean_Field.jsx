@@ -65,7 +65,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
             <div className="space-y-2">
             {options.map((opt) => (
               <div key={opt.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
-                <input type="radio" name={`${f.fieldId}-edit`} disabled className="flex-shrink-0" />
+                <input type="radio" name={`${f.fieldId}-edit`} checked={false} disabled className="flex-shrink-0" />
                 <input
                   type="text"
                   value={opt.value}

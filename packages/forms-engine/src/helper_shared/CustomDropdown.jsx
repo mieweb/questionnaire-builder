@@ -55,10 +55,10 @@ const CustomDropdown = function CustomDropdown({
   // For multi-select, show display
   if (isMulti) {
     return (
-      <div ref={dropdownRef} className="custom-dropdown-multi relative w-full overflow-visible">
+      <div ref={dropdownRef} className="custom-dropdown custom-dropdown-multi relative w-full overflow-visible">
         {/* Selected items display as pills */}
         <div
-          className={`w-full min-h-10 px-3 py-2 shadow border border-gray-300 rounded-lg cursor-pointer bg-white flex flex-wrap gap-2 items-center hover:border-blue-300 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors ${
+          className={`custom-dropdown-trigger w-full min-h-10 px-3 py-2 shadow border border-gray-300 rounded-lg cursor-pointer bg-white flex flex-wrap gap-2 items-center hover:border-blue-300 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors ${
             disabled ? "opacity-50 cursor-not-allowed bg-gray-50 border-gray-200" : ""
           }`}
           onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -69,7 +69,7 @@ const CustomDropdown = function CustomDropdown({
             selectedOptions.map((option) => (
               <span
                 key={option.id}
-                className="inline-flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded text-sm"
+                className="custom-dropdown-selected-pill inline-flex items-center gap-1 px-3 py-1 bg-blue-600 text-white rounded text-sm"
               >
                 {option.value}
                 <button
@@ -77,7 +77,7 @@ const CustomDropdown = function CustomDropdown({
                     e.stopPropagation();
                     handleRemove(option.id);
                   }}
-                  className="hover:bg-blue-700 rounded"
+                  className="custom-dropdown-remove-btn hover:bg-blue-700 rounded"
                   aria-label={`Remove ${option.value}`}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,7 +107,7 @@ const CustomDropdown = function CustomDropdown({
             {availableOptions.map((option) => (
               <div
                 key={option.id}
-                className="px-4 py-2 hover:bg-blue-50 cursor-pointer transition-colors"
+                className="custom-dropdown-option px-4 py-2 hover:bg-blue-50 cursor-pointer transition-colors"
                 onClick={() => handleSelect(option.id)}
               >
                 {option.value}
@@ -122,21 +122,21 @@ const CustomDropdown = function CustomDropdown({
   // Single select display
   const selectedOption = options.find((opt) => opt.id === value);
   return (
-    <div ref={dropdownRef} className="custom-dropdown relative w-full overflow-visible">
+    <div ref={dropdownRef} className="custom-dropdown custom-dropdown-single-container relative w-full overflow-visible">
       {/* Dropdown trigger button */}
       <div
-        className={`w-full px-4 py-2 h-10 shadow border border-gray-300 rounded-lg cursor-pointer bg-white flex items-center justify-between hover:border-blue-300 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors ${
+        className={`custom-dropdown-trigger w-full px-4 py-2 h-10 shadow border border-gray-300 rounded-lg cursor-pointer bg-white flex items-center justify-between hover:border-blue-300 focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-colors ${
           disabled ? "opacity-50 cursor-not-allowed bg-gray-50 border-gray-200" : ""
         }`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
       >
-        <span className={`truncate min-w-0 ${selectedOption ? "text-gray-900" : "text-gray-400"}`}>
+        <span className={`custom-dropdown-value-text truncate min-w-0 ${selectedOption ? "text-gray-900" : "text-gray-400"}`}>
           {selectedOption ? selectedOption.value : placeholder}
         </span>
 
         {/* Dropdown arrow */}
         <svg
-          className={`w-5 h-5 transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+          className={`custom-dropdown-arrow w-5 h-5 transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -152,7 +152,7 @@ const CustomDropdown = function CustomDropdown({
         >
           {showClearOption && (
             <div
-              className="px-4 py-2 hover:bg-blue-50 cursor-pointer transition-colors"
+              className="custom-dropdown-clear-option px-4 py-2 hover:bg-blue-50 cursor-pointer transition-colors"
               onClick={() => {
                 onChange(null);
                 setIsOpen(false);
@@ -164,7 +164,7 @@ const CustomDropdown = function CustomDropdown({
           {options.map((option) => (
             <div
               key={option.id}
-              className={`px-4 py-2 hover:bg-blue-50 cursor-pointer transition-colors ${
+              className={`custom-dropdown-option px-4 py-2 hover:bg-blue-50 cursor-pointer transition-colors ${
                 value === option.id ? "bg-blue-100 text-blue-900" : ""
               }`}
               onClick={() => handleSelect(option.id)}

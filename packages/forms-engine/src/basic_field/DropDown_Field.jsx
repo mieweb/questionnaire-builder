@@ -30,46 +30,46 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
         // ────────── Edit Mode ──────────
         return (
           <div className="dropdown-field-edit space-y-3">
-            <input
-              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
-              type="text"
-              value={f.question || ""}
-              onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder={placeholder?.question || "Enter question"}
-            />
-
             <div>
-              <CustomDropdown
-                options={f.options || []}
-                value={f.selected || null}
-                onChange={(selectedId) => api.selection.single(selectedId)}
-                placeholder="Select an option"
-                disabled={true}
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Question
+              </label>
+              <input
+                type="text"
+                value={f.question || ""}
+                onChange={(e) => api.field.update("question", e.target.value)}
+                placeholder={placeholder?.question || "Enter question"}
+                className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
               />
             </div>
 
-            <div className="space-y-2">
-              {(f.options || []).map((option) => (
-                <div
-                  key={option.id}
-                  className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors"
-                >
-                  <input
-                    type="text"
-                    value={option.value}
-                    onChange={(e) => api.option.update(option.id, e.target.value)}
-                    placeholder={placeholder?.options || "Option text"}
-                    className="flex-1 min-w-0 outline-none bg-transparent"
-                  />
-                  <button 
-                    onClick={() => api.option.remove(option.id)}
-                    className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
-                    title="Remove option"
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Options
+              </label>
+              <div className="space-y-2">
+                {(f.options || []).map((option) => (
+                  <div
+                    key={option.id}
+                    className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors"
                   >
-                    <TRASHCANTWO_ICON className="w-5 h-5" />
-                  </button>
-                </div>
-              ))}
+                    <input
+                      type="text"
+                      value={option.value}
+                      onChange={(e) => api.option.update(option.id, e.target.value)}
+                      placeholder={placeholder?.options || "Option text"}
+                      className="flex-1 min-w-0 outline-none bg-transparent"
+                    />
+                    <button 
+                      onClick={() => api.option.remove(option.id)}
+                      className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                      title="Remove option"
+                    >
+                      <TRASHCANTWO_ICON className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <button 

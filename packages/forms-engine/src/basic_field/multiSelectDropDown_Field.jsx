@@ -13,8 +13,13 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
         const selectedIds = Array.isArray(f.selected) ? f.selected : [];
 
         const handleChange = (newSelectedIds) => {
-          // Update selected with the new array of ids
-          api.field.update("selected", newSelectedIds);
+          // Use multiToggle for each change to maintain existing logic
+          const preSelected = Array.isArray(f.selected) ? f.selected : [];
+          const toAdd = newSelectedIds.filter((id) => !preSelected.includes(id));
+          const toRemove = preSelected.filter((id) => !newSelectedIds.includes(id));
+          
+          toAdd.forEach((id) => api.selection.multiToggle(id));
+          toRemove.forEach((id) => api.selection.multiToggle(id));
         };
 
         if (isPreview) {

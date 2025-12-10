@@ -44,6 +44,13 @@ When proposing code, **adhere to all of the following**:
    - Avoid side effects, global state changes, or cross-cutting refactors.
    - Keep behavior backward-compatible unless the task explicitly requests otherwise.
 
+5. **Only Change When Explicitly Told**
+   - Do NOT make changes unless explicitly asked, given clear permission, or strongly hinted.
+   - Do NOT assume what should be changed or refactored.
+   - Ask for clarification if instructions are ambiguous.
+   - Respect the current state of the code unless directed otherwise.
+   - Do NOT "improve" or refactor code without being told to do so.
+
 ---
 
 ## Decision Checklist (run before editing)

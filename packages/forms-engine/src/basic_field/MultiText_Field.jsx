@@ -12,20 +12,18 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
         if (isPreview) {
           return (
             <div className={`multitext-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
-                <div className="space-y-2">
+              <div className="space-y-3 pb-4">
+                {f.question && <div className="font-light break-words overflow-hidden">{f.question}</div>}
+                <div className="space-y-2 w-full">
                   {(f.options || []).map((option) => (
-                    <div key={option.id} className="flex items-center border border-black/10 shadow-2xs rounded overflow-hidden">
-                      <label className="px-4 py-2 text-sm text-gray-500 bg-gray-50 whitespace-nowrap border-r border-black/10">
-                        {option.value}
-                      </label>
+                    <div key={option.id} className="flex flex-col gap-1">
+                      <label className="text-xs font-medium text-gray-600 px-0 text-left">{option.value}</label>
                       <input
                         type="text"
                         value={option.answer || ""}
                         onChange={(e) => api.option.updateAnswer(option.id, e.target.value)}
                         placeholder=""
-                        className="flex-1 min-w-0 px-4 py-2 border-0 outline-none focus:ring-0"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors min-w-0"
                       />
                     </div>
                   ))}
@@ -37,33 +35,43 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
 
         return (
           <div className="multitext-field-edit space-y-3">
-            <input
-              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
-              type="text"
-              value={f.question || ""}
-              onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder={placeholder?.question || "Enter question"}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Question
+              </label>
+              <input
+                type="text"
+                value={f.question || ""}
+                onChange={(e) => api.field.update("question", e.target.value)}
+                placeholder={placeholder?.question || "Enter question"}
+                className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+              />
+            </div>
 
-            <div className="space-y-2">
-              {(f.options || []).map((option) => (
-                <div key={option.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
-                  <input
-                    type="text"
-                    value={option.value}
-                    onChange={(e) => api.option.update(option.id, e.target.value)}
-                    placeholder={placeholder?.options || "Field label"}
-                    className="flex-1 min-w-0 outline-none bg-transparent"
-                  />
-                  <button 
-                    onClick={() => api.option.remove(option.id)}
-                    className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
-                    title="Remove field"
-                  >
-                    <TRASHCANTWO_ICON className="w-5 h-5" />
-                  </button>
-                </div>
-              ))}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Fields
+              </label>
+              <div className="space-y-2">
+                {(f.options || []).map((option) => (
+                  <div key={option.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
+                    <input
+                      type="text"
+                      value={option.value}
+                      onChange={(e) => api.option.update(option.id, e.target.value)}
+                      placeholder={placeholder?.options || "Field label"}
+                      className="flex-1 min-w-0 outline-none bg-transparent"
+                    />
+                    <button 
+                      onClick={() => api.option.remove(option.id)}
+                      className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                      title="Remove field"
+                    >
+                      <TRASHCANTWO_ICON className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <button 

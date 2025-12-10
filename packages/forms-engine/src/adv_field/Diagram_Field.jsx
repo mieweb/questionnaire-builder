@@ -128,6 +128,10 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
         return (
           <div ref={containerRef} tabIndex={-1} className="space-y-3">
             <input
+              type="text"
+              value={f.question || ""}
+              onChange={(e) => api.field.update("question", e.target.value)}
+              placeholder={placeholder?.question || "Question / Title"}
               className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
             />
 

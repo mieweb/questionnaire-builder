@@ -554,7 +554,7 @@ export default function DrawingCanvas({
               className="undo-btn w-7 h-7 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded shadow-md transition touch-manipulation disabled:opacity-40 disabled:cursor-not-allowed"
               title="Undo"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="undo-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
               </svg>
             </button>
@@ -564,7 +564,7 @@ export default function DrawingCanvas({
               className="redo-btn w-7 h-7 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded shadow-md transition touch-manipulation disabled:opacity-40 disabled:cursor-not-allowed"
               title="Redo"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="redo-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10H11a8 8 0 00-8 8v2m18-10l-6 6m6-6l-6-6" />
               </svg>
             </button>

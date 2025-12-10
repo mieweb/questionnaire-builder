@@ -14,12 +14,12 @@ const CheckField = React.memo(function CheckField({ field, sectionId }) {
             <div className={`check-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
                 <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
-                <div>
+                <div className="space-y-2">
                   {(f.options || []).map((option) => (
-                    <label key={option.id} className="flex items-start px-3 py-2 my-2 cursor-pointer rounded-lg hover:bg-blue-50 transition-colors gap-2">
+                    <label key={option.id} className="flex items-center px-3 py-2 cursor-pointer rounded-lg hover:bg-blue-50 transition-colors gap-2">
                       <input
                         type="checkbox"
-                        className="flex-shrink-0 w-9 h-9 cursor-pointer mt-1"
+                        className="flex-shrink-0 w-9 h-9 cursor-pointer"
                         checked={Array.isArray(f.selected) && f.selected.includes(option.id)}
                         onChange={() => api.selection.multiToggle(option.id)}
                       />
@@ -34,34 +34,49 @@ const CheckField = React.memo(function CheckField({ field, sectionId }) {
 
         return (
           <div className="check-field-edit space-y-3">
-            <input
-              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
-              type="text"
-              value={f.question || ""}
-              onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder={placeholder?.question || "Enter question"}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Question
+              </label>
+              <input
+                type="text"
+                value={f.question || ""}
+                onChange={(e) => api.field.update("question", e.target.value)}
+                placeholder={placeholder?.question || "Enter question"}
+                className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+              />
+            </div>
 
-            <div className="space-y-2">
-              {(f.options || []).map((option) => (
-                <div key={option.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
-                  <input type="checkbox" disabled className="flex-shrink-0" />
-                  <input
-                    type="text"
-                    value={option.value}
-                    onChange={(e) => api.option.update(option.id, e.target.value)}
-                    placeholder={placeholder?.options || "Option text"}
-                    className="flex-1 min-w-0 outline-none bg-transparent"
-                  />
-                  <button 
-                    onClick={() => api.option.remove(option.id)}
-                    className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
-                    title="Remove option"
-                  >
-                    <TRASHCANTWO_ICON className="w-5 h-5" />
-                  </button>
-                </div>
-              ))}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Options
+              </label>
+              <div className="space-y-2">
+                {(f.options || []).map((option) => (
+                  <div key={option.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
+                    <input
+                      type="checkbox"
+                      checked={false}
+                      disabled
+                      className="flex-shrink-0 w-4 h-4 cursor-not-allowed text-gray-300"
+                    />
+                    <input
+                      type="text"
+                      value={option.value}
+                      onChange={(e) => api.option.update(option.id, e.target.value)}
+                      placeholder={placeholder?.options || "Option text"}
+                      className="flex-1 min-w-0 outline-none bg-transparent"
+                    />
+                    <button 
+                      onClick={() => api.option.remove(option.id)}
+                      className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                      title="Remove option"
+                    >
+                      <TRASHCANTWO_ICON className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
             
             <button 

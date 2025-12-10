@@ -117,6 +117,10 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                 Question / Title
               </label>
               <input
+                type="text"
+                value={f.question || ""}
+                onChange={(e) => api.field.update("question", e.target.value)}
+                placeholder={placeholder?.question || "Question / Title"}
                 className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
               />
             </div>
@@ -161,6 +165,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                   value={f.size || "full"}
                   onChange={(id) => api.field.update("size", id)}
                   placeholder="Select size"
+                  disabled={f.padding === "full-bleed"}
                 />
               </div>
 
