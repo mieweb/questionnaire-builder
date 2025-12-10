@@ -50,20 +50,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
 </html>`;
   }, []);
 
-  React.useEffect(() => {
-    const handleIframeError = (event) => {
-      if (iframeRef.current && event.target === iframeRef.current) {
-        setRenderError("Failed to render HTML content. Check for syntax errors.");
-      }
-    };
-
-    const iframe = iframeRef.current;
-    if (iframe) {
-      iframe.addEventListener("error", handleIframeError);
-      return () => iframe.removeEventListener("error", handleIframeError);
-    }
-  }, []);
-
+  // Removed iframe error event handler useEffect; it does not catch HTML parsing errors in srcDoc.
   // Minimal debounce helper
   function debounce(fn, delay) {
     let timer;
