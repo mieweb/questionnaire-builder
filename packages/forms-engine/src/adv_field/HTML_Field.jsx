@@ -167,6 +167,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                     api.field.update("iframeHeight", Math.max(50, Math.min(800, height)));
                   }}
                   className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
+                  aria-label="Preview height in pixels"
                 />
                 <span className="text-sm text-gray-500">px</span>
               </div>
