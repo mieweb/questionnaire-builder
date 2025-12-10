@@ -268,6 +268,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                 <button
                   onClick={addSampleDataField}
                   className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors"
+                  aria-label="Add sample data field"
                 >
                   + Add Field
                 </button>
