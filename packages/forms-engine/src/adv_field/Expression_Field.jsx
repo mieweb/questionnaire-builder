@@ -44,9 +44,13 @@ const validateExpression = (expr) => {
 const formatResult = (value, format, decimals = 2) => {
   if (value === undefined || value === null) return "";
   if (format === "boolean") return value ? "true" : "false";
-  if (format === "currency") return `$${parseFloat(value).toFixed(decimals)}`;
-  if (format === "percentage") return `${parseFloat(value).toFixed(decimals)}%`;
-  return parseFloat(value).toFixed(decimals);
+  const num = parseFloat(value);
+  if (!Number.isFinite(num)) {
+    return String(value);
+  }
+  if (format === "currency") return `$${num.toFixed(decimals)}`;
+  if (format === "percentage") return `${num.toFixed(decimals)}%`;
+  return num.toFixed(decimals);
 };
 
 // Helper: Build data object from form fields
