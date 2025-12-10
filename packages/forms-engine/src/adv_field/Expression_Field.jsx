@@ -15,7 +15,6 @@ const validateExpression = (expr) => {
   }
   // Disallow spaces and restrict allowed characters
   if (!/^[0-9+\-*/().=!><]+$/.test(expr)) {
-    console.log("Invalid expression:", expr);
     throw new Error("Expression contains invalid characters. Only digits, operators (+-*/), parentheses, and comparison operators are allowed. No spaces.");
   }
   // Disallow exponential operator **
