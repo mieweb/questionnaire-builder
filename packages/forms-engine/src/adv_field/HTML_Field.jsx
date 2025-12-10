@@ -64,11 +64,20 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
     }
   }, []);
 
+  // Minimal debounce helper
+  function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
   // Track viewport width for responsive height scaling
   React.useEffect(() => {
-    const handleResize = () => setViewportWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const debouncedResize = debounce(() => setViewportWidth(window.innerWidth), 175);
+    window.addEventListener('resize', debouncedResize);
+    return () => window.removeEventListener('resize', debouncedResize);
   }, []);
 
   React.useEffect(() => {
