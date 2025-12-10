@@ -57,13 +57,15 @@ const buildFieldData = (order, byId, excludeId) => {
     if (!fld || fld.id === excludeId) return;
     
     if (fld.answer != null && fld.answer !== "") {
-      data[fld.id] = isNaN(fld.answer) ? fld.answer : parseFloat(fld.answer);
+      const numValue = Number(fld.answer);
+      data[fld.id] = Number.isNaN(numValue) ? fld.answer : numValue;
     }
     
     if (fld.fieldType === "section" && fld.fields) {
       fld.fields.forEach((child) => {
         if (child.id !== excludeId && child.answer != null && child.answer !== "") {
-          data[child.id] = isNaN(child.answer) ? child.answer : parseFloat(child.answer);
+          const childNumValue = Number(child.answer);
+          data[child.id] = Number.isNaN(childNumValue) ? child.answer : childNumValue;
         }
       });
     }
