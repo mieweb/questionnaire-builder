@@ -235,7 +235,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
               >
                 <option value="number">Number</option>
                 <option value="currency">Currency ($)</option>
-                <option value="percent">Percent (%)</option>
+                <option value="percentage">Percent (%)</option>
                 <option value="decimal">Decimal</option>
                 <option value="boolean">Boolean (true/false)</option>
               </select>
