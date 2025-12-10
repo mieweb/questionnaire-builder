@@ -254,7 +254,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                   min="0"
                   max="10"
                   value={f.decimalPlaces || 2}
-                  onChange={(e) => api.field.update("decimalPlaces", parseInt(e.target.value))}
+                  onChange={(e) => api.field.update("decimalPlaces", parseInt(e.target.value, 10))}
                 />
               </div>
             )}
