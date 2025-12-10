@@ -1,3 +1,5 @@
+import { NUMERIC_EXPRESSION_FORMATS } from "./fieldTypes-config";
+
 // ────────── Get a field's current value for comparison ──────────
 function getValueOf(field) {
   switch (field?.fieldType) {
@@ -38,8 +40,7 @@ function getValueOf(field) {
 // ────────── Check if field is numeric expression ──────────
 function isNumericExpression(field) {
   if (field?.fieldType !== "expression") return false;
-  const fmt = field?.displayFormat;
-  return fmt === "number" || fmt === "currency" || fmt === "percentage";
+  return NUMERIC_EXPRESSION_FORMATS.includes(field?.displayFormat);
 }
 
 function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }

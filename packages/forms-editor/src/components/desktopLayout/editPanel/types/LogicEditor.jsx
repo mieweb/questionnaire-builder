@@ -1,11 +1,11 @@
 import React from "react";
-import { useUIApi, useFormStore, TRASHCANTWO_ICON } from "@mieweb/forms-engine";
+import { useUIApi, useFormStore, TRASHCANTWO_ICON, NUMERIC_EXPRESSION_FORMATS } from "@mieweb/forms-engine";
 
 // ────────── Operators by field type ──────────
 function getOperatorsForFieldType(fieldType, displayFormat) {
   // Numeric expression fields get comparison operators
   if (fieldType === "expression") {
-    const isNumeric = displayFormat === "number" || displayFormat === "currency" || displayFormat === "percentage";
+    const isNumeric = NUMERIC_EXPRESSION_FORMATS.includes(displayFormat);
     if (isNumeric) {
       return ["equals", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"];
     }

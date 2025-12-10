@@ -474,6 +474,12 @@ export function registerFieldComponent(key, component) {
   if (!componentMap[key]) componentMap[key] = component;
 }
 
+/**
+ * Numeric expression display formats
+ * Used for formatting computed values in expression fields
+ */
+export const NUMERIC_EXPRESSION_FORMATS = ["number", "currency", "percentage"];
+
 export function getFieldComponent(type) {
   return componentMap[type] || null;
 }
