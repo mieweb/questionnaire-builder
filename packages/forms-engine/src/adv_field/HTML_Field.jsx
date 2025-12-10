@@ -2,7 +2,7 @@ import React from "react";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 
-const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
+const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
   const [editMode, setEditMode] = React.useState(false);
   const [renderError, setRenderError] = React.useState(null);
@@ -90,7 +90,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                 title="HTML Content"
               />
               {renderError && (
-                <div role="alert" className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
+                <div role="alert" className="render-error mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
                   {renderError}
                 </div>
               )}
@@ -105,7 +105,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
             <div className="flex gap-2">
               <button
                 onClick={() => setEditMode(false)}
-                className={`px-4 py-2 rounded transition-colors ${!editMode
+                className={`edit-mode-btn px-4 py-2 rounded transition-colors ${!editMode
                   ? "bg-blue-500 hover:bg-blue-600 text-white"
                   : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                   }`}
@@ -114,7 +114,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
               </button>
               <button
                 onClick={() => setEditMode(true)}
-                className={`px-4 py-2 rounded transition-colors ${editMode
+                className={`preview-mode-btn px-4 py-2 rounded transition-colors ${editMode
                   ? "bg-blue-500 hover:bg-blue-600 text-white"
                   : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                   }`}
@@ -125,10 +125,10 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
 
             {/* Height Control */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="height-control-label block text-sm font-medium text-gray-700 mb-1">
                 Preview Height (px)
               </label>
-              <div className="flex gap-2 items-center">
+              <div className="height-control-inputs flex gap-2 items-center">
                 <input
                   type="range"
                   min="50"
@@ -136,11 +136,11 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                   step="10"
                   value={iframeHeight}
                   onChange={(e) => {
-                    const height = parseInt(e.target.value);
+                    const height = Math.max(50, Math.min(800, parseInt(e.target.value)));
                     setIframeHeight(height);
                     api.field.update("iframeHeight", height);
                   }}
-                  className="flex-1"
+                  className="height-slider flex-1"
                   aria-label="Preview height in pixels"
                 />
                 <input
@@ -154,17 +154,17 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                     setIframeHeight(Math.max(50, Math.min(800, height)));
                     api.field.update("iframeHeight", Math.max(50, Math.min(800, height)));
                   }}
-                  className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
+                  className="height-input w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
                   aria-label="Preview height in pixels"
                 />
-                <span className="text-sm text-gray-500">px</span>
+                <span className="height-unit text-sm text-gray-500">px</span>
               </div>
             </div>
 
             {editMode ? (
               // Preview Mode
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="preview-label block text-sm font-medium text-gray-700 mb-2">
                   Preview
                 </label>
                 <iframe
@@ -174,13 +174,13 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                   style={{
                     width: "100%",
                     border: "1px solid #ddd",
-                    height: `${iframeHeight}px`,
+                    height: `${getResponsiveHeight(iframeHeight)}px`,
                     background: "#fafafa",
                   }}
                   title="HTML Preview"
                 />
                 {renderError && (
-                  <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700" role="alert">
+                  <div className="preview-error mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700" role="alert">
                     {renderError}
                   </div>
                 )}
@@ -188,11 +188,11 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
             ) : (
               // Edit Mode
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="edit-label block text-sm font-medium text-gray-700 mb-2">
                   HTML Content
                 </label>
                 <textarea
-                  className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors font-mono text-sm max-h-64 overflow-y-auto"
+                  className="html-textarea px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors font-mono text-sm max-h-64 overflow-y-auto"
                   value={f.htmlContent || ""}
                   onChange={(e) => api.field.update("htmlContent", e.target.value)}
                   placeholder="Enter your HTML content here... (e.g., &lt;p&gt;text&lt;/p&gt;)"
@@ -209,4 +209,4 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
   );
 });
 
-export default HTML_Field;
+export default HtmlField;
