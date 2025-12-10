@@ -166,6 +166,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                   onChange={(id) => api.field.update("size", id)}
                   placeholder="Select size"
                   disabled={f.padding === "full-bleed"}
+                  disabled={f.padding === "full-bleed"}
                 />
               </div>
 
