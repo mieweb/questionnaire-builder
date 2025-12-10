@@ -74,9 +74,6 @@ function evaluate(cond, byId) {
         return actualNum < expectedNum;
       case "lessThanOrEqual":
         return actualNum <= expectedNum;
-      case "contains":
-        // For numeric fields, "contains" acts like range check (value starts with prefix)
-        return String(actualNum).startsWith(String(expectedNum));
       default:
         return false;
     }

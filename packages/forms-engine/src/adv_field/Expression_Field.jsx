@@ -9,34 +9,13 @@ const substituteFields = (expression, data) =>
 
 // Helper: Validate expression syntax
 const validateExpression = (expr) => {
-  // Disallow single = (not part of ==, >=, <=, etc.)
-  if (/(?<![=!<>])=(?!=)/.test(expr)) {
+  // Allow only valid characters: numbers, operators, parentheses, field references, spaces
+  if (!/^[\d+\-*/(). {}\w=!<>]*$/.test(expr)) {
+    throw new Error("Expression contains invalid characters.");
+  }
+  // Disallow single = (must be ==, <=, >=, or !=)
+  if (/[^=!<>]=[^=]|^=[^=]|[^=]=$/.test(expr)) {
     throw new Error("Single = is not allowed. Use == for comparison.");
-  }
-  // Disallow spaces and restrict allowed characters
-  if (!/^[0-9+\-*/().=!><]+$/.test(expr)) {
-    throw new Error("Expression contains invalid characters. Only digits, operators (+-*/), parentheses, and comparison operators are allowed. No spaces.");
-  }
-  // Disallow exponential operator **
-  if (/\*\*/.test(expr)) {
-    throw new Error("Exponential operator (**) is not allowed.");
-  }
-  // Length limit
-  if (expr.length > 200) {
-    throw new Error("Expression is too long (max 200 characters).");
-  }
-  // Parentheses nesting limit
-  let maxDepth = 0, depth = 0;
-  for (let i = 0; i < expr.length; i++) {
-    if (expr[i] === '(') {
-      depth++;
-      if (depth > maxDepth) maxDepth = depth;
-    } else if (expr[i] === ')') {
-      depth--;
-    }
-  }
-  if (maxDepth > 10) {
-    throw new Error("Expression has too many nested parentheses (max 10).");
   }
 };
 
@@ -61,15 +40,13 @@ const buildFieldData = (order, byId, excludeId) => {
     if (!fld || fld.id === excludeId) return;
     
     if (fld.answer != null && fld.answer !== "") {
-      const numValue = Number(fld.answer);
-      data[fld.id] = Number.isNaN(numValue) ? fld.answer : numValue;
+      data[fld.id] = isNaN(fld.answer) ? fld.answer : parseFloat(fld.answer);
     }
     
     if (fld.fieldType === "section" && fld.fields) {
       fld.fields.forEach((child) => {
         if (child.id !== excludeId && child.answer != null && child.answer !== "") {
-          const childNumValue = Number(child.answer);
-          data[child.id] = Number.isNaN(childNumValue) ? child.answer : childNumValue;
+          data[child.id] = isNaN(child.answer) ? child.answer : parseFloat(child.answer);
         }
       });
     }
@@ -105,7 +82,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
     try {
       const sampleData = {};
       sampleDataFields.forEach((f) => {
-        if (f.fieldId && f.value !== undefined) {
+        if (f.fieldId && f.value) {
           sampleData[f.fieldId] = isNaN(f.value) ? f.value : parseFloat(f.value);
         }
       });
@@ -130,7 +107,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
   // Handle adding new sample data field
   const addSampleDataField = () => {
-    const newFields = [...sampleDataFields, { fieldName: "", sampleValue: "" }];
+    const newFields = [...sampleDataFields, { fieldId: "", value: "" }];
     setSampleDataFields(newFields);
     ctrl.api.field.update("sampleDataFields", newFields);
   };
@@ -159,11 +136,17 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
   // Store the computed numeric result in field.answer
   React.useEffect(() => {
-    if (computedResult !== undefined && computedResult !== null && computedResult !== field.answer) {
-      // Use a microtask to defer the update
-      Promise.resolve().then(() => {
-        ctrl.api.field.update("answer", computedResult);
-      });
+    if (computedResult !== undefined && computedResult !== null) {
+      // Use epsilon-based comparison for floating-point numbers
+      const hasChanged = typeof computedResult === "number" && typeof field.answer === "number"
+        ? Math.abs(computedResult - field.answer) > Number.EPSILON
+        : computedResult !== field.answer;
+      
+      if (hasChanged) {
+        Promise.resolve().then(() => {
+          ctrl.api.field.update("answer", computedResult);
+        });
+      }
     }
   }, [computedResult, field.answer, ctrl.api.field]);
 
@@ -172,9 +155,9 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
       {({ api, isPreview, field: f }) => {
         if (isPreview) {
           return (
-            <div className="space-y-2 pb-4">
-              {f.label && <div className="font-light text-sm text-gray-600">{f.label}</div>}
-              <div className="p-3 bg-gray-50 border border-gray-300 rounded-lg">
+            <div className="expression-field-preview space-y-2 pb-4">
+              {f.label && <div className="expression-label font-light text-sm text-gray-600">{f.label}</div>}
+              <div className="expression-preview-box p-3 bg-gray-50 border border-gray-300 rounded-lg">
                 <p className="text-sm text-gray-600 mb-1">
                   <span className="font-medium">Expression:</span> {f.expression || "No expression defined"}
                 </p>
@@ -193,9 +176,9 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
         }
 
         return (
-          <div className="space-y-4 w-full">
+          <div className="expression-field-editor space-y-4 w-full">
             {/* Label */}
-            <div>
+            <div className="label-field">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Label (Optional)
               </label>
@@ -209,7 +192,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
             </div>
 
             {/* Expression Input */}
-            <div>
+            <div className="expression-field">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Expression / Formula
               </label>
@@ -221,52 +204,49 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                 rows={4}
               />
               {samplePreview.error ? (
-                <p className="text-xs text-red-600 mt-1">Error: {samplePreview.error}</p>
+                <p className="expression-error text-xs text-red-600 mt-1">Error: {samplePreview.error}</p>
               ) : (
-                <p className="text-xs text-gray-500 mt-1">
-                  Use {'{fieldId}'} to reference other fields. Arithmetic: {'{price} * {quantity}'}. Comparison: {'{age} >= 18'} → true/false.
+                <p className="expression-help text-xs text-gray-500 mt-1">
+                  Use {'{fieldId}'} to reference other fields. Arithmetic: {'{price} * {quantity}'}. Comparison: {'{age} >= 18'} → true/false. "contains" is not supported for numeric fields.
                 </p>
               )}
             </div>
 
             {/* Display Format */}
-            <div>
+            <div className="display-format-field">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Display Format
               </label>
               <select
-                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer transition-colors"
+                className="display-format px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer transition-colors"
                 value={f.displayFormat || "number"}
                 onChange={(e) => api.field.update("displayFormat", e.target.value)}
               >
                 <option value="number">Number</option>
                 <option value="currency">Currency ($)</option>
-                <option value="percentage">Percent (%)</option>
-                <option value="decimal">Decimal</option>
+                <option value="percentage">Percentage (%)</option>
                 <option value="boolean">Boolean (true/false)</option>
               </select>
             </div>
 
-            {/* Decimal Places (for decimal format) */}
-            {f.displayFormat === "decimal" && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Decimal Places
-                </label>
-                <input
-                  className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
-                  type="number"
-                  min="0"
-                  max="10"
-                  value={f.decimalPlaces || 2}
-                  onChange={(e) => api.field.update("decimalPlaces", parseInt(e.target.value, 10))}
-                />
-              </div>
-            )}
+            {/* Decimal Places (for all numeric formats) */}
+            <div className="decimal-places-field">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Decimal Places
+              </label>
+              <input
+                className="decimal-places px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+                type="number"
+                min="0"
+                max="10"
+                value={f.decimalPlaces || 2}
+                onChange={(e) => api.field.update("decimalPlaces", parseInt(e.target.value, 10))}
+              />
+            </div>
 
             {/* Sample Data for Preview */}
-            <div className="border-t pt-4">
-              <div className="flex items-center justify-between mb-3">
+            <div className="sample-data-section border-t pt-4">
+              <div className="sample-data-header flex items-center justify-between mb-3">
                 <label className="block text-sm font-medium text-gray-700">
                   Sample Data (for preview testing)
                 </label>
@@ -282,31 +262,30 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
               {(sampleDataFields || []).length === 0 ? (
                 <p className="text-sm text-gray-500 italic">No sample fields added yet. Add fields to preview the expression result.</p>
               ) : (
-                <div className="space-y-2">
+                <div className="sample-data-list space-y-2">
                   {sampleDataFields.map((field, idx) => (
-                    <div key={idx} className="flex gap-2 items-end">
-                      <div className="flex-1">
+                    <div key={idx} className="sample-data-row flex gap-2 items-end">
+                      <div className="field-id-input flex-1">
                         <input
                           className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors text-sm"
                           type="text"
-                          value={field.fieldName || ""}
-                          onChange={(e) => updateSampleDataField(idx, "fieldName", e.target.value)}
-                          placeholder="Field ID (e.g., fieldId_price)"
+                          value={field.fieldId || ""}
+                          onChange={(e) => updateSampleDataField(idx, "fieldId", e.target.value)}
+                          placeholder="Field ID (e.g., completed)"
                         />
                       </div>
-                      <div className="flex-1">
+                      <div className="field-value-input flex-1">
                         <input
                           className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors text-sm"
                           type="text"
-                          value={field.sampleValue || ""}
-                          onChange={(e) => updateSampleDataField(idx, "sampleValue", e.target.value)}
-                          placeholder="Sample value (e.g., 100)"
+                          value={field.value || ""}
+                          onChange={(e) => updateSampleDataField(idx, "value", e.target.value)}
+                          placeholder="Value (e.g., 8)"
                         />
                       </div>
                       <button
                         onClick={() => removeSampleDataField(idx)}
-                        className="px-3 py-2 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded transition-colors"
-                        aria-label={`Remove sample field "${field.fieldName || `#${idx + 1}`}"`}
+                        className="remove-sample-btn px-3 py-2 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded transition-colors"
                       >
                         Remove
                       </button>
@@ -318,7 +297,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
             {/* Preview Result */}
             {sampleDataFields?.length > 0 && (
-              <div className="p-3 bg-blue-50 border border-blue-300 rounded-lg">
+              <div className="expression-preview-result p-3 bg-blue-50 border border-blue-300 rounded-lg">
                 <p className="text-sm font-medium text-gray-700 mb-2">Preview Result:</p>
                 {samplePreview.error ? (
                   <p className="text-sm text-red-600">Error: {samplePreview.error}</p>
