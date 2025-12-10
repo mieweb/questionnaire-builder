@@ -65,7 +65,7 @@ function evaluate(cond, byId) {
 
     switch (cond?.operator) {
       case "equals":
-        return actualNum === expectedNum;
+        return Math.abs(actualNum - expectedNum) < Number.EPSILON * 10;
       case "greaterThan":
         return actualNum > expectedNum;
       case "greaterThanOrEqual":
