@@ -154,6 +154,7 @@ const HTML_Field = React.memo(function HTML_Field({ field, sectionId }) {
                     api.field.update("iframeHeight", height);
                   }}
                   className="flex-1"
+                  aria-label="Preview height in pixels"
                 />
                 <input
                   type="number"
