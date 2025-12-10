@@ -302,6 +302,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                       <button
                         onClick={() => removeSampleDataField(idx)}
                         className="px-3 py-2 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded transition-colors"
+                        aria-label={`Remove sample field "${field.fieldName || `#${idx + 1}`}"`}
                       >
                         Remove
                       </button>
