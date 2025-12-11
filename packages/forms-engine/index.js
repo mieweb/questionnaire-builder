@@ -2,6 +2,7 @@ import './src/styles.css';
 
 // advanced fields
 export { default as Section_Field } from './src/adv_field/section_Field.jsx';
+export { default as HtmlField } from './src/adv_field/HTML_Field.jsx';
 
 // basic fields
 export { default as Boolean_Field } from './src/basic_field/Boolean_Field.jsx';

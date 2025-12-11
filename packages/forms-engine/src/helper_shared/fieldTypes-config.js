@@ -15,6 +15,7 @@ import SignatureField from "../adv_field/Signature_Field"
 import DiagramField from "../adv_field/Diagram_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 import ImageField from "../adv_field/Image_Field"
+import HTMLField from "../adv_field/HTML_Field"
 import ExpressionField from "../adv_field/Expression_Field"
 
 /**
@@ -427,7 +428,20 @@ const fieldTypes = {
       caption: "Optional caption below image",
     }
   },
-  expression: {
+  html: {
+    label: "HTML Block",
+    category: "Rich Content",
+    componentKey: "html",
+    defaultProps: {
+      fieldType: "html",
+      htmlContent: "",
+      iframeHeight: 400,
+    },
+    placeholder: {
+      htmlContent: "<p>Enter your HTML content here...</p>",
+    }
+  },
+ expression: {
     label: "Expression Field",
     category: "Rich Content",
     componentKey: "expression",
@@ -467,6 +481,7 @@ const componentMap = {
   diagram: DiagramField,
   unsupported: UnsupportedField,
   image: ImageField,
+  html: HTMLField,
   expression: ExpressionField,
 };
 
