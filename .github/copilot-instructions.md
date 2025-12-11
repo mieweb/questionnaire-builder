@@ -72,6 +72,16 @@ If any box is unchecked, **simplify**.
 
 ### React & Tailwind Specific
 
+- **Semantic Class Names Before Tailwind**: Always add semantic/descriptive class names BEFORE Tailwind utility classes for better readability and maintainability. Apply this to all components, HTML structures, and JSX elements.
+  ```jsx
+  // ❌ BAD - Tailwind only, no semantic context
+  <div className="flex gap-2 p-4 bg-white rounded shadow-md">
+  
+  // ✅ GOOD - semantic name first, then Tailwind
+  <div className="tool-selector flex gap-2 p-4 bg-white rounded shadow-md">
+  <button className="size-picker-btn w-7 h-7 rounded bg-blue-500">
+  ```
+
 - **Never use `sr-only` with flex layouts**: The `sr-only` class (screen-reader only) can cause layout issues when combined with flex containers. Use `hidden` (display: none) instead to hide elements like radio buttons.
   ```jsx
   // ❌ BAD - causes white space issues with flex
@@ -80,6 +90,7 @@ If any box is unchecked, **simplify**.
   // ✅ GOOD - use hidden instead
   <input type="radio" className="hidden" />
   ```
+
 - **Use UnselectableRadio for radio inputs**: When creating fields with radio buttons that need unselect functionality, use the `UnselectableRadio` component with `onSelect`/`onUnselect` callbacks instead of inline click handlers.
 
 - **Avoid Index as Key**: Using array index as `key` is only acceptable for truly static lists where order/count never changes. For dynamic lists (items can be reordered, added, or removed), always use stable unique identifiers (like `item.id`).

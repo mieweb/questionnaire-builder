@@ -22,7 +22,7 @@ export { default as Unsupported_Field } from './src/basic_field/Unsupported_Fiel
 // shared helper components and hooks
 export { default as FieldWrapper } from './src/helper_shared/FieldWrapper.jsx';
 export { default as useFieldController } from './src/helper_shared/useFieldController.jsx';
-export { default as fieldTypes, getFieldComponent, registerFieldComponent } from './src/helper_shared/fieldTypes-config.js';
+export { default as fieldTypes, getFieldComponent, registerFieldComponent, NUMERIC_EXPRESSION_FORMATS } from './src/helper_shared/fieldTypes-config.js';
 export { initializeField, initializeFieldOptions } from './src/helper_shared/initializedField.js';
 export { isVisible } from './src/helper_shared/logicVisibility.js';
 export { detectSchemaType, adaptSchema, MIE_FORMS_SCHEMA_TYPE } from './src/helper_shared/schemaAdapter.js';

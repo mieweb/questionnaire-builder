@@ -1,0 +1,675 @@
+{
+  "schemaType": "mieforms-v1.0",
+  "title": "Expression Field - Comprehensive Test Suite",
+  "description": "Complete test coverage for expression field edge cases and scenarios",
+  "fields": [
+    {
+      "id": "section1",
+      "fieldType": "section",
+      "title": "Basic Math Operations",
+      "fields": [
+        {
+          "id": "price",
+          "fieldType": "text",
+          "question": "Enter Price ($)",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "quantity",
+          "fieldType": "text",
+          "question": "Enter Quantity",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "taxRate",
+          "fieldType": "text",
+          "question": "Tax Rate (%)",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "subtotal",
+          "fieldType": "expression",
+          "label": "Subtotal",
+          "expression": "{price} * {quantity}",
+          "displayFormat": "currency",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "price", "value": "10"},
+            {"fieldId": "quantity", "value": "5"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "taxAmount",
+          "fieldType": "expression",
+          "label": "Tax Amount",
+          "expression": "{subtotal} * ({taxRate} / 100)",
+          "displayFormat": "currency",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "subtotal", "value": "50"},
+            {"fieldId": "taxRate", "value": "8"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "total",
+          "fieldType": "expression",
+          "label": "Total",
+          "expression": "{subtotal} + {taxAmount}",
+          "displayFormat": "currency",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "subtotal", "value": "50"},
+            {"fieldId": "taxAmount", "value": "4"}
+          ],
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section2",
+      "fieldType": "section",
+      "title": "Comparison Tests",
+      "fields": [
+        {
+          "id": "age",
+          "fieldType": "text",
+          "question": "Enter Age",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "isAdult",
+          "fieldType": "expression",
+          "label": "Is Adult?",
+          "expression": "{age} >= 18",
+          "displayFormat": "boolean",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "age", "value": "25"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "score1",
+          "fieldType": "text",
+          "question": "Score 1",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "score2",
+          "fieldType": "text",
+          "question": "Score 2",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "isPassing",
+          "fieldType": "expression",
+          "label": "Passing Grade?",
+          "expression": "({score1} + {score2}) / 2 >= 70",
+          "displayFormat": "boolean",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "score1", "value": "75"},
+            {"fieldId": "score2", "value": "80"}
+          ],
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section3",
+      "fieldType": "section",
+      "title": "Percentage & Number Format Tests",
+      "fields": [
+        {
+          "id": "completed",
+          "fieldType": "text",
+          "question": "Tasks Completed",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "totalTasks",
+          "fieldType": "text",
+          "question": "Total Tasks",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "completionRate",
+          "fieldType": "expression",
+          "label": "Completion Rate",
+          "expression": "({completed} / {totalTasks}) * 100",
+          "displayFormat": "percentage",
+          "decimalPlaces": 1,
+          "sampleDataFields": [
+            {"fieldId": "completed", "value": "8"},
+            {"fieldId": "totalTasks", "value": "10"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "num1",
+          "fieldType": "text",
+          "question": "Number 1",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "num2",
+          "fieldType": "text",
+          "question": "Number 2",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "average",
+          "fieldType": "expression",
+          "label": "Average",
+          "expression": "({num1} + {num2}) / 2",
+          "displayFormat": "number",
+          "decimalPlaces": 3,
+          "sampleDataFields": [
+            {"fieldId": "num1", "value": "10.5"},
+            {"fieldId": "num2", "value": "15.3"}
+          ],
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section4",
+      "fieldType": "section",
+      "title": "Complex Expressions",
+      "fields": [
+        {
+          "id": "hours",
+          "fieldType": "text",
+          "question": "Hours Worked",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "hourlyRate",
+          "fieldType": "text",
+          "question": "Hourly Rate ($)",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "overtimeHours",
+          "fieldType": "text",
+          "question": "Overtime Hours",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "salary",
+          "fieldType": "expression",
+          "label": "Total Salary",
+          "expression": "({hours} * {hourlyRate}) + ({overtimeHours} * {hourlyRate} * 1.5)",
+          "displayFormat": "currency",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "hours", "value": "40"},
+            {"fieldId": "hourlyRate", "value": "25"},
+            {"fieldId": "overtimeHours", "value": "5"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "discount",
+          "fieldType": "text",
+          "question": "Discount (%)",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "originalPrice",
+          "fieldType": "text",
+          "question": "Original Price ($)",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "finalPrice",
+          "fieldType": "expression",
+          "label": "Final Price After Discount",
+          "expression": "{originalPrice} * (1 - {discount} / 100)",
+          "displayFormat": "currency",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "originalPrice", "value": "100"},
+            {"fieldId": "discount", "value": "20"}
+          ],
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section5",
+      "fieldType": "section",
+      "title": "Edge Cases - Empty & Zero Values",
+      "fields": [
+        {
+          "id": "emptyField1",
+          "fieldType": "text",
+          "question": "Leave Empty Field 1",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "emptyField2",
+          "fieldType": "text",
+          "question": "Leave Empty Field 2",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "emptySum",
+          "fieldType": "expression",
+          "label": "Empty Fields Sum (should be 0)",
+          "expression": "{emptyField1} + {emptyField2}",
+          "displayFormat": "number",
+          "decimalPlaces": 0,
+          "sampleDataFields": [],
+          "answer": ""
+        },
+        {
+          "id": "zeroValue",
+          "fieldType": "text",
+          "question": "Enter Zero",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "zeroMultiply",
+          "fieldType": "expression",
+          "label": "Multiply by Zero",
+          "expression": "{zeroValue} * 100",
+          "displayFormat": "number",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "zeroValue", "value": "0"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "divideByZeroTest",
+          "fieldType": "text",
+          "question": "Enter Zero for Division Test",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "divideByZero",
+          "fieldType": "expression",
+          "label": "Divide by Zero (should show Infinity or error)",
+          "expression": "100 / {divideByZeroTest}",
+          "displayFormat": "number",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "divideByZeroTest", "value": "0"}
+          ],
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section6",
+      "fieldType": "section",
+      "title": "Edge Cases - Decimal Precision",
+      "fields": [
+        {
+          "id": "decimal1",
+          "fieldType": "text",
+          "question": "Enter 0.1",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "decimal2",
+          "fieldType": "text",
+          "question": "Enter 0.2",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "decimalSum",
+          "fieldType": "expression",
+          "label": "0.1 + 0.2 (floating point test)",
+          "expression": "{decimal1} + {decimal2}",
+          "displayFormat": "number",
+          "decimalPlaces": 10,
+          "sampleDataFields": [
+            {"fieldId": "decimal1", "value": "0.1"},
+            {"fieldId": "decimal2", "value": "0.2"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "veryLargeNumber",
+          "fieldType": "text",
+          "question": "Enter 999999999",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "largeCalc",
+          "fieldType": "expression",
+          "label": "Large Number Calculation",
+          "expression": "{veryLargeNumber} * {veryLargeNumber}",
+          "displayFormat": "number",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "veryLargeNumber", "value": "999999999"}
+          ],
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section7",
+      "fieldType": "section",
+      "title": "Edge Cases - Negative Numbers",
+      "fields": [
+        {
+          "id": "negativeNum1",
+          "fieldType": "text",
+          "question": "Enter -10",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "negativeNum2",
+          "fieldType": "text",
+          "question": "Enter -5",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "negativeSum",
+          "fieldType": "expression",
+          "label": "Sum of Negatives",
+          "expression": "{negativeNum1} + {negativeNum2}",
+          "displayFormat": "number",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "negativeNum1", "value": "-10"},
+            {"fieldId": "negativeNum2", "value": "-5"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "negativeProduct",
+          "fieldType": "expression",
+          "label": "Negative Multiplication",
+          "expression": "{negativeNum1} * {negativeNum2}",
+          "displayFormat": "number",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "negativeNum1", "value": "-10"},
+            {"fieldId": "negativeNum2", "value": "-5"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "negativeComparison",
+          "fieldType": "expression",
+          "label": "Is negative1 less than negative2?",
+          "expression": "{negativeNum1} < {negativeNum2}",
+          "displayFormat": "boolean",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "negativeNum1", "value": "-10"},
+            {"fieldId": "negativeNum2", "value": "-5"}
+          ],
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section8",
+      "fieldType": "section",
+      "title": "Edge Cases - Complex Nested Expressions",
+      "fields": [
+        {
+          "id": "base",
+          "fieldType": "text",
+          "question": "Base Value",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "level1",
+          "fieldType": "expression",
+          "label": "Level 1: Base * 2",
+          "expression": "{base} * 2",
+          "displayFormat": "number",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "base", "value": "10"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "level2",
+          "fieldType": "expression",
+          "label": "Level 2: Level1 * 3",
+          "expression": "{level1} * 3",
+          "displayFormat": "number",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "level1", "value": "20"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "level3",
+          "fieldType": "expression",
+          "label": "Level 3: Level2 + Base",
+          "expression": "{level2} + {base}",
+          "displayFormat": "number",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "level2", "value": "60"},
+            {"fieldId": "base", "value": "10"}
+          ],
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section9",
+      "fieldType": "section",
+      "title": "Edge Cases - Comparison Chain",
+      "fields": [
+        {
+          "id": "value1",
+          "fieldType": "text",
+          "question": "Value 1",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "value2",
+          "fieldType": "text",
+          "question": "Value 2",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "value3",
+          "fieldType": "text",
+          "question": "Value 3",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "equalityTest",
+          "fieldType": "expression",
+          "label": "Are value1 and value2 equal?",
+          "expression": "{value1} == {value2}",
+          "displayFormat": "boolean",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "value1", "value": "5"},
+            {"fieldId": "value2", "value": "5"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "notEqualTest",
+          "fieldType": "expression",
+          "label": "Are value1 and value3 NOT equal?",
+          "expression": "{value1} != {value3}",
+          "displayFormat": "boolean",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "value1", "value": "5"},
+            {"fieldId": "value3", "value": "10"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "rangeTest",
+          "fieldType": "expression",
+          "label": "Is value2 between value1 and value3?",
+          "expression": "({value2} >= {value1}) * ({value2} <= {value3})",
+          "displayFormat": "boolean",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "value1", "value": "5"},
+            {"fieldId": "value2", "value": "7"},
+            {"fieldId": "value3", "value": "10"}
+          ],
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section10",
+      "fieldType": "section",
+      "title": "Edge Cases - Percentage Display",
+      "fields": [
+        {
+          "id": "part",
+          "fieldType": "text",
+          "question": "Part",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "whole",
+          "fieldType": "text",
+          "question": "Whole",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "percentageCalc",
+          "fieldType": "expression",
+          "label": "Percentage (part/whole * 100)",
+          "expression": "({part} / {whole}) * 100",
+          "displayFormat": "percentage",
+          "decimalPlaces": 2,
+          "sampleDataFields": [
+            {"fieldId": "part", "value": "25"},
+            {"fieldId": "whole", "value": "200"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "over100Percent",
+          "fieldType": "expression",
+          "label": "Over 100% Test",
+          "expression": "({part} / {whole}) * 100",
+          "displayFormat": "percentage",
+          "decimalPlaces": 1,
+          "sampleDataFields": [
+            {"fieldId": "part", "value": "150"},
+            {"fieldId": "whole", "value": "100"}
+          ],
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section11",
+      "fieldType": "section",
+      "title": "Edge Cases - Order of Operations",
+      "fields": [
+        {
+          "id": "opVal1",
+          "fieldType": "text",
+          "question": "Enter 2",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "opVal2",
+          "fieldType": "text",
+          "question": "Enter 3",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "opVal3",
+          "fieldType": "text",
+          "question": "Enter 4",
+          "answer": "",
+          "required": false
+        },
+        {
+          "id": "orderTest1",
+          "fieldType": "expression",
+          "label": "2 + 3 * 4 (should be 14, not 20)",
+          "expression": "{opVal1} + {opVal2} * {opVal3}",
+          "displayFormat": "number",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "opVal1", "value": "2"},
+            {"fieldId": "opVal2", "value": "3"},
+            {"fieldId": "opVal3", "value": "4"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "orderTest2",
+          "fieldType": "expression",
+          "label": "(2 + 3) * 4 (should be 20)",
+          "expression": "({opVal1} + {opVal2}) * {opVal3}",
+          "displayFormat": "number",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "opVal1", "value": "2"},
+            {"fieldId": "opVal2", "value": "3"},
+            {"fieldId": "opVal3", "value": "4"}
+          ],
+          "answer": ""
+        },
+        {
+          "id": "orderTest3",
+          "fieldType": "expression",
+          "label": "2 * 3 + 4 (should be 10)",
+          "expression": "{opVal1} * {opVal2} + {opVal3}",
+          "displayFormat": "number",
+          "decimalPlaces": 0,
+          "sampleDataFields": [
+            {"fieldId": "opVal1", "value": "2"},
+            {"fieldId": "opVal2", "value": "3"},
+            {"fieldId": "opVal3", "value": "4"}
+          ],
+          "answer": ""
+        }
+      ]
+    }
+  ]
+}
