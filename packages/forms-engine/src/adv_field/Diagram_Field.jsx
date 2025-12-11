@@ -1,4 +1,5 @@
 import React from "react";
+import CustomDropdown from "../helper_shared/CustomDropdown";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 import DrawingCanvas from "../helper_shared/DrawingCanvas";
@@ -97,7 +98,7 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
           return (
             <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
               <div className="px-6 pt-6 pb-2">
-                <div className="font-light mb-2">{f.question || "Question"}</div>
+                <div className="font-light mb-2 break-words overflow-hidden">{f.question || "Question"}</div>
               </div>
               <div className="flex justify-center mx-auto px-2 pb-2 lg:px-6 lg:pb-4">
                 <div className="w-full max-w-[80vw] md:max-w-[75vw] lg:max-w-full">
@@ -127,11 +128,11 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
         return (
           <div ref={containerRef} tabIndex={-1} className="space-y-3">
             <input
-              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
-              placeholder={placeholder?.question || "Enter question"}
+              placeholder={placeholder?.question || "Question / Title"}
+              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
             />
 
             <div className="p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-sm">
@@ -162,24 +163,22 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                     <label className="block text-sm text-gray-600 mb-2">
                       Quick Presets
                     </label>
-                    <select
+                    <CustomDropdown
+                      options={DIAGRAM_PRESETS.map(preset => ({
+                        id: preset.id,
+                        value: preset.label
+                      }))}
                       value={getSelectedPreset()}
-                      onChange={(e) => {
-                        const preset = DIAGRAM_PRESETS.find(p => p.id === e.target.value);
+                      onChange={(presetId) => {
+                        const preset = DIAGRAM_PRESETS.find(p => p.id === presetId);
                         if (preset) {
                           api.field.update("diagramImage", preset.image);
                           api.field.update("fileName", preset.label);
                         }
                       }}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer transition-colors bg-white"
-                    >
-                      <option value="">Select a diagram...</option>
-                      {DIAGRAM_PRESETS.map(preset => (
-                        <option key={preset.id} value={preset.id}>
-                          {preset.label}
-                        </option>
-                      ))}
-                    </select>
+                      placeholder="Select a diagram..."
+                      showClearOption={true}
+                    />
                   </div>
                   
                   {f.diagramImage ? (

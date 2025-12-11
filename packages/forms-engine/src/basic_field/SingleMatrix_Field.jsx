@@ -20,7 +20,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
           return (
             <div className={`singlematrix-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="pb-4">
-                <div className="font-light mb-3">{f.question || "Question"}</div>
+                <div className="font-light mb-3 break-words overflow-hidden">{f.question || "Question"}</div>
                 
                 {rows.length > 0 && columns.length > 0 ? (
                   <div className="singlematrix-field-grid space-y-1 border-t border-gray-200 pt-3">
@@ -95,7 +95,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
         return (
           <div className="singlematrix-field-edit space-y-3">
             <input
-              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
+              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}

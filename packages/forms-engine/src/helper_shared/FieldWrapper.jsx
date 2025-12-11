@@ -87,7 +87,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
 
         {/* actions: Edit (mobile), Toggle (small/big view), Delete */}
         <div className="field-wrapper-actions flex items-center gap-1 flex-shrink-0">
-          <button onClick={onEditClick} className="block lg:hidden p-1.5 hover:bg-white rounded transition-colors" title="Edit" aria-label="Edit field">
+          <button onClick={onEditClick} className="field-edit-btn block lg:hidden p-1.5 hover:bg-white rounded transition-colors" title="Edit" aria-label="Edit field">
             <EDIT_ICON className="h-5 w-5 text-gray-600" />
           </button>
 
@@ -102,12 +102,12 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
             aria-controls={`fw-body-${ctrl.field?.id}`}
             title={open ? "Collapse" : "Expand"}
             aria-label={open ? "Collapse field" : "Expand field"}
-            className="p-1.5 hover:bg-white rounded transition-colors"
+            className="field-collapse-btn p-1.5 hover:bg-white rounded transition-colors"
           >
-            {open ? <VIEWSMALL_ICON className="h-5 w-5 text-gray-600" /> : <VIEWBIG_ICON className="h-5 w-5 text-gray-600" />}
+            {open ? <VIEWSMALL_ICON className="collapse-icon h-5 w-5 text-gray-600" /> : <VIEWBIG_ICON className="collapse-icon h-5 w-5 text-gray-600" />}
           </button>
 
-          <button onClick={onRemoveClick} className="p-1.5 hover:bg-red-50 rounded transition-colors" title="Delete" aria-label="Delete field">
+          <button onClick={onRemoveClick} className="field-delete-btn p-1.5 hover:bg-red-50 rounded transition-colors" title="Delete" aria-label="Delete field">
             <TRASHCAN_ICON className="h-5 w-5 text-gray-600 hover:text-red-600" />
           </button>
         </div>

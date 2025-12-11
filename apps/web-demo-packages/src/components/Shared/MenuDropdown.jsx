@@ -15,7 +15,7 @@ export function MenuDropdown({
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <div className="fixed top-5 right-5 z-50">
+    <div className="fixed top-6 right-3 z-50">
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
@@ -33,7 +33,7 @@ export function MenuDropdown({
 
       {isOpen && (
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 1, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ type: 'spring', stiffness: 400, damping: 25 }}

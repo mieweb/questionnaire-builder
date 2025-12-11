@@ -31,7 +31,7 @@ export default function Layout({ selectedField }) {
             </div>
           )}
 
-          <div className="layout-main-content flex-1 ">
+          <div className="layout-main-content flex-1 min-w-0">
             <FormBuilderMain />
           </div>
 
