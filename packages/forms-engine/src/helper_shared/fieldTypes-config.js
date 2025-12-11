@@ -15,6 +15,8 @@ import SignatureField from "../adv_field/Signature_Field"
 import DiagramField from "../adv_field/Diagram_Field"
 import UnsupportedField from "../basic_field/Unsupported_Field"
 import ImageField from "../adv_field/Image_Field"
+import HTMLField from "../adv_field/HTML_Field"
+import ExpressionField from "../adv_field/Expression_Field"
 
 /**
  * Field Type Configuration Schema
@@ -408,6 +410,8 @@ const fieldTypes = {
     label: "Image Field",
     category: "Rich Content",
     componentKey: "image",
+    hasOptions: false,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "image",
       label: "",
@@ -422,6 +426,39 @@ const fieldTypes = {
       label: "Image Block",
       altText: "Descriptive alt text for accessibility",
       caption: "Optional caption below image",
+    }
+  },
+  html: {
+    label: "HTML Block",
+    category: "Rich Content",
+    componentKey: "html",
+    defaultProps: {
+      fieldType: "html",
+      htmlContent: "",
+      iframeHeight: 400,
+    },
+    placeholder: {
+      htmlContent: "<p>Enter your HTML content here...</p>",
+    }
+  },
+ expression: {
+    label: "Expression Field",
+    category: "Rich Content",
+    componentKey: "expression",
+    hasOptions: false,
+    hasMatrix: false,
+    defaultProps: {
+      fieldType: "expression",
+      label: "Calculated Result",
+      expression: "",
+      displayFormat: "number",
+      decimalPlaces: 2,
+      sampleDataFields: [],
+      answer: "",
+    },
+    placeholder: {
+      label: "Expression Field",
+      expression: "{fieldId1} + {fieldId2}",
     }
   },
 };
@@ -444,11 +481,19 @@ const componentMap = {
   diagram: DiagramField,
   unsupported: UnsupportedField,
   image: ImageField,
+  html: HTMLField,
+  expression: ExpressionField,
 };
 
 export function registerFieldComponent(key, component) {
   if (!componentMap[key]) componentMap[key] = component;
 }
+
+/**
+ * Numeric expression display formats
+ * Used for formatting computed values in expression fields
+ */
+export const NUMERIC_EXPRESSION_FORMATS = ["number", "currency", "percentage"];
 
 export function getFieldComponent(type) {
   return componentMap[type] || null;

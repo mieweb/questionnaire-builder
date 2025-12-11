@@ -1,0 +1,212 @@
+import React from "react";
+import FieldWrapper from "../helper_shared/FieldWrapper";
+import useFieldController from "../helper_shared/useFieldController";
+
+const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
+  const ctrl = useFieldController(field, sectionId);
+  const [editMode, setEditMode] = React.useState(false);
+  const [renderError, setRenderError] = React.useState(null);
+  const iframeRef = React.useRef(null);
+  const [iframeHeight, setIframeHeight] = React.useState(field.iframeHeight || 400);
+  const [viewportWidth, setViewportWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+
+  // Base height is set for desktop (~1024px width). As viewport narrows, content wraps more and needs more height.
+  const getResponsiveHeight = React.useCallback((baseHeight) => {
+    const referenceWidth = 1024;
+    // Calculate how much narrower we are than reference
+    // Narrower viewport = more text wrapping = need more height
+    const widthRatio = referenceWidth / Math.max(viewportWidth, 320);
+    // Scale height up as viewport gets smaller, dampen to ~0.35 for reduced scaling
+    // At 1024px: multiplier = 1.0, at 512px: multiplier = 1.35, at 375px: ~1.61, at 320px: ~1.78
+    const scaleFactor = 1 + (widthRatio - 1) * 0.35;
+    return Math.round(baseHeight * Math.max(1, scaleFactor));
+  }, [viewportWidth]);
+
+  /**
+   * Wrap HTML in a complete document for iframe rendering
+   * Uses sandbox attribute to prevent scripts from escaping to parent
+   */
+  const wrapHTMLForIframe = React.useCallback((html) => {
+    if (!html || typeof html !== "string") {
+      return "";
+    }
+
+    return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html { padding: 24px 24px 0px 24px; margin: 0; }
+    body { font-family: inherit; margin: 0; line-height: 1.5; }
+    img { max-width: 100%; height: auto; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+  </style>
+</head>
+<body>
+  ${html}
+</body>
+</html>`;
+  }, []);
+
+  // Removed iframe error event handler useEffect; it does not catch HTML parsing errors in srcDoc.
+  // Minimal debounce helper
+  function debounce(fn, delay) {
+    let timer;
+    return function(...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
+  // Track viewport width for responsive height scaling
+  React.useEffect(() => {
+    const debouncedResize = debounce(() => setViewportWidth(window.innerWidth), 175);
+    window.addEventListener('resize', debouncedResize);
+    return () => window.removeEventListener('resize', debouncedResize);
+  }, []);
+
+  React.useEffect(() => {
+    setRenderError(null);
+  }, [field.htmlContent]);
+
+  return (
+    <FieldWrapper ctrl={ctrl} noPadding={ctrl.isPreview}>
+      {({ api, isPreview, field: f }) => {
+        if (isPreview) {
+          const displayHeight = getResponsiveHeight(f.iframeHeight || 400);
+          return (
+            <>
+              <iframe
+                ref={iframeRef}
+                srcDoc={wrapHTMLForIframe(f.htmlContent)}
+                sandbox=""
+                style={{
+                  width: "100%",
+                  border: "none",
+                  height: `${displayHeight}px`,
+                }}
+                title="HTML Content"
+              />
+              {renderError && (
+                <div role="alert" className="render-error mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
+                  {renderError}
+                </div>
+              )}
+            </>
+          );
+        }
+
+        // Edit mode
+        return (
+          <div className="space-y-4 w-full">
+            {/* Editor/Preview Toggle */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setEditMode(false)}
+                className={`edit-mode-btn px-4 py-2 rounded transition-colors ${!editMode
+                  ? "bg-blue-500 hover:bg-blue-600 text-white"
+                  : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                  }`}
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => setEditMode(true)}
+                className={`preview-mode-btn px-4 py-2 rounded transition-colors ${editMode
+                  ? "bg-blue-500 hover:bg-blue-600 text-white"
+                  : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                  }`}
+              >
+                Preview
+              </button>
+            </div>
+
+            {/* Height Control */}
+            <div>
+              <label className="height-control-label block text-sm font-medium text-gray-700 mb-1">
+                Preview Height (px)
+              </label>
+              <div className="height-control-inputs flex gap-2 items-center">
+                <input
+                  type="range"
+                  min="50"
+                  max="800"
+                  step="10"
+                  value={iframeHeight}
+                  onChange={(e) => {
+                    const height = Math.max(50, Math.min(800, parseInt(e.target.value)));
+                    setIframeHeight(height);
+                    api.field.update("iframeHeight", height);
+                  }}
+                  className="height-slider flex-1"
+                  aria-label="Preview height in pixels"
+                />
+                <input
+                  type="number"
+                  min="50"
+                  max="800"
+                  step="10"
+                  value={iframeHeight}
+                  onChange={(e) => {
+                    const height = parseInt(e.target.value) || 400;
+                    setIframeHeight(Math.max(50, Math.min(800, height)));
+                    api.field.update("iframeHeight", Math.max(50, Math.min(800, height)));
+                  }}
+                  className="height-input w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
+                  aria-label="Preview height in pixels"
+                />
+                <span className="height-unit text-sm text-gray-500">px</span>
+              </div>
+            </div>
+
+            {editMode ? (
+              // Preview Mode
+              <div>
+                <label className="preview-label block text-sm font-medium text-gray-700 mb-2">
+                  Preview
+                </label>
+                <iframe
+                  ref={iframeRef}
+                  srcDoc={wrapHTMLForIframe(f.htmlContent)}
+                  sandbox=""
+                  style={{
+                    width: "100%",
+                    border: "1px solid #ddd",
+                    height: `${getResponsiveHeight(iframeHeight)}px`,
+                    background: "#fafafa",
+                  }}
+                  title="HTML Preview"
+                />
+                {renderError && (
+                  <div className="preview-error mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700" role="alert">
+                    {renderError}
+                  </div>
+                )}
+              </div>
+            ) : (
+              // Edit Mode
+              <div>
+                <label className="edit-label block text-sm font-medium text-gray-700 mb-2">
+                  HTML Content
+                </label>
+                <textarea
+                  className="html-textarea px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors font-mono text-sm max-h-64 overflow-y-auto"
+                  value={f.htmlContent || ""}
+                  onChange={(e) => api.field.update("htmlContent", e.target.value)}
+                  placeholder="Enter your HTML content here... (e.g., &lt;p&gt;text&lt;/p&gt;)"
+                  rows={8}
+                  spellCheck="false"
+                  autoComplete="off"
+                />
+              </div>
+            )}
+          </div>
+        );
+      }}
+    </FieldWrapper>
+  );
+});
+
+export default HtmlField;
