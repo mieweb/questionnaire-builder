@@ -1,14 +1,37 @@
 import React from "react";
-import { useUIApi, useFormStore, TRASHCANTWO_ICON } from "@mieweb/forms-engine";
+import { useUIApi, useFormStore, TRASHCANTWO_ICON, NUMERIC_EXPRESSION_FORMATS } from "@mieweb/forms-engine";
 
 // ────────── Operators by field type ──────────
-function getOperatorsForFieldType(fieldType) {
+function getOperatorsForFieldType(fieldType, displayFormat) {
+  // Numeric expression fields get comparison operators
+  if (fieldType === "expression") {
+    const isNumeric = NUMERIC_EXPRESSION_FORMATS.includes(displayFormat);
+    if (isNumeric) {
+      return ["equals", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"];
+    }
+    return ["equals", "contains"];
+  }
+  
   switch (fieldType) {
     case "input": return ["equals", "contains"];
     case "radio":
     case "selection": return ["equals"];
     case "check": return ["includes"];
     default: return ["equals"];
+  }
+}
+
+// ────────── Operator labels for display ──────────
+function getOperatorLabel(op) {
+  switch (op) {
+    case "equals": return "= (equals)";
+    case "greaterThan": return "> (greater than)";
+    case "greaterThanOrEqual": return "≥ (greater than or equal)";
+    case "lessThan": return "< (less than)";
+    case "lessThanOrEqual": return "≤ (less than or equal)";
+    case "contains": return "contains";
+    case "includes": return "includes";
+    default: return op;
   }
 }
 
@@ -105,6 +128,7 @@ export default function LogicEditor() {
             parentId: f.id,
             label: `${sectTitle} › ${c.question?.trim() || c.id}`,
             fieldType: c.fieldType,
+            displayFormat: c.displayFormat,
             options: Array.isArray(c.options) ? c.options : [],
           });
         });
@@ -114,6 +138,7 @@ export default function LogicEditor() {
           parentId: null,
           label: f.question?.trim() || f.title?.trim() || f.id,
           fieldType: f.fieldType,
+          displayFormat: f.displayFormat,
           options: Array.isArray(f.options) ? f.options : [],
         });
       }
@@ -184,7 +209,7 @@ export default function LogicEditor() {
 
       if ("targetId" in patch) {
         const meta = findTarget(updated.targetId);
-        const ops = getOperatorsForFieldType(meta?.fieldType);
+        const ops = getOperatorsForFieldType(meta?.fieldType, meta?.displayFormat);
         if (!ops.includes(updated.operator)) updated.operator = ops[0] || "equals";
 
         const opts = Array.isArray(meta?.options) ? meta.options.map(normOption) : [];
@@ -271,7 +296,7 @@ export default function LogicEditor() {
           <div className="space-y-3">
             {ew.conditions.map((c, i) => {
               const meta = findTarget(c.targetId);
-              const allowedOps = getOperatorsForFieldType(meta?.fieldType);
+              const allowedOps = getOperatorsForFieldType(meta?.fieldType, meta?.displayFormat);
               const optList = Array.isArray(meta?.options) ? meta.options.map(normOption) : [];
               const hasOptions = optList.length > 0;
 
@@ -319,7 +344,7 @@ export default function LogicEditor() {
                         >
                           {(meta ? allowedOps : ["equals"]).map((op) => (
                             <option key={op} value={op}>
-                              {op}
+                              {getOperatorLabel(op)}
                             </option>
                           ))}
                         </select>

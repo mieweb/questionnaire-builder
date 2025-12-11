@@ -1,8 +1,13 @@
+import { NUMERIC_EXPRESSION_FORMATS } from "./fieldTypes-config";
+
 // ────────── Get a field's current value for comparison ──────────
 function getValueOf(field) {
   switch (field?.fieldType) {
     case "text":
     case "longtext":
+      return field.answer ?? "";
+    case "expression":
+      // Expression fields return their answer as-is (may be numeric)
       return field.answer ?? "";
     case "multitext":
       if (Array.isArray(field.options)) {
@@ -32,6 +37,12 @@ function getValueOf(field) {
   }
 }
 
+// ────────── Check if field is numeric expression ──────────
+function isNumericExpression(field) {
+  if (field?.fieldType !== "expression") return false;
+  return NUMERIC_EXPRESSION_FORMATS.includes(field?.displayFormat);
+}
+
 function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
 
 // ────────── Evaluate a single condition ──────────
@@ -42,6 +53,34 @@ function evaluate(cond, byId) {
   const actual = getValueOf(target);
   const expected = cond?.value;
 
+  // For numeric expressions, use numeric comparisons
+  const isNumeric = isNumericExpression(target);
+  if (isNumeric) {
+    const actualNum = parseFloat(actual);
+    const expectedNum = parseFloat(expected);
+    
+    // Handle invalid numbers
+    if (isNaN(actualNum) || isNaN(expectedNum)) {
+      return false;
+    }
+
+    switch (cond?.operator) {
+      case "equals":
+        return Math.abs(actualNum - expectedNum) < Number.EPSILON * 10;
+      case "greaterThan":
+        return actualNum > expectedNum;
+      case "greaterThanOrEqual":
+        return actualNum >= expectedNum;
+      case "lessThan":
+        return actualNum < expectedNum;
+      case "lessThanOrEqual":
+        return actualNum <= expectedNum;
+      default:
+        return false;
+    }
+  }
+
+  // Non-numeric comparison (original logic)
   switch (cond?.operator) {
     case "equals":
       if (Array.isArray(actual)) return false;
