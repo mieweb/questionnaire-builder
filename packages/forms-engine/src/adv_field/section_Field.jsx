@@ -120,7 +120,7 @@ const SectionField = React.memo(function SectionField({ field }) {
         if (isPreview) {
           return (
             <section className={`section-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
-              <div className="bg-blue-500 text-white text-xl px-4 py-2 rounded-t-lg">
+              <div className="bg-blue-500 text-white text-xl px-4 py-2 rounded-t-lg break-words overflow-hidden">
                 {f.title || "Section"}
               </div>
               {children.map((c) => renderChildPreview(c, f.id))}
@@ -136,7 +136,7 @@ const SectionField = React.memo(function SectionField({ field }) {
               <div className="flex-1">
                 <input
                   type="text"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+                  className="w-full min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
                   value={f.title || ""}
                   onChange={(e) => api.field.update("title", e.target.value)}
                   placeholder="Section title (e.g., Data Consent)"

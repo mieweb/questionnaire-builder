@@ -17,7 +17,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
           return (
             <div className={`rating-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className={`grid gap-2 pb-4 ${options.length > 5 ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
-                <div className="font-light">{f.question || "Question"}</div>
+                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
                 <div className="py-2">
                   {options.length > 0 && (
                     <div className="flex flex-wrap justify-evenly gap-2">
@@ -64,7 +64,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
         return (
           <div className="rating-field-edit space-y-3">
             <input
-              className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
+              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}

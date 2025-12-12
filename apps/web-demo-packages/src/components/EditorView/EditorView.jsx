@@ -25,7 +25,7 @@ export function EditorView() {
         setHideUnsupportedFields={setHideUnsupportedFields}
       />
       <div className="demo-app-editor-content flex-1 overflow-y-auto bg-gray-100">
-        <div className="w-full flex justify-center px-5 pt-5">
+        <div className="w-full flex justify-center px-2 pt-5">
           <QuestionnaireEditor
             key={formKey}
             initialFormData={formData}
