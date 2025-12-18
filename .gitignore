@@ -31,6 +31,8 @@ dist-ssr
 # TESTING FILES
 TEMP
 
+# Playwright MCP
+.playwright-mcp/
 
 .nx/cache
 .nx/workspace-data

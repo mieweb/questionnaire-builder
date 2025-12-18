@@ -1,0 +1,363 @@
+@import './tailwind.output.css';
+
+/* Smooth scroll snap for landing page */
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+
+
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #059669;
+  --ifm-color-primary-dark: #047857;
+  --ifm-color-primary-darker: #047857;
+  --ifm-color-primary-darkest: #065f46;
+  --ifm-color-primary-light: #10b981;
+  --ifm-color-primary-lighter: #34d399;
+  --ifm-color-primary-lightest: #6ee7b7;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #34d399;
+  --ifm-color-primary-dark: #10b981;
+  --ifm-color-primary-darker: #059669;
+  --ifm-color-primary-darkest: #047857;
+  --ifm-color-primary-light: #6ee7b7;
+  --ifm-color-primary-lighter: #a7f3d0;
+  --ifm-color-primary-lightest: #d1fae5;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+.json-input::-webkit-scrollbar,
+.rendered-output::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.json-input::-webkit-scrollbar-track,
+.rendered-output::-webkit-scrollbar-track {
+  background: #1e2127;
+}
+
+.json-input::-webkit-scrollbar-thumb,
+.rendered-output::-webkit-scrollbar-thumb {
+  background: #4b5263;
+  border-radius: 4px;
+}
+
+.json-input::-webkit-scrollbar-thumb:hover,
+.rendered-output::-webkit-scrollbar-thumb:hover {
+  background: #5c6370;
+}
+
+/* Modern documentation styling */
+.markdown {
+  --ifm-heading-font-weight: 700;
+}
+
+.markdown h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.markdown h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.markdown h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.markdown code {
+  background-color: #f3f4f6;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.375rem;
+  font-size: 0.875em;
+  border: 1px solid #e5e7eb;
+}
+
+.markdown pre {
+  background-color: #1e293b !important;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+}
+
+.markdown pre code {
+  background: transparent !important;
+  border: none;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+/* Override Prism theme */
+div[class*='codeBlockContainer'] {
+  background-color: #1e293b !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+div[class*='codeBlockContent'] {
+  background-color: #1e293b !important;
+}
+
+/* Ensure all code text is white/light colored */
+.prism-code,
+.prism-code *,
+code[class*="language-"],
+pre[class*="language-"],
+.token {
+  color: #f8fafc !important;
+}
+
+/* Syntax highlighting colors for dark background */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #94a3b8 !important;
+}
+
+.token.punctuation {
+  color: #cbd5e1 !important;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #fbbf24 !important;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #34d399 !important;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #60a5fa !important;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #a78bfa !important;
+}
+
+.token.function,
+.token.class-name {
+  color: #f472b6 !important;
+}
+
+.markdown blockquote {
+  border-left: 4px solid #10b981;
+  background-color: #f0fdf4;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.markdown a {
+  color: #059669;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.markdown a:hover {
+  color: #047857;
+  text-decoration: underline;
+}
+
+.markdown ul,
+.markdown ol {
+  margin: 1rem 0;
+}
+
+.markdown li {
+  margin: 0.5rem 0;
+}
+
+.markdown table {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.markdown thead {
+  background-color: #f9fafb;
+}
+
+.markdown th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #6b7280;
+  padding: 1rem;
+}
+
+.markdown td {
+  padding: 0.875rem 1rem;
+}
+
+.markdown tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.15s;
+}
+
+.markdown tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+/* Admonitions/alerts styling */
+.alert {
+  border-radius: 0.75rem;
+  border-width: 0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+.alert--info {
+  background-color: #eff6ff;
+  border-left: 4px solid #3b82f6;
+}
+
+.alert--warning {
+  background-color: #fefce8;
+  border-left: 4px solid #eab308;
+}
+
+.alert--danger {
+  background-color: #fef2f2;
+  border-left: 4px solid #ef4444;
+}
+
+.alert--success {
+  background-color: #f0fdf4;
+  border-left: 4px solid #10b981;
+}
+
+/* Sidebar improvements */
+.theme-doc-sidebar-container {
+  border-right: 1px solid #e5e7eb;
+}
+
+.menu__link {
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.menu__link:hover {
+  background-color: #f3f4f6;
+}
+
+.menu__link--active {
+  background-color: #d1fae5;
+  color: #065f46;
+  font-weight: 600;
+}
+
+/* Pagination */
+.pagination-nav__link {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+}
+
+.pagination-nav__link:hover {
+  border-color: #10b981;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Breadcrumbs */
+.breadcrumbs__link {
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.breadcrumbs__link:hover {
+  background-color: #f3f4f6;
+}
+
+/* TOC (Table of Contents) */
+.table-of-contents {
+  border-left: 2px solid #e5e7eb;
+  padding-left: 1rem;
+}
+
+.table-of-contents__link {
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  display: block;
+  transition: all 0.2s;
+}
+
+.table-of-contents__link:hover {
+  background-color: #f3f4f6;
+  color: #059669;
+}
+
+.table-of-contents__link--active {
+  color: #059669;
+  font-weight: 600;
+  background-color: #d1fae5;
+}
+
+/* Modern custom scrollbar */
+.custom-scrollbar ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.custom-scrollbar ::-webkit-scrollbar-track {
+  background: #1e293b;
+  border-radius: 10px;
+}
+
+.custom-scrollbar ::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 10px;
+  border: 2px solid #1e293b;
+}
+
+.custom-scrollbar ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.custom-scrollbar ::-webkit-scrollbar-corner {
+  background: #1e293b;
+}

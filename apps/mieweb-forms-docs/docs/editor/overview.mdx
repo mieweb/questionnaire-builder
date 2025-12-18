@@ -1,0 +1,106 @@
+# Editor Overview
+
+The `@mieweb/forms-editor` package provides a full-featured questionnaire editor with visual building tools and live preview.
+
+## What is the Editor?
+
+The editor is a React component that allows users to visually create and modify questionnaires. It combines:
+
+- **Visual Field Editor** - Add, remove, and configure fields through a UI
+- **Code Editor** - Monaco editor for direct JSON/YAML editing
+- **Live Preview** - Toggle to see how forms appear to end users
+- **Field Properties Panel** - Edit field settings, options, and required state
+- **Section Management** - Organize fields into logical groupings
+
+## Live Demo
+
+Try out the full-featured editor with a visual interface:
+
+<div style={{ padding: '2rem', backgroundColor: '#f6f8fa', borderRadius: '8px', textAlign: 'center', marginBottom: '2rem' }}>
+  <h3 style={{ marginTop: 0 }}>Interactive Editor Demo</h3>
+  <p>Build and customize questionnaires with visual tools and live preview.</p>
+  <a href="/editor-demo" className="button button--primary button--lg">Launch Editor Demo →</a>
+</div>
+
+## Key Features
+
+### Dual Editing Modes
+
+- **Visual Editor** - Click-to-edit interface for field properties
+- **Code Editor** - Monaco-powered JSON/YAML editor with syntax highlighting
+
+### Live Preview Toggle
+
+Switch between edit and preview modes instantly to test:
+- Field appearance and behavior
+- Conditional logic (enableWhen)
+- Required field validation
+- User experience flow
+
+### Import/Export
+
+- **JSON** - Standard format for forms
+- **YAML** - Human-friendly alternative
+- **SurveyJS** - Import existing SurveyJS schemas
+
+### Field Library
+
+Pre-built field components for all types:
+- Text inputs (single/multi-line)
+- Selection fields (radio, check, dropdown)
+- Rating scales and sliders
+- Advanced fields (expressions, diagrams, HTML content)
+
+## Editor Modes
+
+### Edit Mode
+
+The default mode with full editing capabilities:
+- Add/remove fields from the schema
+- Configure field properties (question, options, validation)
+- Set up conditional logic (enableWhen)
+- Organize fields into sections
+- Edit raw JSON/YAML in code view
+
+### Preview Mode
+
+Test your form as end users will see it:
+- Fill out the form with sample data
+- Test conditional field visibility
+- Verify required field validation
+- Check responsive layout
+- Experience the user flow
+
+## Integration
+
+The editor is a standard React component:
+
+```jsx
+import { QuestionnaireEditor } from '@mieweb/forms-editor';
+
+<QuestionnaireEditor 
+  initialFormData={formSchema}
+  onChange={(updatedSchema) => saveForm(updatedSchema)}
+  startInPreview={false}
+/>
+```
+
+**Requirements:** React 18+ and React DOM 18+
+
+## Use Cases
+
+- **Form Management Systems** - Admin panels for creating questionnaires
+- **Healthcare Platforms** - Patient intake form builders
+- **Survey Tools** - Custom survey creation interfaces
+- **Data Collection** - Build forms for research or registration
+- **No-Code Platforms** - Visual form builders for non-technical users
+
+## Next Steps
+
+- [Editor Quick Start](/docs/getting-started/quickstart-editor) - Get started in minutes
+- [Editor Props](/docs/editor/props) - Component API reference
+- [Importing & Conversion](/docs/editor/importing) - YAML/JSON + SurveyJS import
+- [Schema Format](/docs/schema-format) - Understand the form structure
+- [Field Types](/docs/field-types) - Explore all available field types
+- [Conditional Logic](/docs/conditional-logic) - Set up enableWhen rules
+

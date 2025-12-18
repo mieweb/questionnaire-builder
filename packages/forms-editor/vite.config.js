@@ -57,13 +57,12 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['react', 'react-dom', '@mieweb/forms-engine', 'framer-motion', 'js-yaml'],
+      external: ['react', 'react-dom', '@mieweb/forms-engine', 'js-yaml'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
           '@mieweb/forms-engine': 'FormsEngine',
-          'framer-motion': 'FramerMotion',
           'js-yaml': 'jsyaml'
         }
       }

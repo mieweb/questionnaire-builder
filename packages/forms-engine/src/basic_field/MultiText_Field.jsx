@@ -13,7 +13,7 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
           return (
             <div className={`multitext-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="space-y-3 pb-4">
-                {f.question && <div className="font-light break-words overflow-hidden">{f.question}</div>}
+                {f.question && <div className="font-light wrap-break-word overflow-hidden">{f.question}</div>}
                 <div className="space-y-2 w-full">
                   {(f.options || []).map((option) => (
                     <div key={option.id} className="flex flex-col gap-1">
@@ -64,7 +64,7 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
                     />
                     <button 
                       onClick={() => api.option.remove(option.id)}
-                      className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                      className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
                       title="Remove field"
                     >
                       <TRASHCANTWO_ICON className="w-4 h-4" />
