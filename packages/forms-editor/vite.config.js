@@ -57,13 +57,14 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['react', 'react-dom', '@mieweb/forms-engine', 'js-yaml'],
+      external: ['react', 'react-dom', '@mieweb/forms-engine', 'js-yaml', 'zustand'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
           '@mieweb/forms-engine': 'FormsEngine',
-          'js-yaml': 'jsyaml'
+          'js-yaml': 'jsyaml',
+          zustand: 'zustand'
         }
       }
     },

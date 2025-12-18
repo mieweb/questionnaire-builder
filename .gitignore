@@ -16,6 +16,7 @@ dist-ssr
 # Generated CSS files
 **/styles.output.css
 **/index.output.css
+**/tailwind.output.css
 
 # Editor directories and files
 .vscode/*

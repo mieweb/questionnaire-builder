@@ -67,8 +67,8 @@ All fields share common properties and have type-specific properties.
 | `question` | string | Most types | Field label/question text |
 | `required` | boolean | ❌ | Whether field must be answered |
 | `enableWhen` | object | ❌ | Conditional visibility rules |
-| `answer` | any | ❌ | Value for text-like fields (e.g. `text`, `longtext`, `expression`) |
-| `selected` | string \| string[] \| object | ❌ | Value for selection/matrix fields (varies by type) |
+| `answer` | any | ❌ | User-entered answer value (used when building a `QuestionnaireResponse`) |
+| `selected` | string \| string[] \| object | ❌ | User-selected answer value for choice/matrix fields (varies by type; used when building a `QuestionnaireResponse`) |
 
 See [Field Types](/docs/field-types) for complete list of field types and their properties.
 
@@ -136,6 +136,54 @@ See [Conditional Logic](/docs/conditional-logic) for detailed guide.
 ---
 
 ## Complete Example
+
+This example defines a two-section patient survey. It demonstrates:
+
+- **Root metadata**: `title`, `description`, and progress bar settings. These describe the questionnaire but don’t store answers.
+- **Sections**: `section_demographics` and `section_medical` group fields under `fields: [...]`.
+- **User answers**:
+  - Text fields store user input in `answer` (e.g. `name.answer`, `age.answer`).
+  - Choice fields store user selection in `selected` (e.g. `gender.selected`, `has_conditions.selected`, `conditions_list.selected`).
+- **Conditional logic (`enableWhen`)**: `conditions_list` is conditionally shown based on the current answer of `has_conditions`.
+
+### How the `enableWhen` in this example works
+
+Inside the `conditions_list` field, you’ll see:
+
+```json
+"enableWhen": {
+  "logic": "AND",
+  "conditions": [
+    {
+      "targetId": "has_conditions",
+      "operator": "equals",
+      "value": "yes"
+    }
+  ]
+}
+```
+
+This means:
+
+- `targetId: "has_conditions"` points to the controlling field (the boolean question: “Do you have any chronic conditions?”).
+- `operator: "equals"` means “the target’s current answer must match exactly”.
+- `value: "yes"` is the value that must be selected in the target field.
+- `logic: "AND"` means **all** entries in `conditions: [...]` must be true for this field to be visible.
+  - In this example there is only one condition, so `AND` doesn’t change behavior—but it matters when you add multiple conditions.
+
+### What a user experiences
+
+- If the user selects **Yes** for `has_conditions` (i.e. `has_conditions.selected` becomes `"yes"`), then the condition is true and `conditions_list` becomes visible.
+- If the user selects **No** (or leaves it unset), the condition is false and `conditions_list` stays hidden.
+
+### Why `selected` is used here
+
+Both `has_conditions` (boolean-style) and `conditions_list` (multi-select checkboxes) store user choices in `selected`:
+
+- `has_conditions.selected` is a single value (e.g. `"yes"` or `"no"`).
+- `conditions_list.selected` is an array (e.g. `["diabetes", "asthma"]`) because users can pick multiple options.
+
+When rendered, users fill in `answer`/`selected`, and those values are what gets converted into a FHIR `QuestionnaireResponse`.
 
 ```json
 {

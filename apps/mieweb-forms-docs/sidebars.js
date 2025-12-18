@@ -35,7 +35,7 @@ const sidebars = {
       items: [
         'renderer/overview',
         'renderer/props',
-        'renderer/fhir-export',
+        'renderer/get-response',
         'renderer/web-component',
         'renderer/blaze',
       ],

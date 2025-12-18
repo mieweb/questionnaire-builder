@@ -120,7 +120,7 @@ const SectionField = React.memo(function SectionField({ field }) {
         if (isPreview) {
           return (
             <section className={`section-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
-              <div className="bg-blue-500 text-white text-xl px-4 py-2 rounded-t-lg break-words overflow-hidden">
+              <div className="bg-blue-500 text-white text-xl px-4 py-2 rounded-t-lg wrap-break-word overflow-hidden">
                 {f.title || "Section"}
               </div>
               {children.map((c) => renderChildPreview(c, f.id))}
@@ -144,7 +144,7 @@ const SectionField = React.memo(function SectionField({ field }) {
               </div>
             </div>
             {isEmpty ? (
-              <div className="flex flex-col items-center justify-center p-8 bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-dashed border-blue-200 rounded-lg shadow-md text-center">
+              <div className="flex flex-col items-center justify-center p-8 bg-linear-to-br from-gray-50 to-gray-100 border-2 border-dashed border-blue-200 rounded-lg shadow-md text-center">
                 <p className="text-sm font-semibold text-gray-700 mb-2">No fields in this section</p>
                 <p className="text-xs text-gray-500 leading-relaxed">
                   Use the <span className="font-semibold text-blue-500">Tool Panel</span> on the left to add fields.

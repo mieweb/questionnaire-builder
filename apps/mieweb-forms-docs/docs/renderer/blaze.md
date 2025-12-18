@@ -24,7 +24,10 @@ import '@mieweb/forms-renderer/blaze';
 {{> questionnaireRenderer
     formData=currentFormData
     hideUnsupportedFields=true
-    onChange=handleChange}}
+  onChange=handleChange
+  onQuestionnaireResponse=handleResponse
+  questionnaireId="my-questionnaire-id"
+  subjectId="patient-123"}}
 ```
 
 ## Helper example
@@ -44,6 +47,11 @@ Template.myForm.helpers({
   handleChange() {
     return (updatedFormData) => {
       console.log('Form changed:', updatedFormData);
+    };
+  },
+  handleResponse() {
+    return (response) => {
+      console.log('QuestionnaireResponse:', response);
     };
   }
 });

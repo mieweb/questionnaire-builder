@@ -56,16 +56,13 @@ function MyForm() {
 export default MyForm;
 ```
 
-## With FHIR Export
+## Get Response
 
-Export filled forms as FHIR QuestionnaireResponse:
+Get the FHIR QuestionnaireResponse as answers change using the callback prop:
 
 ```jsx
 import React from 'react';
-import { 
-  QuestionnaireRenderer, 
-  buildQuestionnaireResponse
-} from '@mieweb/forms-renderer';
+import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
 function MyForm() {
   const [formData] = React.useState({
@@ -75,29 +72,28 @@ function MyForm() {
     ]
   });
 
-  const storeRef = React.useRef(null);
+  const [response, setResponse] = React.useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const state = storeRef.current?.getState?.();
-    if (!state) return;
-    const currentFields = state.order.map((id) => state.byId[id]);
-    const fhirResponse = buildQuestionnaireResponse(
-      currentFields,
-      'my-questionnaire-id',
-      'patient-123'
-    );
-    console.log('FHIR Response:', fhirResponse);
-    // Send to your FHIR server
+    console.log('Submitting FHIR Response:', response);
+    // Send response to your FHIR server
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer formData={formData} storeRef={storeRef} />
+      <QuestionnaireRenderer 
+        formData={formData}
+        questionnaireId="my-questionnaire-id"
+        subjectId="patient-123"
+        onQuestionnaireResponse={setResponse}
+      />
       <button type="submit">Submit</button>
     </form>
   );
 }
+
+export default MyForm;
 ```
 
 ## Loading from YAML
@@ -139,6 +135,6 @@ The renderer uses Tailwind CSS internally, so Tailwind utility classes work out 
 
 - [Renderer Overview](/docs/renderer/overview)
 - [Renderer Props](/docs/renderer/props)
-- [FHIR Export](/docs/renderer/fhir-export)
+- [Get Response](/docs/renderer/get-response)
 - [Field Types](/docs/field-types)
 - [Forms Renderer README](https://github.com/mieweb/questionnaire-builder/tree/main/packages/forms-renderer/README.md)

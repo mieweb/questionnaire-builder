@@ -23,7 +23,7 @@ A lightweight renderer for displaying and filling out questionnaires:
 - React component
 - Standalone Web Component (no React required)
 - Blaze/Meteor component
-- FHIR QuestionnaireResponse export
+- Get a QuestionnaireResponse from current answers
 - Schema auto-detection (MIE Forms or SurveyJS)
 
 **Perfect for:** Patient portals, survey applications, data collection forms.

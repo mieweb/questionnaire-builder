@@ -34,7 +34,7 @@ npm install @mieweb/forms-renderer
     ]
   };
 
-  // Later: export QuestionnaireResponse
+  // Later: get QuestionnaireResponse
   // const fhir = el.getQuestionnaireResponse('q-1', 'patient-123');
 </script>
 ```
@@ -62,4 +62,4 @@ If you use `form-data`, it must be JSON (not YAML):
 - `el.schemaType` - Optional schema hint (`'mieforms' | 'surveyjs'`)
 - `el.hideUnsupportedFields` - Boolean (default `true`)
 - `el.onChange` - Callback receiving full `{ schemaType, ...metadata, fields }`
-- `el.getQuestionnaireResponse(questionnaireId, subjectId)` - Build FHIR QuestionnaireResponse
+- `el.getQuestionnaireResponse(questionnaireId, subjectId)` - Get a `QuestionnaireResponse`

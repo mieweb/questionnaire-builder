@@ -45,6 +45,25 @@ Called whenever answers change. The payload is the current schema + responses:
   // ...any schema metadata
   fields: [ /* fields including current answers */ ]
 }
+
+### `onQuestionnaireResponse` (optional)
+
+- Type: `(response: object) => void`
+
+Called whenever answers change. The payload is a FHIR `QuestionnaireResponse`.
+
+### `questionnaireId` (optional)
+
+- Type: `string`
+- Default: `'questionnaire-1'`
+
+Used as the Questionnaire identifier in the generated `QuestionnaireResponse`.
+
+### `subjectId` (optional)
+
+- Type: `string`
+
+If provided, the `QuestionnaireResponse.subject` will be set to `Patient/{subjectId}`.
 ```
 
 ### `hideUnsupportedFields` (optional)
@@ -75,6 +94,6 @@ If provided, the renderer sets `storeRef.current` to the internal store instance
 
 ## Related
 
-- [FHIR Export](/docs/renderer/fhir-export)
+- [Get Response](/docs/renderer/get-response)
 - [Standalone Web Component](/docs/renderer/web-component)
 - [Meteor Blaze](/docs/renderer/blaze)

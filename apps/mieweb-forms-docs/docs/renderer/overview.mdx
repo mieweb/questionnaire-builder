@@ -10,7 +10,7 @@ The renderer is a display-only component that takes a form schema (JSON or YAML)
 - **State Management** - Tracks user responses and form state
 - **Conditional Logic** - Shows/hides fields based on enableWhen rules
 - **Validation** - Enforces required fields
-- **Response Export** - Converts responses to FHIR QuestionnaireResponse format
+- **Get Response** - Get current answers as a `QuestionnaireResponse`
 
 ## Live Demo
 
@@ -19,7 +19,7 @@ Try out the renderer with a full interactive demo:
 <div className="p-8 bg-slate-50 rounded-lg text-center">
   <h3 className="mt-0">Interactive Renderer Demo</h3>
   <p>Experience the full-featured renderer with a sample patient health survey.</p>
-  <a href="/renderer-demo" className="button button--primary button--lg">Launch Renderer Demo →</a>
+  <a href="/renderer-demo" className="renderer-demo-link button button--primary button--lg">Launch Renderer Demo →</a>
 </div>
 
 ## Integration Options
@@ -82,14 +82,19 @@ Automatically detects and converts between schema formats:
 
 Built-in support for `enableWhen` rules to show/hide fields dynamically.
 
-### FHIR Export
+### Get Response
 
-Convert responses to standard FHIR QuestionnaireResponse:
+Get responses as a `QuestionnaireResponse` (FHIR format) as the user answers questions, and submit it later:
 
 ```jsx
-import { buildQuestionnaireResponse } from '@mieweb/forms-renderer';
+import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
-const fhirResponse = buildQuestionnaireResponse(fields, questionnaireId, subjectId);
+<QuestionnaireRenderer 
+  formData={formSchema}
+  questionnaireId="my-questionnaire"
+  subjectId="patient-123"
+  onQuestionnaireResponse={(response) => console.log(response)}
+/>
 ```
 
 ### Flexible Styling
@@ -108,7 +113,7 @@ Includes Tailwind-based default styles with full customization support.
 
 - [Renderer Quick Start](/docs/getting-started/quickstart-renderer) - Get started in minutes
 - [Renderer Props](/docs/renderer/props) - Component API reference
-- [FHIR Export](/docs/renderer/fhir-export) - Export QuestionnaireResponse
+- [Get Response](/docs/renderer/get-response) - Get QuestionnaireResponse from current answers
 - [Standalone Web Component](/docs/renderer/web-component) - Use without React
 - [Schema Format](/docs/schema-format) - Learn the form schema structure
 - [Field Types](/docs/field-types) - Explore all available field types

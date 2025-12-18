@@ -121,6 +121,18 @@ div[class*='codeBlockContent'] {
   background-color: #1e293b !important;
 }
 
+/* Ensure demo CTA buttons have readable text in MDX pages.
+   (Tailwind utility classes are not guaranteed to be available in docs MDX content.) */
+.markdown a.renderer-demo-link,
+.markdown a.editor-demo-link {
+  color: var(--ifm-color-white) !important;
+}
+
+.markdown a.renderer-demo-link:hover,
+.markdown a.editor-demo-link:hover {
+  color: var(--ifm-color-white) !important;
+}
+
 /* Ensure all code text is white/light colored */
 .prism-code,
 .prism-code *,

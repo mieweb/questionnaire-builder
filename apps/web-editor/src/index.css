@@ -1,5 +1,0 @@
-@import "tailwindcss";
-
-/* Basic host app styles */
-html, body, #root { height: 100%; margin: 0; }
-body { font-family: system-ui, sans-serif; }

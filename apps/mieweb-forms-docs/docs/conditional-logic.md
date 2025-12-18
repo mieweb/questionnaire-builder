@@ -12,6 +12,15 @@ Fields with `enableWhen` are hidden by default and only appear when their condit
 
 ```json
 {
+  "id": "needs_followup",
+  "fieldType": "radio",
+  "question": "Do you need follow up?",
+  "options": [
+    { "id": "needs_followup-option", "value": "Yes" },
+    { "id": "needs_followup-option-2", "value": "No" }
+  ]
+},
+{
   "id": "follow_up",
   "fieldType": "longtext",
   "question": "Please provide more details",
@@ -37,9 +46,9 @@ In this example, the `follow_up` field only appears when `needs_followup` equals
   "logic": "AND" | "OR",
   "conditions": [
     {
-      "targetId": "field_id",
+      "targetId": "<field id>",
       "operator": "equals" | "contains" | "includes" | "greaterThan" | "lessThan" | "greaterThanOrEqual" | "lessThanOrEqual",
-      "value": "comparison_value"
+      "value": "<comparison value>"
     }
   ]
 }
@@ -105,6 +114,11 @@ Show field when ALL conditions are met:
 
 ```json
 {
+  "id": "birth_year",
+  "fieldType": "text",
+  "question": "Year of birth"
+},
+{
   "id": "age_years",
   "fieldType": "expression",
   "label": "Age (years)",
@@ -150,6 +164,36 @@ Show field when ANY condition is met:
 
 ```json
 {
+  "id": "has_disability",
+  "fieldType": "radio",
+  "question": "Do you have a disability?",
+  "options": [
+    { "id": "has_disability-option", "value": "Yes" },
+    { "id": "has_disability-option-2", "value": "No" }
+  ]
+},
+{
+  "id": "birth_year",
+  "fieldType": "text",
+  "question": "Year of birth"
+},
+{
+  "id": "age_years",
+  "fieldType": "expression",
+  "label": "Age (years)",
+  "displayFormat": "number",
+  "expression": "2024 - {birth_year}"
+},
+{
+  "id": "pregnant",
+  "fieldType": "radio",
+  "question": "Are you currently pregnant?",
+  "options": [
+    { "id": "pregnant-option", "value": "Yes" },
+    { "id": "pregnant-option-2", "value": "No" }
+  ]
+},
+{
   "id": "special_accommodations",
   "fieldType": "longtext",
   "question": "Describe your accessibility needs",
@@ -184,25 +228,48 @@ Show field based on calculated values:
 
 ```json
 {
-  "id": "bmi_advice_overweight",
-  "fieldType": "html",
-  "htmlContent": "<p>Consider consulting a healthcare provider.</p>",
-  "enableWhen": {
-    "logic": "AND",
-    "conditions": [
-      {
-        "targetId": "bmi",
-        "operator": "greaterThanOrEqual",
-        "value": "25"
-      },
-      {
-        "targetId": "bmi",
-        "operator": "lessThan",
-        "value": "30"
+      "fieldType": "text",
+      "id": "height_in",
+      "question": "Height (inches)",
+      "answer": ""
+    },
+    {
+      "fieldType": "text",
+      "id": "weight_lb",
+      "question": "Weight (lb)",
+      "answer": ""
+    },
+    {
+      "fieldType": "expression",
+      "id": "bmi",
+      "label": "BMI",
+      "expression": "({weight_lb} / ({height_in} * {height_in})) * 703",
+      "displayFormat": "number",
+      "decimalPlaces": 1,
+      "sampleDataFields": [],
+      "answer": ""
+    },
+    {
+      "fieldType": "html",
+      "id": "bmi_advice_overweight",
+      "htmlContent": "<p>Consider consulting a healthcare provider.</p>",
+      "iframeHeight": 90,
+      "enableWhen": {
+        "logic": "AND",
+        "conditions": [
+          {
+            "targetId": "bmi",
+            "operator": "greaterThanOrEqual",
+            "value": "25"
+          },
+          {
+            "targetId": "bmi",
+            "operator": "lessThan",
+            "value": "30"
+          }
+        ]
       }
-    ]
-  }
-}
+    }
 ```
 
 Shows when BMI is between 25 and 30.
@@ -247,32 +314,47 @@ Use calculated field results in conditions:
 
 ```json
 {
-  "id": "birth_year",
-  "fieldType": "text",
-  "question": "Year of birth"
-},
-{
-  "id": "calculated_age",
-  "fieldType": "expression",
-  "label": "Your age",
-  "displayFormat": "number",
-  "expression": "2024 - {birth_year}"
-},
-{
-  "id": "adult_consent",
-  "fieldType": "boolean",
-  "question": "I consent to adult terms",
-  "enableWhen": {
-    "logic": "AND",
-    "conditions": [
-      {
-        "targetId": "calculated_age",
-        "operator": "greaterThanOrEqual",
-        "value": "18"
+      "id": "birth_year",
+      "fieldType": "text",
+      "question": "Year of birth",
+      "answer": ""
+    },
+    {
+      "id": "calculated_age",
+      "fieldType": "expression",
+      "label": "Your age",
+      "expression": "2024 - {birth_year}",
+      "displayFormat": "number",
+      "decimalPlaces": 2,
+      "sampleDataFields": [],
+      "answer": ""
+    },
+    {
+      "fieldType": "boolean",
+      "id": "adult_consent",
+      "question": "I consent to adult terms",
+      "options": [
+        {
+          "id": "boolean-option",
+          "value": "Yes"
+        },
+        {
+          "id": "boolean-option-1",
+          "value": "No"
+        }
+      ],
+      "selected": null,
+      "enableWhen": {
+        "logic": "AND",
+        "conditions": [
+          {
+            "targetId": "calculated_age",
+            "operator": "greaterThanOrEqual",
+            "value": "18"
+          }
+        ]
       }
-    ]
-  }
-}
+    }
 ```
 
 Note: numeric comparisons (`greaterThan`, `lessThan`, etc.) only run against **expression** fields with a numeric `displayFormat`.
@@ -282,6 +364,36 @@ Note: numeric comparisons (`greaterThan`, `lessThan`, etc.) only run against **e
 For complex scenarios, combine multiple conditions:
 
 ```json
+{
+  "id": "birth_year",
+  "fieldType": "text",
+  "question": "Year of birth"
+},
+{
+  "id": "age_years",
+  "fieldType": "expression",
+  "label": "Age (years)",
+  "displayFormat": "number",
+  "expression": "2024 - {birth_year}"
+},
+{
+  "id": "has_chronic_condition",
+  "fieldType": "radio",
+  "question": "Do you have a chronic condition?",
+  "options": [
+    { "id": "has_chronic_condition-option", "value": "Yes" },
+    { "id": "has_chronic_condition-option-2", "value": "No" }
+  ]
+},
+{
+  "id": "has_medication_allergies",
+  "fieldType": "radio",
+  "question": "Do you have medication allergies?",
+  "options": [
+    { "id": "has_medication_allergies-option", "value": "Yes" },
+    { "id": "has_medication_allergies-option-2", "value": "No" }
+  ]
+},
 {
   "id": "prescription_info",
   "fieldType": "longtext",
@@ -323,25 +435,25 @@ For complex scenarios, combine multiple conditions:
 
 ### 1. Keep Logic Simple
 
-Prefer straightforward conditions. Complex nested logic can confuse users.
+Prefer straightforward conditions when you can—they’re easier to test and debug. Complex logic is fully supported, but it’s harder to maintain.
 
 ```json
-// ✅ Good - Clear and simple
+// Example: Clear and simple
 "enableWhen": {
   "logic": "AND",
   "conditions": [
-    { "targetId": "pregnant", "operator": "equals", "value": "yes" }
+    { "targetId": "<field id>", "operator": "equals", "value": "<comparison value>" }
   ]
 }
 
-// ❌ Avoid - Overly complex
+// Example: More complex (still supported)
 "enableWhen": {
   "logic": "OR",
   "conditions": [
-    { "targetId": "a", "operator": "equals", "value": "1" },
-    { "targetId": "b", "operator": "greaterThan", "value": "5" },
-    { "targetId": "c", "operator": "contains", "value": "x" },
-    { "targetId": "d", "operator": "lessThan", "value": "10" }
+    { "targetId": "<field id>", "operator": "equals", "value": "<comparison value>" },
+    { "targetId": "<field id>", "operator": "greaterThan", "value": "<comparison value>" },
+    { "targetId": "<field id>", "operator": "contains", "value": "<comparison value>" },
+    { "targetId": "<field id>", "operator": "lessThan", "value": "<comparison value>" }
   ]
 }
 ```
@@ -390,6 +502,18 @@ Negative operators like `notEquals` / `notContains` are not currently supported.
 
 ```json
 {
+  "id": "birth_year",
+  "fieldType": "text",
+  "question": "Year of birth"
+},
+{
+  "id": "age_years",
+  "fieldType": "expression",
+  "label": "Age (years)",
+  "displayFormat": "number",
+  "expression": "2024 - {birth_year}"
+},
+{
   "id": "pediatric_questions",
   "enableWhen": {
     "logic": "AND",
@@ -406,7 +530,10 @@ Negative operators like `notEquals` / `notContains` are not currently supported.
 {
   "id": "symptoms",
   "fieldType": "check",
-  "options": [...]
+  "options": [
+    { "id": "symptoms-option", "value": "Cough" },
+    { "id": "symptoms-option-2", "value": "Fever" }
+  ]
 },
 {
   "id": "symptom_duration",
@@ -423,6 +550,13 @@ Negative operators like `notEquals` / `notContains` are not currently supported.
 ### Conditional Disclaimers
 
 ```json
+{
+  "id": "risk_score",
+  "fieldType": "expression",
+  "label": "Risk score",
+  "displayFormat": "number",
+  "expression": "8"
+},
 {
   "id": "risk_warning",
   "fieldType": "html",
