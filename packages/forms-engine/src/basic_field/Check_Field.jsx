@@ -13,17 +13,17 @@ const CheckField = React.memo(function CheckField({ field, sectionId }) {
           return (
             <div className={`check-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
+                <div className="font-light wrap-break-word overflow-hidden">{f.question || "Question"}</div>
                 <div className="space-y-2">
                   {(f.options || []).map((option) => (
                     <label key={option.id} className="flex items-center px-3 py-2 cursor-pointer rounded-lg hover:bg-blue-50 transition-colors gap-2">
                       <input
                         type="checkbox"
-                        className="flex-shrink-0 w-9 h-9 cursor-pointer"
+                        className="shrink-0 w-9 h-9 cursor-pointer"
                         checked={Array.isArray(f.selected) && f.selected.includes(option.id)}
                         onChange={() => api.selection.multiToggle(option.id)}
                       />
-                      <span className="break-words overflow-hidden">{option.value}</span>
+                      <span className="wrap-break-word overflow-hidden">{option.value}</span>
                     </label>
                   ))}
                 </div>
@@ -58,7 +58,7 @@ const CheckField = React.memo(function CheckField({ field, sectionId }) {
                       type="checkbox"
                       checked={false}
                       disabled
-                      className="flex-shrink-0 w-4 h-4 cursor-not-allowed text-gray-300"
+                      className="shrink-0 w-4 h-4 cursor-not-allowed text-gray-300"
                     />
                     <input
                       type="text"
@@ -69,7 +69,7 @@ const CheckField = React.memo(function CheckField({ field, sectionId }) {
                     />
                     <button 
                       onClick={() => api.option.remove(option.id)}
-                      className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                      className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
                       title="Remove option"
                     >
                       <TRASHCANTWO_ICON className="w-4 h-4" />

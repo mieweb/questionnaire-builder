@@ -16,7 +16,7 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
           return (
               <div className={`slider-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className={`grid gap-2 pb-4 ${options.length > 5 ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
-                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
+                <div className="font-light wrap-break-word overflow-hidden">{f.question || "Question"}</div>
                 <div className="py-2">
                   {options.length > 0 && (
                     <div className="relative pt-1">
@@ -53,7 +53,7 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                                 className="w-full text-left cursor-pointer focus:outline-none"
                               >
                                 <span
-                                  className={`text-sm break-words overflow-hidden inline-block max-w-full ${
+                                  className={`text-sm wrap-break-word overflow-hidden inline-block max-w-full ${
                                     selectedIndex === index
                                       ? 'text-blue-600 font-semibold'
                                       : 'text-gray-500 hover:text-blue-600'
@@ -95,7 +95,7 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
             <div className="space-y-2">
               {options.map((option) => (
                 <div key={option.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
-                  <div className="w-3 h-3 rounded-full bg-blue-400 flex-shrink-0" />
+                  <div className="w-3 h-3 rounded-full bg-blue-400 shrink-0" />
                   <input
                     type="text"
                     value={option.value}
@@ -105,7 +105,7 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                   />
                   <button 
                     onClick={() => api.option.remove(option.id)}
-                    className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                    className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
                     title="Remove option"
                   >
                     <TRASHCANTWO_ICON className="w-5 h-5" />

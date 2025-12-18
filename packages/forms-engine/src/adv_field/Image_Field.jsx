@@ -82,7 +82,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
 
           return (
             <div className={previewPaddingClass}>
-              {f.question && <div className="font-light mb-2 break-words overflow-hidden">{f.question}</div>}
+              {f.question && <div className="font-light mb-2 wrap-break-word overflow-hidden">{f.question}</div>}
               {imageUri && (
                 <div className={`flex ${alignmentClass} ${f.padding !== "full-bleed" ? "mb-4" : ""}`}>
                   <img
@@ -243,7 +243,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                 />
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-8 border-2 border-dashed border-blue-300 rounded-lg bg-gradient-to-br from-blue-50 to-gray-50 w-full overflow-hidden flex items-center justify-center min-h-64 cursor-pointer hover:border-blue-400 hover:from-blue-100 hover:to-gray-100 transition-all shadow-sm"
+                  className="p-8 border-2 border-dashed border-blue-300 rounded-lg bg-linear-to-br from-blue-50 to-gray-50 w-full overflow-hidden flex items-center justify-center min-h-64 cursor-pointer hover:border-blue-400 hover:from-blue-100 hover:to-gray-100 transition-all shadow-sm"
                 >
                   <div className="text-center">
                     <UPLOAD_ICON className="w-12 h-12 mx-auto mb-3 text-blue-600" />
