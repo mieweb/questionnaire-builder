@@ -46,7 +46,10 @@ const sidebars = {
       items: [
         'editor/overview',
         'editor/props',
+        'editor/modes',
+        'editor/field-editing',
         'editor/importing',
+        'editor/exporting',
       ],
     },
   ],

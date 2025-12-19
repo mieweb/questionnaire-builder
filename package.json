@@ -8,14 +8,12 @@
     "apps/*"
   ],
   "scripts": {
-    "start": "concurrently \"npm run dev\" \"npm run dev:demos\"",
+    "start": "npm run dev",
     "dev": "npm run start --workspace=apps/mieweb-forms-docs",
     "dev:packages": "npm run build:watch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
-    "dev:demos": "npm run dev --workspace=apps/web-demo-packages",
-    "dev:all": "concurrently \"npm run dev:packages\" \"npm run dev\" \"npm run dev:demos\"",
-    "build": "npm run build:packages && npm run build:demos && npm run build:docs",
+    "dev:all": "concurrently \"npm run dev:packages\" \"npm run dev\"",
+    "build": "npm run build:packages && npm run build:docs",
     "build:packages": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
-    "build:demos": "npm run build --workspace=apps/web-demo-packages",
     "build:docs": "npm run build --workspace=apps/mieweb-forms-docs",
     "lint": "eslint .",
     "version:engine": "npm version patch --workspace=packages/forms-engine",

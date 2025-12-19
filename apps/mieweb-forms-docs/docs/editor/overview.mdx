@@ -1,16 +1,17 @@
 # Editor Overview
 
-The `@mieweb/forms-editor` package provides a full-featured questionnaire editor with visual building tools and live preview.
+The `@mieweb/forms-editor` package provides a full-featured questionnaire editor with visual building tools, code editing, and live preview.
 
 ## What is the Editor?
 
-The editor is a React component that allows users to visually create and modify questionnaires. It combines:
+The editor is a React component that allows users to visually create and modify questionnaires. It provides three editing modes:
 
-- **Visual Field Editor** - Add, remove, and configure fields through a UI
-- **Code Editor** - Monaco editor for direct JSON/YAML editing
-- **Live Preview** - Toggle to see how forms appear to end users
-- **Field Properties Panel** - Edit field settings, options, and required state
-- **Section Management** - Organize fields into logical groupings
+- **Build Mode** - Visual field editor with drag-and-drop
+- **Code Mode** - Monaco-powered JSON editor with syntax highlighting
+- **Preview Mode** - Live testing as end-users will see the form
+- **Field Properties Panel** - Configure field settings, options, and validation
+- **Section Management** - Organize fields into logical groups
+- **Import/Export** - Load existing forms and download as JSON
 
 ## Live Demo
 
@@ -51,25 +52,37 @@ Pre-built field components for all types:
 - Rating scales and sliders
 - Advanced fields (expressions, diagrams, HTML content)
 
-## Editor Modes
+## Three Editing Modes
 
-### Edit Mode
+### Build Mode (Visual Editor)
 
-The default mode with full editing capabilities:
-- Add/remove fields from the schema
-- Configure field properties (question, options, validation)
+The default mode with full visual editing:
+- Drag-and-drop field reordering
+- Click to select and edit fields
+- Add fields from the tool panel
+- Configure properties in the right panel
 - Set up conditional logic (enableWhen)
 - Organize fields into sections
-- Edit raw JSON/YAML in code view
+
+### Code Mode (JSON Editor)
+
+Direct schema editing with Monaco:
+- Syntax highlighting and validation
+- Auto-formatting and pretty-print
+- Bulk editing capabilities
+- Full schema access
+- Copy/paste field definitions
 
 ### Preview Mode
 
 Test your form as end users will see it:
 - Fill out the form with sample data
-- Test conditional field visibility
+- Test conditional field visibility (enableWhen)
 - Verify required field validation
 - Check responsive layout
 - Experience the user flow
+
+See [Editor Modes](/docs/editor/modes) for detailed documentation.
 
 ## Integration
 
