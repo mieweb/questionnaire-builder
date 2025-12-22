@@ -7,9 +7,7 @@ export default function RendererDemoPage() {
     <Layout
       title="Renderer Demo"
       description="Interactive demo of the MIE Forms Renderer">
-      <div style={{ padding: '2rem' }}>
-        <RendererDemo />
-      </div>
+      <RendererDemo />
     </Layout>
   );
 }

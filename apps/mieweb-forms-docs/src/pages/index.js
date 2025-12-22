@@ -95,7 +95,7 @@ export default function Home() {
     <Layout title="Home" description="Professional form builder with FHIR QuestionnaireResponse output">
       
       {/* Hero Section */}
-      <div className="snap-start relative overflow-hidden bg-linear-to-b from-slate-50 to-white pt-32 min-h-[calc(100vh-85px)] flex items-center">
+      <div className="relative overflow-hidden bg-linear-to-b from-slate-50 to-white pt-32 min-h-[calc(100vh-85px)] flex items-center">
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
           <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[80%] rounded-full bg-green-200/40 blur-[96px]"></div>
           <div className="absolute top-[10%] -left-[10%] w-[40%] h-[60%] rounded-full bg-blue-200/40 blur-[96px]"></div>
@@ -127,7 +127,7 @@ export default function Home() {
       </div>
 
       {/* Features Grid */}
-      <div id="features" className="snap-start bg-slate-50 py-20">
+      <div id="features" className="bg-slate-50 py-20">
         <div className="container">
           <div className="text-center mb-16">
             <div className="inline-block mb-4 px-4 py-2 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
@@ -153,7 +153,7 @@ export default function Home() {
       </div>
 
       {/* Interactive Renderer Demo */}
-      <div className="snap-start bg-linear-to-b from-white to-slate-50 py-16 overflow-hidden">
+      <div className="bg-linear-to-b from-white to-slate-50 py-16 overflow-hidden">
         <div className="container">
           <div className="max-w-7xl mx-auto px-4">
             <div className="text-center mb-16">
@@ -235,7 +235,7 @@ export default function Home() {
       </div>
 
       {/* Quick Start */}
-      <div className="snap-start bg-slate-50 py-16">
+      <div className="bg-slate-50 py-16">
         <div className="container">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-16">
@@ -294,7 +294,7 @@ export default function Home() {
       </div>
 
       {/* Packages */}
-      <div className="snap-start container py-16">
+      <div className="container py-16">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-block mb-4 px-4 py-2 bg-green-100 text-green-700 text-sm font-semibold rounded-full">
@@ -331,7 +331,7 @@ export default function Home() {
       </div>
 
       {/* Resources */}
-      <div className="snap-start bg-slate-50 py-16">
+      <div className="bg-slate-50 py-16">
         <div className="container">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-16">

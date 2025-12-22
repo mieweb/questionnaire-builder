@@ -1,13 +1,5 @@
 @import './tailwind.output.css';
 
-/* Smooth scroll snap for landing page */
-html {
-  scroll-behavior: smooth;
-  scroll-snap-type: y proximity;
-}
-
-
-
 /* You can override the default Infima variables here. */
 :root {
   --ifm-color-primary: #059669;

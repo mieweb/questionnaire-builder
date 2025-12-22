@@ -7,9 +7,7 @@ export default function EditorDemoPage() {
     <Layout
       title="Editor Demo"
       description="Interactive demo of the MIE Forms Editor">
-      <div style={{ padding: '2rem' }}>
-        <EditorDemo />
-      </div>
+      <EditorDemo />
     </Layout>
   );
 }
