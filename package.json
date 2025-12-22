@@ -8,10 +8,8 @@
     "apps/*"
   ],
   "scripts": {
-    "start": "npm run dev",
-    "dev": "npm run start --workspace=apps/mieweb-forms-docs",
-    "dev:packages": "npm run build:watch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
-    "dev:all": "concurrently \"npm run dev:packages\" \"npm run dev\"",
+    "dev": "concurrently \"npm run build:watch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer\" \"npm run start --workspace=apps/mieweb-forms-docs\"",
+    "prod": "npm run prod --workspace=apps/mieweb-forms-docs",
     "build": "npm run build:packages && npm run build:docs",
     "build:packages": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
     "build:docs": "npm run build --workspace=apps/mieweb-forms-docs",
