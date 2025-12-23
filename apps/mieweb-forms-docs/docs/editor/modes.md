@@ -27,8 +27,9 @@ Visual form builder with click-to-edit interface.
    - Field options (for radio, check, dropdown, etc.)
    - Required status
    - Conditional logic (enableWhen)
-4. **Reorder Fields** - Use up/down arrow buttons to move fields
-5. **Delete Fields** - Click the trash icon on a field
+4. **Drag & Drop** - Reorder fields by dragging (WIP)
+5. **Reorder Fields** - Use up/down arrow buttons to move fields (WIP)
+6. **Delete Fields** - Click the trash icon on a field
 
 ### Sections
 
@@ -37,7 +38,6 @@ Organize fields into logical groups:
 1. Add a **Section Field** from the tool panel
 2. Section fields have a `title` instead of `question`
 3. Nested fields appear indented under the section
-4. Sections can be nested within other sections
 
 ---
 
@@ -63,7 +63,7 @@ Monaco-powered code editor for direct JSON/YAML editing.
 ### Tips
 
 - Changes in Code mode update Build and Preview modes instantly
-- Invalid JSON prevents switching back to Build mode until fixed
+- Invalid JSON prevents switching back to Build mode until fixed (WIP)
 - Use **Export** to download your JSON for external editing
 
 ---
@@ -108,16 +108,6 @@ Test your form with live interactions.
 
 ### Preview → Build/Code
 Return to editing after testing.
-
----
-
-## Keyboard Shortcuts
-
-| Action | Shortcut |
-|--------|----------|
-| Switch to Build | (Click "Build" tab) |
-| Switch to Code | (Click "Code" tab) |
-| Switch to Preview | (Click "Preview" tab) |
 
 ---
 
