@@ -8,12 +8,12 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:packages\" \"vite --config apps/web-editor/vite.config.ts\"",
-    "dev:demos": "concurrently \"npm run dev:packages\" \"vite --config apps/web-demo-packages/vite.config.ts\"",
-    "dev:packages": "npm run build:watch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
-    "preview": "vite preview --config apps/web-editor/vite.config.ts",
-    "build": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
-    "pack:all": "npm run build && npm pack --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "dev": "concurrently \"npm run build:watch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer\" \"npm run start --workspace=apps/mieweb-forms-docs\"",
+    "prod": "npm run prod --workspace=apps/mieweb-forms-docs",
+    "build": "npm run build:packages && npm run build:docs",
+    "build:packages": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
+    "build:docs": "npm run build --workspace=apps/mieweb-forms-docs",
+    "lint": "eslint .",
     "version:engine": "npm version patch --workspace=packages/forms-engine",
     "version:editor": "npm version patch --workspace=packages/forms-editor",
     "version:renderer": "npm version patch --workspace=packages/forms-renderer",
@@ -25,8 +25,7 @@
     "release:editor": "npm run build && npm run version:editor && npm publish --workspace=packages/forms-editor",
     "release:renderer": "npm run build && npm run version:renderer && npm publish --workspace=packages/forms-renderer",
     "release:all": "npm run build && npm run version:all && npm run sync-deps && npm run publish:packages",
-    "publish:packages": "npm run build && npm publish --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
-    "lint": "eslint ."
+    "publish:packages": "npm run build && npm publish --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",

@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { MENU_ICON, X_ICON } from '../../assets/icon';
 import { ExamplesDropdown } from './ExamplesDropdown';
 import { HideUnsupportedToggle } from './HideUnsupportedToggle';
-import { BackButton } from './BackButton';
 
 export function MenuDropdown({
   selectedExample,
@@ -37,9 +36,8 @@ export function MenuDropdown({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-          className="absolute top-full mt-3 right-0 z-[60] space-y-3 flex flex-col items-end w-48"
+          className="absolute top-full mt-3 right-0 z-60 space-y-3 flex flex-col items-end w-48"
         >
-          <BackButton />
           <HideUnsupportedToggle
             hideUnsupportedFields={hideUnsupportedFields}
             setHideUnsupportedFields={setHideUnsupportedFields}

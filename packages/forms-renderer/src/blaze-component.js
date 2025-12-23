@@ -28,6 +28,9 @@ export function registerBlazeTemplate() {
         schemaType: templateInstance.data.schemaType,
         hideUnsupportedFields: templateInstance.data.hideUnsupportedFields,
         onChange: templateInstance.data.onChange,
+        onQuestionnaireResponse: templateInstance.data.onQuestionnaireResponse,
+        questionnaireId: templateInstance.data.questionnaireId,
+        subjectId: templateInstance.data.subjectId,
         onSubmit: templateInstance.data.onSubmit,
         fullHeight: templateInstance.data.fullHeight,
         className: templateInstance.data.className

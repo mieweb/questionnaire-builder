@@ -16,6 +16,7 @@ dist-ssr
 # Generated CSS files
 **/styles.output.css
 **/index.output.css
+**/tailwind.output.css
 
 # Editor directories and files
 .vscode/*
@@ -31,6 +32,8 @@ dist-ssr
 # TESTING FILES
 TEMP
 
+# Playwright MCP
+.playwright-mcp/
 
 .nx/cache
 .nx/workspace-data

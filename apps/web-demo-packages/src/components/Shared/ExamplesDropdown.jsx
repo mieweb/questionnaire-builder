@@ -3,12 +3,13 @@ import { motion } from 'framer-motion';
 
 export function ExamplesDropdown({ selectedExample, onSelectExample, onLoadData }) {
   const [isOpen, setIsOpen] = React.useState(false);
+  const baseUrl = import.meta.env.BASE_URL || '/';
 
   const examples = [
-    { label: '🎖️ NPS (Net Promoter Score) Forms', url: '/examples/netPromoterScoreForm.json', isJson: true },
-    { label: '🧑‍⚕️ Patient Survey Form', url: '/examples/patientSurveyForm.json', isJson: true },
-    { label: '📝 PHQ-9 Form', url: '/examples/patientHealthQuestionnaireForm.json', isJson: true },
-    { label: '📄 Patient Intake Form', url: '/examples/patientIntakeForm.json', isJson: true },
+    { label: '🎖️ NPS (Net Promoter Score) Forms', url: `${baseUrl}examples/netPromoterScoreForm.json`, isJson: true },
+    { label: '🧑‍⚕️ Patient Survey Form', url: `${baseUrl}examples/patientSurveyForm.json`, isJson: true },
+    { label: '📝 PHQ-9 Form', url: `${baseUrl}examples/patientHealthQuestionnaireForm.json`, isJson: true },
+    { label: '📄 Patient Intake Form', url: `${baseUrl}examples/patientIntakeForm.json`, isJson: true },
   ];
 
   const handleLoadExample = async (example) => {
@@ -51,14 +52,14 @@ export function ExamplesDropdown({ selectedExample, onSelectExample, onLoadData 
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+            className={`transition-transform duration-200 shrink-0 ${isOpen ? 'rotate-180' : ''}`}
           >
             <path d="M6 9l6 6 6-6" />
           </svg>
         </motion.button>
 
         {isOpen && (
-          <div className="floating-examples-menu absolute top-full mt-2 left-0 right-0 bg-white/70 backdrop-blur-xl backdrop-saturate-150 border border-white/30 rounded-2xl shadow-lg overflow-hidden z-[60]">
+          <div className="floating-examples-menu absolute top-full mt-2 left-0 right-0 bg-white/70 backdrop-blur-xl backdrop-saturate-150 border border-white/30 rounded-2xl shadow-lg overflow-hidden z-60">
             {examples.map((example, index) => (
               <button
                 key={example.url}

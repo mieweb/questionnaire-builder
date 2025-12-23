@@ -60,12 +60,13 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['react', 'react-dom', '@mieweb/forms-engine'],
+      external: ['react', 'react-dom', '@mieweb/forms-engine', 'zustand'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
-          '@mieweb/forms-engine': 'FormsEngine'
+          '@mieweb/forms-engine': 'FormsEngine',
+          zustand: 'zustand'
         }
       }
     },

@@ -19,9 +19,9 @@ export function HideUnsupportedToggle({ hideUnsupportedFields, setHideUnsupporte
         className="hidden"
       />
       {hideUnsupportedFields ? (
-        <CHECK_ICON className="w-4 h-4 text-green-600 flex-shrink-0" />
+        <CHECK_ICON className="w-4 h-4 text-green-600 shrink-0" />
       ) : (
-        <X_ICON className="w-4 h-4 text-red-600 flex-shrink-0" />
+        <X_ICON className="w-4 h-4 text-red-600 shrink-0" />
       )}
       <span className="text-slate-600 whitespace-nowrap" title={hideUnsupportedFields ? 'Show unsupported fields' : 'Hide unsupported fields'}>{hideUnsupportedFields ? 'Hide unsupported' : 'Show unsupported'}</span>
     </motion.label>

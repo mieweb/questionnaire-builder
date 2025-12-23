@@ -40,7 +40,7 @@ export function RendererView() {
   };
 
   return (
-    <div className="demo-app-renderer-view w-full relative">
+    <div className="demo-app-renderer-view w-full min-h-screen relative">
       <MenuDropdown
         selectedExample={selectedExample}
         onSelectExample={setSelectedExample}

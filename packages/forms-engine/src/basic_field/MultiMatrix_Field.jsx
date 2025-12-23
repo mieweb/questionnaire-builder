@@ -37,7 +37,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
           return (
             <div className={`multimatrix-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="pb-4">
-                <div className="font-light mb-3 break-words overflow-hidden">{f.question || "Question"}</div>
+                <div className="font-light mb-3 wrap-break-word overflow-hidden">{f.question || "Question"}</div>
                 
                 {rows.length > 0 && columns.length > 0 ? (
                   <div className="multimatrix-field-grid space-y-1 border-t border-gray-200 pt-3">
@@ -70,7 +70,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
                                     id={inputId}
                                     checked={isChecked}
                                     onChange={() => toggleSelection(row.id, col.id)}
-                                    className="h-9 w-9 cursor-pointer flex-shrink-0"
+                                    className="h-9 w-9 cursor-pointer shrink-0"
                                   />
                                   <label htmlFor={inputId} className="lg:hidden cursor-pointer">
                                     {col.value}
@@ -117,7 +117,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
                     />
                     <button 
                       onClick={() => api.row.remove(row.id)}
-                      className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                      className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
                       title="Remove row"
                     >
                       <TRASHCANTWO_ICON className="w-5 h-5" />
@@ -151,7 +151,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
                     />
                     <button 
                       onClick={() => api.column.remove(col.id)}
-                      className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                      className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
                       title="Remove column"
                     >
                       <TRASHCANTWO_ICON className="w-5 h-5" />
