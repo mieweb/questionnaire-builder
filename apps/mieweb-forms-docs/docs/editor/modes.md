@@ -8,14 +8,14 @@ The editor provides three distinct modes for building and testing questionnaires
 
 ## Build Mode
 
-Visual form builder with drag-and-drop interface.
+Visual form builder with click-to-edit interface.
 
 ### Features
 
 - **Field Library** - Add fields from the tool panel on the left
 - **Properties Panel** - Edit field settings on the right when a field is selected
 - **Form Canvas** - Central area showing your form structure
-- **Drag & Drop** - Reorder fields by dragging
+- **Reorder Controls** - Use up/down arrows to move fields
 - **Add/Remove** - Click field actions to duplicate or delete
 
 ### Working with Fields
@@ -27,7 +27,7 @@ Visual form builder with drag-and-drop interface.
    - Field options (for radio, check, dropdown, etc.)
    - Required status
    - Conditional logic (enableWhen)
-4. **Reorder Fields** - Drag fields to rearrange
+4. **Reorder Fields** - Use up/down arrow buttons to move fields
 5. **Delete Fields** - Click the trash icon on a field
 
 ### Sections

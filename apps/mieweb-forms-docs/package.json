@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
-    "start": "cross-env FAST_REFRESH=false concurrently \"npm run tailwind:dev\" \"docusaurus start --host 0.0.0.0 --port 3000 --no-open\"",
+    "start": "concurrently \"npm run tailwind:dev\" \"docusaurus start --host 0.0.0.0 --port 3000 --no-open\"",
     "build": "npm run tailwind:build && docusaurus build",
     "prod": "npm run build && docusaurus serve --host 0.0.0.0 --port 3000",
     "tailwind:dev": "tailwindcss -i ./src/css/tailwind.input.css -o ./src/css/tailwind.output.css --watch",
