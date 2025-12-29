@@ -20,7 +20,7 @@ npm install @mieweb/forms-renderer
 
 ## 📖 Documentation
 
-**[Full Documentation](<link>)**
+**[Full Documentation](https://questionnaire-builder.opensource.mieweb.org/)**
 
 See the complete documentation for:
 - Getting started guides
