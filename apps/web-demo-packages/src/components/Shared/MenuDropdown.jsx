@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MENU_ICON, X_ICON } from '../../assets/icon';
 import { ExamplesDropdown } from './ExamplesDropdown';
@@ -20,7 +21,7 @@ export function MenuDropdown({
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-        className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 p-3 rounded-2xl shadow-lg hover:bg-white/85 hover:border-white/50 hover:shadow-[0_12px_48px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,0.8)] transition-all"
+        className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 p-3 rounded-2xl shadow-lg hover:bg-white/85 hover:border-white/50 hover:shadow-2xl transition-all"
         title="Menu"
       >
         {isOpen ? (
@@ -38,6 +39,12 @@ export function MenuDropdown({
           transition={{ type: 'spring', stiffness: 400, damping: 25 }}
           className="absolute top-full mt-3 right-0 z-60 space-y-3 flex flex-col items-end w-48"
         >
+          <Link
+            to="/"
+            className="back-to-home-btn w-full bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-2.5 rounded-2xl shadow-lg hover:bg-white/85 hover:border-white/50 hover:shadow-2xl transition-all text-center text-sm font-medium"
+          >
+            ← Back to Home
+          </Link>
           <HideUnsupportedToggle
             hideUnsupportedFields={hideUnsupportedFields}
             setHideUnsupportedFields={setHideUnsupportedFields}

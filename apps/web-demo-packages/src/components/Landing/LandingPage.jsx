@@ -5,7 +5,7 @@ import { ResourcesSection } from './ResourcesSection';
 
 export function LandingPage() {
   return (
-    <div className="demo-app-landing min-h-dvh px-6 md:px-12 py-16 bg-gradient-to-b from-white to-slate-50 text-slate-900 font-sans">
+    <div className="demo-app-landing min-h-dvh px-6 md:px-12 py-16 bg-linear-to-b from-white to-slate-50 text-slate-900 font-sans">
       <div className="demo-app-landing-wrapper max-w-5xl mx-auto">
         <div className="demo-app-landing-hero text-center mb-14">
           <h1 className="m-0 mb-4 text-4xl md:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
