@@ -34,7 +34,9 @@ const normalize = (arr) => {
     }
     existingIds.add(parentId);
     
-    const init = initializeField({ ...f, id: parentId });
+    // Deep clone to prevent shared array references when loading from JSON
+    const cloned = JSON.parse(JSON.stringify(f));
+    const init = initializeField({ ...cloned, id: parentId });
     
     // Initialize nested children in sections and generate IDs for them too
     if (init.fieldType === "section" && Array.isArray(init.fields)) {
@@ -47,6 +49,9 @@ const normalize = (arr) => {
         existingIds.add(childId);
         return initializeField({ ...child, id: childId });
       });
+    } else if (init.fieldType === "section") {
+      // Ensure sections always have an array for fields
+      init.fields = [];
     }
     
     byId[parentId] = init;
@@ -169,7 +174,9 @@ export const createFormStore = (initProps = {}) => {
       const title = initialPatch?.title || tpl.title || '';
       const id = generateFieldId(type, existingIds, sectionId);
       
-      const f = initializeField({ ...tpl, ...initialPatch, id });
+      // Deep clone template to avoid shared array/object references
+      const clonedTpl = JSON.parse(JSON.stringify(tpl));
+      const f = initializeField({ ...clonedTpl, ...initialPatch, id });
 
       if (!sectionId) {
         return {

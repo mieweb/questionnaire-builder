@@ -147,24 +147,31 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
   React.useEffect(() => {
     const { result: computedResult, error } = evaluationResult;
     setEvaluationError(error);
-    
-    if (computedResult !== undefined && computedResult !== null && computedResult !== "") {
+
+    // Avoid persisting non-finite numbers (NaN/Infinity) into schema/exports (YAML prints `.nan`).
+    const normalizedComputedResult =
+      typeof computedResult === "number" && !Number.isFinite(computedResult)
+        ? ""
+        : computedResult;
+
+    if (normalizedComputedResult !== undefined && normalizedComputedResult !== null && normalizedComputedResult !== "") {
       // Check if value has changed, using epsilon for numeric comparisons
       let hasChanged = true;
-      const bothNumeric = typeof computedResult === "number" && typeof field.answer === "number";
+      const bothNumeric =
+        typeof normalizedComputedResult === "number" && typeof field.answer === "number";
       
       if (bothNumeric) {
         // For numbers, use epsilon-based comparison to avoid floating-point precision issues
-        hasChanged = Math.abs(computedResult - field.answer) > Number.EPSILON;
-      } else if (typeof computedResult === typeof field.answer) {
+        hasChanged = Math.abs(normalizedComputedResult - field.answer) > Number.EPSILON;
+      } else if (typeof normalizedComputedResult === typeof field.answer) {
         // For same types (string, boolean), use strict equality
-        hasChanged = computedResult !== field.answer;
+        hasChanged = normalizedComputedResult !== field.answer;
       }
       // If types differ, hasChanged stays true (always update)
       
       if (hasChanged) {
         Promise.resolve().then(() => {
-          ctrl.api.field.update("answer", computedResult);
+          ctrl.api.field.update("answer", normalizedComputedResult);
         });
       }
     }

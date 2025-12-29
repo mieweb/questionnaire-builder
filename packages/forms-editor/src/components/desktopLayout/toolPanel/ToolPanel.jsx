@@ -96,13 +96,13 @@ const ToolPanelImpl = ({ isPreview = false }) => {
       <div className="tool-panel-container pb-4 rounded-lg shadow-sm">
       <h3 className="tool-panel-title sticky top-0 z-20 bg-white text-base font-semibold pb-2 pt-3 px-4 border-b border-gray-200 flex items-center justify-between gap-2">
         <span className="flex items-center gap-2 min-w-0">
-          <TOOLS_ICON className="w-5 h-5 text-gray-700 flex-shrink-0" />
+          <TOOLS_ICON className="w-5 h-5 text-gray-700 shrink-0" />
           <span className="truncate">{isSectionSelected ? `Add to "${sectionTitle}"` : "Tools"}</span>
         </span>
         {isSectionSelected && (
           <button
             onClick={handleClearSelection}
-            className="text-gray-600 hover:text-red-600 hover:bg-red-50 p-1 rounded transition-colors flex-shrink-0"
+            className="text-gray-600 hover:text-red-600 hover:bg-red-50 p-1 rounded transition-colors shrink-0"
             title="Unselect section"
           >
             <X_ICON className="w-5 h-5" />

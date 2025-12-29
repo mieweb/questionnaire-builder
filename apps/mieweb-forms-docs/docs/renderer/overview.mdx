@@ -1,0 +1,120 @@
+# Renderer Overview
+
+The `@mieweb/forms-renderer` package provides a lightweight, flexible solution for displaying questionnaires and collecting user responses.
+
+## What is the Renderer?
+
+The renderer is a display-only component that takes a form schema (JSON or YAML) and renders it as an interactive form. It handles:
+
+- **Field Rendering** - Displays all field types (text, radio, check, rating, etc.)
+- **State Management** - Tracks user responses and form state
+- **Conditional Logic** - Shows/hides fields based on enableWhen rules
+- **Validation** - Enforces required fields
+- **Get Response** - Get current answers as a `QuestionnaireResponse`
+
+## Live Demo
+
+Try out the renderer with a full interactive demo:
+
+<div className="p-8 bg-slate-50 rounded-lg text-center">
+  <h3 className="mt-0">Interactive Renderer Demo</h3>
+  <p>Experience the full-featured renderer with a sample patient health survey.</p>
+  <a href="/renderer-demo" className="renderer-demo-link button button--primary button--lg">Launch Renderer Demo →</a>
+</div>
+
+## Integration Options
+
+The renderer supports three integration methods:
+
+### React Component
+
+Use in React applications as a standard component:
+
+```jsx
+import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
+
+<QuestionnaireRenderer formData={formSchema} onChange={handleChange} />
+```
+
+**Requirements:** React 18+ and React DOM 18+ in your project.
+
+### Standalone Web Component
+
+Use in plain HTML without installing React (React is bundled):
+
+```html
+<questionnaire-renderer></questionnaire-renderer>
+
+<script type="module">
+  import '@mieweb/forms-renderer/standalone';
+  
+  const renderer = document.querySelector('questionnaire-renderer');
+  renderer.formData = { schemaType: "mieforms-v1.0", fields: [...] };
+</script>
+```
+
+**Requirements:** Modern browser with ES modules support.
+
+### Meteor Blaze
+
+Use in Meteor applications with Blaze templates (React is bundled):
+
+```html
+{{> questionnaireRenderer formData=myFormData onChange=handleChange}}
+```
+
+```javascript
+import '@mieweb/forms-renderer/blaze';
+```
+
+**Requirements:** Meteor 2.0+
+
+## Key Features
+
+### Schema Auto-Detection
+
+Automatically detects and converts between schema formats:
+
+- **MIE Forms** - Native format with `schemaType: "mieforms-v1.0"`
+- **SurveyJS** - Automatically converts SurveyJS schemas to MIE Forms format
+
+### Conditional Logic
+
+Built-in support for `enableWhen` rules to show/hide fields dynamically.
+
+### Get Response
+
+Get responses as a `QuestionnaireResponse` (FHIR format) as the user answers questions, and submit it later:
+
+```jsx
+import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
+
+<QuestionnaireRenderer 
+  formData={formSchema}
+  questionnaireId="my-questionnaire"
+  subjectId="patient-123"
+  onQuestionnaireResponse={(response) => console.log(response)}
+/>
+```
+
+### Flexible Styling
+
+Includes Tailwind-based default styles with full customization support.
+
+## Use Cases
+
+- **Patient Portals** - Collect health information from patients
+- **Surveys & Assessments** - Customer feedback, research surveys, evaluations
+- **Data Collection Forms** - Registration, intake, screening forms
+- **Embedded Forms** - Integrate questionnaires into existing applications
+- **Mobile Apps** - Responsive design works on all screen sizes
+
+## Next Steps
+
+- [Renderer Quick Start](/docs/getting-started/quickstart-renderer) - Get started in minutes
+- [Renderer Props](/docs/renderer/props) - Component API reference
+- [Get Response](/docs/renderer/get-response) - Get QuestionnaireResponse from current answers
+- [Standalone Web Component](/docs/renderer/web-component) - Use without React
+- [Schema Format](/docs/schema-format) - Learn the form schema structure
+- [Field Types](/docs/field-types) - Explore all available field types
+- [Conditional Logic](/docs/conditional-logic) - Master enableWhen rules

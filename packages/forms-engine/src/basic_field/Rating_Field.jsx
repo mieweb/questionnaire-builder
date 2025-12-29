@@ -17,7 +17,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
           return (
             <div className={`rating-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className={`grid gap-2 pb-4 ${options.length > 5 ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
-                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
+                <div className="font-light wrap-break-word overflow-hidden">{f.question || "Question"}</div>
                 <div className="py-2">
                   {options.length > 0 && (
                     <div className="flex flex-wrap justify-evenly gap-2">
@@ -78,7 +78,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
             <div className="space-y-2">
               {options.map((option) => (
                 <div key={option.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
-                  <div className="w-3 h-3 rounded-full bg-blue-400 flex-shrink-0" />
+                  <div className="w-3 h-3 rounded-full bg-blue-400 shrink-0" />
                   <input
                     type="text"
                     value={option.value}
@@ -88,7 +88,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                   />
                   <button 
                     onClick={() => api.option.remove(option.id)}
-                    className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                    className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
                     title="Remove option"
                   >
                     <TRASHCANTWO_ICON className="w-5 h-5" />

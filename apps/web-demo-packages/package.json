@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "scripts": {
+    "dev": "vite --port 3001",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@mieweb/forms-editor": "*",
     "@mieweb/forms-renderer": "*",

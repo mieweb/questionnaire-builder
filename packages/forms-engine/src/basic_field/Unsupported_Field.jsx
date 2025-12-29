@@ -56,7 +56,7 @@ function UnsupportedField({ field }) {
           <div className="text-xs text-gray-600 mb-2 font-semibold">
             Full SurveyJS data for manual conversion:
           </div>
-          <pre className="bg-gray-100 p-3 rounded text-xs overflow-auto max-h-[300px] border border-gray-300">
+          <pre className="bg-gray-100 p-3 rounded text-xs overflow-auto max-h-75 border border-gray-300">
             {JSON.stringify(data, null, 2)}
           </pre>
         </div>

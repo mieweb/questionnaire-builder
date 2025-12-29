@@ -90,7 +90,7 @@ const CustomDropdown = function CustomDropdown({
 
           {/* Dropdown arrow */}
           <svg
-            className={`w-5 h-5 ml-auto transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+            className={`w-5 h-5 ml-auto transition-transform shrink-0 ${isOpen ? "rotate-180" : ""}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -102,7 +102,7 @@ const CustomDropdown = function CustomDropdown({
         {/* Dropdown menu */}
         {isOpen && availableOptions.length > 0 && (
           <div
-            className={`custom-dropdown-menu absolute z-[9999] w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg ${maxHeight} overflow-y-auto`}
+            className={`custom-dropdown-menu absolute z-9999 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg ${maxHeight} overflow-y-auto`}
           >
             {availableOptions.map((option) => (
               <div
@@ -136,7 +136,7 @@ const CustomDropdown = function CustomDropdown({
 
         {/* Dropdown arrow */}
         <svg
-          className={`custom-dropdown-arrow w-5 h-5 transition-transform flex-shrink-0 ${isOpen ? "rotate-180" : ""}`}
+          className={`custom-dropdown-arrow w-5 h-5 transition-transform shrink-0 ${isOpen ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -148,7 +148,7 @@ const CustomDropdown = function CustomDropdown({
       {/* Dropdown menu */}
       {isOpen && options.length > 0 && (
         <div
-          className={`custom-dropdown-menu absolute z-[50] w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg ${maxHeight} overflow-y-auto`}
+          className={`custom-dropdown-menu absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg ${maxHeight} overflow-y-auto`}
         >
           {showClearOption && (
             <div

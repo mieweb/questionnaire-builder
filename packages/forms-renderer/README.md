@@ -1,127 +1,79 @@
 # @mieweb/forms-renderer
 
-Questionnaire renderer with three distribution options: React component, standalone Web Component, or Blaze component for Meteor.
+Display questionnaires with three integration options: React, standalone Web Component, or Meteor Blaze.
 
-## 🆕 New Features
+## Installation
 
-### YAML & JSON Auto-Parsing
-Pass YAML strings, JSON strings, or parsed objects:
-```jsx
-// YAML string
-const yamlData = `
-schemaType: mieforms-v1.0
-fields:
-  - id: name
-    fieldType: text
-    question: Name?
-`;
-
-<QuestionnaireRenderer formData={yamlData} />
-
-// JSON string or object also work!
-```
-
-### Schema Auto-Detection
-Schema type is automatically detected - no need to specify:
-```jsx
-<QuestionnaireRenderer 
-  formData={unknownSchema}  // Auto-detects MIE Forms or SurveyJS
-/>
-```
-
-### Flexible Styling
-Pass custom CSS classes for styling:
-```jsx
-<QuestionnaireRenderer 
-  formData={formData}
-  className="custom-wrapper p-4"
-/>
-```
-
-## Examples
-
-- [`example-react.jsx`](./examples/example-react.jsx) - React component
-- [`example-standalone.html`](./examples/example-standalone.html) - Web Component
-- [`blaze-example.html`](./examples/blaze-example.html) - Blaze/Meteor
-
-## Usage
-
-Choose the method that fits your stack:
-
-### 1. React Component (for React apps)
-
-**Install:**
-```bash
-npm install @mieweb/forms-renderer react react-dom
-```
-
-**Basic Usage:**
-```jsx
-import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
-
-function MyForm() {
-  const [formData] = React.useState({
-    schemaType: 'mieforms-v1.0',
-    fields: [
-      {
-        id: 'q-name',
-        fieldType: 'text',
-        question: 'What is your full name?',
-        answer: ''
-      }
-    ]
-  });
-  
-  const currentFields = useFieldsArray();
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const fhir = buildQuestionnaireResponse(currentFields, 'my-questionnaire', 'patient-123');
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer formData={formData} />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-```
-
-**With SurveyJS Schema:**
-```jsx
-import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
-
-function SurveyForm() {
-  const surveySchema = {
-    pages: [{
-      elements: [
-        { type: 'text', name: 'firstName', title: 'First Name' },
-        { type: 'text', name: 'lastName', title: 'Last Name' }
-      ]
-    }]
-  };
-
-  return (
-    <QuestionnaireRenderer 
-      formData={surveySchema}
-      hideUnsupportedFields={true}
-    />
-  );
-}
-```
-
----
-
-### 2. Standalone Web Component (framework-agnostic)
-
-**Install:**
 ```bash
 npm install @mieweb/forms-renderer
 ```
-No peer dependencies required - bundles React internally.
 
-**Usage:**
+**Requirements:** React 18+ and React DOM 18+ (except for standalone and Blaze integrations which bundle React)
+
+## Quick Start
+
+### React Component
+
+```jsx
+import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
+
+function MyForm() {
+  const formData = {
+    schemaType: 'mieforms-v1.0',
+    fields: [
+      { id: 'name', fieldType: 'text', question: 'Your name?', answer: '' }
+    ]
+  };
+
+  return <QuestionnaireRenderer formData={formData} />;
+}
+```
+
+### Standalone Web Component
+
+```html
+<script type="module">
+  import '@mieweb/forms-renderer/standalone';
+  
+  document.querySelector('questionnaire-renderer').formData = {
+    schemaType: 'mieforms-v1.0',
+    fields: [...]
+  };
+</script>
+
+<questionnaire-renderer></questionnaire-renderer>
+```
+
+### Meteor Blaze
+
+```javascript
+import '@mieweb/forms-renderer/blaze';
+```
+
+```handlebars
+{{> questionnaireRenderer formData=myFormData}}
+```
+
+## Documentation
+
+**[Full Documentation](<link>/docs/renderer/overview)**
+
+For detailed information, see:
+- [Quick Start Guide](<link>/docs/getting-started/quickstart-renderer)
+- [Props Reference](<link>/docs/renderer/props)
+- [Get Response](<link>/docs/renderer/get-response)
+- [Web Component](<link>/docs/renderer/web-component)
+- [Blaze Integration](<link>/docs/renderer/blaze)
+
+## Examples
+
+- [`example-react.jsx`](./examples/example-react.jsx)
+- [`example-standalone.html`](./examples/example-standalone.html)
+- [`blaze-example.html`](./examples/blaze-example.html)
+
+## License
+
+MIT
 ```html
 <!DOCTYPE html>
 <html>
@@ -190,7 +142,7 @@ import '@mieweb/forms-renderer/blaze';
 {{> questionnaireRenderer 
     formData=myFormData 
     hideUnsupportedFields=true 
-    onChange=handleChange}}
+  onChange=handleChange}}
 ```
 
 **Helper example:**
@@ -221,9 +173,13 @@ Template.myTemplate.helpers({
 - `formData` - Form data object, YAML string, or JSON string (supports auto-parsing)
 - `schemaType` - Optional: `'mieforms'` or `'surveyjs'` (auto-detected if not provided)
 - `onChange` - Callback when answers change (receives complete form data object)
+- `onQuestionnaireResponse` - Callback when answers change (receives FHIR `QuestionnaireResponse`)
+- `questionnaireId` - Questionnaire identifier used in the generated `QuestionnaireResponse` (default: `'questionnaire-1'`)
+- `subjectId` - Optional subject id used in the generated `QuestionnaireResponse` (`Patient/{subjectId}`)
 - `className` - Additional CSS classes
 - `fullHeight` - Full viewport height mode
 - `hideUnsupportedFields` - Hide unsupported field types (default: `true`)
+- `storeRef` - Optional ref to access the internal store instance (advanced)
 
 ### 🔄 Breaking Changes (v0.1.14)
 
@@ -260,13 +216,31 @@ onChange={(formData) => console.log(formData)}
 
 **`buildQuestionnaireResponse(fields, questionnaireId, subjectId)`**
 
-Returns FHIR QuestionnaireResponse. Use with `useFieldsArray()` to get current form state:
+Returns a FHIR `QuestionnaireResponse` for a given `fields` array. In React, you’ll typically either:
+
+- Use `onQuestionnaireResponse` to receive a ready-to-use response, or
+- Use `onChange` and pass `formData.fields` into `buildQuestionnaireResponse`.
 
 ```jsx
-import { buildQuestionnaireResponse, useFieldsArray } from '@mieweb/forms-renderer';
+import React from 'react';
+import { QuestionnaireRenderer, buildQuestionnaireResponse } from '@mieweb/forms-renderer';
 
-const currentFields = useFieldsArray();
-const fhir = buildQuestionnaireResponse(currentFields, 'q-1', 'patient-123');
+export function MyForm({ formData }) {
+  const [latestFields, setLatestFields] = React.useState([]);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const fhir = buildQuestionnaireResponse(latestFields, 'q-1', 'patient-123');
+    console.log(fhir);
+  };
+
+  return (
+    <form onSubmit={onSubmit}>
+      <QuestionnaireRenderer formData={formData} onChange={(fd) => setLatestFields(fd.fields)} />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
 ```
 
 ### Web Component API
@@ -291,6 +265,9 @@ renderer.formData = { schemaType: 'mieforms-v1.0', fields: [...] };
 - `formData` - Form data object (with `schemaType` and `fields`)
 - `schemaType` - Optional: `'mieforms'` or `'surveyjs'` (auto-detected if not provided)
 - `onChange` - Change callback function (receives complete form data object)
+- `onQuestionnaireResponse` - Callback when answers change (receives FHIR `QuestionnaireResponse`)
+- `questionnaireId` - Questionnaire identifier used in the generated `QuestionnaireResponse` (default: `'questionnaire-1'`)
+- `subjectId` - Optional subject id used in the generated `QuestionnaireResponse` (`Patient/{subjectId}`)
 - `hideUnsupportedFields` - Boolean to hide unsupported types (default: `true`)
 - `fullHeight` - Boolean for full height mode
 

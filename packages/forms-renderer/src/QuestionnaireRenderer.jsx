@@ -2,6 +2,7 @@ import React from 'react';
 import { FormStoreContext, UIStoreContext, createFormStore, createUIStore } from '@mieweb/forms-engine';
 import { useQuestionnaireInit } from './hooks';
 import { RendererBody } from './components';
+import { buildQuestionnaireResponse } from './utils/fhirResponse';
 import './styles.input.css';
 
 /**
@@ -9,6 +10,9 @@ import './styles.input.css';
  * @param {string|object} formData - YAML string, JSON string, or form data object
  * @param {string} [schemaType] - Optional: 'mieforms' or 'surveyjs' (auto-detected if not provided)
  * @param {function} [onChange] - Callback fired when form data changes
+ * @param {function} [onQuestionnaireResponse] - Callback fired when answers change (receives FHIR QuestionnaireResponse)
+ * @param {string} [questionnaireId] - Questionnaire identifier used in QuestionnaireResponse
+ * @param {string} [subjectId] - Optional subject id used in QuestionnaireResponse (Patient/{subjectId})
  * @param {string} [className] - Additional CSS classes
  * @param {boolean} [fullHeight=false] - Apply min-h-screen
  * @param {boolean} [hideUnsupportedFields=true] - Hide unsupported field types
@@ -18,6 +22,9 @@ function QuestionnaireRendererInner({
   formData,
   schemaType,
   onChange,
+  onQuestionnaireResponse,
+  questionnaireId = 'questionnaire-1',
+  subjectId,
   className = '',
   fullHeight = false,
   hideUnsupportedFields = true,
@@ -35,15 +42,23 @@ function QuestionnaireRendererInner({
   useQuestionnaireInit(formData, schemaType, hideUnsupportedFields);
 
   React.useEffect(() => {
-    if (!onChange || !formStore) return;
+    if ((!onChange && !onQuestionnaireResponse) || !formStore) return;
     return formStore.subscribe((s) => {
-      onChange({
-        schemaType: s.schemaType || 'mieforms-v1.0',
-        ...s.schemaMetadata,
-        fields: s.order.map(id => s.byId[id])
-      });
+      const fields = s.order.map((id) => s.byId[id]);
+
+      if (onChange) {
+        onChange({
+          schemaType: s.schemaType || 'mieforms-v1.0',
+          ...s.schemaMetadata,
+          fields,
+        });
+      }
+
+      if (onQuestionnaireResponse) {
+        onQuestionnaireResponse(buildQuestionnaireResponse(fields, questionnaireId, subjectId));
+      }
     });
-  }, [onChange, formStore]);
+  }, [onChange, onQuestionnaireResponse, questionnaireId, subjectId, formStore]);
 
   const rootClasses = [
     'qb-render-root renderer-container font-titillium overflow-y-auto custom-scrollbar',
