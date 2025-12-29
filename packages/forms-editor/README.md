@@ -32,14 +32,14 @@ function App() {
 
 ## Documentation
 
-**[Full Documentation](<link>/docs/editor/overview)**
+**[Full Documentation](https://questionnaire-builder.opensource.mieweb.org/docs/editor/overview)**
 
 For detailed information, see:
-- [Quick Start Guide](<link>/docs/getting-started/quickstart-editor)
-- [Props Reference](<link>/docs/editor/props)
-- [Editor Modes](<link>/docs/editor/modes)
-- [Field Editing](<link>/docs/editor/field-editing)
-- [Import/Export](<link>/docs/editor/importing)
+- [Quick Start Guide](https://questionnaire-builder.opensource.mieweb.org/docs/getting-started/quickstart-editor)
+- [Props Reference](https://questionnaire-builder.opensource.mieweb.org/docs/editor/props)
+- [Editor Modes](https://questionnaire-builder.opensource.mieweb.org/docs/editor/modes)
+- [Field Editing](https://questionnaire-builder.opensource.mieweb.org/docs/editor/field-editing)
+- [Import/Export](https://questionnaire-builder.opensource.mieweb.org/docs/editor/importing)
 
 ## License
 

@@ -56,14 +56,14 @@ import '@mieweb/forms-renderer/blaze';
 
 ## Documentation
 
-**[Full Documentation](<link>/docs/renderer/overview)**
+**[Full Documentation](https://questionnaire-builder.opensource.mieweb.org/docs/renderer/overview)**
 
 For detailed information, see:
-- [Quick Start Guide](<link>/docs/getting-started/quickstart-renderer)
-- [Props Reference](<link>/docs/renderer/props)
-- [Get Response](<link>/docs/renderer/get-response)
-- [Web Component](<link>/docs/renderer/web-component)
-- [Blaze Integration](<link>/docs/renderer/blaze)
+- [Quick Start Guide](https://questionnaire-builder.opensource.mieweb.org/docs/getting-started/quickstart-renderer)
+- [Props Reference](https://questionnaire-builder.opensource.mieweb.org/docs/renderer/props)
+- [Get Response](https://questionnaire-builder.opensource.mieweb.org/docs/renderer/get-response)
+- [Web Component](https://questionnaire-builder.opensource.mieweb.org/docs/renderer/web-component)
+- [Blaze Integration](https://questionnaire-builder.opensource.mieweb.org/docs/renderer/blaze)
 
 ## Examples
 

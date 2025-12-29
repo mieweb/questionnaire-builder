@@ -56,12 +56,12 @@ function MyApp() {
 
 ## Documentation
 
-**[Full Documentation](<link>)**
+**[Full Documentation](https://questionnaire-builder.opensource.mieweb.org/)**
 
 For detailed information, see:
-- [Field Types](<link>/docs/field-types)
-- [Schema Format](<link>/docs/schema-format)
-- [Conditional Logic](<link>/docs/conditional-logic)
+- [Field Types](https://questionnaire-builder.opensource.mieweb.org/docs/field-types)
+- [Schema Format](https://questionnaire-builder.opensource.mieweb.org/docs/schema-format)
+- [Conditional Logic](https://questionnaire-builder.opensource.mieweb.org/docs/conditional-logic)
 
 ## License
 
