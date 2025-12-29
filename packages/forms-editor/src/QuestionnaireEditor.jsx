@@ -10,6 +10,7 @@ import {
   useUIApi,
   adaptSchema,
   parseAndDetect,
+  AlertProvider,
 } from '@mieweb/forms-engine';
 import { useStore } from 'zustand';
 import './index.css';
@@ -108,10 +109,12 @@ export function QuestionnaireEditor(props) {
   const uiStore = React.useRef(createUIStore()).current;
 
   return (
-    <FormStoreContext.Provider value={formStore}>
-      <UIStoreContext.Provider value={uiStore}>
-        <QuestionnaireEditorInner {...props} />
-      </UIStoreContext.Provider>
-    </FormStoreContext.Provider>
+    <AlertProvider>
+      <FormStoreContext.Provider value={formStore}>
+        <UIStoreContext.Provider value={uiStore}>
+          <QuestionnaireEditorInner {...props} />
+        </UIStoreContext.Provider>
+      </FormStoreContext.Provider>
+    </AlertProvider>
   );
 }

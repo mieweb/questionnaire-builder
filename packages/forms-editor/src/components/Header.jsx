@@ -1,11 +1,12 @@
 import React from "react";
-import { useFormStore, useFormData, useUIApi, adaptSchema, parseAndDetect, CODE_ICON, VEDITOR_ICON, PICTURE_ICON, UPLOAD_ICON, DOWNLOAD_ICON } from "@mieweb/forms-engine";
+import { useFormStore, useFormData, useUIApi, adaptSchema, parseAndDetect, useAlert, CODE_ICON, VEDITOR_ICON, PICTURE_ICON, UPLOAD_ICON, DOWNLOAD_ICON } from "@mieweb/forms-engine";
 
 export default function Header() {
   const [showSchemaConfirm, setShowSchemaConfirm] = React.useState(false);
   const [pendingImport, setPendingImport] = React.useState(null);
   const replaceAll = useFormStore((s) => s.replaceAll);
   const formData = useFormData(); // Get complete form data with metadata
+  const { showAlert } = useAlert();
 
   const ui = useUIApi();
   const isPreview = ui.state.isPreview;
@@ -18,14 +19,20 @@ export default function Header() {
       const { data, schemaType } = parseAndDetect(text);
 
       if (schemaType !== 'mieforms' && schemaType !== 'surveyjs') {
-        alert(`Unsupported or invalid schema format.\n\nExpected: MIE Forms or SurveyJS\nDetected: ${schemaType}`);
+        showAlert(
+          `Expected: MIE Forms or SurveyJS\nDetected: ${schemaType}`,
+          { title: 'Unsupported Schema Format' }
+        );
         return;
       }
 
       setPendingImport({ data, detectedSchemaType: schemaType });
       setShowSchemaConfirm(true);
     } catch (err) {
-      alert(`Failed to parse file:\n\n${err?.message || "Invalid file format"}`);
+      showAlert(
+        err?.message || "Invalid file format",
+        { title: 'Failed to Parse File' }
+      );
     }
   };
 
@@ -65,12 +72,18 @@ export default function Header() {
       ui.selectedFieldId.clear();
       ui.preview.set(false);
 
-      alert(`✅ Import successful!\n\nFormat: ${confirmedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}\nLoaded ${fields.length} field(s)`);
+      showAlert(
+        `Format: ${confirmedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}\nLoaded ${fields.length} field(s)`,
+        { title: '✅ Import Successful' }
+      );
 
       setShowSchemaConfirm(false);
       setPendingImport(null);
     } catch (err) {
-      alert(`Import failed:\n\n${err?.message || "Invalid format"}`);
+      showAlert(
+        err?.message || "Invalid format",
+        { title: 'Import Failed' }
+      );
       setShowSchemaConfirm(false);
       setPendingImport(null);
     }

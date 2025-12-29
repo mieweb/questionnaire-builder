@@ -1,12 +1,13 @@
 import React from "react";
 import Editor from "@monaco-editor/react";
-import { useFormStore, useFormData, useUIApi } from "@mieweb/forms-engine";
+import { useFormStore, useFormData, useUIApi, parseAndDetect, adaptSchema, MIE_FORMS_SCHEMA_TYPE, useAlert } from "@mieweb/forms-engine";
 import YAML from "js-yaml";
 
 export default function CodeEditor() {
   const formData = useFormData();
   const replaceAll = useFormStore((s) => s.replaceAll);
   const ui = useUIApi();
+  const { showAlert } = useAlert();
   const containerRef = React.useRef(null);
   
   const [format, setFormat] = React.useState("yaml"); // "json" or "yaml"
@@ -66,12 +67,33 @@ export default function CodeEditor() {
         throw new Error("Invalid form data: must be an object");
       }
 
-      // Validate minimal structure
-      if (!Array.isArray(parsed.fields)) {
-        parsed.fields = parsed.fields || [];
+      // Detect schema type and adapt if necessary
+      const { schemaType } = parseAndDetect(parsed);
+      const { fields, conversionReport } = adaptSchema(parsed, schemaType);
+
+      // Notify user if schema was converted from SurveyJS
+      if (schemaType === 'surveyjs') {
+        showAlert(
+          `This schema will be converted to MIE Forms format.\n\n` +
+          `Converted: ${conversionReport?.convertedFields || 0} field(s)\n` +
+          `Dropped: ${conversionReport?.droppedFields?.length || 0} unsupported field(s)\n\n` +
+          `Please use MIE Forms schema inside of code editor for the best experience in the future.`,
+          { title: 'ℹ️ SurveyJS Schema Detected' }
+        );
       }
 
-      replaceAll(parsed);
+      // Build final schema object
+      const finalSchema = {
+        schemaType: parsed.schemaType || MIE_FORMS_SCHEMA_TYPE,
+        fields
+      };
+
+      // If converted from another format, store conversion report in UI
+      if (conversionReport) {
+        ui.setConversionReport(conversionReport);
+      }
+
+      replaceAll(finalSchema);
       setError("");
       ui.preview.set(false);
       ui.codeEditor.set(false);

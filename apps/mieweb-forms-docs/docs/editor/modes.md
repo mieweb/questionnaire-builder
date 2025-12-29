@@ -47,10 +47,12 @@ Monaco-powered code editor for direct JSON/YAML editing.
 
 ### Features
 
-- **Syntax Highlighting** - JSON with color-coded formatting
+- **Syntax Highlighting** - JSON/YAML with color-coded formatting
+- **Format Toggle** - Switch between JSON and YAML
 - **Auto-formatting** - Pretty-print with proper indentation
 - **Validation** - Real-time error detection
 - **Full Schema Access** - Edit metadata, fields, and structure directly
+- **Schema Conversion** - Automatically detects and converts SurveyJS schemas to MIE Forms format
 
 ### When to Use Code Mode
 
@@ -59,12 +61,25 @@ Monaco-powered code editor for direct JSON/YAML editing.
 - Advanced schema modifications
 - Viewing complete form structure
 - Fine-tuning properties not exposed in Build mode
+- Importing SurveyJS schemas
+
+### Schema Conversion
+
+When you paste a SurveyJS schema and click "Apply", the editor will:
+
+1. Automatically detect it's a SurveyJS schema
+2. Convert it to MIE Forms format
+3. Show a notification with conversion details (fields converted, fields dropped)
+4. Recommend using MIE Forms format for the best editing experience
+
+**Note:** For optimal compatibility and editing features, use MIE Forms schema format. SurveyJS schemas are converted automatically but some features may not be supported.
 
 ### Tips
 
-- Changes in Code mode update Build and Preview modes instantly
-- Invalid JSON prevents switching back to Build mode until fixed (WIP)
-- Use **Export** to download your JSON for external editing
+- Changes in Code mode update Build and Preview modes when you click "Apply"
+- Invalid JSON/YAML prevents switching modes until fixed
+- Use **Export** to download your schema for external editing
+- Format toggle preserves your data when switching between JSON and YAML
 
 ---
 
