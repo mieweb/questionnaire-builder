@@ -53,6 +53,14 @@ When proposing code, **adhere to all of the following**:
    - Respect the current state of the code unless directed otherwise.
    - Do NOT "improve" or refactor code without being told to do so.
 
+6. **Documentation Updates**
+   - When making changes to packages (`forms-engine`, `forms-editor`, `forms-renderer`), remind the user to update the documentation site (`apps/mieweb-forms-docs`) if:
+     - Public API changes (props, methods, exports)
+     - New features are added
+     - Breaking changes occur
+     - Usage examples need updating
+   - The documentation site is at `https://questionnaire-builder.opensource.mieweb.org/`
+
 ---
 
 ## Decision Checklist (run before editing)
@@ -87,6 +95,15 @@ If any box is unchecked, **simplify**.
   // ✅ GOOD - semantic name first, then Tailwind
   <div className="tool-selector flex gap-2 p-4 bg-white rounded shadow-md">
   <button className="size-picker-btn w-7 h-7 rounded bg-blue-500">
+  ```
+
+- **Prefer Standard Tailwind Classes Over Arbitrary Values**: Always use Tailwind's built-in utility classes instead of arbitrary values (e.g., `shadow-[...]`, `text-[14px]`). Arbitrary values make the code harder to maintain and break Tailwind's design system consistency.
+  ```jsx
+  // ❌ BAD - arbitrary values
+  <div className="shadow-[0_12px_48px_rgba(0,0,0,0.12)] text-[14px]">
+  
+  // ✅ GOOD - standard Tailwind classes
+  <div className="shadow-2xl text-sm">
   ```
 
 - **Never use `sr-only` with flex layouts**: The `sr-only` class (screen-reader only) can cause layout issues when combined with flex containers. Use `hidden` (display: none) instead to hide elements like radio buttons.
