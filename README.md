@@ -11,10 +11,10 @@ FHIR-compatible questionnaire system for building and rendering dynamic forms.
 ## 🚀 Installation
 
 ```bash
-# For building forms
+# For building forms & vieiwng
 npm install @mieweb/forms-editor
 
-# For displaying forms
+# For displaying forms & submitting
 npm install @mieweb/forms-renderer
 ```
 
@@ -35,8 +35,9 @@ See the complete documentation for:
 git clone https://github.com/mieweb/questionnaire-builder.git
 cd questionnaire-builder
 npm install
-npm start              # Start docs site
 npm run build          # Build all packages
+npm dev                # Start docs site
+
 ```
 
 ## 📄 License
