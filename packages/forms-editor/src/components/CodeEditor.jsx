@@ -9,6 +9,7 @@ export default function CodeEditor() {
   const ui = useUIApi();
   const { showAlert } = useAlert();
   const containerRef = React.useRef(null);
+  const autoSaveTimeoutRef = React.useRef(null);
   
   const [format, setFormat] = React.useState("yaml"); // "json" or "yaml"
   const [editorHeight, setEditorHeight] = React.useState(640);
@@ -52,15 +53,25 @@ export default function CodeEditor() {
   const handleCodeChange = (value) => {
     setCode(value || "");
     setError("");
+    
+    // Clear existing timeout
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
+    }
+    
+    // Set new timeout for auto-save after 1.5 seconds of inactivity
+    autoSaveTimeoutRef.current = setTimeout(() => {
+      handleSave(value || code);
+    }, 1500);
   };
 
-  const handleSave = () => {
+  const handleSave = (codeToSave = code) => {
     try {
       let parsed;
       if (format === "json") {
-        parsed = JSON.parse(code);
+        parsed = JSON.parse(codeToSave);
       } else {
-        parsed = YAML.load(code);
+        parsed = YAML.load(codeToSave);
       }
 
       if (!parsed || typeof parsed !== "object") {
@@ -95,8 +106,6 @@ export default function CodeEditor() {
 
       replaceAll(finalSchema);
       setError("");
-      ui.preview.set(false);
-      ui.codeEditor.set(false);
     } catch (err) {
       setError(`Invalid ${format.toUpperCase()}: ${err.message}`);
     }
@@ -104,6 +113,11 @@ export default function CodeEditor() {
 
   const handleFormatChange = (newFormat) => {
     try {
+      // Clear any pending auto-save
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+      
       let newCode;
       const currentData = format === "json" ? JSON.parse(code) : YAML.load(code);
       
@@ -120,6 +134,15 @@ export default function CodeEditor() {
       setError(`Cannot convert: ${err.message}`);
     }
   };
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div ref={containerRef} className="code-editor-container flex flex-col bg-gray-50 max-w-7xl w-full" style={{ height: `${editorHeight}px` }}>
@@ -156,8 +179,11 @@ export default function CodeEditor() {
               {error}
             </div>
           )}
+          <div className="text-xs text-gray-500 px-3 py-1">
+            Auto-saves after 1.5s
+          </div>
           <button
-            onClick={handleSave}
+            onClick={() => handleSave()}
             className="px-4 py-2 rounded-lg border border-black/15 bg-white hover:bg-black/5 text-sm font-medium transition-colors"
           >
             Apply Changes
