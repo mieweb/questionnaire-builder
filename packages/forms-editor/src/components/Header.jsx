@@ -11,6 +11,7 @@ export default function Header() {
   const ui = useUIApi();
   const isPreview = ui.state.isPreview;
   const isCodeEditor = ui.state.isCodeEditor ?? false;
+  const codeEditorHasError = ui.state.codeEditorHasError ?? false;
 
   // ────────── Import handler with auto-detection ──────────
   const handleFileSelect = (fileContent) => {
@@ -134,12 +135,16 @@ export default function Header() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="header-mode-toggle flex gap-1 rounded-lg border border-black/10 bg-black/5 p-1 w-fit">
             <button
-              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${!isPreview && !isCodeEditor
+              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${
+                !isPreview && !isCodeEditor
                   ? "bg-white text-slate-900 shadow-sm"
+                  : codeEditorHasError
+                  ? "text-slate-400 cursor-not-allowed"
                   : "text-slate-600 hover:text-slate-900"
-                }`}
+              }`}
               onClick={onEdit}
-              title="Visual Editor"
+              disabled={codeEditorHasError}
+              title={codeEditorHasError ? "Fix code errors before switching" : "Visual Editor"}
             >
               <VEDITOR_ICON className="w-5 h-5" />
               <span>Build</span>
@@ -156,12 +161,16 @@ export default function Header() {
               <span>Code</span>
             </button>
             <button
-              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${isPreview
+              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${
+                isPreview
                   ? "bg-white text-slate-900 shadow-sm"
+                  : codeEditorHasError
+                  ? "text-slate-400 cursor-not-allowed"
                   : "text-slate-600 hover:text-slate-900"
-                }`}
+              }`}
               onClick={onPreview}
-              title="Preview"
+              disabled={codeEditorHasError}
+              title={codeEditorHasError ? "Fix code errors before switching" : "Preview Form"}
             >
               <PICTURE_ICON className="w-5 h-5" />
               <span>Preview</span>
