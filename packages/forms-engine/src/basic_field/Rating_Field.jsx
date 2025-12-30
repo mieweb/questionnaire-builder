@@ -44,7 +44,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                               className="hidden"
                             />
                             <span className="text-sm font-medium whitespace-nowrap">
-                              {option.value}
+                              {option.text || option.value}
                             </span>
                           </label>
                         );
@@ -81,8 +81,8 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                   <div className="w-3 h-3 rounded-full bg-blue-400 shrink-0" />
                   <input
                     type="text"
-                    value={option.value}
-                    onChange={(e) => api.option.update(option.id, e.target.value)}
+                    value={option.text || option.value}
+                    onChange={(e) => api.option.update(option.id, { text: e.target.value, value: typeof option.value === 'number' ? option.value : e.target.value })}
                     placeholder={placeholder?.options || "Option label"}
                     className="flex-1 min-w-0 outline-none bg-transparent"
                   />

@@ -2,22 +2,56 @@ import React from "react";
 import { useUIApi, useFormStore, TRASHCANTWO_ICON, NUMERIC_EXPRESSION_FORMATS } from "@mieweb/forms-engine";
 
 // ────────── Operators by field type ──────────
-function getOperatorsForFieldType(fieldType, displayFormat) {
+function getOperatorsForFieldType(fieldType, displayFormat, inputType) {
   // Numeric expression fields get comparison operators
   if (fieldType === "expression") {
     const isNumeric = NUMERIC_EXPRESSION_FORMATS.includes(displayFormat);
     if (isNumeric) {
-      return ["equals", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"];
+      return ["equals", "notEquals", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"];
     }
-    return ["equals", "contains"];
+    return ["equals", "notEquals", "contains", "empty", "notEmpty"];
   }
   
   switch (fieldType) {
-    case "input": return ["equals", "contains"];
+    case "text":
+    case "longtext":
+      // Number, range, and date/time inputs support numeric/comparison operators
+      if (inputType === "number" || inputType === "range") {
+        return ["equals", "notEquals", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual", "empty", "notEmpty"];
+      }
+      if (inputType === "date" || inputType === "datetime-local" || inputType === "month" || inputType === "time") {
+        return ["equals", "notEquals", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual", "empty", "notEmpty"];
+      }
+      // Text, email, tel get text operators
+      return ["equals", "notEquals", "contains", "empty", "notEmpty"];
     case "radio":
-    case "selection": return ["equals"];
-    case "check": return ["includes"];
-    default: return ["equals"];
+    case "dropdown":
+    case "boolean":
+      return ["equals", "notEquals"];
+    case "check":
+    case "multiselectdropdown":
+      return ["includes", "empty", "notEmpty"];
+    case "rating":
+    case "slider":
+    case "ranking":
+      return ["equals", "notEquals", "greaterThan", "greaterThanOrEqual", "lessThan", "lessThanOrEqual"];
+    default:
+      return ["equals", "notEquals"];
+  }
+}
+
+// ────────── Property accessors available for field types ──────────
+function getPropertyAccessorsForFieldType(fieldType) {
+  switch (fieldType) {
+    case "check":
+    case "multiselectdropdown":
+    case "ranking":
+      return ["length", "count"];
+    case "text":
+    case "longtext":
+      return ["length"];
+    default:
+      return [];
   }
 }
 
@@ -25,12 +59,15 @@ function getOperatorsForFieldType(fieldType, displayFormat) {
 function getOperatorLabel(op) {
   switch (op) {
     case "equals": return "= (equals)";
+    case "notEquals": return "≠ (not equals)";
     case "greaterThan": return "> (greater than)";
     case "greaterThanOrEqual": return "≥ (greater than or equal)";
     case "lessThan": return "< (less than)";
     case "lessThanOrEqual": return "≤ (less than or equal)";
     case "contains": return "contains";
     case "includes": return "includes";
+    case "empty": return "is empty";
+    case "notEmpty": return "is not empty";
     default: return op;
   }
 }
@@ -209,7 +246,7 @@ export default function LogicEditor() {
 
       if ("targetId" in patch) {
         const meta = findTarget(updated.targetId);
-        const ops = getOperatorsForFieldType(meta?.fieldType, meta?.displayFormat);
+        const ops = getOperatorsForFieldType(meta?.fieldType, meta?.displayFormat, meta?.inputType);
         if (!ops.includes(updated.operator)) updated.operator = ops[0] || "equals";
 
         const opts = Array.isArray(meta?.options) ? meta.options.map(normOption) : [];
@@ -296,9 +333,16 @@ export default function LogicEditor() {
           <div className="space-y-3">
             {ew.conditions.map((c, i) => {
               const meta = findTarget(c.targetId);
-              const allowedOps = getOperatorsForFieldType(meta?.fieldType, meta?.displayFormat);
+              const allowedOps = getOperatorsForFieldType(meta?.fieldType, meta?.displayFormat, meta?.inputType);
+              const propertyAccessors = meta ? getPropertyAccessorsForFieldType(meta.fieldType) : [];
+              const hasPropertyAccessors = propertyAccessors.length > 0;
               const optList = Array.isArray(meta?.options) ? meta.options.map(normOption) : [];
               const hasOptions = optList.length > 0;
+              const needsValue = !['empty', 'notEmpty'].includes(c.operator);
+              
+              // Numeric operators use number input for threshold comparison, not option dropdown
+              const numericOperators = ['greaterThan', 'greaterThanOrEqual', 'lessThan', 'lessThanOrEqual'];
+              const isNumericComparison = numericOperators.includes(c.operator);
 
               return (
                 <div key={i} className="p-3 bg-gray-50 border border-gray-200 rounded-lg space-y-2">
@@ -333,6 +377,29 @@ export default function LogicEditor() {
                       </select>
                     </div>
 
+                    {/* Property Accessor (optional - only for certain field types) */}
+                    {hasPropertyAccessors && (
+                      <div>
+                        <label className="block text-xs font-medium text-gray-600 mb-1">Property (optional)</label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white text-sm"
+                          value={c.propertyAccessor || ''}
+                          onChange={(e) => updateCond(i, { propertyAccessor: e.target.value || undefined })}
+                          disabled={isDisabled || !meta}
+                        >
+                          <option value="">— Direct value —</option>
+                          {propertyAccessors.map((prop) => (
+                            <option key={prop} value={prop}>
+                              .{prop} (get {prop})
+                            </option>
+                          ))}
+                        </select>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Use .length or .count to compare the number of items
+                        </p>
+                      </div>
+                    )}
+
                     <div className="grid grid-cols-2 gap-2">
                       <div>
                         <label className="block text-xs font-medium text-gray-600 mb-1">Operator</label>
@@ -352,7 +419,11 @@ export default function LogicEditor() {
 
                       <div>
                         <label className="block text-xs font-medium text-gray-600 mb-1">Value</label>
-                        {hasOptions ? (
+                        {!needsValue ? (
+                          <div className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-100 text-sm text-gray-500 flex items-center">
+                            (no value needed)
+                          </div>
+                        ) : hasOptions && !c.propertyAccessor && !isNumericComparison ? (
                           <select
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white text-sm"
                             value={c.value}
@@ -369,7 +440,8 @@ export default function LogicEditor() {
                         ) : (
                           <input
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none text-sm"
-                            placeholder="Enter value"
+                            placeholder={c.propertyAccessor || isNumericComparison ? "Enter number" : "Enter value"}
+                            type={c.propertyAccessor || isNumericComparison ? "number" : "text"}
                             value={c.value}
                             onChange={(e) => updateCond(i, { value: e.target.value })}
                             disabled={isDisabled || !meta}

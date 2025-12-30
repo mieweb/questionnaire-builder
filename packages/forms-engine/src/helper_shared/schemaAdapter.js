@@ -132,9 +132,49 @@ function convertSurveyElement(element, fieldNames = new Set()) {
   }
   
   switch (fieldType) {
-    case 'input':
+    case 'text':
       field.answer = element.defaultValue || '';
+      
+      // Map SurveyJS inputType to our inputType
+      if (element.inputType) {
+        const inputTypeMap = {
+          'number': 'number',
+          'email': 'email',
+          'tel': 'tel',
+          'date': 'date',
+          'datetime': 'datetime-local',
+          'datetime-local': 'datetime-local',
+          'month': 'month',
+          'time': 'time',
+          'range': 'range'
+        };
+        field.inputType = inputTypeMap[element.inputType] || 'text';
+      } else {
+        field.inputType = 'text';
+      }
+      
+      // Map unit if present (SurveyJS doesn't have standard unit support, but some custom implementations might)
+      if (element.unit) {
+        field.unit = element.unit;
+      }
+      
       checkLostInputFeatures(element, warnings);
+      break;
+      
+    case 'longtext':
+      field.answer = element.defaultValue || '';
+      field.inputType = 'text'; // Longtext is always text type
+      checkLostInputFeatures(element, warnings);
+      break;
+      
+    case 'multitext':
+      // SurveyJS multipletext has items array with name/title
+      field.options = Array.isArray(element.items)
+        ? element.items.map((item, idx) => ({
+            id: item.name || `item-${idx}`,
+            value: item.title || item.name || `Item ${idx + 1}`
+          }))
+        : [{ id: 'item-1', value: 'Item 1' }];
       break;
       
     case 'radio':
@@ -144,10 +184,76 @@ function convertSurveyElement(element, fieldNames = new Set()) {
       checkLostChoiceFeatures(element, warnings);
       break;
       
+    case 'boolean':
+      field.options = [
+        { id: 'yes', value: element.labelTrue || 'Yes' },
+        { id: 'no', value: element.labelFalse || 'No' }
+      ];
+      if (element.defaultValue === true || element.defaultValue === 'true') {
+        field.selected = 'yes';
+      } else if (element.defaultValue === false || element.defaultValue === 'false') {
+        field.selected = 'no';
+      } else {
+        field.selected = null;
+      }
+      break;
+      
     case 'check':
+    case 'multiselectdropdown':
       field.options = mapSurveyChoices(element.choices);
       field.selected = Array.isArray(element.defaultValue) ? element.defaultValue : [];
       checkLostChoiceFeatures(element, warnings);
+      break;
+      
+    case 'rating':
+      // Convert SurveyJS rating (rateMin/rateMax) to options array
+      field.options = mapRatingToOptions(element);
+      field.selected = element.defaultValue || null;
+      break;
+      
+    case 'ranking':
+      field.options = mapSurveyChoices(element.choices);
+      field.selected = Array.isArray(element.defaultValue) ? element.defaultValue : [];
+      break;
+      
+    case 'singlematrix':
+      field.rows = mapSurveyChoices(element.rows);
+      field.columns = mapSurveyChoices(element.columns);
+      field.selected = element.defaultValue || {};
+      break;
+      
+    case 'multimatrix':
+      field.rows = mapSurveyChoices(element.rows);
+      field.columns = mapSurveyChoices(element.columns);
+      field.selected = element.defaultValue || {};
+      break;
+      
+    case 'html':
+      field.htmlContent = element.html || '';
+      break;
+      
+    case 'image':
+      field.label = element.title || element.name || '';
+      field.imageUri = element.imageLink || '';
+      field.altText = element.altText || element.title || '';
+      field.size = 'full';
+      field.alignment = 'center';
+      field.padding = 'padded';
+      break;
+      
+    case 'signature':
+      field.placeholder = element.placeholder || 'Sign here';
+      field.signatureData = '';
+      field.signatureImage = '';
+      break;
+      
+    case 'expression':
+      field.label = element.title || element.name || 'Calculated Result';
+      field.expression = element.expression || '';
+      field.displayFormat = 'number';
+      field.decimalPlaces = 2;
+      field.sampleDataFields = [];
+      field.answer = '';
       break;
       
     case 'section':
@@ -158,37 +264,32 @@ function convertSurveyElement(element, fieldNames = new Set()) {
       break;
   }
   
-  if (element.type === 'boolean' && field.fieldType === 'radio') {
-    field.options = [
-      { id: 'yes', value: element.labelTrue || 'Yes' },
-      { id: 'no', value: element.labelFalse || 'No' }
-    ];
-    if (element.defaultValue === true) field.selected = 'yes';
-    else if (element.defaultValue === false) field.selected = 'no';
-    else field.selected = null;
-  }
-  
   if (element.isRequired) {
     field.required = true;
   }
   
+  // Try to convert visibleIf first
+  let visibleIfConverted = false;
   if (element.visibleIf) {
     const enableWhen = convertVisibleIfToEnableWhen(element.visibleIf, fieldNames);
     if (enableWhen) {
       field.enableWhen = enableWhen;
-      removeWarning(warnings, 'conditional_logic_lost', 'visibleIf');
+      visibleIfConverted = true;
     }
   }
   
+  // If visibleIf wasn't converted, try enableIf
+  let enableIfConverted = false;
   if (element.enableIf && !field.enableWhen) {
     const enableWhen = convertVisibleIfToEnableWhen(element.enableIf, fieldNames);
     if (enableWhen) {
       field.enableWhen = enableWhen;
-      removeWarning(warnings, 'conditional_logic_lost', 'enableIf');
+      enableIfConverted = true;
     }
   }
   
-  checkLostCommonFeatures(element, warnings);
+  // Only add warnings for features that were NOT successfully converted
+  checkLostCommonFeatures(element, warnings, visibleIfConverted, enableIfConverted);
   
   // Add metadata properties at the end
   // For sections, store a simplified version of sourceData with element names instead of full objects
@@ -212,18 +313,42 @@ function removeWarning(warnings, type, property) {
 
 function mapSurveyTypeToMIEForms(surveyType) {
   const typeMap = {
+    // Text inputs
     'text': 'text',
-    'comment': 'text',
-    'multipletext': 'text',
+    'comment': 'longtext',        // Multi-line text area
+    'multipletext': 'multitext',  // Multiple text inputs
     
+    // Single choice
     'radiogroup': 'radio',
     'dropdown': 'dropdown',
-    'boolean': 'radio',
+    'boolean': 'boolean',         // Yes/No field
     
+    // Multiple choice
     'checkbox': 'check',
+    'tagbox': 'multiselectdropdown',  // Multi-select dropdown
     
+    // Rating & Ranking
+    'rating': 'rating',           // Star/number rating
+    'ranking': 'ranking',         // Drag-and-drop ranking
+    
+    // Matrix fields
+    'matrix': 'singlematrix',     // Single-select matrix (radio per row)
+    'matrixdropdown': 'multimatrix',  // Multi-select matrix (checkbox per row)
+    'matrixdynamic': 'multimatrix',   // Dynamic matrix
+    
+    // Containers
     'panel': 'section',
     'paneldynamic': 'section',
+    
+    // Rich Content
+    'html': 'html',               // HTML display block
+    'image': 'image',             // Image display
+    'signaturepad': 'signature',  // Signature pad
+    'expression': 'expression',   // Calculated field
+    
+    // Unsupported
+    'file': null,                 // File upload not supported
+    'imagepicker': null,          // Image picker not supported
   };
   
   return typeMap[surveyType] || null;
@@ -247,6 +372,29 @@ function mapSurveyChoices(choices) {
   });
 }
 
+function mapRatingToOptions(element) {
+  // SurveyJS rating uses rateMin/rateMax (defaults 1-5)
+  const min = element.rateMin !== undefined ? element.rateMin : 1;
+  const max = element.rateMax !== undefined ? element.rateMax : 5;
+  const step = element.rateStep || 1;
+  
+  const options = [];
+  for (let i = min; i <= max; i += step) {
+    options.push({ 
+      text: String(i),  // Display text
+      value: i          // Actual numeric value for comparisons
+    });
+  }
+  
+  return options.length > 0 ? options : [
+    { text: '1', value: 1 },
+    { text: '2', value: 2 },
+    { text: '3', value: 3 },
+    { text: '4', value: 4 },
+    { text: '5', value: 5 }
+  ];
+}
+
 function extractSurveyMetadata(surveyData) {
   const metadata = {};
   
@@ -267,12 +415,14 @@ function extractSurveyMetadata(surveyData) {
 }
 
 function checkLostInputFeatures(element, warnings) {
-  if (element.inputType && element.inputType !== 'text') {
+  // We now support these inputTypes, so only warn for unsupported ones
+  const supportedInputTypes = ['text', 'number', 'email', 'tel', 'date', 'datetime', 'datetime-local', 'month', 'time', 'range'];
+  if (element.inputType && !supportedInputTypes.includes(element.inputType)) {
     warnings.push({
       type: 'input_type_lost',
       property: 'inputType',
       value: element.inputType,
-      message: `Input type "${element.inputType}" not supported (date, tel, email, number will render as text)`,
+      message: `Input type "${element.inputType}" not supported`,
       impact: 'medium'
     });
   }
@@ -340,8 +490,9 @@ function checkLostChoiceFeatures(element, warnings) {
   }
 }
 
-function checkLostCommonFeatures(element, warnings) {
-  if (element.visibleIf) {
+function checkLostCommonFeatures(element, warnings, visibleIfConverted = false, enableIfConverted = false) {
+  // Only warn about visibleIf if it exists AND was not successfully converted
+  if (element.visibleIf && !visibleIfConverted) {
     warnings.push({
       type: 'conditional_logic_lost',
       property: 'visibleIf',
@@ -351,7 +502,8 @@ function checkLostCommonFeatures(element, warnings) {
     });
   }
   
-  if (element.enableIf) {
+  // Only warn about enableIf if it exists AND was not successfully converted
+  if (element.enableIf && !enableIfConverted) {
     warnings.push({
       type: 'conditional_logic_lost',
       property: 'enableIf',
@@ -430,11 +582,52 @@ function convertVisibleIfToEnableWhen(expression, fieldNames = new Set()) {
 }
 
 function parseCondition(condition) {
-  const matchPattern = (pattern) => condition.match(pattern);
+  // Strip leading/trailing parentheses and whitespace used for grouping in SurveyJS
+  // Example: "({field} = 'value')" becomes "{field} = 'value'"
+  const trimmed = condition.trim().replace(/^\(+/, '').replace(/\)+$/, '').trim();
   
-  let match = matchPattern(/\{(\w+)\}\s*=\s*'([^']+)'/) || 
-              matchPattern(/\{(\w+)\}\s*=\s*"([^"]+)"/) ||
-              matchPattern(/\{(\w+)\}\s*=\s*([\w.-]+)/);
+  // Match property accessors: {fieldId.property} operator value
+  // Examples: {redFlags.length} > 0, {items.count} >= 5
+  let match = trimmed.match(/\{(\w+)\.(\w+)\}\s*(>=|<=|>|<|=|!=|<>)\s*([\d.-]+)/);
+  if (match) {
+    const [, fieldId, property, op, value] = match;
+    const operator = op === '>=' ? 'greaterThanOrEqual'
+                   : op === '<=' ? 'lessThanOrEqual'
+                   : op === '>' ? 'greaterThan'
+                   : op === '<' ? 'lessThan'
+                   : op === '=' ? 'equals'
+                   : 'notEquals';
+    return { 
+      targetId: fieldId, 
+      operator, 
+      value, 
+      propertyAccessor: property
+    };
+  }
+  
+  // Numeric comparisons without property accessor: {fieldId} > 5, {fieldId} >= 7
+  match = trimmed.match(/\{(\w+)\}\s*(>=|<=|>|<)\s*([\d.-]+)/);
+  if (match) {
+    const [, fieldId, op, value] = match;
+    const operator = op === '>=' ? 'greaterThanOrEqual'
+                   : op === '<=' ? 'lessThanOrEqual'
+                   : op === '>' ? 'greaterThan'
+                   : 'lessThan';
+    return { targetId: fieldId, operator, value };
+  }
+  
+  // Not equals: {fieldId} != value or {fieldId} <> value
+  match = trimmed.match(/\{(\w+)\}\s*(?:!=|<>)\s*'([^']+)'/) ||
+          trimmed.match(/\{(\w+)\}\s*(?:!=|<>)\s*"([^"]+)"/) ||
+          trimmed.match(/\{(\w+)\}\s*(?:!=|<>)\s*([\w.-]+)/);
+  if (match) {
+    return { targetId: match[1], operator: 'notEquals', value: match[2] };
+  }
+  
+  // Equals: {fieldId} = value
+  match = trimmed.match(/\{(\w+)\}\s*=\s*'([^']+)'/) || 
+          trimmed.match(/\{(\w+)\}\s*=\s*"([^"]+)"/) ||
+          trimmed.match(/\{(\w+)\}\s*=\s*([\w.-]+)/);
   
   if (match) {
     const value = match[2];
@@ -442,25 +635,22 @@ function parseCondition(condition) {
     return { targetId: match[1], operator: 'equals', value: normalizedValue };
   }
   
-  match = matchPattern(/\{(\w+)\}\s*(?:<>|!=)\s*'([^']+)'/) ||
-          matchPattern(/\{(\w+)\}\s*(?:<>|!=)\s*"([^"]+)"/) ||
-          matchPattern(/\{(\w+)\}\s*(?:<>|!=)\s*([\w.-]+)/);
-  
-  if (match) return null;
-  
-  match = matchPattern(/\{(\w+)\}\s+contains\s+'([^']+)'/) ||
-          matchPattern(/\{(\w+)\}\s+contains\s+"([^"]+)"/) ||
-          matchPattern(/\{(\w+)\}\s+contains\s+([\w.-]+)/);
+  // Contains (for text search): {fieldId} contains 'text'
+  match = trimmed.match(/\{(\w+)\}\s+contains\s+'([^']+)'/) ||
+          trimmed.match(/\{(\w+)\}\s+contains\s+"([^"]+)"/) ||
+          trimmed.match(/\{(\w+)\}\s+contains\s+([\w.-]+)/);
   
   if (match) {
     return { targetId: match[1], operator: 'contains', value: match[2] };
   }
   
-  match = matchPattern(/\{(\w+)\}\s+empty/i);
-  if (match) return { targetId: match[1], operator: 'equals', value: '' };
+  // Empty check: {fieldId} empty
+  match = trimmed.match(/\{(\w+)\}\s+empty/i);
+  if (match) return { targetId: match[1], operator: 'empty', value: '' };
   
-  match = matchPattern(/\{(\w+)\}\s+notempty/i);
-  if (match) return null;
+  // Not empty check: {fieldId} notempty
+  match = trimmed.match(/\{(\w+)\}\s+notempty/i);
+  if (match) return { targetId: match[1], operator: 'notEmpty', value: '' };
   
   return null;
 }
@@ -487,6 +677,14 @@ function resolveEnableWhenValues(fields) {
   const processField = (field) => {
     if (field.enableWhen && field.enableWhen.conditions) {
       field.enableWhen.conditions.forEach(condition => {
+        const numericOperators = ['greaterThan', 'greaterThanOrEqual', 'lessThan', 'lessThanOrEqual'];
+        const skipResolve = numericOperators.includes(condition.operator) || 
+                           condition.propertyAccessor ||
+                           condition.operator === 'empty' ||
+                           condition.operator === 'notEmpty';
+        
+        if (skipResolve) return;
+        
         const targetField = fieldMap.get(condition.targetId);
         
         if (targetField?.options && Array.isArray(targetField.options)) {
