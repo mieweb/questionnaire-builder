@@ -13,6 +13,7 @@ export const useUIApi = () => {
   const selectedFieldVal = useStore(uiStore, (s) => s.selectedFieldId);
   const isEditModalOpen  = useStore(uiStore, (s) => s.isEditModalOpen);
   const conversionReport = useStore(uiStore, (s) => s.conversionReport);
+  const codeEditorHasError = useStore(uiStore, (s) => s.codeEditorHasError);
 
   // ────────── Base actions ──────────
   const setPreview            = useStore(uiStore, (s) => s.setPreview);
@@ -30,6 +31,7 @@ export const useUIApi = () => {
   const clearConversionReport = useStore(uiStore, (s) => s.clearConversionReport);
   
   const setHideUnsupportedFields = useStore(uiStore, (s) => s.setHideUnsupportedFields);
+  const setCodeEditorHasError = useStore(uiStore, (s) => s.setCodeEditorHasError);
 
   // ────────── selectedChildId (reactive read) ──────────
   const selectedChild         = useStore(uiStore, (s) => s.selectedChildId); 
@@ -46,7 +48,7 @@ export const useUIApi = () => {
   const toggleEdit = React.useCallback(() => setEditModalOpen((v) => !v), [setEditModalOpen]);
 
   return React.useMemo(() => ({
-    state: { isPreview, isCodeEditor, isEditModalOpen, panelResetKey },
+    state: { isPreview, isCodeEditor, isEditModalOpen, panelResetKey, codeEditorHasError },
 
     isPreview,
     isCodeEditor,
@@ -82,14 +84,17 @@ export const useUIApi = () => {
     
     // ────────── Hide unsupported fields ──────────
     setHideUnsupportedFields,
+    
+    // ────────── Code editor error state ──────────
+    setCodeEditorHasError,
   }), [
-    isPreview, isCodeEditor, isEditModalOpen, panelResetKey,
+    isPreview, isCodeEditor, isEditModalOpen, panelResetKey, codeEditorHasError,
     setPreview, togglePreview, setCodeEditor, toggleCodeEditor,
     selectedFieldVal, setSelectField, clearSelectedField, renameSelectedFieldId,
     setEditModalOpen, openEdit, closeEdit, toggleEdit,
     selectedChild, setSelectedChildId, clearSelectedChildId,
     renameSelectedChildParentId, renameSelectedChildId,
     conversionReport, setConversionReport, clearConversionReport,
-    setHideUnsupportedFields,
+    setHideUnsupportedFields, setCodeEditorHasError,
   ]);
 };

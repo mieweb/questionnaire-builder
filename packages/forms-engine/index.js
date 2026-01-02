@@ -28,6 +28,7 @@ export { initializeField, initializeFieldOptions } from './src/helper_shared/ini
 export { isVisible } from './src/helper_shared/logicVisibility.js';
 export { detectSchemaType, adaptSchema, MIE_FORMS_SCHEMA_TYPE } from './src/helper_shared/schemaAdapter.js';
 export { parseInput, parseAndDetect } from './src/helper_shared/schemaParser.js';
+export { AlertProvider, useAlert } from './src/helper_shared/AlertContext.jsx';
 export { generateFieldId, generateOptionId } from './src/helper_shared/idGenerator.js';
 
 // state: stores, apis, selectors

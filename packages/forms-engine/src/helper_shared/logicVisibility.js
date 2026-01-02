@@ -50,11 +50,59 @@ function evaluate(cond, byId) {
   const target = byId?.[cond?.targetId];
   if (!target) return false;
 
-  const actual = getValueOf(target);
+  let actual = getValueOf(target);
   const expected = cond?.value;
 
-  // For numeric expressions, use numeric comparisons
-  const isNumeric = isNumericExpression(target);
+  // Apply property accessor if specified (e.g., .length, .count)
+  if (cond?.propertyAccessor) {
+    const prop = cond.propertyAccessor.toLowerCase();
+    if (prop === 'length' || prop === 'count') {
+      if (Array.isArray(actual)) {
+        actual = actual.length;
+      } else if (typeof actual === 'string') {
+        actual = actual.length;
+      } else if (typeof actual === 'object' && actual !== null) {
+        // For objects, count keys
+        actual = Object.keys(actual).length;
+      } else {
+        actual = 0;
+      }
+    } else {
+      // Unknown property accessor
+      return false;
+    }
+  }
+
+  // For rating/ranking fields with numeric comparisons, resolve the selected option's numeric value
+  const numericOperators = ['greaterThan', 'greaterThanOrEqual', 'lessThan', 'lessThanOrEqual'];
+  if (numericOperators.includes(cond?.operator) && 
+      (target.fieldType === 'rating' || target.fieldType === 'ranking' || target.fieldType === 'slider')) {
+    // actual is an option ID (e.g., "rating-option-7"), find its numeric value
+    if (typeof actual === 'string' && Array.isArray(target.options)) {
+      const selectedOption = target.options.find(opt => opt.id === actual);
+      if (selectedOption && typeof selectedOption.value === 'number') {
+        actual = selectedOption.value;
+      }
+    }
+  }
+
+  // Handle empty/notEmpty operators (work with property accessors too)
+  if (cond?.operator === 'empty') {
+    if (Array.isArray(actual)) return actual.length === 0;
+    if (typeof actual === 'object' && actual !== null) return Object.keys(actual).length === 0;
+    return !actual || String(actual).trim() === '';
+  }
+  
+  if (cond?.operator === 'notEmpty') {
+    if (Array.isArray(actual)) return actual.length > 0;
+    if (typeof actual === 'object' && actual !== null) return Object.keys(actual).length > 0;
+    return actual && String(actual).trim() !== '';
+  }
+
+  // For numeric expressions or numeric comparisons, use numeric logic
+  const isNumeric = isNumericExpression(target) || 
+                    ['greaterThan', 'greaterThanOrEqual', 'lessThan', 'lessThanOrEqual'].includes(cond?.operator);
+  
   if (isNumeric) {
     const actualNum = parseFloat(actual);
     const expectedNum = parseFloat(expected);
@@ -67,6 +115,8 @@ function evaluate(cond, byId) {
     switch (cond?.operator) {
       case "equals":
         return Math.abs(actualNum - expectedNum) < Number.EPSILON * 10;
+      case "notEquals":
+        return Math.abs(actualNum - expectedNum) >= Number.EPSILON * 10;
       case "greaterThan":
         return actualNum > expectedNum;
       case "greaterThanOrEqual":
@@ -85,6 +135,11 @@ function evaluate(cond, byId) {
     case "equals":
       if (Array.isArray(actual)) return false;
       return String(actual ?? "") === String(expected ?? "");
+      
+    case "notEquals":
+      if (Array.isArray(actual)) return true;
+      return String(actual ?? "") !== String(expected ?? "");
+      
     case "contains": {
       const norm = (s) =>
         String(s ?? "")

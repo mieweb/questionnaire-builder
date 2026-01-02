@@ -18,7 +18,6 @@ function NonSectionEditor({ f }) {
 
   return (
     <>
-      <h3 className="text-lg font-semibold mb-3">Edit</h3>
       <CommonEditor f={f} onUpdateField={onUpdateField} />
 
       {f.fieldType === "input" && (

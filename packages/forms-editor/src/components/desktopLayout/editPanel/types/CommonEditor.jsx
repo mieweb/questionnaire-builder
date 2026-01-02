@@ -1,6 +1,7 @@
 import React from "react";
 import { useFormStore } from "@mieweb/forms-engine";
 import DraftIdEditor from "./DraftIdEditor"
+import InputTypeEditor from "./InputTypeEditor";
 
 function CommonEditor({ f, onUpdateField }) {
   const byId = useFormStore(React.useCallback(s => s.byId, []));
@@ -46,16 +47,9 @@ function CommonEditor({ f, onUpdateField }) {
         />
       </div>
 
-      <div>
-        <label className="inline-flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={!!f.required}
-            onChange={(e) => onUpdateField("required", e.target.checked)}
-          />
-          Required
-        </label>
-      </div>
+      {(f.fieldType === "text" || f.fieldType === "longtext") && (
+        <InputTypeEditor field={f} onUpdate={onUpdateField} />
+      )}
 
       <div>
         <label className="block text-sm mb-1">Sublabel (optional)</label>
@@ -65,6 +59,17 @@ function CommonEditor({ f, onUpdateField }) {
           onChange={(e) => onUpdateField("sublabel", e.target.value)}
           placeholder="Helper text / description"
         />
+      </div>
+
+      <div>
+        <label className="inline-flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={!!f.required}
+            onChange={(e) => onUpdateField?.("required", e.target.checked)}
+          />
+          Required
+        </label>
       </div>
     </div>
   );

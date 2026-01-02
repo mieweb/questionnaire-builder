@@ -135,6 +135,71 @@ const handleChange = (formData) => {
 };
 ```
 
+### Auto-save in Code Mode
+
+The code editor automatically saves changes when you switch modes:
+
+- **No Apply button needed** - Changes save when switching to Build or Preview mode
+- **Smart saving** - Only saves if the code is valid and different from current state
+- **Error prevention** - Build/Preview buttons disabled if code has syntax errors
+- **Visual feedback** - Error banner shows syntax issues in real-time
+
+## Importing SurveyJS Schemas
+
+### Via Code Editor (Paste)
+
+When pasting a SurveyJS schema into the code editor:
+
+1. **Paste** your SurveyJS JSON/YAML
+2. **Confirmation modal appears** automatically
+3. Choose **"Yes, Convert"** to convert to MIE Forms, or **"No, Cancel Paste"** to undo
+4. If converted, see a report of fields converted and dropped
+
+```jsx
+// Just paste this into the code editor and confirm:
+{
+  "title": "Survey",
+  "pages": [{
+    "elements": [
+      { "type": "text", "name": "firstName", "title": "First Name" },
+      { "type": "radiogroup", "name": "role", "title": "Your Role", 
+        "choices": ["Developer", "Designer", "Manager"] }
+    ]
+  }]
+}
+```
+
+### Via Import Button
+
+Use the Import button in the editor header:
+
+1. Click **Import**
+2. Select a SurveyJS JSON/YAML file
+3. Confirm the schema type in the modal
+4. Schema is converted and loaded automatically
+
+### Programmatically
+
+Pass a SurveyJS schema with the `schemaType` prop:
+
+```jsx
+const surveySchema = {
+  pages: [{
+    elements: [
+      { type: 'text', name: 'email', title: 'Email Address' }
+    ]
+  }]
+};
+
+<QuestionnaireEditor 
+  initialFormData={surveySchema}
+  schemaType="surveyjs"
+  onChange={setFormData}
+/>
+```
+
+The editor will convert it to MIE Forms format and your `onChange` will receive the normalized schema.
+
 ## Custom Styling
 
 Hide the header or add custom classes:
