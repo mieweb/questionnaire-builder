@@ -23,6 +23,11 @@ export default function CodeEditor() {
   });
   const [error, setError] = React.useState("");
 
+  // Clear error state on mount if we have valid initial code
+  React.useEffect(() => {
+    ui.setCodeEditorHasError(false);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Parse code based on format
   const parseCode = React.useCallback((codeText) => {
     if (format === "json") {
@@ -63,10 +68,12 @@ export default function CodeEditor() {
       setCode(newCode);
       codeRef.current = newCode;
       setError("");
+      ui.setCodeEditorHasError(false);
     } catch (err) {
       setError(`Failed to serialize: ${err.message}`);
+      ui.setCodeEditorHasError(true);
     }
-  }, [formData, serializeData]);
+  }, [formData, serializeData, ui]);
 
   const handleCodeChange = (value) => {
     setCode(value || "");
@@ -165,8 +172,10 @@ export default function CodeEditor() {
       codeRef.current = newCode;
       setFormat(newFormat);
       setError("");
+      ui.setCodeEditorHasError(false);
     } catch (err) {
       setError(`Cannot convert: ${err.message}`);
+      ui.setCodeEditorHasError(true);
     }
   };
 
