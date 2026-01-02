@@ -73,10 +73,22 @@ export default function Header() {
       ui.selectedFieldId.clear();
       ui.preview.set(false);
 
-      showAlert(
-        `Format: ${confirmedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}\nLoaded ${fields.length} field(s)`,
-        { title: '✅ Import Successful' }
-      );
+      // Show conversion details for SurveyJS imports
+      if (confirmedSchemaType === 'surveyjs' && result.conversionReport) {
+        const report = result.conversionReport;
+        const unsupportedCount = report.unsupportedFields?.length || 0;
+        showAlert(
+          `Format: SurveyJS → MIE Forms\n\n` +
+          `Converted: ${report.convertedFields || 0} field(s)\n` +
+          `Unsupported: ${unsupportedCount} field(s)${unsupportedCount > 0 ? ' ⚠️' : ''}`,
+          { title: '✅ Import Successful' }
+        );
+      } else {
+        showAlert(
+          `Format: ${confirmedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}\nLoaded ${fields.length} field(s)`,
+          { title: '✅ Import Successful' }
+        );
+      }
 
       setShowSchemaConfirm(false);
       setPendingImport(null);

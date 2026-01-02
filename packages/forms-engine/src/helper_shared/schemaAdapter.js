@@ -45,7 +45,7 @@ function surveyJSToMIEForms(surveyData) {
     surveyMetadata: extractSurveyMetadata(surveyData),
     totalElements: 0,
     convertedFields: 0,
-    droppedFields: [],
+    unsupportedFields: [],
     warnings: []
   };
   
@@ -79,7 +79,16 @@ function surveyJSToMIEForms(surveyData) {
   const fields = elements.map(element => {
     const result = convertSurveyElement(element, fieldNames);
     if (result) {
-      conversionReport.convertedFields++;
+      // Check if field is unsupported (has unsupportedType property)
+      if (result.unsupportedType) {
+        conversionReport.unsupportedFields.push({
+          name: element.name || 'unnamed',
+          type: element.type || 'unknown',
+          title: element.title || ''
+        });
+      } else {
+        conversionReport.convertedFields++;
+      }
       if (result._conversionWarnings && result._conversionWarnings.length > 0) {
         conversionReport.warnings.push(...result._conversionWarnings.map(w => ({
           ...w,
@@ -87,12 +96,6 @@ function surveyJSToMIEForms(surveyData) {
           fieldName: element.name
         })));
       }
-    } else {
-      conversionReport.droppedFields.push({
-        name: element.name || 'unnamed',
-        type: element.type || 'unknown',
-        title: element.title || ''
-      });
     }
     return result;
   }).filter(Boolean);
@@ -249,11 +252,19 @@ function convertSurveyElement(element, fieldNames = new Set()) {
       
     case 'expression':
       field.label = element.title || element.name || 'Calculated Result';
-      field.expression = element.expression || '';
-      field.displayFormat = 'number';
+      const conversionResult = convertSurveyJSExpression(element.expression || '');
+      field.expression = conversionResult.expression;
+      
+      // Auto-detect if this is string concatenation
+      field.displayFormat = conversionResult.isStringExpression ? 'string' : 'number';
       field.decimalPlaces = 2;
       field.sampleDataFields = [];
       field.answer = '';
+      
+      // Add warnings for lost expression features
+      if (conversionResult.warnings.length > 0) {
+        warnings.push(...conversionResult.warnings);
+      }
       break;
       
     case 'section':
@@ -320,6 +331,7 @@ function mapSurveyTypeToMIEForms(surveyType) {
     
     // Single choice
     'radiogroup': 'radio',
+    'buttongroup': 'radio',       // Button-style radio group
     'dropdown': 'dropdown',
     'boolean': 'boolean',         // Yes/No field
     
@@ -412,6 +424,80 @@ function extractSurveyMetadata(surveyData) {
   });
   
   return metadata;
+}
+
+function convertSurveyJSExpression(expression) {
+  if (!expression) return { expression: '', warnings: [], isStringExpression: false };
+  
+  const warnings = [];
+  let converted = expression;
+  const original = expression;
+  
+  // Track if we removed advanced features
+  let hadAdvancedFeatures = false;
+  
+  // Check if this is a string concatenation expression
+  const hasQuotes = converted.includes("'") || converted.includes('"');
+  const isStringExpression = hasQuotes;
+  
+  // Remove common SurveyJS wrapper patterns like iif(isNaN(...), '', actual_expr)
+  // Pattern: iif(isNaN({field1}) or isNaN({field2}), '', {field1} + {field2})
+  const iifIsNaNPattern = /iif\s*\(\s*isNaN\s*\([^)]+\)\s+or\s+isNaN\s*\([^)]+\)\s*,\s*''\s*,\s*(.+)\s*\)/i;
+  const isNaNMatch = converted.match(iifIsNaNPattern);
+  if (isNaNMatch) {
+    converted = isNaNMatch[1].trim();
+    hadAdvancedFeatures = true;
+  }
+  
+  // Check for other iif() patterns that we can't fully convert
+  if (converted.includes('iif(')) {
+    warnings.push({
+      type: 'expression_function_lost',
+      property: 'expression',
+      value: 'iif()',
+      message: 'Conditional iif() function not supported - may produce unexpected results',
+      impact: 'high'
+    });
+  }
+  
+  // Remove trim() function wrapper - keep the content inside
+  // Pattern: trim(expression) -> expression
+  const trimPattern = /^\s*trim\s*\(\s*(.+?)\s*\)\s*$/i;
+  const trimMatch = converted.match(trimPattern);
+  if (trimMatch) {
+    converted = trimMatch[1].trim();
+    hadAdvancedFeatures = true;
+  }
+  
+  // Don't warn about string concatenation since we now support it with displayFormat: 'string'
+  // (Only warn if there are quotes AND it's not clearly a string concat pattern)
+  
+  // Check for other SurveyJS functions we don't support
+  const unsupportedFunctions = ['age(', 'date(', 'today(', 'isNaN(', 'contains('];
+  unsupportedFunctions.forEach(func => {
+    if (converted.toLowerCase().includes(func.toLowerCase())) {
+      warnings.push({
+        type: 'expression_function_lost',
+        property: 'expression',
+        value: func,
+        message: `Function ${func} not supported in MIE Forms expressions`,
+        impact: 'high'
+      });
+    }
+  });
+  
+  // Add general warning if we simplified the expression
+  if (hadAdvancedFeatures && warnings.length === 0) {
+    warnings.push({
+      type: 'expression_simplified',
+      property: 'expression',
+      value: original,
+      message: 'Expression was simplified from SurveyJS format (removed trim/iif wrappers)',
+      impact: 'low'
+    });
+  }
+  
+  return { expression: converted.trim(), warnings, isStringExpression };
 }
 
 function checkLostInputFeatures(element, warnings) {

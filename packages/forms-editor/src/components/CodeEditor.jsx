@@ -128,10 +128,11 @@ export default function CodeEditor() {
                   if (conversionReport) {
                     ui.setConversionReport(conversionReport);
                     setTimeout(() => {
+                      const unsupportedCount = conversionReport?.unsupportedFields?.length || 0;
                       showAlert(
                         `This schema has been converted to MIE Forms format.\n\n` +
                         `Converted: ${conversionReport?.convertedFields || 0} field(s)\n` +
-                        `Dropped: ${conversionReport?.droppedFields?.length || 0} unsupported field(s)\n\n` +
+                        `Unsupported: ${unsupportedCount} field(s)${unsupportedCount > 0 ? ' ⚠️' : ''}\n\n` +
                         `Please use MIE Forms schema inside of code editor for the best experience in the future.`,
                         { title: 'ℹ️ SurveyJS Schema Detected' }
                       );
