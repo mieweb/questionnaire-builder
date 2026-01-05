@@ -83,19 +83,58 @@ function surveyJSToMIEForms(surveyData) {
   };
   collectFieldNames(elements);
   
+  // Helper to recursively count fields
+  const countFields = (field) => {
+    if (!field) return { converted: 0, unsupported: 0 };
+    
+    let converted = 0;
+    let unsupported = 0;
+    
+    if (field.unsupportedType) {
+      unsupported++;
+    } else if (field.fieldType !== 'section') {
+      converted++;
+    }
+    
+    // Recursively count nested fields in sections
+    if (field.fields && Array.isArray(field.fields)) {
+      field.fields.forEach(child => {
+        const childCounts = countFields(child);
+        converted += childCounts.converted;
+        unsupported += childCounts.unsupported;
+      });
+    }
+    
+    return { converted, unsupported };
+  };
+  
   const fields = elements.map(element => {
     const result = convertSurveyElement(element, fieldNames);
     if (result) {
-      // Check if field is unsupported (has unsupportedType property)
-      if (result.unsupportedType) {
-        conversionReport.unsupportedFields.push({
-          name: element.name || 'unnamed',
-          type: element.type || 'unknown',
-          title: element.title || ''
-        });
-      } else {
-        conversionReport.convertedFields++;
+      // Recursively count all fields including nested ones
+      const counts = countFields(result);
+      conversionReport.convertedFields += counts.converted;
+      
+      if (counts.unsupported > 0 || result.unsupportedType) {
+        // Add to unsupported list
+        const addUnsupported = (field, elementData) => {
+          if (field.unsupportedType) {
+            conversionReport.unsupportedFields.push({
+              name: elementData.name || 'unnamed',
+              type: elementData.type || 'unknown',
+              title: elementData.title || ''
+            });
+          }
+          if (field.fields && Array.isArray(field.fields)) {
+            field.fields.forEach((child, idx) => {
+              const childElement = elementData.elements?.[idx] || {};
+              addUnsupported(child, childElement);
+            });
+          }
+        };
+        addUnsupported(result, element);
       }
+      
       if (result._conversionWarnings && result._conversionWarnings.length > 0) {
         conversionReport.warnings.push(...result._conversionWarnings.map(w => ({
           ...w,
@@ -218,7 +257,8 @@ function convertSurveyElement(element, fieldNames = new Set()) {
     case 'rating':
       // Convert SurveyJS rating (rateMin/rateMax) to options array
       field.options = mapRatingToOptions(element);
-      field.selected = element.defaultValue || null;
+      // Don't set selected from defaultValue - that's a form behavior, not initial data
+      field.selected = null;
       break;
       
     case 'ranking':
@@ -262,11 +302,37 @@ function convertSurveyElement(element, fieldNames = new Set()) {
       const conversionResult = convertSurveyJSExpression(element.expression || '');
       field.expression = conversionResult.expression;
       
-      // Auto-detect if this is string concatenation
-      field.displayFormat = conversionResult.isStringExpression ? 'string' : 'number';
-      field.decimalPlaces = 2;
-      field.sampleDataFields = [];
-      field.answer = '';
+      // Check if expression contains unsupported functions
+      const hasUnsupportedFunctions = conversionResult.warnings.some(
+        w => w.type === 'expression_function_unsupported'
+      );
+      
+      if (hasUnsupportedFunctions) {
+        // Mark as unsupported field
+        field.fieldType = 'unsupported';
+        field.unsupportedType = 'expression';
+        field.unsupportedData = {
+          ...element,
+          reason: 'Expression contains unsupported functions: ' + 
+            conversionResult.warnings
+              .filter(w => w.type === 'expression_function_unsupported')
+              .map(w => w.value)
+              .join(', ')
+        };
+      } else {
+        // Use displayStyle from SurveyJS if provided, otherwise auto-detect
+        const supportedFormats = ['number', 'currency', 'percentage', 'boolean', 'string'];
+        if (element.displayStyle) {
+          field.displayFormat = supportedFormats.includes(element.displayStyle) 
+            ? element.displayStyle 
+            : 'string';
+        } else {
+          field.displayFormat = conversionResult.isStringExpression ? 'string' : 'number';
+        }
+        field.decimalPlaces = 2;
+        field.sampleDataFields = [];
+        field.answer = '';
+      }
       
       // Add warnings for lost expression features
       if (conversionResult.warnings.length > 0) {
@@ -400,17 +466,18 @@ function mapRatingToOptions(element) {
   const options = [];
   for (let i = min; i <= max; i += step) {
     options.push({ 
+      id: `${element.name}-option-${options.length}`,  // Unique ID for selection
       text: String(i),  // Display text
       value: i          // Actual numeric value for comparisons
     });
   }
   
   return options.length > 0 ? options : [
-    { text: '1', value: 1 },
-    { text: '2', value: 2 },
-    { text: '3', value: 3 },
-    { text: '4', value: 4 },
-    { text: '5', value: 5 }
+    { id: 'rating-1', text: '1', value: 1 },
+    { id: 'rating-2', text: '2', value: 2 },
+    { id: 'rating-3', text: '3', value: 3 },
+    { id: 'rating-4', text: '4', value: 4 },
+    { id: 'rating-5', text: '5', value: 5 }
   ];
 }
 
@@ -456,6 +523,7 @@ function convertSurveyJSExpression(expression) {
     let argStart = iifStart + 4; // After 'iif('
     const args = [];
     let currentArg = '';
+    let iifEnd = -1;
     
     for (let i = argStart; i < expr.length; i++) {
       const char = expr[i];
@@ -481,6 +549,7 @@ function convertSurveyJSExpression(expression) {
         if (depth === 0) {
           // End of iif()
           args.push(currentArg.trim());
+          iifEnd = i + 1; // Position after the closing )
           break;
         }
         depth--;
@@ -493,7 +562,7 @@ function convertSurveyJSExpression(expression) {
       }
     }
     
-    if (args.length === 3) {
+    if (args.length === 3 && iifEnd !== -1) {
       const [condition, trueVal, falseVal] = args;
       // Recursively convert nested iif in each part
       const convertedCond = convertIif(condition);
@@ -503,7 +572,6 @@ function convertSurveyJSExpression(expression) {
       const replacement = `if ${convertedCond} then ${convertedTrue} else ${convertedFalse}`;
       
       // Replace the original iif(...) with the converted version
-      const iifEnd = expr.indexOf(')', argStart + currentArg.length) + 1;
       const before = expr.substring(0, iifStart);
       const after = expr.substring(iifEnd);
       
@@ -524,14 +592,21 @@ function convertSurveyJSExpression(expression) {
   // Match = that is not preceded by <, >, !, = and not followed by =
   converted = converted.replace(/(?<![<>=!])=(?!=)/g, '==');
   
-  // 4. Convert notempty operator: {field} notempty → {field} != ''
-  converted = converted.replace(/(\{[^}]+\})\s+notempty\b/gi, "$1 != ''");
+  // 3b. Convert string literals in comparisons to bracket syntax
+  // Pattern: ==|!=|<|>|<=|>= followed by optional spaces and 'text' or "text"
+  // Convert to [text] to distinguish from concatenation strings
+  converted = converted.replace(/(==|!=|<|>|<=|>=)\s*(['"])([^'"]+)\2/g, '$1 [$3]');
+  // Also handle the reverse: 'text' followed by comparison operator
+  converted = converted.replace(/(['"])([^'"]+)\1\s*(==|!=|<|>|<=|>=)/g, '[$2] $3');
   
-  // 5. Convert empty operator: {field} empty → {field} == ''
-  converted = converted.replace(/(\{[^}]+\})\s+empty\b/gi, "$1 == ''");
+  // 4. Convert notempty operator: {field} notempty → {field} != []
+  converted = converted.replace(/(\{[^}]+\})\s+notempty\b/gi, "$1 != []");
   
-  // 6. Convert escape sequences in strings (\\n → actual space, since we don't support newlines in display)
-  converted = converted.replace(/\\n/g, ' ');
+  // 5. Convert empty operator: {field} empty → {field} == []
+  converted = converted.replace(/(\{[^}]+\})\s+empty\b/gi, "$1 == []");
+  
+  // 6. Convert escape sequences - \n to <nl> for newlines, \t to space, \r removed
+  converted = converted.replace(/\\n/g, '<nl>');
   converted = converted.replace(/\\t/g, ' ');
   converted = converted.replace(/\\r/g, '');
   
@@ -585,6 +660,10 @@ function convertSurveyJSExpression(expression) {
     { pattern: /\bcount\s*\(/i, name: 'count()' },
     { pattern: /\bcontains\s*\(/i, name: 'contains()' },
     { pattern: /\bisNaN\s*\(/i, name: 'isNaN()' },
+    { pattern: /\bcoalesce\s*\(/i, name: 'coalesce()' },
+    { pattern: /\bupper\s*\(/i, name: 'upper()' },
+    { pattern: /\blower\s*\(/i, name: 'lower()' },
+    { pattern: /\bsubstring\s*\(/i, name: 'substring()' },
   ];
   
   unsupportedFunctions.forEach(({ pattern, name }) => {
