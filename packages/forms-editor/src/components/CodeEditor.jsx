@@ -11,6 +11,7 @@ export default function CodeEditor() {
   const containerRef = React.useRef(null);
   const codeRef = React.useRef("");
   const editorRef = React.useRef(null);
+  const hasUnsavedChanges = React.useRef(false);
   
   const [format, setFormat] = React.useState("yaml"); // "json" or "yaml"
   const [editorHeight, setEditorHeight] = React.useState(640);
@@ -63,6 +64,9 @@ export default function CodeEditor() {
 
   // Update code when formData changes (syncing from visual editor)
   React.useEffect(() => {
+    // Don't overwrite if user has unsaved pasted content
+    if (hasUnsavedChanges.current) return;
+    
     try {
       const newCode = serializeData(formData);
       setCode(newCode);
@@ -78,6 +82,7 @@ export default function CodeEditor() {
   const handleCodeChange = (value) => {
     setCode(value || "");
     codeRef.current = value || "";
+    hasUnsavedChanges.current = true;
     
     // Live validation
     try {
@@ -121,6 +126,7 @@ export default function CodeEditor() {
                   const { fields, conversionReport } = adaptSchema(parsed, schemaType);
                   const finalSchema = {
                     schemaType: parsed.schemaType || MIE_FORMS_SCHEMA_TYPE,
+                    ...(conversionReport?.surveyMetadata || {}),
                     fields
                   };
                   
@@ -131,6 +137,7 @@ export default function CodeEditor() {
                   codeRef.current = convertedCode;
                   editor.setValue(convertedCode);
                   setError("");
+                  hasUnsavedChanges.current = false;
                   
                   if (conversionReport) {
                     ui.setConversionReport(conversionReport);
@@ -182,10 +189,16 @@ export default function CodeEditor() {
   // Auto-save when switching away from code editor (component unmounting)
   React.useEffect(() => {
     return () => {
-      if (!codeRef.current) return;
+      const currentCode = codeRef.current?.trim();
+      
+      if (!currentCode) {
+        replaceAll({ schemaType: MIE_FORMS_SCHEMA_TYPE, fields: [] });
+        hasUnsavedChanges.current = false;
+        return;
+      }
 
       try {
-        const parsed = parseCode(codeRef.current);
+        const parsed = parseCode(currentCode);
 
         if (!parsed || typeof parsed !== "object") return;
 
@@ -197,6 +210,7 @@ export default function CodeEditor() {
 
         const finalSchema = {
           schemaType: parsed.schemaType || MIE_FORMS_SCHEMA_TYPE,
+          ...(conversionReport?.surveyMetadata || {}),
           fields
         };
 
@@ -206,6 +220,7 @@ export default function CodeEditor() {
 
         replaceAll(finalSchema);
         ui.setCodeEditorHasError(false);
+        hasUnsavedChanges.current = false;
       } catch (err) {
         // Silently fail - error already shown in editor header
       }

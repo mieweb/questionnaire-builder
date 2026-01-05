@@ -55,13 +55,12 @@ export default function Header() {
 
       const schemaObject = {
         schemaType: confirmedSchemaType === 'surveyjs' ? 'mieforms-v1.0' : (data.schemaType || 'mieforms-v1.0'),
+        ...(result.conversionReport?.surveyMetadata || {}),
         fields
       };
 
-      // Preserve original metadata for SurveyJS schemas
-      if (confirmedSchemaType === 'surveyjs' && result.conversionReport?.surveyMetadata) {
-        Object.assign(schemaObject, result.conversionReport.surveyMetadata);
-      } else if (confirmedSchemaType === 'mieforms') {
+      // For MIE Forms schemas, preserve any extra metadata that's not in surveyMetadata
+      if (confirmedSchemaType === 'mieforms') {
         // For MIE Forms, preserve any metadata that's not fields or schemaType
         const { fields: _f, schemaType: _st, ...metadata } = data;
         if (Object.keys(metadata).length > 0) {

@@ -29,7 +29,14 @@ export function adaptSchema(data, schemaType = 'mieforms') {
       return surveyJSToMIEForms(data);
       
     case 'mieforms':
-      return { fields: data.fields || [], conversionReport: null };
+      const { fields = [], schemaType: _st, ...metadata } = data;
+      return { 
+        fields, 
+        conversionReport: Object.keys(metadata).length > 0 ? {
+          sourceType: 'mieforms',
+          surveyMetadata: metadata
+        } : null 
+      };
       
     default:
       throw new Error(`Unsupported schema type: ${schemaType}. MIE Forms data must include schemaType field starting with 'mieforms-v'`);

@@ -35,35 +35,48 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                       />
                       
                       {/* Scale markers and labels below */}
-                      <div className="relative mt-2">
-                        <div className="flex justify-between text-gray-400">
-                          {options.map((option) => (
-                            <span key={option.id}>╹</span>
-                          ))}
-                        </div>
-                        <div className="flex justify-between gap-2 mt-1">
-                          {options.map((option, index) => (
-                            <div
-                              key={option.id}
-                              className="flex-1 min-w-0"
-                            >
-                              <button
-                                type="button"
-                                onClick={() => api.selection.single(option.id)}
-                                className="w-full text-left cursor-pointer focus:outline-none"
+                      <div className="relative mt-2 px-2">
+                        <div className="relative h-4 text-gray-400 text-center">
+                          {options.map((option, index) => {
+                            const position = options.length > 1 ? (index / (options.length - 1)) * 100 : 50;
+                            return (
+                              <span
+                                key={option.id}
+                                className="absolute"
+                                style={{ left: `${position}%`, transform: 'translateX(-50%)' }}
                               >
-                                <span
-                                  className={`text-sm wrap-break-word overflow-hidden inline-block max-w-full ${
-                                    selectedIndex === index
-                                      ? 'text-blue-600 font-semibold'
-                                      : 'text-gray-500 hover:text-blue-600'
-                                  }`}
+                                ╹
+                              </span>
+                            );
+                          })}
+                        </div>
+                        <div className="relative mt-1">
+                          {options.map((option, index) => {
+                            const position = options.length > 1 ? (index / (options.length - 1)) * 100 : 50;
+                            return (
+                              <div
+                                key={option.id}
+                                className="absolute"
+                                style={{ left: `${position}%`, transform: 'translateX(-50%)' }}
+                              >
+                                <button
+                                  type="button"
+                                  onClick={() => api.selection.single(option.id)}
+                                  className="cursor-pointer focus:outline-none whitespace-nowrap"
                                 >
-                                  {option.value}
-                                </span>
-                              </button>
-                            </div>
-                          ))}
+                                  <span
+                                    className={`text-sm ${
+                                      selectedIndex === index
+                                        ? 'text-blue-600 font-semibold'
+                                        : 'text-gray-500 hover:text-blue-600'
+                                    }`}
+                                  >
+                                    {option.value}
+                                  </span>
+                                </button>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
