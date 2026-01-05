@@ -44,8 +44,8 @@ const tokenizeExpression = (expression) => {
 // Helper: Evaluate a pure numeric/field expression (no string literals)
 const evaluatePureExpression = (expr, data) => {
   // First, convert bracket syntax [text] to quoted strings for evaluation
-  // Special cases: [] becomes "", <nl> becomes actual newline
-  let processed = expr.replace(/\[\]/g, '""').replace(/<nl>/g, '"\\n"').replace(/\[([^\]]+)\]/g, '"$1"');
+  // Special cases: [] becomes "", <nl> becomes literal "<nl>" string (split later for display)
+  let processed = expr.replace(/\[\]/g, '""').replace(/<nl>/g, '"<nl>"').replace(/\[([^\]]+)\]/g, '"$1"');
   
   // Substitute field references with values
   const substituted = processed.replace(/\{(\w+)\}/g, (_, fieldId) => {
