@@ -1,0 +1,205 @@
+{
+  "schemaType": "mieforms-v1.0",
+  "fields": [
+    {
+      "id": "section_inputs",
+      "fieldType": "section",
+      "question": "Input Fields (fill these to test expressions)",
+      "fields": [
+        {
+          "id": "firstName",
+          "fieldType": "text",
+          "question": "First Name",
+          "inputType": "text",
+          "answer": "John"
+        },
+        {
+          "id": "lastName",
+          "fieldType": "text",
+          "question": "Last Name",
+          "inputType": "text",
+          "answer": "Doe"
+        },
+        {
+          "id": "age",
+          "fieldType": "text",
+          "question": "Age",
+          "inputType": "number",
+          "answer": "25"
+        },
+        {
+          "id": "price",
+          "fieldType": "text",
+          "question": "Price ($)",
+          "inputType": "number",
+          "answer": "100"
+        },
+        {
+          "id": "quantity",
+          "fieldType": "text",
+          "question": "Quantity",
+          "inputType": "number",
+          "answer": "3"
+        },
+        {
+          "id": "discountPercent",
+          "fieldType": "text",
+          "question": "Discount (%)",
+          "inputType": "number",
+          "answer": "10"
+        },
+        {
+          "id": "heightCm",
+          "fieldType": "text",
+          "question": "Height (cm)",
+          "inputType": "number",
+          "answer": "175"
+        },
+        {
+          "id": "weightKg",
+          "fieldType": "text",
+          "question": "Weight (kg)",
+          "inputType": "number",
+          "answer": "70"
+        },
+        {
+          "id": "preferredContact",
+          "fieldType": "text",
+          "question": "Preferred Contact (email/phone/other)",
+          "inputType": "text",
+          "answer": "email"
+        },
+        {
+          "id": "email",
+          "fieldType": "text",
+          "question": "Email",
+          "inputType": "email",
+          "answer": "john@example.com"
+        },
+        {
+          "id": "phone",
+          "fieldType": "text",
+          "question": "Phone",
+          "inputType": "tel",
+          "answer": "555-1234"
+        }
+      ]
+    },
+    {
+      "id": "section_expressions",
+      "fieldType": "section",
+      "question": "Expression Tests",
+      "fields": [
+        {
+          "id": "expr_simple_math",
+          "fieldType": "expression",
+          "label": "1. Simple Math: price * quantity",
+          "expression": "{price} * {quantity}",
+          "displayFormat": "currency",
+          "decimalPlaces": 2
+        },
+        {
+          "id": "expr_discount",
+          "fieldType": "expression",
+          "label": "2. Discount Calculation: price * quantity * (1 - discount/100)",
+          "expression": "{price} * {quantity} * (1 - {discountPercent} / 100)",
+          "displayFormat": "currency",
+          "decimalPlaces": 2
+        },
+        {
+          "id": "expr_string_concat",
+          "fieldType": "expression",
+          "label": "3. String Concatenation: firstName + ' ' + lastName",
+          "expression": "{firstName} + ' ' + {lastName}",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_simple_if",
+          "fieldType": "expression",
+          "label": "4. Simple If: if age >= 18 then 'Adult' else 'Minor'",
+          "expression": "if {age} >= 18 then 'Adult' else 'Minor'",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_nested_if",
+          "fieldType": "expression",
+          "label": "5. Nested If: age categories",
+          "expression": "if {age} < 13 then 'Child' else if {age} < 20 then 'Teen' else if {age} < 65 then 'Adult' else 'Senior'",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_boolean",
+          "fieldType": "expression",
+          "label": "6. Boolean: age >= 21",
+          "expression": "{age} >= 21",
+          "displayFormat": "boolean"
+        },
+        {
+          "id": "expr_logical_and",
+          "fieldType": "expression",
+          "label": "7. Logical AND: age >= 18 && age < 65",
+          "expression": "if {age} >= 18 && {age} < 65 then 'Working Age' else 'Not Working Age'",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_logical_or",
+          "fieldType": "expression",
+          "label": "8. Logical OR: age < 18 || age >= 65",
+          "expression": "if {age} < 18 || {age} >= 65 then 'Discount Eligible' else 'Regular Price'",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_string_equality",
+          "fieldType": "expression",
+          "label": "9. String Equality: preferredContact == 'email'",
+          "expression": "if {preferredContact} == 'email' then {email} else if {preferredContact} == 'phone' then {phone} else 'No contact'",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_complex_string",
+          "fieldType": "expression",
+          "label": "10. Complex String: 'Name: ' + firstName + ' ' + lastName",
+          "expression": "'Name: ' + {firstName} + ' ' + {lastName}",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_percentage",
+          "fieldType": "expression",
+          "label": "11. Percentage: discountPercent display",
+          "expression": "{discountPercent}",
+          "displayFormat": "percentage",
+          "decimalPlaces": 0
+        },
+        {
+          "id": "expr_comparison_result",
+          "fieldType": "expression",
+          "label": "12. Comparison with calculation: if total > 250 then discount",
+          "expression": "if {price} * {quantity} > 250 then 'Free Shipping!' else 'Add more for free shipping'",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_not_equal",
+          "fieldType": "expression",
+          "label": "13. Not Equal: firstName != ''",
+          "expression": "if {firstName} != '' then 'Has Name' else 'No Name'",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_bmi_simple",
+          "fieldType": "expression",
+          "label": "14. BMI Calculation (simplified): weight / (height/100)^2",
+          "expression": "{weightKg} / (({heightCm} / 100) * ({heightCm} / 100))",
+          "displayFormat": "number",
+          "decimalPlaces": 1
+        },
+        {
+          "id": "expr_bmi_category",
+          "fieldType": "expression",
+          "label": "15. BMI Category",
+          "expression": "if {weightKg} / (({heightCm} / 100) * ({heightCm} / 100)) < 18.5 then 'Underweight' else if {weightKg} / (({heightCm} / 100) * ({heightCm} / 100)) < 25 then 'Normal' else if {weightKg} / (({heightCm} / 100) * ({heightCm} / 100)) < 30 then 'Overweight' else 'Obese'",
+          "displayFormat": "string"
+        }
+      ]
+    }
+  ]
+}

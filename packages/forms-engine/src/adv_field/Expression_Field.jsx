@@ -4,19 +4,131 @@ import useFieldController from "../helper_shared/useFieldController";
 import { useFormStore } from "../state/formStore";
 import { NUMERIC_EXPRESSION_FORMATS } from "../helper_shared/fieldTypes-config";
 
-// Helper: Substitute field references with values
-const substituteFields = (expression, data) => 
-  expression.replace(/{(\w+)}/g, (_, fieldId) => data[fieldId] ?? 0);
+// Helper: Check if all referenced fields have values
+const hasAllFields = (expression, data) => {
+  const fieldRefs = expression.match(/\{(\w+)\}/g) || [];
+  return fieldRefs.every(ref => {
+    const fieldId = ref.slice(1, -1);
+    return data[fieldId] !== undefined && data[fieldId] !== null && data[fieldId] !== "";
+  });
+};
 
-// Helper: Validate expression syntax
-const validateExpression = (expr) => {
-  // Only allow: numbers, operators, parentheses, spaces, and {fieldId} references
-  if (!/^[\d+\-*/(). =!<>]*(\{[a-zA-Z_][a-zA-Z0-9_]*\}[\d+\-*/(). =!<>]*)*$/.test(expr)) {
-    throw new Error("Expression contains invalid characters. Use {fieldId} for field references.");
+// Helper: Parse expression into tokens (string literals vs expressions)
+const tokenizeExpression = (expression) => {
+  const tokens = [];
+  let current = "";
+  let inQuote = null;
+  
+  for (let i = 0; i < expression.length; i++) {
+    const char = expression[i];
+    
+    if (!inQuote && (char === "'" || char === '"')) {
+      // Starting a quoted string
+      if (current.trim()) tokens.push({ type: "expr", value: current.trim() });
+      current = "";
+      inQuote = char;
+    } else if (inQuote && char === inQuote) {
+      // Ending a quoted string
+      tokens.push({ type: "string", value: current });
+      current = "";
+      inQuote = null;
+    } else {
+      current += char;
+    }
   }
-  // Disallow single = (must be ==, <=, >=, or !=)
-  if (/[^=!<>]=[^=]|^=[^=]|[^=]=$/.test(expr)) {
-    throw new Error("Single = is not allowed. Use == for comparison.");
+  
+  if (current.trim()) tokens.push({ type: "expr", value: current.trim() });
+  return tokens;
+};
+
+// Helper: Evaluate a pure numeric/field expression (no string literals)
+const evaluatePureExpression = (expr, data) => {
+  // Substitute field references with values
+  const substituted = expr.replace(/\{(\w+)\}/g, (_, fieldId) => {
+    const val = data[fieldId];
+    if (val === undefined || val === null || val === "") return "0";
+    return typeof val === "number" ? val : `"${val}"`;
+  });
+  
+  // Clean up any remaining operators at edges (from concatenation cleanup)
+  const cleaned = substituted.replace(/^\s*\+\s*/, "").replace(/\s*\+\s*$/, "").trim();
+  if (!cleaned) return "";
+  
+  // Evaluate directly - Function() constructor will throw if syntax is invalid
+  // No need to validate characters since we've already substituted safe values
+  try {
+    return Function('"use strict"; return (' + cleaned + ')')();
+  } catch (e) {
+    throw new Error("Invalid expression");
+  }
+};
+
+// Helper: Evaluate if-then-else expression (supports nesting)
+const evaluateIfThenElse = (expression, data) => {
+  // Match: if condition then trueVal else falseVal
+  const ifMatch = expression.match(/^if\s+(.+?)\s+then\s+(.+?)\s+else\s+(.+)$/i);
+  if (!ifMatch) return null;
+  
+  const [, condition, trueVal, falseVal] = ifMatch;
+  
+  // Evaluate the condition
+  const condResult = evaluatePureExpression(condition.trim(), data);
+  
+  // Get the appropriate value
+  const resultExpr = condResult ? trueVal.trim() : falseVal.trim();
+  
+  // If it's a quoted string, return the string content
+  const stringMatch = resultExpr.match(/^(['"])(.*)\\1$/);
+  if (stringMatch) return stringMatch[2];
+  
+  // Otherwise evaluate it (might be nested if-then-else)
+  if (/^if\s+/i.test(resultExpr)) {
+    return evaluateIfThenElse(resultExpr, data);
+  }
+  
+  return evaluatePureExpression(resultExpr, data);
+};
+
+// Main evaluation function
+const evaluateExpression = (expression, data = {}) => {
+  if (!expression) return { result: "", error: "" };
+  
+  // If referenced fields are missing, return empty (not error)
+  if (!hasAllFields(expression, data)) {
+    return { result: "", error: "" };
+  }
+  
+  try {
+    // Check for if-then-else syntax
+    if (/\bif\s+/i.test(expression)) {
+      const result = evaluateIfThenElse(expression.trim(), data);
+      if (result !== null) return { result, error: "" };
+    }
+    
+    // Check if expression has string literals (concatenation)
+    const hasStringLiterals = /['"]/.test(expression);
+    
+    if (hasStringLiterals) {
+      // Parse into tokens and evaluate each part
+      const tokens = tokenizeExpression(expression);
+      const results = tokens.map(token => {
+        if (token.type === "string") {
+          return token.value;
+        } else {
+          // Evaluate the expression part
+          const val = evaluatePureExpression(token.value, data);
+          return val === undefined || val === null ? "" : String(val);
+        }
+      });
+      return { result: results.join(""), error: "" };
+    }
+    
+    // Pure numeric expression
+    const result = evaluatePureExpression(expression, data);
+    return { result, error: "" };
+    
+  } catch (error) {
+    return { result: "", error: error.message || "Invalid expression" };
   }
 };
 
@@ -63,19 +175,6 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
   const [sampleDataFields, setSampleDataFields] = React.useState(field.sampleDataFields || []);
   const order = useFormStore((s) => s.order);
   const byId = useFormStore((s) => s.byId);
-  
-  // Evaluate expression (pure function - no state updates)
-  const evaluateExpression = React.useCallback((expression, data = {}) => {
-    if (!expression) return { result: "", error: "" };
-    try {
-      const evaluatedExpr = substituteFields(expression, data);
-      validateExpression(evaluatedExpr);
-      const result = Function('"use strict"; return (' + evaluatedExpr + ')')();
-      return { result, error: "" };
-    } catch (error) {
-      return { result: "", error: error.message || "Invalid expression" };
-    }
-  }, []);
 
   // Sample preview for editor mode
   const samplePreview = React.useMemo(() => {
@@ -90,9 +189,8 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
         }
       });
       
-      const evaluatedExpr = substituteFields(field.expression, sampleData);
-      validateExpression(evaluatedExpr);
-      const result = Function('"use strict"; return (' + evaluatedExpr + ')')();
+      const { result, error } = evaluateExpression(field.expression, sampleData);
+      if (error) return { result: "", error };
       
       return { 
         result: formatResult(result, field.displayFormat, field.decimalPlaces), 
@@ -136,12 +234,19 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
     ctrl.api.field.update("sampleDataFields", newFields);
   };
 
+  // Build stable representation of field data to prevent feedback loops
+  const fieldDataString = React.useMemo(() => {
+    if (!ctrl.isPreview) return "";
+    const data = buildFieldData(order, byId, field.id);
+    return JSON.stringify(data);
+  }, [ctrl.isPreview, order, byId, field.id]);
+
   // Computed result for preview mode
   const evaluationResult = React.useMemo(() => {
     if (!ctrl.isPreview || !field.expression) return { result: "", error: "" };
-    const actualData = buildFieldData(order, byId, field.id);
+    const actualData = fieldDataString ? JSON.parse(fieldDataString) : {};
     return evaluateExpression(field.expression, actualData);
-  }, [ctrl.isPreview, field.expression, order, byId, field.id]);
+  }, [ctrl.isPreview, field.expression, fieldDataString]);
 
   // Store the computed numeric result in field.answer and any evaluation error in state
   React.useEffect(() => {

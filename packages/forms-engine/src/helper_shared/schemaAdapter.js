@@ -438,71 +438,166 @@ function convertSurveyJSExpression(expression) {
   
   const warnings = [];
   let converted = expression;
-  const original = expression;
-  
-  // Track if we removed advanced features
-  let hadAdvancedFeatures = false;
   
   // Check if this is a string concatenation expression
   const hasQuotes = converted.includes("'") || converted.includes('"');
   const isStringExpression = hasQuotes;
   
-  // Remove common SurveyJS wrapper patterns like iif(isNaN(...), '', actual_expr)
-  // Pattern: iif(isNaN({field1}) or isNaN({field2}), '', {field1} + {field2})
-  const iifIsNaNPattern = /iif\s*\(\s*isNaN\s*\([^)]+\)\s+or\s+isNaN\s*\([^)]+\)\s*,\s*''\s*,\s*(.+)\s*\)/i;
-  const isNaNMatch = converted.match(iifIsNaNPattern);
-  if (isNaNMatch) {
-    converted = isNaNMatch[1].trim();
-    hadAdvancedFeatures = true;
-  }
+  // 1. Convert iif(condition, trueVal, falseVal) → if condition then trueVal else falseVal
+  // Handle nested iif() by processing innermost first (recursive approach)
+  const convertIif = (expr) => {
+    // Find iif( and match its arguments with proper parenthesis/quote balancing
+    const iifStart = expr.toLowerCase().indexOf('iif(');
+    if (iifStart === -1) return expr;
+    
+    // Find the matching closing parenthesis
+    let depth = 0;
+    let inQuote = null;
+    let argStart = iifStart + 4; // After 'iif('
+    const args = [];
+    let currentArg = '';
+    
+    for (let i = argStart; i < expr.length; i++) {
+      const char = expr[i];
+      
+      // Handle quotes
+      if ((char === "'" || char === '"') && expr[i - 1] !== '\\') {
+        if (!inQuote) inQuote = char;
+        else if (inQuote === char) inQuote = null;
+        currentArg += char;
+        continue;
+      }
+      
+      if (inQuote) {
+        currentArg += char;
+        continue;
+      }
+      
+      // Handle parentheses
+      if (char === '(') {
+        depth++;
+        currentArg += char;
+      } else if (char === ')') {
+        if (depth === 0) {
+          // End of iif()
+          args.push(currentArg.trim());
+          break;
+        }
+        depth--;
+        currentArg += char;
+      } else if (char === ',' && depth === 0) {
+        args.push(currentArg.trim());
+        currentArg = '';
+      } else {
+        currentArg += char;
+      }
+    }
+    
+    if (args.length === 3) {
+      const [condition, trueVal, falseVal] = args;
+      // Recursively convert nested iif in each part
+      const convertedCond = convertIif(condition);
+      const convertedTrue = convertIif(trueVal);
+      const convertedFalse = convertIif(falseVal);
+      
+      const replacement = `if ${convertedCond} then ${convertedTrue} else ${convertedFalse}`;
+      
+      // Replace the original iif(...) with the converted version
+      const iifEnd = expr.indexOf(')', argStart + currentArg.length) + 1;
+      const before = expr.substring(0, iifStart);
+      const after = expr.substring(iifEnd);
+      
+      // Continue converting any remaining iif() in the expression
+      return convertIif(before + replacement + after);
+    }
+    
+    return expr;
+  };
   
-  // Check for other iif() patterns that we can't fully convert
-  if (converted.includes('iif(')) {
-    warnings.push({
-      type: 'expression_function_lost',
-      property: 'expression',
-      value: 'iif()',
-      message: 'Conditional iif() function not supported - may produce unexpected results',
-      impact: 'high'
-    });
-  }
+  converted = convertIif(converted);
   
-  // Remove trim() function wrapper - keep the content inside
-  // Pattern: trim(expression) -> expression
-  const trimPattern = /^\s*trim\s*\(\s*(.+?)\s*\)\s*$/i;
-  const trimMatch = converted.match(trimPattern);
-  if (trimMatch) {
-    converted = trimMatch[1].trim();
-    hadAdvancedFeatures = true;
-  }
+  // 2. Convert logical operators (must be word-bounded to avoid matching within words)
+  converted = converted.replace(/\band\b/gi, '&&');
+  converted = converted.replace(/\bor\b/gi, '||');
   
-  // Don't warn about string concatenation since we now support it with displayFormat: 'string'
-  // (Only warn if there are quotes AND it's not clearly a string concat pattern)
+  // 3. Convert single = to == for equality (but not <=, >=, !=, ==)
+  // Match = that is not preceded by <, >, !, = and not followed by =
+  converted = converted.replace(/(?<![<>=!])=(?!=)/g, '==');
   
-  // Check for other SurveyJS functions we don't support
-  const unsupportedFunctions = ['age(', 'date(', 'today(', 'isNaN(', 'contains('];
-  unsupportedFunctions.forEach(func => {
-    if (converted.toLowerCase().includes(func.toLowerCase())) {
+  // 4. Convert notempty operator: {field} notempty → {field} != ''
+  converted = converted.replace(/(\{[^}]+\})\s+notempty\b/gi, "$1 != ''");
+  
+  // 5. Convert empty operator: {field} empty → {field} == ''
+  converted = converted.replace(/(\{[^}]+\})\s+empty\b/gi, "$1 == ''");
+  
+  // 6. Convert escape sequences in strings (\\n → actual space, since we don't support newlines in display)
+  converted = converted.replace(/\\n/g, ' ');
+  converted = converted.replace(/\\t/g, ' ');
+  converted = converted.replace(/\\r/g, '');
+  
+  // 7. Strip trim() wrapper - just use the inner content
+  // Pattern: trim(expression) → expression (handles nested content with balanced parens)
+  const stripTrim = (expr) => {
+    const trimMatch = expr.match(/\btrim\s*\(/i);
+    if (!trimMatch) return expr;
+    
+    const start = trimMatch.index;
+    const argStart = start + trimMatch[0].length;
+    let depth = 1;
+    let inQuote = null;
+    let i = argStart;
+    
+    for (; i < expr.length && depth > 0; i++) {
+      const char = expr[i];
+      if ((char === "'" || char === '"') && expr[i - 1] !== '\\') {
+        if (!inQuote) inQuote = char;
+        else if (inQuote === char) inQuote = null;
+        continue;
+      }
+      if (inQuote) continue;
+      if (char === '(') depth++;
+      else if (char === ')') depth--;
+    }
+    
+    const inner = expr.substring(argStart, i - 1);
+    const before = expr.substring(0, start);
+    const after = expr.substring(i);
+    
+    // Recursively strip any remaining trim() calls
+    return stripTrim(before + inner + after);
+  };
+  converted = stripTrim(converted);
+  
+  // 8. Check for unsupported functions and warn
+  const unsupportedFunctions = [
+    { pattern: /\bage\s*\(/i, name: 'age()' },
+    { pattern: /\btoday\s*\(/i, name: 'today()' },
+    { pattern: /\byearDiff\s*\(/i, name: 'yearDiff()' },
+    { pattern: /\bmonthDiff\s*\(/i, name: 'monthDiff()' },
+    { pattern: /\bdayDiff\s*\(/i, name: 'dayDiff()' },
+    { pattern: /\bround\s*\(/i, name: 'round()' },
+    { pattern: /\bpow\s*\(/i, name: 'pow()' },
+    { pattern: /\babs\s*\(/i, name: 'abs()' },
+    { pattern: /\bmin\s*\(/i, name: 'min()' },
+    { pattern: /\bmax\s*\(/i, name: 'max()' },
+    { pattern: /\bsum\s*\(/i, name: 'sum()' },
+    { pattern: /\bavg\s*\(/i, name: 'avg()' },
+    { pattern: /\bcount\s*\(/i, name: 'count()' },
+    { pattern: /\bcontains\s*\(/i, name: 'contains()' },
+    { pattern: /\bisNaN\s*\(/i, name: 'isNaN()' },
+  ];
+  
+  unsupportedFunctions.forEach(({ pattern, name }) => {
+    if (pattern.test(converted)) {
       warnings.push({
-        type: 'expression_function_lost',
+        type: 'expression_function_unsupported',
         property: 'expression',
-        value: func,
-        message: `Function ${func} not supported in MIE Forms expressions`,
+        value: name,
+        message: `Function ${name} not yet supported in MIE Forms - expression may not evaluate correctly`,
         impact: 'high'
       });
     }
   });
-  
-  // Add general warning if we simplified the expression
-  if (hadAdvancedFeatures && warnings.length === 0) {
-    warnings.push({
-      type: 'expression_simplified',
-      property: 'expression',
-      value: original,
-      message: 'Expression was simplified from SurveyJS format (removed trim/iif wrappers)',
-      impact: 'low'
-    });
-  }
   
   return { expression: converted.trim(), warnings, isStringExpression };
 }
@@ -797,3 +892,4 @@ function resolveEnableWhenValues(fields) {
   
   fields.forEach(processField);
 }
+
