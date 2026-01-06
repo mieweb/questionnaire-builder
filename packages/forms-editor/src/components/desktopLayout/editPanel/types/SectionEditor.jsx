@@ -13,20 +13,30 @@ function SectionEditor({ section, onActiveChildChange }) {
   if (!formStore) throw new Error('Missing FormStoreContext.Provider in the tree');
 
   const children = Array.isArray(section.fields) ? section.fields : [];
-  const [activeChildId, setActiveChildId] = React.useState(children[0]?.id || null);
-
-  // Sync with global selectedChildId from section
-  React.useEffect(() => {
-    const globalParentId = ui.selectedChildId.ParentId;
-    const globalChildId = ui.selectedChildId.ChildId;
-    if (globalParentId === section.id && globalChildId) {
-      setActiveChildId(globalChildId);
+  
+  // Initialize from global selectedChildId if valid for this section, otherwise first child
+  const globalParentId = ui.selectedChildId.ParentId;
+  const globalChildId = ui.selectedChildId.ChildId;
+  const initialChildId = React.useMemo(() => {
+    if (globalParentId === section.id && globalChildId && children.some((c) => c.id === globalChildId)) {
+      return globalChildId;
     }
-  }, [ui.selectedChildId.ParentId, ui.selectedChildId.ChildId, section.id]);
+    return children[0]?.id || null;
+  }, []); // Only compute once on mount
+  
+  const [activeChildId, setActiveChildId] = React.useState(initialChildId);
 
+  // Sync with global selectedChildId from section (only when global changes externally)
+  const prevGlobalChildIdRef = React.useRef(globalChildId);
   React.useEffect(() => {
-    setActiveChildId(children[0]?.id || null);
-  }, [section.id]);
+    // Only sync if global changed AND it's for this section AND different from current
+    if (prevGlobalChildIdRef.current !== globalChildId) {
+      prevGlobalChildIdRef.current = globalChildId;
+      if (globalParentId === section.id && globalChildId && globalChildId !== activeChildId) {
+        setActiveChildId(globalChildId);
+      }
+    }
+  }, [globalParentId, globalChildId, section.id, activeChildId]);
 
   React.useEffect(() => {
     if (!children.length) {
