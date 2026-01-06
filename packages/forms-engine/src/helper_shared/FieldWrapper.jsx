@@ -79,14 +79,14 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
       aria-selected={ctrl.selected || undefined}
       tabIndex={-1}
     >
-      <div className={`field-wrapper-edit-header flex justify-between items-center gap-3 px-3 py-2.5 ${open ? "-mx-6 -mt-6 mb-4" : "m-0"} bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 ${open ? "rounded-t-lg" : "rounded-lg"} ${ctrl.insideSection ? "hidden" : ""}`}>
+      <div className={`field-wrapper-edit-header flex justify-between items-center gap-3 px-3 py-2.5 ${open ? "-mx-6 -mt-6 mb-4" : "m-0"} bg-linear-to-r from-gray-50 to-gray-100 border-b border-gray-200 ${open ? "rounded-t-lg" : "rounded-lg"} ${ctrl.insideSection ? "hidden" : ""}`}>
         <div className="text-left flex-1 select-none text-sm font-medium text-gray-700 truncate">
           {ctrl.insideSection ? (`${ctrl.label}`) :
             (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title || ""}`) : (`${ctrl.label} ${ctrl.field.question || ""}`))}
         </div>
 
         {/* actions: Edit (mobile), Toggle (small/big view), Delete */}
-        <div className="field-wrapper-actions flex items-center gap-1 flex-shrink-0">
+        <div className="field-wrapper-actions flex items-center gap-1 shrink-0">
           <button onClick={onEditClick} className="field-edit-btn block lg:hidden p-1.5 hover:bg-white rounded transition-colors" title="Edit" aria-label="Edit field">
             <EDIT_ICON className="h-5 w-5 text-gray-600" />
           </button>

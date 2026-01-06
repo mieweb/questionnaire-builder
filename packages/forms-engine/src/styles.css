@@ -1,11 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
-@import "tailwindcss/utilities";
-@import "tailwindcss/theme";
+@import "tailwindcss" prefix(mie);
 
 @theme {
   --font-titillium: "Titillium Web", sans-serif;
 }
 
 @utility custom-scrollbar {
-  @apply [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full;
+  @apply mie:[&::-webkit-scrollbar]:w-1 mie:[&::-webkit-scrollbar-track]:bg-transparent mie:[&::-webkit-scrollbar-thumb]:bg-gray-300 mie:[&::-webkit-scrollbar-thumb]:rounded-full;
 }
