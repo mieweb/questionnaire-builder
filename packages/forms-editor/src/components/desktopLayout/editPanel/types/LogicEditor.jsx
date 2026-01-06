@@ -85,21 +85,22 @@ export default function LogicEditor() {
 
   const [target, setTarget] = React.useState(initialTarget);
 
-  // keep target in sync when switching selected field/section
+  // keep target in sync when switching selected field/section OR when initial target changes
   React.useEffect(() => {
     setTarget(initialTarget);
   }, [initialTarget]);
 
-  // sync UI child selection for other panels (no-op if not a section)
-  React.useEffect(() => {
+  // sync UI child selection when user changes the dropdown (not on every target change)
+  const handleTargetChange = React.useCallback((newTarget) => {
+    setTarget(newTarget);
     if (!isSectionCtx) return;
-    if (target && target.startsWith("child:")) {
-      const cid = target.slice(6);
+    if (newTarget && newTarget.startsWith("child:")) {
+      const cid = newTarget.slice(6);
       ui.selectedChildId.set(selectedId, cid);
     } else {
       ui.selectedChildId.set(null, null);
     }
-  }, [isSectionCtx, target, selectedId, ui]);
+  }, [isSectionCtx, selectedId, ui]);
 
   // compute effective scope
   const isChildScope = Boolean(isSectionCtx && target && target.startsWith("child:"));
@@ -243,7 +244,7 @@ export default function LogicEditor() {
           <select
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white"
             value={target}
-            onChange={(e) => setTarget(e.target.value)}
+            onChange={(e) => handleTargetChange(e.target.value)}
           >
             <option value="">Section (this)</option>
             {sectionChildren.map((c) => (
