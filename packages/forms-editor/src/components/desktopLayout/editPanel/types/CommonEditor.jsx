@@ -42,7 +42,7 @@ function CommonEditor({ f, onUpdateField }) {
         <input
           className="w-full px-3 py-2 border border-black/20 rounded"
           value={f.question || ""}
-          onChange={(e) => onUpdateField("question", e.target.value)}
+          onChange={(e) => onUpdateField?.("question", e.target.value)}
           placeholder="Enter question text"
         />
       </div>

@@ -58,14 +58,10 @@ const evaluatePureExpression = (expr, data) => {
   const cleaned = substituted.replace(/^\s*\+\s*/, "").replace(/\s*\+\s*$/, "").trim();
   if (!cleaned) return "";
   
-  // Debug logging
-  console.log('Expression eval:', { original: expr, substituted, cleaned });
-  
   // Evaluate directly - Function() constructor will throw if syntax is invalid
   // No need to validate characters since we've already substituted safe values
   try {
     const result = Function('"use strict"; return (' + cleaned + ')')();
-    console.log('Result:', result);
     return result;
   } catch (e) {
     console.error('Eval error:', e.message, 'Expression:', cleaned);
