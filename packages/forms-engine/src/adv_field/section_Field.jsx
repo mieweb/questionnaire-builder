@@ -14,10 +14,9 @@ const SectionField = React.memo(function SectionField({ field }) {
   const ui = useUIApi();
   const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
 
-  const parentId = ui.selectedChildId.ParentId;
-  const childId = ui.selectedChildId.ChildId;
-
-  const selectedChildId = parentId === field.id ? childId : null;
+  // Use reactive selectedChild instead of direct property access
+  const selectedChild = useUIStore((s) => s.selectedChildId);
+  const selectedChildId = selectedChild.parentId === field.id ? selectedChild.childId : null;
 
   const childRefs = React.useRef({});
   const previousChildCountRef = React.useRef(0);
@@ -102,9 +101,11 @@ const SectionField = React.memo(function SectionField({ field }) {
         ].join(" ")}
         onClick={(e) => {
           e.stopPropagation();
-          ui.selectedFieldId.set(sectionId);
+          // Only set selectedFieldId if it's not already the section
+          if (ui.selectedFieldId.value !== sectionId) {
+            ui.selectedFieldId.set(sectionId);
+          }
           ui.selectedChildId.set(sectionId, child.id);
-
         }}
       >
         <ChildField field={child} sectionId={sectionId} />
