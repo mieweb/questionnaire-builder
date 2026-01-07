@@ -5,16 +5,51 @@ import useFieldController from "../helper_shared/useFieldController";
 const TextField = React.memo(function TextField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
 
-  // Format phone number as (XXX) XXX-XXXX
+  // Format phone numbers:
+  // - International (+XX ...): Keep + and country code, first space, then convert spaces to dashes
+  // - US (+1 or no +): Format as (XXX) XXX-XXXX
   const formatPhoneNumber = (value) => {
     if (!value) return value;
-    const phoneNumber = value.replace(/[^\d]/g, '');
-    const phoneNumberLength = phoneNumber.length;
-    if (phoneNumberLength < 4) return phoneNumber;
-    if (phoneNumberLength < 7) {
-      return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3)}`;
+    
+    // Handle international format with country code
+    if (value.startsWith('+')) {
+      // Check if it's +1 (US/Canada country code)
+      const digitsOnly = value.replace(/[^\d]/g, '');
+      if (value.startsWith('+1') && digitsOnly.length === 11) {
+        // Format as US number: +1 (XXX) XXX-XXXX
+        const usDigits = digitsOnly.slice(1); // Remove the '1'
+        return `+1 (${usDigits.slice(0, 3)}) ${usDigits.slice(3, 6)}-${usDigits.slice(6, 10)}`;
+      }
+      
+      // For other country codes, preserve + and country code, keep first space, convert rest to dashes
+      const firstSpaceIndex = value.indexOf(' ');
+      if (firstSpaceIndex === -1) return value; // No space yet, return as-is
+      
+      const countryCodePart = value.slice(0, firstSpaceIndex + 1); // e.g., "+44 "
+      const restOfNumber = value.slice(firstSpaceIndex + 1).replace(/\s+/g, '-'); // Convert spaces to dashes
+      return countryCodePart + restOfNumber;
     }
-    return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6, 10)}`;
+    
+    // US format without country code
+    const digitsOnly = value.replace(/[^\d]/g, '');
+    const digitCount = digitsOnly.length;
+    
+    // Only format if exactly 10 digits (US number)
+    if (digitCount === 10) {
+      return `(${digitsOnly.slice(0, 3)}) ${digitsOnly.slice(3, 6)}-${digitsOnly.slice(6, 10)}`;
+    }
+    
+    // For partial entry (< 10 digits), format progressively
+    if (digitCount < 4) return digitsOnly;
+    if (digitCount < 7) {
+      return `(${digitsOnly.slice(0, 3)}) ${digitsOnly.slice(3)}`;
+    }
+    if (digitCount < 10) {
+      return `(${digitsOnly.slice(0, 3)}) ${digitsOnly.slice(3, 6)}-${digitsOnly.slice(6)}`;
+    }
+    
+    // For 11+ digits without +, preserve original
+    return value;
   };
 
   const handlePhoneChange = (value, updateFn) => {
@@ -40,8 +75,7 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
             'date': 'MM/DD/YYYY',
             'datetime-local': 'MM/DD/YYYY HH:MM',
             'month': 'MM/YYYY',
-            'time': 'HH:MM',
-            'range': '0'
+            'time': 'HH:MM'
           };
           return placeholderMap[inputType] || 'Type your answer';
         };
