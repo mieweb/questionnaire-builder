@@ -35,7 +35,6 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.9.2",
     "@docusaurus/types": "3.9.2",
-    "@tailwindcss/cli": "^4.0.0",
     "concurrently": "^9.2.1"
   },
   "browserslist": {

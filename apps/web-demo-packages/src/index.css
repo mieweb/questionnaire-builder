@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "tailwindcss" layer(utilities) prefix(mie);
 
 /* Demo app styles */
 html, body, #root { height: 100%; margin: 0; }

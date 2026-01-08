@@ -6,7 +6,8 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 
 export default [
   {       "ignores": [
-        "dist",
+        "**/dist/**",
+        "**/build/**",
         "**/vite.config.*.timestamp*",
         "**/vitest.config.*.timestamp*"
       ] },
