@@ -47,10 +47,39 @@ Monaco-powered code editor for direct JSON/YAML editing.
 
 ### Features
 
-- **Syntax Highlighting** - JSON with color-coded formatting
+- **Syntax Highlighting** - JSON/YAML with color-coded formatting
+- **Format Toggle** - Switch between JSON and YAML
 - **Auto-formatting** - Pretty-print with proper indentation
-- **Validation** - Real-time error detection
+- **Live Validation** - Real-time syntax error detection
+- **Auto-save** - Automatically saves when switching tabs (no Apply button needed)
+- **Error Prevention** - Build/Preview buttons disabled until syntax errors are fixed
 - **Full Schema Access** - Edit metadata, fields, and structure directly
+- **Schema Conversion** - Automatically detects and converts SurveyJS schemas
+
+### Auto-save Behavior
+
+The code editor **auto-saves** your changes when you switch to Build or Preview mode:
+
+- No need to click an "Apply Changes" button
+- Changes only save if the code is valid JSON/YAML
+- If there are syntax errors, you must fix them before switching modes
+- The editor compares your code with the current form state and only saves if changes were made
+
+### Schema Conversion on Paste
+
+When you **paste** a SurveyJS schema into the code editor:
+
+1. The editor automatically detects it's a SurveyJS schema
+2. Shows a confirmation modal: **"Yes, Convert"** or **"No, Cancel Paste"**
+3. If you choose **Yes**:
+   - Converts the schema to MIE Forms format
+   - Updates the editor with the converted schema
+   - Shows conversion report (fields converted, fields dropped)
+4. If you choose **No**:
+   - Cancels the paste operation
+   - Restores the previous code content
+
+This gives you immediate control over schema conversion without accidentally overwriting your work.
 
 ### When to Use Code Mode
 
@@ -59,12 +88,23 @@ Monaco-powered code editor for direct JSON/YAML editing.
 - Advanced schema modifications
 - Viewing complete form structure
 - Fine-tuning properties not exposed in Build mode
+- Importing SurveyJS schemas
+
+### SurveyJS Schema Conversion
+
+**Automatic Detection:**
+- Paste a SurveyJS schema → Get immediate confirmation prompt
+- Import a SurveyJS file → Auto-detects schema type during import
+
+**Note:** For optimal compatibility and editing features, use MIE Forms schema format. SurveyJS schemas are converted automatically but some features may not be supported.
 
 ### Tips
 
-- Changes in Code mode update Build and Preview modes instantly
-- Invalid JSON prevents switching back to Build mode until fixed (WIP)
-- Use **Export** to download your JSON for external editing
+- Changes in Code mode auto-save when switching to Build or Preview
+- Invalid JSON/YAML shows an error banner and prevents mode switching
+- Build and Preview buttons are disabled until syntax errors are fixed
+- Use **Export** to download your schema for external editing
+- Format toggle preserves your data when switching between JSON and YAML
 
 ---
 

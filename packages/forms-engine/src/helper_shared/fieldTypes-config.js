@@ -87,6 +87,8 @@ const fieldTypes = {
       fieldType: "text",
       question: "",
       answer: "",
+      inputType: "text",  // text, number, email, tel, date, datetime-local, month, time, range
+      unit: "",           // For number/range: feet, inches, meters, mm, kg, lbs, etc.
     },
     placeholder: {
       question: "Enter your question...",
@@ -245,11 +247,11 @@ const fieldTypes = {
       fieldType: "rating",
       question: "",
       options: [
-        { value: "1" },
-        { value: "2" },
-        { value: "3" },
-        { value: "4" },
-        { value: "5" },
+        { text: "1", value: 1 },
+        { text: "2", value: 2 },
+        { text: "3", value: 3 },
+        { text: "4", value: 4 },
+        { text: "5", value: 5 },
       ],
       selected: null,
     },

@@ -47,7 +47,7 @@ export default function MatrixEditor({ field, api }) {
               />
               <button
                 onClick={() => api.row.remove(row.id)}
-                className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
                 title="Remove row"
               >
                 <TRASHCANTWO_ICON className="w-5 h-5" />
@@ -81,7 +81,7 @@ export default function MatrixEditor({ field, api }) {
               />
               <button
                 onClick={() => api.column.remove(col.id)}
-                className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
                 title="Remove column"
               >
                 <TRASHCANTWO_ICON className="w-5 h-5" />

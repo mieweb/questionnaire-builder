@@ -1,0 +1,787 @@
+{
+  "schemaType": "mieforms-v1.0",
+  "title": "Comprehensive Test Form (No Special Functions in Expressions)",
+  "description": "Expressions use ONLY: field references, concatenation (+), arithmetic (+ - * /), comparisons (= != > < >= <=), and boolean operators (and/or).",
+  "fields": [
+    {
+      "id": "section_intro_identity",
+      "fieldType": "section",
+      "title": "Intro + Identity",
+      "fields": [
+        {
+          "id": "intro_html",
+          "fieldType": "html",
+          "htmlContent": "<h3>Comprehensive Test Form</h3><p>This survey covers many question types and uses expressions without any SurveyJS special functions.</p><ul><li>Allowed in expressions: <b>{field}</b>, +, -, *, /, comparisons, and/or</li><li>Not used: iif, coalesce, today, yearDiff, pow, round, trim, etc.</li></ul>",
+          "iframeHeight": 200
+        },
+        {
+          "id": "firstName",
+          "fieldType": "text",
+          "question": "First name",
+          "inputType": "text",
+          "required": true,
+          "answer": ""
+        },
+        {
+          "id": "lastName",
+          "fieldType": "text",
+          "question": "Last name",
+          "inputType": "text",
+          "required": true,
+          "answer": ""
+        },
+        {
+          "id": "email",
+          "fieldType": "text",
+          "question": "Email",
+          "inputType": "email",
+          "required": true,
+          "answer": ""
+        },
+        {
+          "id": "phone",
+          "fieldType": "text",
+          "question": "Phone",
+          "inputType": "tel",
+          "answer": ""
+        },
+        {
+          "id": "country",
+          "fieldType": "dropdown",
+          "question": "Country",
+          "required": true,
+          "options": [
+            {
+              "id": "US",
+              "value": "United States"
+            },
+            {
+              "id": "CA",
+              "value": "Canada"
+            },
+            {
+              "id": "MX",
+              "value": "Mexico"
+            },
+            {
+              "id": "OTHER",
+              "value": "Other"
+            }
+          ],
+          "selected": null
+        },
+        {
+          "id": "state",
+          "fieldType": "dropdown",
+          "question": "State (enabled only if country = US)",
+          "options": [
+            {
+              "id": "IN",
+              "value": "IN"
+            },
+            {
+              "id": "IL",
+              "value": "IL"
+            },
+            {
+              "id": "MI",
+              "value": "MI"
+            },
+            {
+              "id": "OH",
+              "value": "OH"
+            },
+            {
+              "id": "CA",
+              "value": "CA"
+            },
+            {
+              "id": "NY",
+              "value": "NY"
+            },
+            {
+              "id": "TX",
+              "value": "TX"
+            }
+          ],
+          "selected": null,
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "country",
+                "operator": "equals",
+                "value": "US"
+              }
+            ]
+          }
+        },
+        {
+          "id": "zip",
+          "fieldType": "text",
+          "question": "ZIP / Postal Code",
+          "inputType": "text",
+          "answer": ""
+        },
+        {
+          "id": "expr_fullName",
+          "fieldType": "expression",
+          "label": "Full name (expression: concat only)",
+          "expression": "{firstName} + ' ' + {lastName}",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_usLocationLine",
+          "fieldType": "expression",
+          "label": "Location line (shown only if US)",
+          "expression": "{state} + ' ' + {zip}",
+          "displayFormat": "string",
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "country",
+                "operator": "equals",
+                "value": "US"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "section_inputs_types",
+      "fieldType": "section",
+      "title": "Inputs + Validators",
+      "fields": [
+        {
+          "id": "website",
+          "fieldType": "text",
+          "question": "Website",
+          "inputType": "text",
+          "answer": ""
+        },
+        {
+          "id": "ageYears",
+          "fieldType": "text",
+          "question": "Age (years)",
+          "inputType": "number",
+          "required": true,
+          "answer": ""
+        },
+        {
+          "id": "heightCm",
+          "fieldType": "text",
+          "question": "Height (cm)",
+          "inputType": "number",
+          "required": true,
+          "answer": ""
+        },
+        {
+          "id": "weightKg",
+          "fieldType": "text",
+          "question": "Weight (kg)",
+          "inputType": "number",
+          "required": true,
+          "answer": ""
+        },
+        {
+          "id": "expr_bmi_raw",
+          "fieldType": "expression",
+          "label": "BMI raw (no pow/round): (weight*10000)/(height*height)",
+          "expression": "({weightKg} * 10000) / ({heightCm} * {heightCm})",
+          "displayFormat": "number",
+          "decimalPlaces": 2
+        },
+        {
+          "id": "about",
+          "fieldType": "longtext",
+          "question": "About you (min length 20)",
+          "answer": ""
+        },
+        {
+          "id": "password",
+          "fieldType": "text",
+          "question": "Password",
+          "inputType": "text",
+          "required": true,
+          "answer": ""
+        },
+        {
+          "id": "passwordConfirm",
+          "fieldType": "text",
+          "question": "Confirm password",
+          "inputType": "text",
+          "required": true,
+          "answer": ""
+        },
+        {
+          "id": "expr_password_status",
+          "fieldType": "expression",
+          "label": "Password status",
+          "expression": "if {password} == {passwordConfirm} then 'Passwords match' else 'Passwords do NOT match'",
+          "displayFormat": "string",
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "password",
+                "operator": "notEmpty",
+                "value": ""
+              },
+              {
+                "targetId": "passwordConfirm",
+                "operator": "notEmpty",
+                "value": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "section_choices_logic",
+      "fieldType": "section",
+      "title": "Choices + Conditional Logic",
+      "fields": [
+        {
+          "id": "preferredContact",
+          "fieldType": "radio",
+          "question": "Preferred contact method",
+          "required": true,
+          "options": [
+            {
+              "id": "email",
+              "value": "Email"
+            },
+            {
+              "id": "phone",
+              "value": "Phone"
+            },
+            {
+              "id": "none",
+              "value": "Do not contact"
+            }
+          ],
+          "selected": null
+        },
+        {
+          "id": "expr_contact_email",
+          "fieldType": "expression",
+          "label": "Contact summary",
+          "expression": "'Contact via email: ' + {email}",
+          "displayFormat": "string",
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "preferredContact",
+                "operator": "equals",
+                "value": "email"
+              }
+            ]
+          }
+        },
+        {
+          "id": "expr_contact_phone",
+          "fieldType": "expression",
+          "label": "Contact summary",
+          "expression": "'Contact via phone: ' + {phone}",
+          "displayFormat": "string",
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "preferredContact",
+                "operator": "equals",
+                "value": "phone"
+              }
+            ]
+          }
+        },
+        {
+          "id": "expr_contact_none",
+          "fieldType": "expression",
+          "label": "Contact summary",
+          "expression": "'No contact requested'",
+          "displayFormat": "string",
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "preferredContact",
+                "operator": "equals",
+                "value": "none"
+              }
+            ]
+          }
+        },
+        {
+          "id": "interests",
+          "fieldType": "check",
+          "question": "Interests (multi-select)",
+          "options": [
+            {
+              "id": "fitness",
+              "value": "fitness"
+            },
+            {
+              "id": "nutrition",
+              "value": "nutrition"
+            },
+            {
+              "id": "sleep",
+              "value": "sleep"
+            },
+            {
+              "id": "mental_health",
+              "value": "mental_health"
+            },
+            {
+              "id": "productivity",
+              "value": "productivity"
+            },
+            {
+              "id": "other",
+              "value": "other"
+            }
+          ],
+          "selected": []
+        },
+        {
+          "id": "interestDetails",
+          "fieldType": "longtext",
+          "question": "Tell us more (required if 'other' selected)",
+          "answer": "",
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "interests",
+                "operator": "includes",
+                "value": "other"
+              }
+            ]
+          }
+        },
+        {
+          "id": "priority",
+          "fieldType": "dropdown",
+          "question": "Priority",
+          "options": [
+            {
+              "id": "1",
+              "value": "Low"
+            },
+            {
+              "id": "2",
+              "value": "Medium"
+            },
+            {
+              "id": "3",
+              "value": "High"
+            }
+          ],
+          "selected": "2"
+        },
+        {
+          "id": "satisfaction",
+          "fieldType": "rating",
+          "question": "Overall satisfaction (1–5)",
+          "required": true,
+          "options": [
+            {
+              "id": "1",
+              "value": "1"
+            },
+            {
+              "id": "2",
+              "value": "2"
+            },
+            {
+              "id": "3",
+              "value": "3"
+            },
+            {
+              "id": "4",
+              "value": "4"
+            },
+            {
+              "id": "5",
+              "value": "5"
+            }
+          ],
+          "selected": null
+        },
+        {
+          "id": "expr_priority_and_satisfaction",
+          "fieldType": "expression",
+          "label": "Priority + Satisfaction summary",
+          "expression": "'Priority=' + {priority} + ', Satisfaction=' + {satisfaction}",
+          "displayFormat": "string"
+        }
+      ]
+    },
+    {
+      "id": "section_matrices",
+      "fieldType": "section",
+      "title": "Matrices + Panels",
+      "fields": [
+        {
+          "id": "matrixQuality",
+          "fieldType": "singlematrix",
+          "question": "Quality matrix",
+          "required": true,
+          "rows": [
+            {
+              "id": "ui",
+              "value": "UI"
+            },
+            {
+              "id": "perf",
+              "value": "Performance"
+            },
+            {
+              "id": "docs",
+              "value": "Documentation"
+            },
+            {
+              "id": "support",
+              "value": "Support"
+            }
+          ],
+          "columns": [
+            {
+              "id": "1",
+              "value": "1"
+            },
+            {
+              "id": "2",
+              "value": "2"
+            },
+            {
+              "id": "3",
+              "value": "3"
+            },
+            {
+              "id": "4",
+              "value": "4"
+            },
+            {
+              "id": "5",
+              "value": "5"
+            }
+          ],
+          "selected": {}
+        }
+      ]
+    },
+    {
+      "id": "section_uploads_signature",
+      "fieldType": "section",
+      "title": "Files + Signature + Misc Types",
+      "fields": [
+        {
+          "id": "signature",
+          "fieldType": "signature",
+          "question": "Signature",
+          "placeholder": "Sign here",
+          "signatureData": "",
+          "signatureImage": ""
+        },
+        {
+          "id": "mood",
+          "fieldType": "radio",
+          "question": "Mood",
+          "options": [
+            {
+              "id": "happy",
+              "value": "Happy"
+            },
+            {
+              "id": "neutral",
+              "value": "Neutral"
+            },
+            {
+              "id": "sad",
+              "value": "Sad"
+            }
+          ],
+          "selected": null
+        },
+        {
+          "id": "subscribe",
+          "fieldType": "boolean",
+          "question": "Subscribe to updates?",
+          "options": [
+            {
+              "id": "yes",
+              "value": "Yes"
+            },
+            {
+              "id": "no",
+              "value": "No"
+            }
+          ],
+          "selected": "no"
+        },
+        {
+          "id": "notes",
+          "fieldType": "longtext",
+          "question": "Notes",
+          "answer": ""
+        }
+      ]
+    },
+    {
+      "id": "section_score_logic",
+      "fieldType": "section",
+      "title": "Scoring + Conditional Requirements (No Functions)",
+      "fields": [
+        {
+          "id": "q1",
+          "fieldType": "rating",
+          "question": "Question 1 (0–5)",
+          "required": true,
+          "options": [
+            {
+              "id": "0",
+              "value": "0"
+            },
+            {
+              "id": "1",
+              "value": "1"
+            },
+            {
+              "id": "2",
+              "value": "2"
+            },
+            {
+              "id": "3",
+              "value": "3"
+            },
+            {
+              "id": "4",
+              "value": "4"
+            },
+            {
+              "id": "5",
+              "value": "5"
+            }
+          ],
+          "selected": ""
+        },
+        {
+          "id": "q2",
+          "fieldType": "rating",
+          "question": "Question 2 (0–5)",
+          "required": true,
+          "options": [
+            {
+              "id": "0",
+              "value": "0"
+            },
+            {
+              "id": "1",
+              "value": "1"
+            },
+            {
+              "id": "2",
+              "value": "2"
+            },
+            {
+              "id": "3",
+              "value": "3"
+            },
+            {
+              "id": "4",
+              "value": "4"
+            },
+            {
+              "id": "5",
+              "value": "5"
+            }
+          ],
+          "selected": ""
+        },
+        {
+          "id": "q3",
+          "fieldType": "rating",
+          "question": "Question 3 (0–5)",
+          "required": true,
+          "options": [
+            {
+              "id": "0",
+              "value": "0"
+            },
+            {
+              "id": "1",
+              "value": "1"
+            },
+            {
+              "id": "2",
+              "value": "2"
+            },
+            {
+              "id": "3",
+              "value": "3"
+            },
+            {
+              "id": "4",
+              "value": "4"
+            },
+            {
+              "id": "5",
+              "value": "5"
+            }
+          ],
+          "selected": ""
+        },
+        {
+          "id": "flag",
+          "fieldType": "radio",
+          "question": "Flag",
+          "required": true,
+          "options": [
+            {
+              "id": "no",
+              "value": "No"
+            },
+            {
+              "id": "yes",
+              "value": "Yes"
+            }
+          ],
+          "selected": "no"
+        },
+        {
+          "id": "expr_score",
+          "fieldType": "expression",
+          "label": "Score = q1 + q2 + q3 + (flagYes adds 2)",
+          "expression": "if {flag} == 'yes' then {q1} + {q2} + {q3} + 2 else {q1} + {q2} + {q3}",
+          "displayFormat": "number",
+          "decimalPlaces": 0
+        },
+        {
+          "id": "scoreNotes",
+          "fieldType": "longtext",
+          "question": "Explain your answers (required if score >= 10)",
+          "answer": "",
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "expr_score",
+                "operator": "greaterThanOrEqual",
+                "value": "10"
+              }
+            ]
+          }
+        },
+        {
+          "id": "expr_action_low",
+          "fieldType": "expression",
+          "label": "Suggested action",
+          "expression": "'Low: Routine follow-up'",
+          "displayFormat": "string",
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "expr_score",
+                "operator": "lessThan",
+                "value": "6"
+              }
+            ]
+          }
+        },
+        {
+          "id": "expr_action_mid",
+          "fieldType": "expression",
+          "label": "Suggested action",
+          "expression": "'Medium: Schedule soon'",
+          "displayFormat": "string",
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "expr_score",
+                "operator": "greaterThanOrEqual",
+                "value": "6"
+              },
+              {
+                "targetId": "expr_score",
+                "operator": "lessThan",
+                "value": "10"
+              }
+            ]
+          }
+        },
+        {
+          "id": "expr_action_high",
+          "fieldType": "expression",
+          "label": "Suggested action",
+          "expression": "'High: Urgent evaluation'",
+          "displayFormat": "string",
+          "enableWhen": {
+            "logic": "AND",
+            "conditions": [
+              {
+                "targetId": "expr_score",
+                "operator": "greaterThanOrEqual",
+                "value": "10"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "section_final_review",
+      "fieldType": "section",
+      "title": "Final Review",
+      "fields": [
+        {
+          "id": "expr_review",
+          "fieldType": "expression",
+          "label": "Review summary",
+          "expression": "'Name: ' + {firstName} + ' ' + {lastName} + <nl> + 'Email: ' + {email} + <nl> + 'Phone: ' + {phone} + <nl> + 'Country: ' + {country}",
+          "displayFormat": "string"
+        },
+        {
+          "id": "expr_review_bmi",
+          "fieldType": "expression",
+          "label": "BMI (raw)",
+          "expression": "({weightKg} * 10000) / ({heightCm} * {heightCm})",
+          "displayFormat": "number",
+          "decimalPlaces": 2
+        },
+        {
+          "id": "expr_review_score",
+          "fieldType": "expression",
+          "label": "Score",
+          "expression": "if {flag} == 'yes' then {q1} + {q2} + {q3} + 2 else {q1} + {q2} + {q3}",
+          "displayFormat": "number",
+          "decimalPlaces": 0
+        },
+        {
+          "id": "confirm",
+          "fieldType": "boolean",
+          "question": "Confirm the above looks correct",
+          "required": true,
+          "options": [
+            {
+              "id": "yes",
+              "value": "Yes"
+            },
+            {
+              "id": "no",
+              "value": "No"
+            }
+          ],
+          "selected": null
+        }
+      ]
+    }
+  ]
+}
