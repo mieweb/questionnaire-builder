@@ -1,6 +1,6 @@
 {
   "name": "@mieweb/forms-engine",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Field components and utilities for questionnaire builder",
   "type": "module",
   "main": "./dist/index.js",
