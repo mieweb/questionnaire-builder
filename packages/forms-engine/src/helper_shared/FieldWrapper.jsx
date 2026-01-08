@@ -71,7 +71,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
   
   return (
     <div
-      className={wrapperClassName}
+      className={wrapperClassName} 
       onClick={onRowClick}
       data-field-id={ctrl.field?.id}
       data-inside-section={ctrl.insideSection ? "true" : "false"}

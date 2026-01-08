@@ -4,33 +4,261 @@ import useFieldController from "../helper_shared/useFieldController";
 import { useFormStore } from "../state/formStore";
 import { NUMERIC_EXPRESSION_FORMATS } from "../helper_shared/fieldTypes-config";
 
-// Helper: Substitute field references with values
-const substituteFields = (expression, data) => 
-  expression.replace(/{(\w+)}/g, (_, fieldId) => data[fieldId] ?? 0);
+// Helper: Check if all referenced fields exist (they can be empty)
+const hasAllFields = (expression, data) => {
+  const fieldRefs = expression.match(/\{(\w+)\}/g) || [];
+  return fieldRefs.every(ref => {
+    const fieldId = ref.slice(1, -1);
+    return data[fieldId] !== undefined && data[fieldId] !== null;
+  });
+};
 
-// Helper: Validate expression syntax
-const validateExpression = (expr) => {
-  // Only allow: numbers, operators, parentheses, spaces, and {fieldId} references
-  if (!/^[\d+\-*/(). =!<>]*(\{[a-zA-Z_][a-zA-Z0-9_]*\}[\d+\-*/(). =!<>]*)*$/.test(expr)) {
-    throw new Error("Expression contains invalid characters. Use {fieldId} for field references.");
+// Helper: Parse expression into tokens (string literals vs expressions)
+const tokenizeExpression = (expression) => {
+  const tokens = [];
+  let current = "";
+  let inQuote = null;
+  
+  for (let i = 0; i < expression.length; i++) {
+    const char = expression[i];
+    
+    if (!inQuote && (char === "'" || char === '"')) {
+      // Starting a quoted string
+      if (current.trim()) tokens.push({ type: "expr", value: current.trim() });
+      current = "";
+      inQuote = char;
+    } else if (inQuote && char === inQuote) {
+      // Ending a quoted string
+      tokens.push({ type: "string", value: current });
+      current = "";
+      inQuote = null;
+    } else {
+      current += char;
+    }
   }
-  // Disallow single = (must be ==, <=, >=, or !=)
-  if (/[^=!<>]=[^=]|^=[^=]|[^=]=$/.test(expr)) {
-    throw new Error("Single = is not allowed. Use == for comparison.");
+  
+  if (current.trim()) tokens.push({ type: "expr", value: current.trim() });
+  return tokens;
+};
+
+// Helper: Evaluate a pure numeric/field expression (no string literals)
+const evaluatePureExpression = (expr, data) => {
+  // First, convert bracket syntax [text] to quoted strings for evaluation
+  // Special cases: [] becomes "", <nl> becomes literal "<nl>" string (split later for display)
+  let processed = expr.replace(/\[\]/g, '""').replace(/<nl>/g, '"<nl>"').replace(/\[([^\]]+)\]/g, '"$1"');
+  
+  // Substitute field references with values
+  const substituted = processed.replace(/\{(\w+)\}/g, (_, fieldId) => {
+    const val = data[fieldId];
+    if (val === undefined || val === null || val === "") return '""';
+    return typeof val === "number" ? val : `"${val}"`;
+  });
+  
+  // Clean up any remaining operators at edges (from concatenation cleanup)
+  const cleaned = substituted.replace(/^\s*\+\s*/, "").replace(/\s*\+\s*$/, "").trim();
+  if (!cleaned) return "";
+  
+  // Evaluate directly - Function() constructor will throw if syntax is invalid
+  // No need to validate characters since we've already substituted safe values
+  try {
+    const result = Function('"use strict"; return (' + cleaned + ')')();
+    return result;
+  } catch (e) {
+    console.error('Eval error:', e.message, 'Expression:', cleaned);
+    throw new Error("Invalid expression");
+  }
+};
+
+// Helper: Evaluate if-then-else expression (supports nesting)
+const evaluateIfThenElse = (expression, data) => {
+  // Match: if condition then trueVal else falseVal
+  // Need to balance then/else pairs for nested if-then-else
+  const match = expression.match(/^if\s+/i);
+  if (!match) return null;
+  
+  let depth = 0;
+  let conditionEnd = -1;
+  let thenEnd = -1;
+  let i = 3; // Skip "if "
+  
+  // Find the condition (up to matching 'then')
+  while (i < expression.length) {
+    const remaining = expression.substring(i);
+    if (/^if\s+/i.test(remaining)) {
+      depth++;
+      i += 3;
+    } else if (/^then\s+/i.test(remaining)) {
+      if (depth === 0) {
+        conditionEnd = i;
+        i += 5; // Skip "then "
+        break;
+      }
+      depth--;
+      i += 5;
+    } else {
+      i++;
+    }
+  }
+  
+  if (conditionEnd === -1) return null;
+  
+  // Find the trueVal (up to matching 'else')
+  depth = 0;
+  while (i < expression.length) {
+    const remaining = expression.substring(i);
+    if (/^if\s+/i.test(remaining)) {
+      depth++;
+      i += 3;
+    } else if (/^then\s+/i.test(remaining)) {
+      i += 5;
+    } else if (/^else\s+/i.test(remaining)) {
+      if (depth === 0) {
+        thenEnd = i;
+        i += 5; // Skip "else "
+        break;
+      }
+      depth--;
+      i += 5;
+    } else {
+      i++;
+    }
+  }
+  
+  if (thenEnd === -1) return null;
+  
+  const condition = expression.substring(3, conditionEnd).trim();
+  const trueVal = expression.substring(conditionEnd + 5, thenEnd).trim();
+  const falseVal = expression.substring(i).trim();
+  
+  // Evaluate the condition
+  const condResult = evaluatePureExpression(condition, data);
+  
+  // Get the appropriate value
+  const resultExpr = condResult ? trueVal : falseVal;
+  
+  // If it's a quoted string, return the string content
+  const stringMatch = resultExpr.match(/^(['"])(.*)\1$/);
+  if (stringMatch) return stringMatch[2];
+  
+  // Otherwise evaluate it (might be nested if-then-else)
+  if (/^if\s+/i.test(resultExpr)) {
+    return evaluateIfThenElse(resultExpr, data);
+  }
+  
+  return evaluatePureExpression(resultExpr, data);
+};
+
+// Main evaluation function
+const evaluateExpression = (expression, data = {}) => {
+  if (!expression) return { result: "", error: "" };
+  
+  // If referenced fields are missing, return empty (not error)
+  if (!hasAllFields(expression, data)) {
+    return { result: "", error: "" };
+  }
+  
+  try {
+    // Check for if-then-else syntax
+    if (/\bif\s+/i.test(expression)) {
+      const result = evaluateIfThenElse(expression.trim(), data);
+      if (result !== null) return { result, error: "" };
+    }
+    
+    // Check if expression has string concatenation (quotes OUTSIDE of comparisons)
+    // Don't tokenize if quotes are only inside comparisons like =='yes'
+    const hasStringConcatenation = /['"].*?\+|^\s*['"]|[^=!<>]['"]/.test(expression);
+    
+    if (hasStringConcatenation) {
+      // Parse into tokens and evaluate each part
+      const tokens = tokenizeExpression(expression);
+      const results = tokens.map(token => {
+        if (token.type === "string") {
+          return token.value;
+        } else {
+          // Evaluate the expression part
+          const val = evaluatePureExpression(token.value, data);
+          return val === undefined || val === null ? "" : String(val);
+        }
+      });
+      return { result: results.join(""), error: "" };
+    }
+    
+    // Pure numeric/boolean expression
+    const result = evaluatePureExpression(expression, data);
+    return { result, error: "" };
+    
+  } catch (error) {
+    return { result: "", error: error.message || "Invalid expression" };
   }
 };
 
 // Helper: Format result based on display type
 const formatResult = (value, format, decimals = 2) => {
   if (value === undefined || value === null) return "";
+  
+  // String format - return as-is
+  if (format === "string") return String(value);
+  
+  // Boolean format
   if (format === "boolean") return value ? "true" : "false";
+  
+  // Numeric formats - only format if it's actually a number
   const num = parseFloat(value);
   if (!Number.isFinite(num)) {
     return String(value);
   }
+  
   if (format === "currency") return `$${num.toFixed(decimals)}`;
   if (format === "percentage") return `${num.toFixed(decimals)}%`;
-  return num.toFixed(decimals);
+  if (format === "number") return num.toFixed(decimals);
+  
+  // Default: return as-is
+  return String(value);
+};
+
+// Helper: Get the display value for a field based on its type
+const getFieldDisplayValue = (field) => {
+  if (!field) return "";
+  
+  // Get raw value from answer or selected
+  let value = field.answer != null && field.answer !== "" 
+    ? field.answer 
+    : field.selected;
+  
+  // For fields with options, resolve ID to display value
+  if (field.options && value != null && value !== "") {
+    // Rating fields: resolve to numeric value
+    if (field.fieldType === "rating") {
+      const selectedOption = field.options.find(opt => opt.id === value || opt.text === value);
+      if (selectedOption && selectedOption.value != null) {
+        return selectedOption.value;
+      }
+    }
+    // Radio, dropdown, boolean: resolve to text value
+    else if (field.fieldType === "radio" || field.fieldType === "dropdown" || field.fieldType === "boolean") {
+      const selectedOption = field.options.find(opt => opt.id === value);
+      if (selectedOption) {
+        return selectedOption.value || selectedOption.text || value;
+      }
+    }
+    // Checkbox, multiselect: resolve array of IDs to text values
+    else if (field.fieldType === "check" || field.fieldType === "multiselectdropdown") {
+      const values = Array.isArray(value) ? value : [value];
+      const resolved = values.map(v => {
+        const opt = field.options.find(opt => opt.id === v);
+        return opt ? (opt.value || opt.text || v) : v;
+      });
+      return resolved.join(", ");
+    }
+  }
+  
+  // For unselected rating fields, default to 0 for calculations
+  if (field.fieldType === "rating" && (value == null || value === "")) {
+    return 0;
+  }
+  
+  // Default: return value as-is (or empty string if null)
+  return value ?? "";
 };
 
 // Helper: Build data object from form fields
@@ -40,16 +268,16 @@ const buildFieldData = (order, byId, excludeId) => {
     const fld = byId[id];
     if (!fld || fld.id === excludeId) return;
     
-    if (fld.answer != null && fld.answer !== "") {
-      const parsed = parseFloat(fld.answer);
-      data[fld.id] = !Number.isNaN(parsed) ? parsed : fld.answer;
-    }
+    const value = getFieldDisplayValue(fld);
+    const parsed = parseFloat(value);
+    data[fld.id] = !Number.isNaN(parsed) ? parsed : value;
     
     if (fld.fieldType === "section" && fld.fields) {
       fld.fields.forEach((child) => {
-        if (child.id !== excludeId && child.answer != null && child.answer !== "") {
-          const parsed = parseFloat(child.answer);
-          data[child.id] = !Number.isNaN(parsed) ? parsed : child.answer;
+        if (child.id !== excludeId) {
+          const childValue = getFieldDisplayValue(child);
+          const parsed = parseFloat(childValue);
+          data[child.id] = !Number.isNaN(parsed) ? parsed : childValue;
         }
       });
     }
@@ -63,19 +291,6 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
   const [sampleDataFields, setSampleDataFields] = React.useState(field.sampleDataFields || []);
   const order = useFormStore((s) => s.order);
   const byId = useFormStore((s) => s.byId);
-  
-  // Evaluate expression (pure function - no state updates)
-  const evaluateExpression = React.useCallback((expression, data = {}) => {
-    if (!expression) return { result: "", error: "" };
-    try {
-      const evaluatedExpr = substituteFields(expression, data);
-      validateExpression(evaluatedExpr);
-      const result = Function('"use strict"; return (' + evaluatedExpr + ')')();
-      return { result, error: "" };
-    } catch (error) {
-      return { result: "", error: error.message || "Invalid expression" };
-    }
-  }, []);
 
   // Sample preview for editor mode
   const samplePreview = React.useMemo(() => {
@@ -90,9 +305,8 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
         }
       });
       
-      const evaluatedExpr = substituteFields(field.expression, sampleData);
-      validateExpression(evaluatedExpr);
-      const result = Function('"use strict"; return (' + evaluatedExpr + ')')();
+      const { result, error } = evaluateExpression(field.expression, sampleData);
+      if (error) return { result: "", error };
       
       return { 
         result: formatResult(result, field.displayFormat, field.decimalPlaces), 
@@ -136,12 +350,19 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
     ctrl.api.field.update("sampleDataFields", newFields);
   };
 
+  // Build stable representation of field data to prevent feedback loops
+  const fieldDataString = React.useMemo(() => {
+    if (!ctrl.isPreview) return "";
+    const data = buildFieldData(order, byId, field.id);
+    return JSON.stringify(data);
+  }, [ctrl.isPreview, order, byId, field.id]);
+
   // Computed result for preview mode
   const evaluationResult = React.useMemo(() => {
     if (!ctrl.isPreview || !field.expression) return { result: "", error: "" };
-    const actualData = buildFieldData(order, byId, field.id);
+    const actualData = fieldDataString ? JSON.parse(fieldDataString) : {};
     return evaluateExpression(field.expression, actualData);
-  }, [ctrl.isPreview, field.expression, order, byId, field.id]);
+  }, [ctrl.isPreview, field.expression, fieldDataString]);
 
   // Store the computed numeric result in field.answer and any evaluation error in state
   React.useEffect(() => {
@@ -184,20 +405,34 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
           return (
             <div className="expression-field-preview space-y-2 pb-4">
               {f.label && <div className="expression-label font-light text-sm text-gray-600">{f.label}</div>}
-              <div className="expression-preview-box p-3 bg-gray-50 border border-gray-300 rounded-lg">
-                <p className="text-sm text-gray-600 mb-1">
-                  <span className="font-medium">Expression:</span> {f.expression || "No expression defined"}
-                </p>
-                {evaluationResult.result != null && (
-                  <p className="text-lg font-semibold text-blue-600 mt-2">
-                    <span className="text-sm text-gray-600">Result: </span>
-                    {formatResult(evaluationResult.result, f.displayFormat, f.decimalPlaces)}
+              {f.hideDebugInfo ? (
+                // Show only result
+                evaluationResult.result != null && (
+                  <div className="flex flex-col gap-1">
+                    {formatResult(evaluationResult.result, f.displayFormat, f.decimalPlaces).split('<nl>').map((line, i) => (
+                      <p key={i} className="text-lg font-semibold text-blue-600">{line}</p>
+                    ))}
+                  </div>
+                )
+              ) : (
+                // Show expression and result with labels
+                <div className="expression-preview-box p-3 bg-gray-50 border border-gray-300 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-1">
+                    <span className="font-medium">Expression:</span> {f.expression || "No expression defined"}
                   </p>
-                )}
-                {evaluationResult.error && (
-                  <p className="text-sm text-red-600 mt-2">Error: {evaluationResult.error}</p>
-                )}
-              </div>
+                  {evaluationResult.result != null && (
+                    <div className="flex flex-col gap-1 mt-2">
+                      <span className="text-sm text-gray-600">Result: </span>
+                      {formatResult(evaluationResult.result, f.displayFormat, f.decimalPlaces).split('<nl>').map((line, i) => (
+                        <p key={i} className="text-lg font-semibold text-blue-600">{line}</p>
+                      ))}
+                    </div>
+                  )}
+                  {evaluationResult.error && (
+                    <p className="text-sm text-red-600 mt-2">Error: {evaluationResult.error}</p>
+                  )}
+                </div>
+              )}
             </div>
           );
         }
@@ -249,6 +484,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                 value={f.displayFormat || "number"}
                 onChange={(e) => api.field.update("displayFormat", e.target.value)}
               >
+                <option value="string">String</option>
                 <option value="number">Number</option>
                 <option value="currency">Currency ($)</option>
                 <option value="percentage">Percentage (%)</option>
@@ -256,19 +492,36 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
               </select>
             </div>
 
-            {/* Decimal Places (for all numeric formats) */}
-            <div className="decimal-places-field">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Decimal Places
+            {/* Decimal Places (only show for numeric formats) */}
+            {NUMERIC_EXPRESSION_FORMATS.includes(f.displayFormat) && (
+              <div className="decimal-places-field">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Decimal Places
+                </label>
+                <input
+                  className="decimal-places px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+                  type="number"
+                  min="0"
+                  max="10"
+                  value={f.decimalPlaces || 2}
+                  onChange={(e) => api.field.update("decimalPlaces", parseInt(e.target.value, 10))}
+                />
+              </div>
+            )}
+
+            {/* Hide Debug Info */}
+            <div className="hide-debug-info-field">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={f.hideDebugInfo || false}
+                  onChange={(e) => api.field.update("hideDebugInfo", e.target.checked)}
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <span className="text-sm font-medium text-gray-700">
+                  Hide Expression and Result labels (show result only)
+                </span>
               </label>
-              <input
-                className="decimal-places px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
-                type="number"
-                min="0"
-                max="10"
-                value={f.decimalPlaces || 2}
-                onChange={(e) => api.field.update("decimalPlaces", parseInt(e.target.value, 10))}
-              />
             </div>
 
             {/* Sample Data for Preview */}
@@ -333,9 +586,11 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                 {samplePreview.error ? (
                   <p className="text-sm text-red-600">Error: {samplePreview.error}</p>
                 ) : (
-                  <p className="text-lg font-semibold text-blue-600">
-                    {samplePreview.result || "No result"}
-                  </p>
+                  <div className="flex flex-col gap-1">
+                    {(samplePreview.result || "No result").split('<nl>').map((line, i) => (
+                      <p key={i} className="text-lg font-semibold text-blue-600">{line}</p>
+                    ))}
+                  </div>
                 )}
               </div>
             )}

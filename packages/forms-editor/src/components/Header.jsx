@@ -1,15 +1,17 @@
 import React from "react";
-import { useFormStore, useFormData, useUIApi, adaptSchema, parseAndDetect, CODE_ICON, VEDITOR_ICON, PICTURE_ICON, UPLOAD_ICON, DOWNLOAD_ICON } from "@mieweb/forms-engine";
+import { useFormStore, useFormData, useUIApi, adaptSchema, parseAndDetect, useAlert, CODE_ICON, VEDITOR_ICON, PICTURE_ICON, UPLOAD_ICON, DOWNLOAD_ICON } from "@mieweb/forms-engine";
 
 export default function Header() {
   const [showSchemaConfirm, setShowSchemaConfirm] = React.useState(false);
   const [pendingImport, setPendingImport] = React.useState(null);
   const replaceAll = useFormStore((s) => s.replaceAll);
   const formData = useFormData(); // Get complete form data with metadata
+  const { showAlert } = useAlert();
 
   const ui = useUIApi();
   const isPreview = ui.state.isPreview;
   const isCodeEditor = ui.state.isCodeEditor ?? false;
+  const codeEditorHasError = ui.state.codeEditorHasError ?? false;
 
   // ────────── Import handler with auto-detection ──────────
   const handleFileSelect = (fileContent) => {
@@ -18,14 +20,20 @@ export default function Header() {
       const { data, schemaType } = parseAndDetect(text);
 
       if (schemaType !== 'mieforms' && schemaType !== 'surveyjs') {
-        alert(`Unsupported or invalid schema format.\n\nExpected: MIE Forms or SurveyJS\nDetected: ${schemaType}`);
+        showAlert(
+          `Expected: MIE Forms or SurveyJS\nDetected: ${schemaType}`,
+          { title: 'Unsupported Schema Format' }
+        );
         return;
       }
 
       setPendingImport({ data, detectedSchemaType: schemaType });
       setShowSchemaConfirm(true);
     } catch (err) {
-      alert(`Failed to parse file:\n\n${err?.message || "Invalid file format"}`);
+      showAlert(
+        err?.message || "Invalid file format",
+        { title: 'Failed to Parse File' }
+      );
     }
   };
 
@@ -47,13 +55,12 @@ export default function Header() {
 
       const schemaObject = {
         schemaType: confirmedSchemaType === 'surveyjs' ? 'mieforms-v1.0' : (data.schemaType || 'mieforms-v1.0'),
+        ...(result.conversionReport?.surveyMetadata || {}),
         fields
       };
 
-      // Preserve original metadata for SurveyJS schemas
-      if (confirmedSchemaType === 'surveyjs' && result.conversionReport?.surveyMetadata) {
-        Object.assign(schemaObject, result.conversionReport.surveyMetadata);
-      } else if (confirmedSchemaType === 'mieforms') {
+      // For MIE Forms schemas, preserve any extra metadata that's not in surveyMetadata
+      if (confirmedSchemaType === 'mieforms') {
         // For MIE Forms, preserve any metadata that's not fields or schemaType
         const { fields: _f, schemaType: _st, ...metadata } = data;
         if (Object.keys(metadata).length > 0) {
@@ -65,12 +72,30 @@ export default function Header() {
       ui.selectedFieldId.clear();
       ui.preview.set(false);
 
-      alert(`✅ Import successful!\n\nFormat: ${confirmedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}\nLoaded ${fields.length} field(s)`);
+      // Show conversion details for SurveyJS imports
+      if (confirmedSchemaType === 'surveyjs' && result.conversionReport) {
+        const report = result.conversionReport;
+        const unsupportedCount = report.unsupportedFields?.length || 0;
+        showAlert(
+          `Format: SurveyJS → MIE Forms\n\n` +
+          `Converted: ${report.convertedFields || 0} field(s)\n` +
+          `Unsupported: ${unsupportedCount} field(s)${unsupportedCount > 0 ? ' ⚠️' : ''}`,
+          { title: '✅ Import Successful' }
+        );
+      } else {
+        showAlert(
+          `Format: ${confirmedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}\nLoaded ${fields.length} field(s)`,
+          { title: '✅ Import Successful' }
+        );
+      }
 
       setShowSchemaConfirm(false);
       setPendingImport(null);
     } catch (err) {
-      alert(`Import failed:\n\n${err?.message || "Invalid format"}`);
+      showAlert(
+        err?.message || "Invalid format",
+        { title: 'Import Failed' }
+      );
       setShowSchemaConfirm(false);
       setPendingImport(null);
     }
@@ -121,12 +146,16 @@ export default function Header() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="header-mode-toggle flex gap-1 rounded-lg border border-black/10 bg-black/5 p-1 w-fit">
             <button
-              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${!isPreview && !isCodeEditor
+              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${
+                !isPreview && !isCodeEditor
                   ? "bg-white text-slate-900 shadow-sm"
+                  : codeEditorHasError
+                  ? "text-slate-400 cursor-not-allowed"
                   : "text-slate-600 hover:text-slate-900"
-                }`}
+              }`}
               onClick={onEdit}
-              title="Visual Editor"
+              disabled={codeEditorHasError}
+              title={codeEditorHasError ? "Fix code errors before switching" : "Visual Editor"}
             >
               <VEDITOR_ICON className="w-5 h-5" />
               <span>Build</span>
@@ -143,12 +172,16 @@ export default function Header() {
               <span>Code</span>
             </button>
             <button
-              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${isPreview
+              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${
+                isPreview
                   ? "bg-white text-slate-900 shadow-sm"
+                  : codeEditorHasError
+                  ? "text-slate-400 cursor-not-allowed"
                   : "text-slate-600 hover:text-slate-900"
-                }`}
+              }`}
               onClick={onPreview}
-              title="Preview"
+              disabled={codeEditorHasError}
+              title={codeEditorHasError ? "Fix code errors before switching" : "Preview Form"}
             >
               <PICTURE_ICON className="w-5 h-5" />
               <span>Preview</span>

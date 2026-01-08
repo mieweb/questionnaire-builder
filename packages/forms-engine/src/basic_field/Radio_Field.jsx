@@ -14,7 +14,7 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
           return (
             <div className={`radio-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light break-words overflow-hidden">{f.question || "Question"}</div>
+                <div className="font-light wrap-break-word overflow-hidden">{f.question || "Question"}</div>
                 <div>
                   {(f.options || []).map((option) => {
                     const inputId = `${f.id}-${option.id}`;
@@ -33,7 +33,7 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
                           checked={isSelected}
                           onSelect={() => api.selection.single(option.id)}
                           onUnselect={() => api.field.update("selected", null)}
-                          className="mr-2 h-9 w-9 flex-shrink-0 cursor-pointer"
+                          className="mr-2 h-9 w-9 shrink-0 cursor-pointer"
                         />
                         {option.value}
                       </label>
@@ -72,7 +72,7 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
                       name={`${f.fieldId}-edit`}
                       checked={false}
                       disabled
-                      className="flex-shrink-0 w-4 h-4 text-gray-300 cursor-not-allowed"
+                      className="shrink-0 w-4 h-4 text-gray-300 cursor-not-allowed"
                     />
                     <input
                       type="text"
@@ -83,7 +83,7 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
                     />
                     <button 
                       onClick={() => api.option.remove(option.id)}
-                      className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                      className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
                       title="Remove option"
                     >
                       <TRASHCANTWO_ICON className="w-4 h-4" />

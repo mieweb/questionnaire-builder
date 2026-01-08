@@ -14,10 +14,9 @@ const SectionField = React.memo(function SectionField({ field }) {
   const ui = useUIApi();
   const hideUnsupportedFields = useUIStore((s) => s.hideUnsupportedFields);
 
-  const parentId = ui.selectedChildId.ParentId;
-  const childId = ui.selectedChildId.ChildId;
-
-  const selectedChildId = parentId === field.id ? childId : null;
+  // Use reactive selectedChild instead of direct property access
+  const selectedChild = useUIStore((s) => s.selectedChildId);
+  const selectedChildId = selectedChild.parentId === field.id ? selectedChild.childId : null;
 
   const childRefs = React.useRef({});
   const previousChildCountRef = React.useRef(0);
@@ -34,8 +33,10 @@ const SectionField = React.memo(function SectionField({ field }) {
     return out;
   }, [byId]);
 
-  // Auto-scroll to newly added field
+  // Auto-scroll to newly added field (only in build/edit mode, not preview)
   React.useEffect(() => {
+    if (ctrl.isPreview) return; // Don't auto-scroll in preview mode
+    
     const currentChildCount = Array.isArray(field.fields) ? field.fields.length : 0;
     if (currentChildCount > previousChildCountRef.current && currentChildCount > 0) {
       // A field was added, scroll to the last one and select it
@@ -51,17 +52,20 @@ const SectionField = React.memo(function SectionField({ field }) {
       }
     }
     previousChildCountRef.current = currentChildCount;
-  }, [field.fields, field.id, ui.selectedChildId]);
+  }, [field.fields, field.id, ui.selectedChildId, ctrl.isPreview]);
 
   // Auto-scroll when selected child changes (e.g., from SectionEditor dropdown)
+  // Only in build/edit mode, not preview
   React.useEffect(() => {
+    if (ctrl.isPreview) return; // Don't auto-scroll in preview mode
+    
     if (selectedChildId && childRefs.current[selectedChildId]) {
       setTimeout(() => {
         const el = childRefs.current[selectedChildId];
         el?.scrollIntoView?.({ behavior: "smooth", block: "nearest" });
       }, 0);
     }
-  }, [selectedChildId]);
+  }, [selectedChildId, ctrl.isPreview]);
 
   // ────────── Helper: Check if child should be hidden ──────────
   const shouldHideChild = (child) => {
@@ -102,9 +106,11 @@ const SectionField = React.memo(function SectionField({ field }) {
         ].join(" ")}
         onClick={(e) => {
           e.stopPropagation();
-          ui.selectedFieldId.set(sectionId);
+          // Only set selectedFieldId if it's not already the section
+          if (ui.selectedFieldId.value !== sectionId) {
+            ui.selectedFieldId.set(sectionId);
+          }
           ui.selectedChildId.set(sectionId, child.id);
-
         }}
       >
         <ChildField field={child} sectionId={sectionId} />

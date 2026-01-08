@@ -11,6 +11,7 @@ export const createUIStore = (initProps = {}) => {
     selectedChildId: { parentId: null, childId: null },
     conversionReport: null,
     hideUnsupportedFields: false,
+    codeEditorHasError: false,
   };
 
   return createStore((set, get) => ({
@@ -91,6 +92,11 @@ export const createUIStore = (initProps = {}) => {
   hideUnsupportedFields: false,
   
   setHideUnsupportedFields: (v) => set({ hideUnsupportedFields: !!v }),
+
+  // ────────── Code editor error state ──────────
+  codeEditorHasError: false,
+  
+  setCodeEditorHasError: (v) => set({ codeEditorHasError: !!v }),
 
 }));
 };
