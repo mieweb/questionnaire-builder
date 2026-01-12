@@ -52,6 +52,9 @@ const config = {
           const base = {
             resolve: {
               alias: {
+                '@mieweb/forms-engine': path.resolve(__dirname, '../../packages/forms-engine/dist/index.js'),
+                '@mieweb/forms-editor': path.resolve(__dirname, '../../packages/forms-editor/dist/index.js'),
+                '@mieweb/forms-renderer': path.resolve(__dirname, '../../packages/forms-renderer/dist/react.js'),
                 react: path.resolve(__dirname, '../../node_modules/react'),
                 'react-dom': path.resolve(__dirname, '../../node_modules/react-dom'),
                 'react/jsx-runtime': path.resolve(__dirname, '../../node_modules/react/jsx-runtime'),
@@ -74,25 +77,13 @@ const config = {
 
           if (isServer) return base;
 
-          const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-          const existingMinimizers = Array.isArray(config.optimization?.minimizer)
-            ? config.optimization.minimizer
-            : [];
-
           return {
             ...base,
+            ignoreWarnings: [
+              /Invalid character/
+            ],
             optimization: {
               ...config.optimization,
-              minimizer: [
-                ...existingMinimizers.filter(
-                  (m) => m?.constructor?.name !== 'CssMinimizerPlugin'
-                ),
-                new CssMinimizerPlugin({
-                  minimizerOptions: {
-                    preset: ['default', { calc: false }],
-                  },
-                }),
-              ],
               splitChunks: {
                 ...(typeof config.optimization?.splitChunks === 'object'
                   ? config.optimization.splitChunks
@@ -137,12 +128,12 @@ const config = {
         },
         blog: false,
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: ['./src/css/custom.css'],
         },
       }),
     ],
   ],
-
+  
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({

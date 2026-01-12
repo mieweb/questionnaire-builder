@@ -24,12 +24,12 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
       {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
-            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
-              <div className="px-6 pt-6 pb-2">
-                <div className="font-light mb-2 break-words overflow-hidden">{f.question || "Question"}</div>
+            <div className={insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}>
+              <div className="mie:px-6 mie:pt-6 mie:pb-2">
+                <div className="mie:font-light mie:mb-2 mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
               </div>
-              <div className="flex justify-center mx-auto px-2 pb-2 lg:px-6 lg:pb-4">
-                <div style={{ width: '100%', maxWidth: '80vw' }} className="md:max-w-[75vw] lg:max-w-full">
+              <div className="mie:flex mie:justify-center mie:mx-auto mie:px-2 mie:pb-2 mie:lg:px-6 mie:lg:pb-4">
+                <div style={{ width: '100%', maxWidth: '80vw' }} className="mie:md:max-w-[75vw] mie:lg:max-w-full">
                   <DrawingCanvas
                     onDrawingChange={handleSignatureChange}
                     existingDrawing={f.signatureData}
@@ -51,23 +51,23 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
         }
 
         return (
-          <div className="signature-field-edit space-y-3">
+          <div className="signature-field-edit mie:space-y-3">
             <input
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
-              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
             />
 
-            <div className="p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-sm">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <div className="mie:p-4 mie:border mie:border-gray-300 mie:rounded-lg mie:bg-gray-50 mie:shadow-sm">
+              <label className="mie:block mie:text-sm mie:font-semibold mie:text-gray-700 mie:mb-3">
                 Signature Pad Settings
               </label>
 
-              <div className="space-y-3">
+              <div className="mie:space-y-3">
                 <div>
-                  <label className="block text-sm text-gray-600 mb-1">
+                  <label className="mie:block mie:text-sm mie:text-gray-600 mie:mb-1">
                     Placeholder Text
                   </label>
                   <input
@@ -75,19 +75,19 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                     value={f.placeholder || ""}
                     onChange={(e) => api.field.update("placeholder", e.target.value)}
                     placeholder={placeholder?.pad || "e.g., Please sign here"}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors bg-white"
+                    className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors mie:bg-white"
                   />
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="mie:flex mie:items-center mie:gap-2">
                   <input
                     type="checkbox"
                     id="required-sig"
                     checked={f.required === true}
                     onChange={(e) => api.field.update("required", e.target.checked)}
-                    className="w-4 h-4 cursor-pointer"
+                    className="mie:w-4 mie:h-4 mie:cursor-pointer"
                   />
-                  <label htmlFor="required-sig" className="text-sm text-gray-700 cursor-pointer">
+                  <label htmlFor="required-sig" className="mie:text-sm mie:text-gray-700 mie:cursor-pointer">
                     Required signature
                   </label>
                 </div>

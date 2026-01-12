@@ -130,10 +130,10 @@ function SectionEditor({ section, onActiveChildChange }) {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="mie:space-y-4">
       {/* Section Properties */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Section Properties</h3>
+      <div className="mie:space-y-3">
+        <h3 className="mie:text-sm mie:font-semibold mie:text-gray-700 mie:uppercase mie:tracking-wide">Section Properties</h3>
 
         <DraftIdEditor
           id={section.id}
@@ -141,9 +141,9 @@ function SectionEditor({ section, onActiveChildChange }) {
         />
 
         <div className="section-editor-title">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Section Title</label>
+          <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">Section Title</label>
           <input
-            className="w-full px-3 py-2 border border-gray-300 rounded focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
+            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none"
             value={section.title || ""}
             onChange={(e) => onUpdateSection("title", e.target.value)}
             placeholder="e.g., Patient Information"
@@ -152,22 +152,22 @@ function SectionEditor({ section, onActiveChildChange }) {
       </div>
 
       {/* Field Selection */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+      <div className="mie:space-y-3">
+        <h3 className="mie:text-sm mie:font-semibold mie:text-gray-700 mie:uppercase mie:tracking-wide">
           Fields ({children.length})
         </h3>
         
         {children.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-6 bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg text-center">
-            <p className="text-sm text-gray-500">No fields in this section</p>
-            <p className="text-xs text-gray-400 mt-1">Use the Tool Panel to add fields</p>
+          <div className="mie:flex mie:flex-col mie:items-center mie:justify-center mie:p-6 mie:bg-gray-50 mie:border-2 mie:border-dashed mie:border-gray-200 mie:rounded-lg mie:text-center">
+            <p className="mie:text-sm mie:text-gray-500">No fields in this section</p>
+            <p className="mie:text-xs mie:text-gray-400 mie:mt-1">Use the Tool Panel to add fields</p>
           </div>
         ) : (
           <>
             {/* Dropdown Field Selector */}
-            <div className="relative">
+            <div className="mie:relative">
               <select
-                className="w-full px-3 py-2 pr-10 border border-gray-300 rounded bg-white focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none appearance-none cursor-pointer"
+                className="mie:w-full mie:px-3 mie:py-2 mie:pr-10 mie:border mie:border-gray-300 mie:rounded mie:bg-white mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:appearance-none mie:cursor-pointer"
                 value={activeChildId || ""}
                 onChange={(e) => handleChildSelect(e.target.value)}
               >
@@ -177,22 +177,22 @@ function SectionEditor({ section, onActiveChildChange }) {
                   </option>
                 ))}
               </select>
-              <ARROWDOWN_ICON className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+              <ARROWDOWN_ICON className="mie:absolute mie:right-3 mie:top-1/2 mie:-translate-y-1/2 mie:w-4 mie:h-4 mie:text-gray-500 mie:pointer-events-none" />
             </div>
 
             {activeChild && (
-              <div className="space-y-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+              <div className="mie:space-y-4 mie:p-4 mie:bg-gray-50 mie:border mie:border-gray-200 mie:rounded-lg">
                 {/* Field Type Badge */}
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <div className="mie:flex mie:items-center mie:justify-between">
+                  <span className="mie:inline-flex mie:items-center mie:px-2.5 mie:py-0.5 mie:rounded-full mie:text-xs mie:font-medium mie:bg-blue-100 mie:text-blue-800">
                     {fieldTypes[activeChild.fieldType]?.label || activeChild.fieldType}
                   </span>
                   <button
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 border border-red-300 rounded transition-colors"
+                    className="mie:flex mie:items-center mie:gap-1.5 mie:px-3 mie:py-1.5 mie:text-xs mie:font-medium mie:text-red-600 mie:hover:text-red-700 mie:hover:bg-red-50 mie:border mie:border-red-300 mie:rounded mie:transition-colors"
                     onClick={onDeleteChild}
                     title="Delete this field"
                   >
-                    <TRASHCANTWO_ICON className="w-3.5 h-3.5" />
+                    <TRASHCANTWO_ICON className="mie:w-3.5 mie:h-3.5" />
                     Delete
                   </button>
                 </div>
@@ -202,9 +202,9 @@ function SectionEditor({ section, onActiveChildChange }) {
 
                 {activeChild.fieldType === "input" && (
                   <div className="section-editor-default-answer">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Default Answer</label>
+                    <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">Default Answer</label>
                     <input
-                      className="w-full px-3 py-2 border border-gray-300 rounded focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
+                      className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none"
                       value={activeChild.answer || ""}
                       onChange={(e) => onUpdateChild("answer", e.target.value)}
                       placeholder="Default value"

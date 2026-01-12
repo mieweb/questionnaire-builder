@@ -500,11 +500,11 @@ export default function DrawingCanvas({
   }, [handleDrawStart, handleDrawMove, handleDrawEnd]);
 
   return (
-    <div ref={containerRef} className="drawing-canvas-container w-full">
+    <div ref={containerRef} className="drawing-canvas-container mie:w-full">
       {/* Canvas */}
       <div
-        className={`canvas-wrapper relative rounded bg-white overflow-hidden ${
-          existingDrawing ? "" : "border-2 border-gray-300"
+        className={`canvas-wrapper mie:relative mie:rounded mie:bg-white mie:overflow-hidden ${
+          existingDrawing ? "" : "mie:border-2 mie:border-gray-300"
         }`}
       >
         <canvas
@@ -531,7 +531,7 @@ export default function DrawingCanvas({
         {/* Cursor dot overlay */}
         {cursorPosition && (
           <div
-            className="cursor-dot pointer-events-none absolute rounded-full border-2"
+            className="mie:cursor-dot mie:pointer-events-none mie:absolute mie:rounded-full mie:border-2"
             style={{
               left: `${cursorPosition.x}px`,
               top: `${cursorPosition.y}px`,
@@ -547,33 +547,33 @@ export default function DrawingCanvas({
 
         {/* Action Buttons - Right Side */}
         {showControls && (hasDrawing || canUndo || canRedo) && (
-          <div className="action-buttons absolute top-2 right-2 flex flex-col md:flex-row gap-2">
+          <div className="action-buttons mie:absolute mie:top-2 mie:right-2 mie:flex mie:flex-col mie:md:flex-row mie:gap-2">
             <button
               onClick={undo}
               disabled={!canUndo}
-              className="undo-btn w-7 h-7 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded shadow-md transition touch-manipulation disabled:opacity-40 disabled:cursor-not-allowed"
+              className="undo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-gray-100 mie:hover:bg-gray-200 mie:text-gray-700 mie:rounded mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
               title="Undo"
             >
-              <svg className="undo-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="undo-icon mie:w-4 mie:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
               </svg>
             </button>
             <button
               onClick={redo}
               disabled={!canRedo}
-              className="redo-btn w-7 h-7 flex items-center justify-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded shadow-md transition touch-manipulation disabled:opacity-40 disabled:cursor-not-allowed"
+              className="redo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-gray-100 mie:hover:bg-gray-200 mie:text-gray-700 mie:rounded mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
               title="Redo"
             >
-              <svg className="redo-icon w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="redo-icon mie:w-4 mie:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 10H11a8 8 0 00-8 8v2m18-10l-6 6m6-6l-6-6" />
               </svg>
             </button>
             <button
               onClick={clearCanvas}
-              className="clear-btn w-7 h-7 flex items-center justify-center bg-red-100 hover:bg-red-200 text-red-700 rounded shadow-md transition touch-manipulation"
+              className="mie:clear-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-red-100 mie:hover:bg-red-200 mie:text-red-700 mie:rounded mie:shadow-md mie:transition mie:touch-manipulation"
               title="Clear"
             >
-              <X_ICON className="h-4 w-4" />
+              <X_ICON className="mie:h-4 mie:w-4" />
             </button>
           </div>
         )}
@@ -581,35 +581,35 @@ export default function DrawingCanvas({
 
       {/* Tool Controls - Below Canvas */}
       {showControls && (
-        <div className="tool-controls-toolbar flex gap-2 rounded mt-2 px-0.5">
+        <div className="tool-controls-toolbar mie:flex mie:gap-2 mie:rounded mie:mt-2 mie:px-0.5">
           {/* Tool Selector */}
           <button
             onClick={() => setCurrentTool("pen")}
-            className={`tool-btn tool-btn-pen w-7 h-7 flex items-center justify-center rounded transition-colors touch-manipulation ${
+            className={`tool-btn tool-btn-pen mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:transition-colors mie:touch-manipulation ${
               currentTool === "pen"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                ? "mie:bg-blue-500 mie:text-white"
+                : "mie:bg-gray-100 mie:text-gray-700 mie:hover:bg-gray-200"
             }`}
             title="Pen"
           >
-            <PEN_ICON className="w-4 h-4" />
+            <PEN_ICON className="mie:w-4 mie:h-4" />
           </button>
           {hasEraser && (
             <button
               onClick={() => setCurrentTool("eraser")}
-              className={`tool-btn tool-btn-eraser w-7 h-7 flex items-center justify-center rounded transition-colors touch-manipulation ${
+              className={`tool-btn tool-btn-eraser mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:transition-colors mie:touch-manipulation ${
                 currentTool === "eraser"
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  ? "mie:bg-blue-500 mie:text-white"
+                  : "mie:bg-gray-100 mie:text-gray-700 mie:hover:bg-gray-200"
               }`}
               title="Eraser"
             >
-              <ERASER_ICON className="w-4 h-4" />
+              <ERASER_ICON className="mie:w-4 mie:h-4" />
             </button>
           )}
 
           {/* Divider */}
-          {currentTool === "pen" && <div className="toolbar-divider w-px bg-gray-300" />}
+          {currentTool === "pen" && <div className="toolbar-divider mie:w-px mie:bg-gray-300" />}
 
           {/* Color Selector */}
           {currentTool === "pen" && (
@@ -620,10 +620,10 @@ export default function DrawingCanvas({
                   onClick={() => {
                     setCurrentColor(color);
                   }}
-                  className={`color-btn w-7 h-7 rounded transition-all touch-manipulation ${
+                  className={`color-btn mie:w-7 mie:h-7 mie:rounded mie:transition-all mie:touch-manipulation ${
                     currentColor === color
-                      ? "ring-2 ring-blue-500 ring-offset-2"
-                      : "hover:ring-2 hover:ring-gray-300"
+                      ? "mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
+                      : "mie:hover:ring-2 mie:hover:ring-gray-300"
                   }`}
                   style={{ backgroundColor: color }}
                   title={color}
@@ -632,10 +632,10 @@ export default function DrawingCanvas({
 
               {/* Custom Color Slot */}
               <div
-                className={`custom-color-slot w-7 h-7 rounded cursor-pointer transition-all touch-manipulation ${
+                className={`custom-color-slot mie:w-7 mie:h-7 mie:rounded mie:cursor-pointer mie:transition-all mie:touch-manipulation ${
                   customColor && currentColor === customColor
-                    ? "ring-2 ring-blue-500 ring-offset-2"
-                    : "hover:ring-2 hover:ring-gray-300"
+                    ? "mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
+                    : "mie:hover:ring-2 mie:hover:ring-gray-300"
                 }`}
                 style={{ backgroundColor: customColor || "#808080" }}
               >
@@ -646,13 +646,13 @@ export default function DrawingCanvas({
                     setCustomColor(e.target.value);
                     setCurrentColor(e.target.value);
                   }}
-                  className="w-full h-full opacity-0 cursor-pointer"
+                  className="mie:w-full mie:h-full mie:opacity-0 mie:cursor-pointer"
                   title="Custom color"
                 />
               </div>
 
               {/* Divider */}
-              <div className="toolbar-divider w-px bg-gray-300" />
+              <div className="toolbar-divider mie:w-px mie:bg-gray-300" />
 
               {/* Size Selector */}
               {sizePalette.map((size) => (
@@ -661,47 +661,47 @@ export default function DrawingCanvas({
                   onClick={() => {
                     setCurrentSize(size);
                   }}
-                  className={`size-btn w-7 h-7 flex items-center justify-center rounded transition-all touch-manipulation ${
+                  className={`size-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:transition-all mie:touch-manipulation ${
                     currentSize === size
-                      ? "bg-blue-500 ring-2 ring-blue-500 ring-offset-2"
-                      : "bg-gray-100 hover:bg-gray-200"
+                      ? "mie:bg-blue-500 mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
+                      : "mie:bg-gray-100 mie:hover:bg-gray-200"
                   }`}
                   title={`Size ${size}px`}
                 >
                   <div
-                    className={`size-indicator rounded-full ${currentSize === size ? "bg-white" : "bg-gray-700"}`}
+                    className={`size-indicator mie:rounded-full ${currentSize === size ? "mie:bg-white" : "mie:bg-gray-700"}`}
                     style={{ width: `${size * 2}px`, height: `${size * 2}px` }}
                   />
                 </button>
               ))}
 
               {/* Custom Size Slot */}
-              <div className="custom-size-slot relative" ref={sizePickerRef}>
+              <div className="custom-size-slot mie:relative" ref={sizePickerRef}>
                 <button
                   onClick={() => {
                     setTempSize(customSize || 5);
                     setShowSizePicker(!showSizePicker);
                   }}
-                  className={`custom-size-btn w-7 h-7 flex items-center justify-center rounded transition-colors touch-manipulation ${
+                  className={`custom-size-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:transition-colors mie:touch-manipulation ${
                     currentSize === customSize && customSize !== null
-                      ? "bg-blue-500 ring-2 ring-blue-500 ring-offset-2"
-                      : "bg-gray-100 hover:bg-gray-200 border-2 border-dashed border-gray-300"
+                      ? "mie:bg-blue-500 mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
+                      : "mie:bg-gray-100 mie:hover:bg-gray-200 mie:border-2 mie:border-dashed mie:border-gray-300"
                   }`}
                   title="Custom size"
                 >
                   {customSize ? (
                     <div
-                      className={`size-indicator rounded-full ${currentSize === customSize ? "bg-white" : "bg-gray-700"}`}
+                      className={`size-indicator mie:rounded-full ${currentSize === customSize ? "mie:bg-white" : "mie:bg-gray-700"}`}
                       style={{ width: `${Math.min(customSize * 1.5, 20)}px`, height: `${Math.min(customSize * 1.5, 20)}px` }}
                     />
                   ) : (
-                    <span className="text-xs text-gray-500">+</span>
+                    <span className="mie:text-xs mie:text-gray-500">+</span>
                   )}
                 </button>
 
                 {/* Size Picker Modal - Vertical Slider */}
                 {showSizePicker && (
-                  <div className="size-picker-modal absolute bottom-full -left-2 mb-2 flex flex-col items-center gap-1 bg-white rounded-lg shadow-lg border border-gray-200 p-2 z-50 w-fit">
+                  <div className="mie:size-picker-modal mie:absolute mie:bottom-full mie:-left-2 mie:mb-2 mie:flex mie:flex-col mie:items-center mie:gap-1 mie:bg-white mie:rounded-lg mie:shadow-lg mie:border mie:border-gray-200 mie:p-2 mie:z-50 mie:w-fit">
                     <input
                       type="range"
                       min="4"
@@ -718,19 +718,19 @@ export default function DrawingCanvas({
                         setCurrentSize(tempSize);
                         setShowSizePicker(false);
                       }}
-                      className="size-slider h-24 w-5"
+                      className="mie:size-slider mie:h-24 mie:w-5"
                       style={{
                         writingMode: 'bt-lr',
                         WebkitAppearance: 'slider-vertical'
                       }}
                     />
-                    <div className="size-preview flex items-center justify-center w-6 h-6">
+                    <div className="mie:size-preview mie:flex mie:items-center mie:justify-center mie:w-6 mie:h-6">
                       <div
-                        className="size-preview-dot rounded-full bg-gray-700 transition-all"
+                        className="mie:size-preview-dot mie:rounded-full mie:bg-gray-700 mie:transition-all"
                         style={{ width: `${tempSize}px`, height: `${tempSize}px` }}
                       />
                     </div>
-                    <span className="text-xs font-medium text-gray-600">{tempSize}px</span>
+                    <span className="mie:text-xs mie:font-medium mie:text-gray-600">{tempSize}px</span>
                   </div>
                 )}
               </div>

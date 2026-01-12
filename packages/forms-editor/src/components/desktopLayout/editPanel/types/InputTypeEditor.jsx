@@ -57,11 +57,11 @@ export default function InputTypeEditor({ field, onUpdate }) {
   const showUnitSelector = inputType === "number" || inputType === "range";
 
   return (
-    <div className="space-y-3">
+    <div className="mie:space-y-3">
       <div>
-        <label className="block text-sm mb-1">Input Type</label>
+        <label className="mie:block mie:text-sm mie:mb-1">Input Type</label>
         <select
-          className="w-full px-3 py-2 border border-black/20 rounded"
+          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
           value={inputType}
           onChange={(e) => onUpdate("inputType", e.target.value)}
         >
@@ -73,9 +73,9 @@ export default function InputTypeEditor({ field, onUpdate }) {
       
       {showUnitSelector && (
         <div>
-          <label className="block text-sm mb-1">Unit (optional)</label>
+          <label className="mie:block mie:text-sm mie:mb-1">Unit (optional)</label>
           <select
-            className="w-full px-3 py-2 border border-black/20 rounded"
+            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
             value={unit}
             onChange={(e) => onUpdate("unit", e.target.value)}
           >

@@ -24,13 +24,13 @@ export default function OptionListEditor({ field, api }) {
   }, [opts.length]);
 
   return (
-    <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
-      <div ref={containerRef} className="space-y-2">
+    <div className="mie:space-y-3">
+      <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700">{label}</label>
+      <div ref={containerRef} className="mie:space-y-2">
         {opts.map((opt) => (
-          <div key={opt.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
+          <div key={opt.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-gray-400 mie:transition-colors">
             <input
-              className="flex-1 min-w-0 outline-none bg-transparent"
+              className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
               value={opt.value}
               onChange={(e) => api.option.update(opt.id, e.target.value)}
               placeholder={placeholder}
@@ -38,10 +38,10 @@ export default function OptionListEditor({ field, api }) {
             {!isBoolean && (
               <button
                 onClick={() => api.option.remove(opt.id)}
-                className="flex-shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
                 title="Remove option"
               >
-                <TRASHCANTWO_ICON className="w-5 h-5" />
+                <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
               </button>
             )}
           </div>
@@ -50,7 +50,7 @@ export default function OptionListEditor({ field, api }) {
       {!isBoolean && (
         <button
           onClick={() => api.option.add("")}
-          className="w-full px-3 py-2 text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors"
+          className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
         >
           + Add {singular}
         </button>

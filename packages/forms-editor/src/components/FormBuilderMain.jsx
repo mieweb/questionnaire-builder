@@ -36,8 +36,8 @@ export default function FormBuilderMain() {
       ref={containerRef}
       className={
         `form-builder-main 
-        ${ui.state.isPreview ? `max-w-4xl` : `max-w-xl`} 
-        mx-auto rounded-lg overflow-y-auto max-h-[calc(100svh-13rem)] lg:max-h-[calc(100dvh-11rem)] custom-scrollbar lg:pr-2`
+        ${ui.state.isPreview ? `mie:max-w-4xl` : `mie:max-w-xl`} 
+        mie:mx-auto mie:rounded-lg mie:overflow-y-auto mie:max-h-[calc(100svh-13rem)] mie:lg:max-h-[calc(100dvh-11rem)] custom-scrollbar mie:lg:pr-2`
       }
       onClick={() => !ui.state.isPreview && ui.selectedFieldId.clear()}
     >
@@ -58,7 +58,7 @@ const FieldRow = React.memo(function FieldRow({ id }) {
   if (!FieldComponent) return null;
 
   return (
-    <div className="mb-1.5" data-field-type={field.fieldType} data-field-id={field.id}>
+    <div className="mie:mb-1.5" data-field-type={field.fieldType} data-field-id={field.id}>
       <FieldComponent field={field} />
     </div>
   );
@@ -66,19 +66,16 @@ const FieldRow = React.memo(function FieldRow({ id }) {
 
 function EmptyState() {
   return (
-    <div className="form-builder-empty-state flex flex-col
-                    items-center justify-center h-72 bg-linear-to-br from-gray-50 
-                    to-gray-100 border-2 border-dashed border-blue-200 rounded-xl 
-                    shadow-md text-center px-8 py-10"
+    <div className="form-builder-empty-state mie:flex mie:flex-col mie:items-center mie:justify-center mie:h-72 mie:bg-linear-to-br mie:from-gray-50 mie:to-gray-100 mie:border-2 mie:border-dashed mie:border-blue-200 mie:rounded-xl mie:shadow-md mie:text-center mie:px-8 mie:py-10"
     >
-      <div className="empty-state-title text-xl font-semibold text-gray-700 mb-2">Forms</div>
-      <div className="empty-state-description text-base text-gray-500">
-        <div className="lg:hidden">
-          Tap the <span className="font-semibold text-blue-500">Tool Panel</span> button to add fields.
+      <div className="empty-state-title mie:text-xl mie:font-semibold mie:text-gray-700 mie:mb-2">Forms</div>
+      <div className="empty-state-description mie:text-base mie:text-gray-500">
+        <div className="mie:lg:hidden">
+          Tap the <span className="mie:font-semibold mie:text-blue-500">Tool Panel</span> button to add fields.
         </div>
-        <div className="hidden lg:block">
-          Add fields using the <span className="font-semibold text-blue-500">Tool Panel</span> on the left.<br />
-          Edit field properties using the <span className="font-semibold text-blue-500">Edit Panel</span> on the right.
+        <div className="mie:hidden mie:lg:block">
+          Add fields using the <span className="mie:font-semibold mie:text-blue-500">Tool Panel</span> on the left.<br />
+          Edit field properties using the <span className="mie:font-semibold mie:text-blue-500">Edit Panel</span> on the right.
         </div>
       </div>
     </div>

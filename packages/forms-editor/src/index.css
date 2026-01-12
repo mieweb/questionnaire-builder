@@ -1,5 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
-@import "tailwindcss" prefix(mie);
+@import "tailwindcss/theme" prefix(mie);
+@import "tailwindcss/utilities" prefix(mie);
+
+/* Tell Tailwind which files to scan for utility classes */
+@source "../../../packages/forms-editor/src/**/*.{js,jsx}";
+@source "../../../packages/forms-engine/src/**/*.{js,jsx}";
+
+/* Scoped base styles - essential resets for mie: prefixed utilities */
+@layer base {
+  .qb-editor-root,
+  .qb-editor-root *,
+  .qb-editor-root *::before,
+  .qb-editor-root *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: currentColor;
+  }
+}
 
 /* Remove focus-visible outline on divs and buttons to prevent Escape key outline */
 div:focus-visible,

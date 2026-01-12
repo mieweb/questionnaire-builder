@@ -1,7 +1,7 @@
 import Link from '@docusaurus/Link';
 import Layout from '@theme/Layout';
 import { heroSection, featuresSection, interactiveDemoSection, quickStart, packagesSection, resourcesSection, initialFormData } from './index.config';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 import * as yaml from 'js-yaml';
 import CodeMirror from '@uiw/react-codemirror';

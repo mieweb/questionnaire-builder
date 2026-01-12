@@ -14,12 +14,12 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
         
         if (isPreview) {
           return (
-              <div className={`slider-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
-              <div className={`grid gap-2 pb-4 ${options.length > 5 ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2'}`}>
-                <div className="font-light wrap-break-word overflow-hidden">{f.question || "Question"}</div>
-                <div className="py-2">
+              <div className={`slider-field-preview ${insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}`}>
+              <div className={`mie:grid mie:gap-2 mie:pb-4 ${options.length > 5 ? 'mie:grid-cols-1' : 'mie:grid-cols-1 mie:sm:grid-cols-2'}`}>
+                <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <div className="mie:py-2">
                   {options.length > 0 && (
-                    <div className="relative pt-1">
+                    <div className="mie:relative mie:pt-1">
                       {/* Slider Track */}
                       <input
                         type="range"
@@ -31,18 +31,18 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                           const index = parseInt(e.target.value);
                           api.selection.single(options[index]?.id);
                         }}
-                        className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb"
+                        className="mie:w-full mie:h-1 mie:bg-gray-200 mie:rounded-lg mie:appearance-none mie:cursor-pointer slider-thumb"
                       />
                       
                       {/* Scale markers and labels below */}
-                      <div className="relative mt-2 px-2">
-                        <div className="relative h-4 text-gray-400 text-center">
+                      <div className="mie:relative mie:mt-2 mie:px-2">
+                        <div className="mie:relative mie:h-4 mie:text-gray-400 mie:text-center">
                           {options.map((option, index) => {
                             const position = options.length > 1 ? (index / (options.length - 1)) * 100 : 50;
                             return (
                               <span
                                 key={option.id}
-                                className="absolute"
+                                className="mie:absolute"
                                 style={{ left: `${position}%`, transform: 'translateX(-50%)' }}
                               >
                                 ╹
@@ -50,19 +50,19 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                             );
                           })}
                         </div>
-                        <div className="relative mt-1">
+                        <div className="mie:relative mie:mt-1">
                           {options.map((option, index) => {
                             const position = options.length > 1 ? (index / (options.length - 1)) * 100 : 50;
                             return (
                               <div
                                 key={option.id}
-                                className="absolute"
+                                className="mie:absolute"
                                 style={{ left: `${position}%`, transform: 'translateX(-50%)' }}
                               >
                                 <button
                                   type="button"
                                   onClick={() => api.selection.single(option.id)}
-                                  className="cursor-pointer focus:outline-none whitespace-nowrap"
+                                  className="mie:cursor-pointer mie:focus:outline-none mie:whitespace-nowrap"
                                 >
                                   <span
                                     className={`text-sm ${
@@ -83,7 +83,7 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                   )}
                   
                   {options.length === 0 && (
-                    <div className="text-sm text-gray-400 italic">No options available</div>
+                    <div className="mie:text-sm mie:text-gray-400 mie:italic">No options available</div>
                   )}
                 </div>
               </div>
@@ -92,36 +92,36 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
         }
 
         return (
-          <div className="slider-field-edit space-y-3">
+          <div className="slider-field-edit mie:space-y-3">
             <input
-              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
+              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
 
-            <div className="text-sm text-gray-600">
+            <div className="mie:text-sm mie:text-gray-600">
               Options (each will be a point on the slider):
             </div>
 
-            <div className="space-y-2">
+            <div className="mie:space-y-2">
               {options.map((option) => (
-                <div key={option.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
-                  <div className="w-3 h-3 rounded-full bg-blue-400 shrink-0" />
+                <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-gray-400 mie:transition-colors">
+                  <div className="mie:w-3 mie:h-3 mie:rounded-full mie:bg-blue-400 mie:shrink-0" />
                   <input
                     type="text"
                     value={option.value}
                     onChange={(e) => api.option.update(option.id, e.target.value)}
                     placeholder={placeholder?.options || "Option label"}
-                    className="flex-1 min-w-0 outline-none bg-transparent"
+                    className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
                   />
                   <button 
                     onClick={() => api.option.remove(option.id)}
-                    className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                    className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
                     title="Remove option"
                   >
-                    <TRASHCANTWO_ICON className="w-5 h-5" />
+                    <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
                   </button>
                 </div>
               ))}
@@ -129,9 +129,9 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
 
             <button 
               onClick={() => api.option.add()} 
-              className="w-full px-3 py-2 text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+              className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
             >
-              <PLUSOPTION_ICON className="w-5 h-5" /> Add Option
+              <PLUSOPTION_ICON className="mie:w-5 mie:h-5" /> Add Option
             </button>
           </div>
         );

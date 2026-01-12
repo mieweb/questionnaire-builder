@@ -101,8 +101,8 @@ const SectionField = React.memo(function SectionField({ field }) {
         key={child.id}
         ref={(el) => el && (childRefs.current[child.id] = el)}
         className={[
-          "rounded-lg mb-3 cursor-pointer",
-          isHighlighted ? "border-2 border-blue-400 border-dashed" : "border border-transparent",
+          "mie:rounded-lg mie:mb-3 mie:cursor-pointer",
+          isHighlighted ? "mie:border-2 mie:border-blue-400 mie:border-dashed" : "mie:border mie:border-transparent",
         ].join(" ")}
         onClick={(e) => {
           e.stopPropagation();
@@ -125,8 +125,8 @@ const SectionField = React.memo(function SectionField({ field }) {
 
         if (isPreview) {
           return (
-            <section className={`section-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
-              <div className="bg-blue-500 text-white text-xl px-4 py-2 rounded-t-lg wrap-break-word overflow-hidden">
+            <section className={`section-field-preview ${insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}`}>
+              <div className="mie:bg-blue-500 mie:text-white mie:text-xl mie:px-4 mie:py-2 mie:rounded-t-lg mie:wrap-break-word mie:overflow-hidden">
                 {f.title || "Section"}
               </div>
               {children.map((c) => renderChildPreview(c, f.id))}
@@ -138,11 +138,11 @@ const SectionField = React.memo(function SectionField({ field }) {
 
         return (
           <div className="section-field-edit">
-            <div className="flex justify-between items-center mb-3 gap-2 section-field-header">
-              <div className="flex-1">
+            <div className="mie:flex mie:justify-between mie:items-center mie:mb-3 mie:gap-2 section-field-header">
+              <div className="mie:flex-1">
                 <input
                   type="text"
-                  className="w-full min-w-0 px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+                  className="mie:w-full mie:min-w-0 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
                   value={f.title || ""}
                   onChange={(e) => api.field.update("title", e.target.value)}
                   placeholder="Section title (e.g., Data Consent)"
@@ -150,12 +150,12 @@ const SectionField = React.memo(function SectionField({ field }) {
               </div>
             </div>
             {isEmpty ? (
-              <div className="flex flex-col items-center justify-center p-8 bg-linear-to-br from-gray-50 to-gray-100 border-2 border-dashed border-blue-200 rounded-lg shadow-md text-center">
-                <p className="text-sm font-semibold text-gray-700 mb-2">No fields in this section</p>
-                <p className="text-xs text-gray-500 leading-relaxed">
-                  Use the <span className="font-semibold text-blue-500">Tool Panel</span> on the left to add fields.
+              <div className="mie:flex mie:flex-col mie:items-center mie:justify-center mie:p-8 mie:bg-linear-to-br mie:from-gray-50 mie:to-gray-100 mie:border-2 mie:border-dashed mie:border-blue-200 mie:rounded-lg mie:shadow-md mie:text-center">
+                <p className="mie:text-sm mie:font-semibold mie:text-gray-700 mie:mb-2">No fields in this section</p>
+                <p className="mie:text-xs mie:text-gray-500 mie:leading-relaxed">
+                  Use the <span className="mie:font-semibold mie:text-blue-500">Tool Panel</span> on the left to add fields.
                   <br />
-                  Press <span className="font-semibold text-blue-500">ESC</span> or click <span className="font-semibold text-blue-500">X</span> to unselect.
+                  Press <span className="mie:font-semibold mie:text-blue-500">ESC</span> or click <span className="mie:font-semibold mie:text-blue-500">X</span> to unselect.
                 </p>
               </div>
             ) : (

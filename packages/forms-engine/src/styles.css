@@ -1,5 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
-@import "tailwindcss" prefix(mie);
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,909;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import "tailwindcss/theme" prefix(mie);
+@import "tailwindcss/utilities" prefix(mie);
+
+/* Scoped base styles - essential resets for mie: prefixed utilities */
+@layer base {
+  .qb-editor-root,
+  .qb-editor-root *,
+  .qb-editor-root *::before,
+  .qb-editor-root *::after,
+  .qb-renderer-root,
+  .qb-renderer-root *,
+  .qb-renderer-root *::before,
+  .qb-renderer-root *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: currentColor;
+  }
+}
 
 @theme {
   --font-titillium: "Titillium Web", sans-serif;

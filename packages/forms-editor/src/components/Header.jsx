@@ -135,65 +135,65 @@ export default function Header() {
   };
 
   return (
-    <header className="editor-header w-full bg-white border border-gray-200 rounded-lg shadow-sm">
-      <div className="px-4 py-4">
+    <header className="editor-header mie:w-full mie:bg-white mie:border mie:border-gray-200 mie:rounded-lg mie:shadow-sm">
+      <div className="mie:px-4 mie:py-4">
         {/* Top row: Logo/Title */}
-        <div className="mb-4">
-          <h1 className="text-lg lg:text-2xl font-bold text-slate-900">Editor</h1>
+        <div className="mie:mb-4">
+          <h1 className="mie:text-lg mie:lg:text-2xl mie:font-bold mie:text-slate-900">Editor</h1>
         </div>
 
         {/* Bottom row: View Mode Tabs + Import/Export */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="header-mode-toggle flex gap-1 rounded-lg border border-black/10 bg-black/5 p-1 w-fit">
+        <div className="mie:flex mie:flex-wrap mie:items-center mie:justify-between mie:gap-3">
+          <div className="header-mode-toggle mie:flex mie:gap-1 mie:rounded-lg mie:border mie:border-black/10 mie:bg-black/5 mie:p-1 mie:w-fit">
             <button
-              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${
+              className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors ${
                 !isPreview && !isCodeEditor
-                  ? "bg-white text-slate-900 shadow-sm"
+                  ? "mie:bg-white mie:text-slate-900 mie:shadow-sm"
                   : codeEditorHasError
-                  ? "text-slate-400 cursor-not-allowed"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "mie:text-slate-400 mie:cursor-not-allowed"
+                  : "mie:text-slate-600 mie:hover:text-slate-900"
               }`}
               onClick={onEdit}
               disabled={codeEditorHasError}
               title={codeEditorHasError ? "Fix code errors before switching" : "Visual Editor"}
             >
-              <VEDITOR_ICON className="w-5 h-5" />
+              <VEDITOR_ICON className="mie:w-5 mie:h-5" />
               <span>Build</span>
             </button>
             <button
-              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${isCodeEditor
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-600 hover:text-slate-900"
+              className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors ${isCodeEditor
+                  ? "mie:bg-white mie:text-slate-900 mie:shadow-sm"
+                  : "mie:text-slate-600 mie:hover:text-slate-900"
                 }`}
               onClick={onCodeEditor}
               title="Code Editor"
             >
-              <CODE_ICON className="w-5 h-5" />
+              <CODE_ICON className="mie:w-5 mie:h-5" />
               <span>Code</span>
             </button>
             <button
-              className={`flex items-center justify-center gap-2 px-2 lg:px-4 py-2 lg:py-2 rounded-lg text-xs lg:text-sm font-medium transition-colors ${
+              className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors ${
                 isPreview
-                  ? "bg-white text-slate-900 shadow-sm"
+                  ? "mie:bg-white mie:text-slate-900 mie:shadow-sm"
                   : codeEditorHasError
-                  ? "text-slate-400 cursor-not-allowed"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "mie:text-slate-400 mie:cursor-not-allowed"
+                  : "mie:text-slate-600 mie:hover:text-slate-900"
               }`}
               onClick={onPreview}
               disabled={codeEditorHasError}
               title={codeEditorHasError ? "Fix code errors before switching" : "Preview Form"}
             >
-              <PICTURE_ICON className="w-5 h-5" />
+              <PICTURE_ICON className="mie:w-5 mie:h-5" />
               <span>Preview</span>
             </button>
           </div>
 
-          <div className="header-actions flex gap-1 items-center">
-            <label className="header-import-label px-2 py-2 lg:px-3 lg:py-2 rounded-lg border border-black/15 bg-white hover:bg-black/5 cursor-pointer text-xs lg:text-sm font-medium transition-colors flex items-center lg:gap-2 gap-0">
-              <UPLOAD_ICON className="w-4 h-4 lg:w-4 lg:h-4" />
-              <span className="hidden min-[445px]:inline">Import</span>
+          <div className="header-actions mie:flex mie:gap-1 mie:items-center">
+            <label className="header-import-label mie:px-2 mie:py-2 mie:lg:px-3 mie:lg:py-2 mie:rounded-lg mie:border mie:border-black/15 mie:bg-white mie:hover:bg-black/5 mie:cursor-pointer mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:flex mie:items-center mie:lg:gap-2 mie:gap-0">
+              <UPLOAD_ICON className="mie:w-4 mie:h-4 mie:lg:w-4 mie:lg:h-4" />
+              <span className="mie:hidden min-[445px]:inline">Import</span>
               <input
-                className="hidden"
+                className="mie:hidden"
                 type="file"
                 accept=".json,.yaml,.yml,application/json,text/yaml"
                 onChange={(e) => {
@@ -208,12 +208,12 @@ export default function Header() {
             </label>
 
             <button
-              className="px-2 py-2 lg:px-3 lg:py-2 rounded-lg border border-black/15 bg-white hover:bg-black/5 text-xs lg:text-sm font-medium transition-colors flex items-center lg:gap-2 gap-0"
+              className="mie:px-2 mie:py-2 mie:lg:px-3 mie:lg:py-2 mie:rounded-lg mie:border mie:border-black/15 mie:bg-white mie:hover:bg-black/5 mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:flex mie:items-center mie:lg:gap-2 mie:gap-0"
               onClick={onExport}
               title="Export"
             >
-              <DOWNLOAD_ICON className="w-4 h-4 lg:w-4 lg:h-4" />
-              <span className="hidden min-[445px]:inline">Export</span>
+              <DOWNLOAD_ICON className="mie:w-4 mie:h-4 mie:lg:w-4 mie:lg:h-4" />
+              <span className="mie:hidden min-[445px]:inline">Export</span>
             </button>
           </div>
         </div>
@@ -221,33 +221,33 @@ export default function Header() {
 
       {/* Schema Type Confirmation Modal */}
       {showSchemaConfirm && pendingImport && (
-        <div className="import-modal-overlay fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="import-modal-content bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
-            <div className="import-modal-header mb-6">
-              <h3 className="text-xl font-semibold text-slate-900 mb-2">
+        <div className="import-modal-overlay mie:fixed mie:inset-0 mie:z-50 mie:flex mie:items-center mie:justify-center mie:bg-black/50 mie:p-4">
+          <div className="import-modal-content mie:bg-white mie:rounded-2xl mie:shadow-2xl mie:max-w-md mie:w-full mie:p-6">
+            <div className="import-modal-header mie:mb-6">
+              <h3 className="mie:text-xl mie:font-semibold mie:text-slate-900 mie:mb-2">
                 Confirm Schema Type
               </h3>
-              <p className="text-sm text-slate-600">
-                Is this a <strong className="text-slate-900">{pendingImport.detectedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}</strong> schema?
+              <p className="mie:text-sm mie:text-slate-600">
+                Is this a <strong className="mie:text-slate-900">{pendingImport.detectedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}</strong> schema?
               </p>
               {pendingImport.detectedSchemaType === 'surveyjs' && (
-                <p className="text-xs text-slate-500 mt-2">
+                <p className="mie:text-xs mie:text-slate-500 mie:mt-2">
                   SurveyJS schemas will be converted to MIE Forms format.
                 </p>
               )}
             </div>
 
-            <div className="import-modal-actions flex gap-3">
+            <div className="import-modal-actions mie:flex mie:gap-3">
               <button
                 onClick={() => confirmImport(pendingImport.detectedSchemaType)}
-                className="flex-1 px-6 py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 transition-colors shadow-sm hover:shadow"
+                className="mie:flex-1 mie:px-6 mie:py-3 mie:rounded-xl mie:bg-blue-500 mie:text-white mie:font-semibold mie:hover:bg-blue-600 mie:transition-colors mie:shadow-sm hover:shadow"
               >
                 Yes, Import
               </button>
 
               <button
                 onClick={cancelImport}
-                className="flex-1 px-6 py-3 rounded-xl border-2 border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold transition-colors"
+                className="mie:flex-1 mie:px-6 mie:py-3 mie:rounded-xl mie:border-2 mie:border-slate-300 mie:bg-white mie:hover:bg-slate-50 mie:text-slate-700 mie:font-semibold mie:transition-colors"
               >
                 Abort
               </button>

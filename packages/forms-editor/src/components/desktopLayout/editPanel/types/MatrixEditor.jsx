@@ -32,35 +32,35 @@ export default function MatrixEditor({ field, api }) {
   }, [columns.length]);
 
   return (
-    <div className="space-y-4">
+    <div className="mie:space-y-4">
       {/* Rows Section */}
-      <div className="space-y-3">
-        <label className="block text-sm font-medium text-gray-700">Rows</label>
-        <div ref={rowsContainerRef} className="space-y-2">
+      <div className="mie:space-y-3">
+        <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700">Rows</label>
+        <div ref={rowsContainerRef} className="mie:space-y-2">
           {rows.map((row) => (
-            <div key={row.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
+            <div key={row.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-gray-400 mie:transition-colors">
               <input
-                className="flex-1 min-w-0 outline-none bg-transparent"
+                className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
                 value={row.value}
                 onChange={(e) => api.row.update(row.id, e.target.value)}
                 placeholder="Row text"
               />
               <button
                 onClick={() => api.row.remove(row.id)}
-                className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
                 title="Remove row"
               >
-                <TRASHCANTWO_ICON className="w-5 h-5" />
+                <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
               </button>
             </div>
           ))}
         </div>
         {rows.length >= 10 ? (
-          <div className="px-3 py-2 text-sm text-gray-500 text-center bg-gray-50 rounded-lg">Max rows reached (10)</div>
+          <div className="mie:px-3 mie:py-2 mie:text-sm mie:text-gray-500 mie:text-center mie:bg-gray-50 mie:rounded-lg">Max rows reached (10)</div>
         ) : (
           <button
             onClick={() => api.row.add("")}
-            className="w-full px-3 py-2 text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors"
+            className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
           >
             + Add Row
           </button>
@@ -68,33 +68,33 @@ export default function MatrixEditor({ field, api }) {
       </div>
 
       {/* Columns Section */}
-      <div className="space-y-3">
-        <label className="block text-sm font-medium text-gray-700">Columns</label>
-        <div ref={colsContainerRef} className="space-y-2">
+      <div className="mie:space-y-3">
+        <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700">Columns</label>
+        <div ref={colsContainerRef} className="mie:space-y-2">
           {columns.map((col) => (
-            <div key={col.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
+            <div key={col.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-gray-400 mie:transition-colors">
               <input
-                className="flex-1 min-w-0 outline-none bg-transparent"
+                className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
                 value={col.value}
                 onChange={(e) => api.column.update(col.id, e.target.value)}
                 placeholder="Column text"
               />
               <button
                 onClick={() => api.column.remove(col.id)}
-                className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
                 title="Remove column"
               >
-                <TRASHCANTWO_ICON className="w-5 h-5" />
+                <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
               </button>
             </div>
           ))}
         </div>
         {columns.length >= 10 ? (
-          <div className="px-3 py-2 text-sm text-gray-500 text-center bg-gray-50 rounded-lg">Max columns reached (10)</div>
+          <div className="mie:px-3 mie:py-2 mie:text-sm mie:text-gray-500 mie:text-center mie:bg-gray-50 mie:rounded-lg">Max columns reached (10)</div>
         ) : (
           <button
             onClick={() => api.column.add("")}
-            className="w-full px-3 py-2 text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors"
+            className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
           >
             + Add Column
           </button>
