@@ -39,11 +39,12 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                         <div className="relative h-4 text-gray-400 text-center">
                           {options.map((option, index) => {
                             const position = options.length > 1 ? (index / (options.length - 1)) * 100 : 50;
+                            const transform = index === 0 ? 'translateX(0)' : index === options.length - 1 ? 'translateX(-100%)' : 'translateX(-50%)';
                             return (
                               <span
                                 key={option.id}
                                 className="absolute"
-                                style={{ left: `${position}%`, transform: 'translateX(-50%)' }}
+                                style={{ left: `${position}%`, transform }}
                               >
                                 ╹
                               </span>
@@ -53,11 +54,12 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                         <div className="relative mt-1">
                           {options.map((option, index) => {
                             const position = options.length > 1 ? (index / (options.length - 1)) * 100 : 50;
+                            const transform = index === 0 ? 'translateX(0)' : index === options.length - 1 ? 'translateX(-100%)' : 'translateX(-50%)';
                             return (
                               <div
                                 key={option.id}
                                 className="absolute"
-                                style={{ left: `${position}%`, transform: 'translateX(-50%)' }}
+                                style={{ left: `${position}%`, transform }}
                               >
                                 <button
                                   type="button"
