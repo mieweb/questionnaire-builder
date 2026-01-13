@@ -240,7 +240,7 @@ export default function Header() {
             <div className="import-modal-actions mie:flex mie:gap-3">
               <button
                 onClick={() => confirmImport(pendingImport.detectedSchemaType)}
-                className="mie:flex-1 mie:px-6 mie:py-3 mie:rounded-xl mie:bg-blue-500 mie:text-white mie:font-semibold mie:hover:bg-blue-600 mie:transition-colors mie:shadow-sm hover:shadow"
+                className="mie:flex-1 mie:px-6 mie:py-3 mie:rounded-xl mie:bg-blue-500 mie:text-white mie:font-semibold mie:hover:bg-blue-600 mie:transition-colors mie:shadow-sm mie:hover:shadow"
               >
                 Yes, Import
               </button>

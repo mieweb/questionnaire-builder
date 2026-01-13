@@ -67,24 +67,24 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
         if (isPreview) {
           const imageUri = f.imageUri || previewUrl;
           const sizeClass = {
-            small: "w-1/2",
-            medium: "w-3/4",
-            full: "w-full",
-          }[f.size || "full"] || "w-full";
+            small: "mie:w-1/2",
+            medium: "mie:w-3/4",
+            full: "mie:w-full",
+          }[f.size || "full"] || "mie:w-full";
 
           const alignmentClass = {
-            left: "justify-start",
-            center: "justify-center",
-            right: "justify-end",
-          }[f.alignment || "center"] || "justify-center";
+            left: "mie:justify-start",
+            center: "mie:justify-center",
+            right: "mie:justify-end",
+          }[f.alignment || "center"] || "mie:justify-center";
 
-          const previewPaddingClass = f.padding === "full-bleed" ? "" : "pb-4";
+          const previewPaddingClass = f.padding === "full-bleed" ? "" : "mie:pb-4";
 
           return (
             <div className={previewPaddingClass}>
               {f.question && <div className="mie:font-light mie:mb-2 mie:wrap-break-word mie:overflow-hidden">{f.question}</div>}
               {imageUri && (
-                <div className={`flex ${alignmentClass} ${f.padding !== "full-bleed" ? "mb-4" : ""}`}>
+                <div className={`mie:flex ${alignmentClass} ${f.padding !== "full-bleed" ? "mie:mb-4" : ""}`}>
                   <img
                     src={imageUri}
                     alt={f.altText || "Image"}
@@ -99,16 +99,16 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
 
         const currentImageUri = f.imageUri || previewUrl;
         const sizeClass = {
-          small: "w-1/2",
-          medium: "w-3/4",
-          full: "w-full",
-        }[f.size || "full"] || "w-full";
+          small: "mie:w-1/2",
+          medium: "mie:w-3/4",
+          full: "mie:w-full",
+        }[f.size || "full"] || "mie:w-full";
 
         const alignmentClass = {
-          left: "justify-start",
-          center: "justify-center",
-          right: "justify-end",
-        }[f.alignment || "center"] || "justify-center";
+          left: "mie:justify-start",
+          center: "mie:justify-center",
+          right: "mie:justify-end",
+        }[f.alignment || "center"] || "mie:justify-center";
 
         return (
           <div ref={containerRef} tabIndex={-1} className="mie:space-y-3 mie:w-full mie:overflow-hidden">
@@ -218,7 +218,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                   <X_ICON className="mie:w-5 mie:h-5" />
                 </button>
                 <p className="mie:text-sm mie:font-semibold mie:text-gray-700 mie:mb-3">Preview</p>
-                <div className={`flex ${alignmentClass} mb-2`}>
+                <div className={`mie:flex ${alignmentClass} mie:mb-2`}>
                   <img
                     src={currentImageUri}
                     alt={f.altText || "Preview"}

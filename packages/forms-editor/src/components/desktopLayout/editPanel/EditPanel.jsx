@@ -4,7 +4,7 @@ import SectionEditor from "./types/SectionEditor";
 import LogicEditor from "./types/LogicEditor";
 import { useUIApi, useFormStore, EDIT_ICON, EYEEDIT_ICON } from "@mieweb/forms-engine";
 
-export default function EditPanel() {
+export default function EditPanel({ isMobileModal = false }) {
   const ui = useUIApi();
 
   const selectedField = useFormStore(
@@ -35,7 +35,11 @@ export default function EditPanel() {
 
   return (
     <div
-      className="edit-panel-container mie:bg-white mie:border mie:border-gray-200 mie:rounded-lg mie:shadow-sm mie:overflow-y-auto custom-scrollbar mie:max-h-[calc(100svh-24rem)] mie:lg:max-h-[calc(100dvh-20rem)]"
+      className={`edit-panel-container mie:bg-white mie:border mie:border-gray-200 mie:rounded-lg mie:shadow-sm ${
+        isMobileModal
+          ? "mie:overflow-visible mie:max-h-none"
+          : "mie:overflow-y-auto custom-scrollbar mie:max-h-[calc(100svh-24rem)] mie:lg:max-h-[calc(100dvh-20rem)]"
+      }`}
     >
       {/* Sticky Header with Mode Toggle */}
       <div className="mie:sticky mie:top-0 mie:z-20 mie:bg-white mie:border-b mie:border-gray-200 mie:px-4 mie:pt-3 mie:pb-2">

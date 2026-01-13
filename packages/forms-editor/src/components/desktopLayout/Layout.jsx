@@ -50,9 +50,7 @@ export default function Layout({ selectedField }) {
                     onClick={() => ui.modal.set(false)}
                   />
                   <div className="mie:fixed mie:bottom-0 mie:left-0 mie:right-0 mie:z-50 mie:bg-white mie:rounded-t-2xl mie:shadow-2xl mie:max-h-[60vh] mie:overflow-y-auto custom-scrollbar mie:lg:hidden">
-                    <div className="[&_.edit-panel-container]:overflow-visible [&_.edit-panel-container]:max-h-none">
-                      <EditPanel key={panelResetKey} />
-                    </div>
+                    <EditPanel key={panelResetKey} isMobileModal={true} />
                   </div>
                 </>
               )}

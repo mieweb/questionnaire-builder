@@ -65,10 +65,10 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                                   className="mie:cursor-pointer mie:focus:outline-none mie:whitespace-nowrap"
                                 >
                                   <span
-                                    className={`text-sm ${
+                                    className={`mie:text-sm ${
                                       selectedIndex === index
-                                        ? 'text-blue-600 font-semibold'
-                                        : 'text-gray-500 hover:text-blue-600'
+                                        ? 'mie:text-blue-600 mie:font-semibold'
+                                        : 'mie:text-gray-500 mie:hover:text-blue-600'
                                     }`}
                                   >
                                     {option.value}

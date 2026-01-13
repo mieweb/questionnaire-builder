@@ -6,7 +6,7 @@ const CustomDropdown = function CustomDropdown({
   onChange = () => {},
   placeholder = "Select an option",
   showClearOption = true,
-  maxHeight = "max-h-60",
+  maxHeight = "mie:max-h-60",
   isMulti = false,
   disabled = false,
 }) {

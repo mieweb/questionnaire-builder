@@ -25,8 +25,8 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                         const inputId = `${f.id}-${option.id}`;
                         const isSelected = selectedIndex === index;
                         const labelClasses = isSelected
-                          ? "flex items-center justify-center min-w-[44px] h-11 px-3 rounded-full border-2 transition-all cursor-pointer bg-blue-600 text-white border-blue-600 scale-105"
-                          : "flex items-center justify-center min-w-[44px] h-11 px-3 rounded-full border-2 transition-all cursor-pointer bg-white text-gray-700 border-gray-300 hover:border-blue-300 hover:bg-blue-50 hover:scale-105";
+                          ? "mie:flex mie:items-center mie:justify-center mie:min-w-[44px] mie:h-11 mie:px-3 mie:rounded-full mie:border-2 mie:transition-all mie:cursor-pointer mie:bg-blue-600 mie:text-white mie:border-blue-600 mie:scale-105"
+                          : "mie:flex mie:items-center mie:justify-center mie:min-w-[44px] mie:h-11 mie:px-3 mie:rounded-full mie:border-2 mie:transition-all mie:cursor-pointer mie:bg-white mie:text-gray-700 mie:border-gray-300 mie:hover:border-blue-300 mie:hover:bg-blue-50 mie:hover:scale-105";
                         
                         return (
                           <label

@@ -50,7 +50,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
               placeholder={placeholder?.question || "Enter question"}
             />
 
-            <div className="mie:w-full mie:min-h-10 mie:px-4 mie:py-2 shadow mie:border mie:border-gray-300 mie:rounded-lg mie:bg-gray-50 mie:flex mie:flex-wrap mie:gap-2 mie:items-center">
+            <div className="mie:w-full mie:min-h-10 mie:px-4 mie:py-2 mie:shadow mie:border mie:border-gray-300 mie:rounded-lg mie:bg-gray-50 mie:flex mie:flex-wrap mie:gap-2 mie:items-center">
               <span className="mie:text-gray-400 mie:text-sm">Multi-select dropdown (Preview mode only)</span>
             </div>
 
