@@ -88,14 +88,35 @@ If any box is unchecked, **simplify**.
 
 ### React & Tailwind Specific
 
-- **Semantic Class Names Before Tailwind**: Always add semantic/descriptive class names BEFORE Tailwind utility classes for better readability and maintainability. Apply this to all components, HTML structures, and JSX elements.
+- **CRITICAL: Always Use `mie:` Prefix for ALL Tailwind Classes**: This project uses Tailwind CSS v4 with `prefix(mie)` scoping. **Every single Tailwind utility class MUST have the `mie:` prefix**. This applies to:
+  - Regular classes: `mie:flex`, `mie:p-4`, `mie:bg-white`
+  - Pseudo-state variants: `mie:hover:bg-blue-500`, `mie:focus:ring-2`
+  - Responsive variants: `mie:md:flex-row`, `mie:lg:hidden`
+  - Combined variants: `mie:hover:mie:bg-blue-600` → **NO!** Use `mie:hover:bg-blue-600`
+  - Template literals: `` `mie:px-4 ${condition ? "mie:bg-blue-500" : "mie:bg-gray-200"}` ``
+  
+  The prefix goes BEFORE variant modifiers (hover:, focus:, md:, lg:, etc.).
+  ```jsx
+  // ❌ BAD - missing mie: prefix (WILL NOT WORK)
+  <div className="flex gap-2 p-4 bg-white rounded">
+  <button className={`px-4 py-2 ${active ? "bg-blue-500" : "bg-gray-200"}`}>
+  
+  // ✅ GOOD - all classes have mie: prefix
+  <div className="mie:flex mie:gap-2 mie:p-4 mie:bg-white mie:rounded">
+  <button className={`mie:px-4 mie:py-2 ${active ? "mie:bg-blue-500" : "mie:bg-gray-200"}`}>
+  
+  // ✅ GOOD - variants with prefix (mie: comes first)
+  <button className="mie:bg-blue-500 mie:hover:bg-blue-600 mie:focus:ring-2 mie:md:px-6">
+  ```
+
+- **Semantic Class Names Before Tailwind**: Always add semantic/descriptive class names BEFORE Tailwind utility classes for better readability and maintainability. Apply this to all components, HTML structures, and JSX elements. Semantic names do NOT get the `mie:` prefix.
   ```jsx
   // ❌ BAD - Tailwind only, no semantic context
-  <div className="flex gap-2 p-4 bg-white rounded shadow-md">
+  <div className="mie:flex mie:gap-2 mie:p-4 mie:bg-white mie:rounded mie:shadow-md">
   
-  // ✅ GOOD - semantic name first, then Tailwind
-  <div className="tool-selector flex gap-2 p-4 bg-white rounded shadow-md">
-  <button className="size-picker-btn w-7 h-7 rounded bg-blue-500">
+  // ✅ GOOD - semantic name first (no prefix), then Tailwind (with prefix)
+  <div className="tool-selector mie:flex mie:gap-2 mie:p-4 mie:bg-white mie:rounded mie:shadow-md">
+  <button className="size-picker-btn mie:w-7 mie:h-7 mie:rounded mie:bg-blue-500">
   ```
 
 - **Prefer Standard Tailwind Classes Over Arbitrary Values**: Always use Tailwind's built-in utility classes instead of arbitrary values (e.g., `shadow-[...]`, `text-[14px]`, `z-[9999]`). Arbitrary values should be avoided unless absolutely necessary and no preset class exists. This maintains design system consistency and makes the code more maintainable.
