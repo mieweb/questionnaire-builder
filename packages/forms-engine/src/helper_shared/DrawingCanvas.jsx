@@ -551,7 +551,7 @@ export default function DrawingCanvas({
             <button
               onClick={undo}
               disabled={!canUndo}
-              className="undo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-gray-100 mie:hover:bg-gray-200 mie:text-gray-700 mie:rounded mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
+              className="undo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-gray-100 mie:hover:bg-gray-200 mie:text-gray-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
               title="Undo"
             >
               <svg className="undo-icon mie:w-4 mie:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -561,7 +561,7 @@ export default function DrawingCanvas({
             <button
               onClick={redo}
               disabled={!canRedo}
-              className="redo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-gray-100 mie:hover:bg-gray-200 mie:text-gray-700 mie:rounded mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
+              className="redo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-gray-100 mie:hover:bg-gray-200 mie:text-gray-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
               title="Redo"
             >
               <svg className="redo-icon mie:w-4 mie:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -570,7 +570,7 @@ export default function DrawingCanvas({
             </button>
             <button
               onClick={clearCanvas}
-              className="mie:clear-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-red-100 mie:hover:bg-red-200 mie:text-red-700 mie:rounded mie:shadow-md mie:transition mie:touch-manipulation"
+              className="mie:clear-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-red-100 mie:hover:bg-red-200 mie:text-red-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation"
               title="Clear"
             >
               <X_ICON className="mie:h-4 mie:w-4" />
@@ -585,7 +585,7 @@ export default function DrawingCanvas({
           {/* Tool Selector */}
           <button
             onClick={() => setCurrentTool("pen")}
-            className={`tool-btn tool-btn-pen mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:transition-colors mie:touch-manipulation ${
+            className={`tool-btn tool-btn-pen mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-colors mie:touch-manipulation ${
               currentTool === "pen"
                 ? "mie:bg-blue-500 mie:text-white"
                 : "mie:bg-gray-100 mie:text-gray-700 mie:hover:bg-gray-200"
@@ -597,7 +597,7 @@ export default function DrawingCanvas({
           {hasEraser && (
             <button
               onClick={() => setCurrentTool("eraser")}
-              className={`tool-btn tool-btn-eraser mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:transition-colors mie:touch-manipulation ${
+              className={`tool-btn tool-btn-eraser mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-colors mie:touch-manipulation ${
                 currentTool === "eraser"
                   ? "mie:bg-blue-500 mie:text-white"
                   : "mie:bg-gray-100 mie:text-gray-700 mie:hover:bg-gray-200"
@@ -620,7 +620,7 @@ export default function DrawingCanvas({
                   onClick={() => {
                     setCurrentColor(color);
                   }}
-                  className={`color-btn mie:w-7 mie:h-7 mie:rounded mie:transition-all mie:touch-manipulation ${
+                  className={`color-btn mie:w-7 mie:h-7 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-all mie:touch-manipulation ${
                     currentColor === color
                       ? "mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
                       : "mie:hover:ring-2 mie:hover:ring-gray-300"
@@ -661,7 +661,7 @@ export default function DrawingCanvas({
                   onClick={() => {
                     setCurrentSize(size);
                   }}
-                  className={`size-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:transition-all mie:touch-manipulation ${
+                  className={`size-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-all mie:touch-manipulation ${
                     currentSize === size
                       ? "mie:bg-blue-500 mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
                       : "mie:bg-gray-100 mie:hover:bg-gray-200"
@@ -682,9 +682,9 @@ export default function DrawingCanvas({
                     setTempSize(customSize || 5);
                     setShowSizePicker(!showSizePicker);
                   }}
-                  className={`custom-size-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:transition-colors mie:touch-manipulation ${
+                  className={`custom-size-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:outline-none mie:focus:outline-none mie:transition-colors mie:touch-manipulation ${
                     currentSize === customSize && customSize !== null
-                      ? "mie:bg-blue-500 mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
+                      ? "mie:bg-blue-500 mie:ring-2 mie:ring-blue-500 mie:ring-offset-2 mie:border-0"
                       : "mie:bg-gray-100 mie:hover:bg-gray-200 mie:border-2 mie:border-dashed mie:border-gray-300"
                   }`}
                   title="Custom size"
