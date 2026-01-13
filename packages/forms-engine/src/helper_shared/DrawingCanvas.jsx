@@ -525,7 +525,7 @@ export default function DrawingCanvas({
         {/* Hidden drawing layer canvas */}
         <canvas
           ref={drawingCanvasRef}
-          style={{ display: "none" }}
+          className="mie:hidden"
         />
 
         {/* Cursor dot overlay */}
