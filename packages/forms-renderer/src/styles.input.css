@@ -23,6 +23,26 @@
   --font-titillium: "Titillium Web", sans-serif;
 }
 
-@utility custom-scrollbar {
-  @apply mie:[&::-webkit-scrollbar]:w-1 mie:[&::-webkit-scrollbar-track]:bg-transparent mie:[&::-webkit-scrollbar-thumb]:bg-gray-300 mie:[&::-webkit-scrollbar-thumb]:rounded-full;
+/* Custom scrollbar styles - auto-hide, appears on hover */
+.mie\:custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.mie\:custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.mie\:custom-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  transition: background 0.2s;
+}
+.mie\:custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: #d1d5db; /* gray-300 */
+}
+/* Firefox */
+.mie\:custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.mie\:custom-scrollbar:hover {
+  scrollbar-color: #d1d5db transparent;
 } 

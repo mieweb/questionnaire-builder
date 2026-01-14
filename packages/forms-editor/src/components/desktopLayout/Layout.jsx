@@ -49,7 +49,7 @@ export default function Layout({ selectedField }) {
                     className="mie:fixed mie:inset-0 mie:z-40 mie:bg-black/30 mie:lg:hidden"
                     onClick={() => ui.modal.set(false)}
                   />
-                  <div className="mie:fixed mie:bottom-0 mie:left-0 mie:right-0 mie:z-50 mie:bg-white mie:rounded-t-2xl mie:shadow-2xl mie:max-h-[60vh] mie:overflow-y-auto custom-scrollbar mie:lg:hidden">
+                  <div className="mie:fixed mie:bottom-0 mie:left-0 mie:right-0 mie:z-50 mie:bg-white mie:rounded-t-2xl mie:shadow-2xl mie:max-h-[60vh] mie:overflow-y-auto mie:custom-scrollbar mie:lg:hidden">
                     <EditPanel key={panelResetKey} isMobileModal={true} />
                   </div>
                 </>
@@ -79,7 +79,7 @@ export default function Layout({ selectedField }) {
               <div className="mie:fixed mie:inset-0 mie:z-40 mie:bg-black/30 mie:lg:hidden"
                 onClick={() => setIsMobileToolPanelOpen(false)}
               />
-              <div className="mie:fixed mie:bottom-0 mie:left-0 mie:right-0 mie:z-50 mie:bg-white mie:rounded-t-2xl mie:shadow-2xl mie:max-h-[60vh] mie:overflow-y-auto custom-scrollbar mie:lg:hidden">
+              <div className="mie:fixed mie:bottom-0 mie:left-0 mie:right-0 mie:z-50 mie:bg-white mie:rounded-t-2xl mie:shadow-2xl mie:max-h-[60vh] mie:overflow-y-auto mie:custom-scrollbar mie:lg:hidden">
                 <ToolPanel />
               </div>
             </>

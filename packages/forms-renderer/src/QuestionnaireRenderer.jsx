@@ -61,7 +61,7 @@ function QuestionnaireRendererInner({
   }, [onChange, onQuestionnaireResponse, questionnaireId, subjectId, formStore]);
 
   const rootClasses = [
-    'qb-render-root renderer-container mie:font-titillium mie:overflow-y-auto custom-scrollbar',
+    'qb-render-root renderer-container mie:font-titillium mie:overflow-y-auto mie:custom-scrollbar',
     'mie:max-w-4xl mie:mx-auto mie:px-2 mie:pb-8 mie:pt-4',
     fullHeight && 'mie:max-h-screen mie:my-9',
     className,

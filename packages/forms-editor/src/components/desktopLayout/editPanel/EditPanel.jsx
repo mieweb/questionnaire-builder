@@ -38,7 +38,7 @@ export default function EditPanel({ isMobileModal = false }) {
       className={`edit-panel-container mie:bg-white mie:border mie:border-gray-200 mie:rounded-lg mie:shadow-sm ${
         isMobileModal
           ? "mie:overflow-visible mie:max-h-none"
-          : "mie:overflow-y-auto custom-scrollbar mie:max-h-[calc(100svh-24rem)] mie:lg:max-h-[calc(100dvh-20rem)]"
+          : "mie:overflow-y-auto mie:custom-scrollbar mie:max-h-[calc(100svh-24rem)] mie:lg:max-h-[calc(100dvh-20rem)]"
       }`}
     >
       {/* Sticky Header with Mode Toggle */}

@@ -37,7 +37,7 @@ export default function FormBuilderMain() {
       className={
         `form-builder-main 
         ${ui.state.isPreview ? `mie:max-w-4xl` : `mie:max-w-xl`} 
-        mie:mx-auto mie:rounded-lg mie:overflow-y-auto mie:max-h-[calc(100svh-13rem)] mie:lg:max-h-[calc(100dvh-11rem)] custom-scrollbar mie:lg:pr-2`
+        mie:mx-auto mie:rounded-lg mie:overflow-y-auto mie:max-h-[calc(100svh-13rem)] mie:lg:max-h-[calc(100dvh-11rem)] mie:custom-scrollbar mie:lg:pr-2`
       }
       onClick={() => !ui.state.isPreview && ui.selectedFieldId.clear()}
     >

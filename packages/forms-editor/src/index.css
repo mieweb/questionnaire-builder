@@ -25,24 +25,30 @@ button:focus-visible {
   outline: none;
 }
 
-/* Dark mode support - when inside a Bootstrap dark theme parent */
-[data-bs-theme="dark"] .qb-editor-root {
-  color-scheme: dark;
-}
-
-[data-bs-theme="dark"] .qb-editor-root .bg-white {
-  background-color: #2B3036 !important;
-}
-
-[data-bs-theme="dark"] .qb-editor-root .bg-gray-50 {
-  background-color: #2B3036 !important;
-}
-
-[data-bs-theme="dark"] .qb-editor-root .bg-gray-100 {
-  background-color: #363c42 !important;
-}
-
 @theme {
   --font-titillium: "Titillium Web", sans-serif;
 }
 
+/* Custom scrollbar styles - auto-hide, appears on hover */
+.mie\:custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.mie\:custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.mie\:custom-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  transition: background 0.2s;
+}
+.mie\:custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: #d1d5db; /* gray-300 */
+}
+/* Firefox */
+.mie\:custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.mie\:custom-scrollbar:hover {
+  scrollbar-color: #d1d5db transparent;
+}

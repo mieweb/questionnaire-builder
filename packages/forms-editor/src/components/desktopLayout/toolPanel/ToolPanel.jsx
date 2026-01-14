@@ -90,7 +90,7 @@ const ToolPanelImpl = ({ isPreview = false }) => {
 
   return (
     <div 
-      className=" mie:border mie:border-gray-200 mie:rounded-lg mie:bg-white mie:overflow-y-auto custom-scrollbar mie:max-h-[calc(100svh-24rem)] mie:lg:max-h-[calc(100dvh-20rem)]"
+      className=" mie:border mie:border-gray-200 mie:rounded-lg mie:bg-white mie:overflow-y-auto mie:custom-scrollbar mie:max-h-[calc(100svh-24rem)] mie:lg:max-h-[calc(100dvh-20rem)]"
       tabIndex="-1"
     >
       <div className="tool-panel-container mie:pb-4 mie:rounded-lg mie:shadow-sm">

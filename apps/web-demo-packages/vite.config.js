@@ -23,6 +23,7 @@ export default defineConfig({
     allowedHosts: true
   },
   optimizeDeps: {
-    include: ['@mieweb/forms-editor', '@mieweb/forms-renderer', '@mieweb/forms-engine']
+    include: ['@mieweb/forms-editor', '@mieweb/forms-renderer', '@mieweb/forms-engine'],
+    force: true
   }
 });
