@@ -52,7 +52,6 @@ export default defineConfig({
     }
   ],
   build: {
-    watch: {},
     lib: {
       entry: resolve(__dirname, 'index.js'),
       name: 'FormsEngine',
