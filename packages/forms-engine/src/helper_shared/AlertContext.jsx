@@ -84,14 +84,14 @@ function AlertModal({ alert, onClose }) {
           {alert.cancelText && (
             <button
               onClick={() => onClose(false)}
-              className="alert-cancel-btn mie:px-4 mie:py-2 mie:bg-white mie:border mie:border-slate-300 mie:text-slate-700 mie:text-sm mie:font-medium mie:rounded-md mie:hover:bg-slate-50 mie:focus:outline-none mie:focus:ring-2 mie:focus:ring-slate-500 mie:focus:ring-offset-2 mie:transition-colors"
+              className="alert-cancel-btn mie:px-4 mie:py-2 mie:bg-white mie:border-0 mie:text-slate-700 mie:text-sm mie:font-medium mie:rounded-md mie:hover:bg-slate-50 mie:outline-none mie:focus:outline-none mie:focus:ring-2 mie:focus:ring-slate-500 mie:focus:ring-offset-2 mie:transition-colors"
             >
               {alert.cancelText}
             </button>
           )}
           <button
             onClick={() => onClose(true)}
-            className="alert-confirm-btn mie:px-4 mie:py-2 mie:bg-blue-600 mie:text-white mie:text-sm mie:font-medium mie:rounded-md mie:hover:bg-blue-700 mie:focus:outline-none mie:focus:ring-2 mie:focus:ring-blue-500 mie:focus:ring-offset-2 mie:transition-colors"
+            className="alert-confirm-btn mie:px-4 mie:py-2 mie:bg-blue-600 mie:border-0 mie:text-white mie:text-sm mie:font-medium mie:rounded-md mie:hover:bg-blue-700 mie:outline-none mie:focus:outline-none mie:focus:ring-2 mie:focus:ring-blue-500 mie:focus:ring-offset-2 mie:transition-colors"
           >
             {alert.confirmText}
           </button>

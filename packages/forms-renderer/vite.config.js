@@ -54,6 +54,7 @@ export default defineConfig({
     }
   ],
   build: {
+    watch: {},
     emptyOutDir: false,
     lib: {
       entry: resolve(__dirname, 'index.js'),

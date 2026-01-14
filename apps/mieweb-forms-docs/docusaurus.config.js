@@ -49,6 +49,7 @@ const config = {
         name: 'webpack-config-plugin',
         configureWebpack(config, isServer) {
           const path = require('path');
+          
           const base = {
             resolve: {
               alias: {
@@ -103,6 +104,14 @@ const config = {
               },
             },
           };
+        },
+        getPathsToWatch() {
+          const path = require('path');
+          return [
+            path.resolve(__dirname, '../../packages/forms-engine/dist'),
+            path.resolve(__dirname, '../../packages/forms-editor/dist'),
+            path.resolve(__dirname, '../../packages/forms-renderer/dist'),
+          ];
         },
       };
     },

@@ -188,7 +188,7 @@ function SectionEditor({ section, onActiveChildChange }) {
                     {fieldTypes[activeChild.fieldType]?.label || activeChild.fieldType}
                   </span>
                   <button
-                    className="mie:flex mie:items-center mie:gap-1.5 mie:px-3 mie:py-1.5 mie:text-xs mie:font-medium mie:text-red-600 mie:hover:text-red-700 mie:hover:bg-red-50 mie:border mie:border-red-300 mie:rounded mie:transition-colors"
+                    className="mie:flex mie:items-center mie:gap-1.5 mie:px-3 mie:py-1.5 mie:text-xs mie:font-medium mie:bg-white mie:text-red-600 mie:hover:text-red-700 mie:hover:bg-red-50 mie:border mie:border-red-300 mie:rounded mie:transition-colors"
                     onClick={onDeleteChild}
                     title="Delete this field"
                   >

@@ -46,7 +46,7 @@ function UnsupportedField({ field }) {
       <button
         type="button"
         onClick={() => setShowDetails(!showDetails)}
-        className="mie:mt-3 mie:px-3 mie:py-1.5 mie:bg-orange-500 mie:text-white mie:rounded mie:hover:bg-orange-600 mie:text-sm mie:transition-colors"
+        className="mie:mt-3 mie:px-3 mie:py-1.5 mie:bg-orange-500 mie:text-white mie:rounded mie:hover:bg-orange-600 mie:text-sm mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none"
       >
         {showDetails ? '▼ Hide' : '▶ Show'} Full Data
       </button>

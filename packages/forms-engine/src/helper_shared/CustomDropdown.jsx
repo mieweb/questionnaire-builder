@@ -77,7 +77,7 @@ const CustomDropdown = function CustomDropdown({
                     e.stopPropagation();
                     handleRemove(option.id);
                   }}
-                  className="custom-dropdown-remove-btn mie:hover:bg-blue-700 mie:rounded"
+                  className="custom-dropdown-remove-btn mie:flex mie:items-center mie:justify-center mie:bg-transparent mie:text-white mie:hover:bg-blue-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none"
                   aria-label={`Remove ${option.value}`}
                 >
                   <svg className="mie:w-4 mie:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,7 +90,7 @@ const CustomDropdown = function CustomDropdown({
 
           {/* Dropdown arrow */}
           <svg
-            className={`mie:w-5 mie:h-5 mie:ml-auto mie:transition-transform mie:shrink-0 ${isOpen ? "mie:rotate-180" : ""}`}
+            className={`mie:w-5 mie:h-5 mie:ml-auto mie:transition-transform mie:shrink-0 mie:text-gray-600 ${isOpen ? "mie:rotate-180" : ""}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -107,7 +107,7 @@ const CustomDropdown = function CustomDropdown({
             {availableOptions.map((option) => (
               <div
                 key={option.id}
-                className="custom-dropdown-option mie:px-4 mie:py-2 mie:hover:bg-blue-50 mie:cursor-pointer mie:transition-colors"
+                className="custom-dropdown-option mie:px-4 mie:py-2 mie:text-gray-900 mie:hover:bg-blue-50 mie:cursor-pointer mie:transition-colors"
                 onClick={() => handleSelect(option.id)}
               >
                 {option.value}
@@ -136,7 +136,7 @@ const CustomDropdown = function CustomDropdown({
 
         {/* Dropdown arrow */}
         <svg
-          className={`custom-dropdown-arrow mie:w-5 mie:h-5 mie:transition-transform mie:shrink-0 ${isOpen ? "mie:rotate-180" : ""}`}
+          className={`custom-dropdown-arrow mie:w-5 mie:h-5 mie:transition-transform mie:shrink-0 mie:text-gray-600 ${isOpen ? "mie:rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -152,7 +152,7 @@ const CustomDropdown = function CustomDropdown({
         >
           {showClearOption && (
             <div
-              className="custom-dropdown-clear-option mie:px-4 mie:py-2 mie:hover:bg-blue-50 mie:cursor-pointer mie:transition-colors"
+              className="custom-dropdown-clear-option mie:px-4 mie:py-2 mie:text-gray-900 mie:hover:bg-blue-50 mie:cursor-pointer mie:transition-colors"
               onClick={() => {
                 onChange(null);
                 setIsOpen(false);

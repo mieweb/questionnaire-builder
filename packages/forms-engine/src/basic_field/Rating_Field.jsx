@@ -88,7 +88,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                   />
                   <button 
                     onClick={() => api.option.remove(option.id)}
-                    className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                    className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors mie:bg-transparent"
                     title="Remove option"
                   >
                     <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
@@ -99,7 +99,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
 
             <button 
               onClick={() => api.option.add()} 
-              className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
+              className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:bg-white mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
             >
               <PLUSOPTION_ICON className="mie:w-5 mie:h-5" /> Add Option
             </button>

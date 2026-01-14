@@ -87,7 +87,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
 
         {/* actions: Edit (mobile), Toggle (small/big view), Delete */}
         <div className="field-wrapper-actions mie:flex mie:items-center mie:gap-1 mie:shrink-0">
-          <button onClick={onEditClick} className="field-edit-btn mie:block mie:lg:hidden mie:p-1.5 mie:hover:bg-white mie:rounded mie:transition-colors" title="Edit" aria-label="Edit field">
+          <button onClick={onEditClick} className="field-edit-btn mie:block mie:lg:hidden mie:p-1.5 mie:bg-transparent mie:text-gray-600 mie:hover:bg-white mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none" title="Edit" aria-label="Edit field">
             <EDIT_ICON className="mie:h-5 mie:w-5 mie:text-gray-600" />
           </button>
 
@@ -102,12 +102,12 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
             aria-controls={`fw-body-${ctrl.field?.id}`}
             title={open ? "Collapse" : "Expand"}
             aria-label={open ? "Collapse field" : "Expand field"}
-            className="field-collapse-btn mie:p-1.5 mie:hover:bg-white mie:rounded mie:transition-colors"
+            className="field-collapse-btn mie:p-1.5 mie:bg-transparent mie:text-gray-600 mie:hover:bg-white mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none"
           >
             {open ? <VIEWSMALL_ICON className="mie:collapse-icon mie:h-5 mie:w-5 mie:text-gray-600" /> : <VIEWBIG_ICON className="mie:collapse-icon mie:h-5 mie:w-5 mie:text-gray-600" />}
           </button>
 
-          <button onClick={onRemoveClick} className="field-delete-btn mie:p-1.5 mie:hover:bg-red-50 mie:rounded mie:transition-colors" title="Delete" aria-label="Delete field">
+          <button onClick={onRemoveClick} className="field-delete-btn mie:p-1.5 mie:bg-transparent mie:text-gray-600 mie:hover:bg-red-50 mie:hover:text-red-600 mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none" title="Delete" aria-label="Delete field">
             <TRASHCAN_ICON className="mie:h-5 mie:w-5 mie:text-gray-600 mie:hover:text-red-600" />
           </button>
         </div>

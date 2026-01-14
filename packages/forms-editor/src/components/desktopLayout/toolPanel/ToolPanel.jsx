@@ -102,7 +102,7 @@ const ToolPanelImpl = ({ isPreview = false }) => {
         {isSectionSelected && (
           <button
             onClick={handleClearSelection}
-            className="mie:text-gray-600 mie:hover:text-red-600 mie:hover:bg-red-50 mie:p-1 mie:rounded mie:transition-colors mie:shrink-0"
+            className="mie:bg-transparent mie:text-gray-600 mie:hover:text-red-600 mie:hover:bg-red-50 mie:p-1 mie:rounded mie:transition-colors mie:shrink-0"
             title="Unselect section"
           >
             <X_ICON className="mie:w-5 mie:h-5" />
@@ -130,7 +130,7 @@ const ToolPanelImpl = ({ isPreview = false }) => {
                   className={`mie:px-3 mie:py-2 mie:text-sm mie:text-left mie:border mie:rounded-md mie:transition-colors mie:duration-150 ${
                     isDisabled
                       ? "mie:border-gray-200 mie:bg-gray-50 mie:text-gray-400 mie:cursor-not-allowed"
-                      : "mie:border-gray-300 mie:hover:bg-blue-50 mie:hover:border-blue-400 mie:hover:text-blue-700"
+                      : "mie:bg-white mie:text-gray-900 mie:border-gray-300 mie:hover:bg-blue-50 mie:hover:border-blue-400 mie:hover:text-blue-700"
                   }`}
                   onClick={handlers[type]}
                   title={isDisabled ? "Cannot add section to a section" : `Add ${label}`}

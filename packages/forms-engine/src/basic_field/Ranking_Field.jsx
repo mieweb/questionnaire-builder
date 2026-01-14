@@ -71,13 +71,13 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
                         className="ranking-field-item mie:flex mie:items-center mie:px-3 mie:py-2 mie:my-2 mie:bg-white mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-blue-300 mie:hover:bg-blue-50 mie:transition-colors"
                       >
                         <div className="mie:flex mie:items-center mie:flex-1">
-                          <span>{optionText}</span>
+                          <span className="mie:text-gray-900">{optionText}</span>
                         </div>
                         <div className="mie:flex mie:items-center mie:gap-1 mie:ml-2">
                           <button
                             onClick={() => moveItem(api, optId, "up")}
                             disabled={!canMoveUp}
-                            className={`mie:p-1 ${canMoveUp ? "mie:text-gray-700 mie:hover:text-blue-600" : "mie:text-gray-300 mie:cursor-not-allowed"}`}
+                            className={`mie:p-1 mie:bg-transparent mie:border-0 mie:outline-none mie:focus:outline-none ${canMoveUp ? "mie:text-gray-700 mie:hover:text-blue-600" : "mie:text-gray-300 mie:cursor-not-allowed"}`}
                             aria-label="Move up"
                           >
                             <UPARROW_ICON className="mie:h-6 mie:w-6" />
@@ -85,7 +85,7 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
                           <button
                             onClick={() => moveItem(api, optId, "down")}
                             disabled={!canMoveDown}
-                            className={`mie:p-1 ${canMoveDown ? "mie:text-gray-700 mie:hover:text-blue-600" : "mie:text-gray-300 mie:cursor-not-allowed"}`}
+                            className={`mie:p-1 mie:bg-transparent mie:border-0 mie:outline-none mie:focus:outline-none ${canMoveDown ? "mie:text-gray-700 mie:hover:text-blue-600" : "mie:text-gray-300 mie:cursor-not-allowed"}`}
                             aria-label="Move down"
                           >
                             <DOWNARROW_ICON className="mie:h-6 mie:w-6" />
@@ -123,7 +123,7 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
                   />
                   <button 
                     onClick={() => api.option.remove(option.id)}
-                    className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                    className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors mie:bg-transparent mie:border-0 mie:outline-none mie:focus:outline-none"
                     title="Remove option"
                   >
                     <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
@@ -134,7 +134,7 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
 
             <button
               onClick={() => api.option.add()}
-              className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
+              className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:bg-white mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2 mie:outline-none mie:focus:outline-none"
             >
               <PLUSOPTION_ICON className="mie:w-5 mie:h-5" /> Add Option
             </button>

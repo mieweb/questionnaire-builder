@@ -27,7 +27,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                     {/* Column Headers - Hidden on mobile */}
                     <div className="mie:hidden mie:lg:flex mie:items-center mie:gap-4 mie:pl-32">
                       {columns.map((col) => (
-                        <div key={col.id} className="mie:flex-1 mie:text-center mie:font-normal">
+                        <div key={col.id} className="mie:flex-1 mie:text-center mie:font-normal mie:text-gray-900">
                           {col.value}
                         </div>
                       ))}
@@ -36,9 +36,9 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                     {/* Rows with Radio Buttons */}
                     {rows.map((row, rowIndex) => (
                       <div key={row.id} className="mie:py-1 mie:my-2">
-                        <div className="mie:lg:hidden mie:font-semibold mie:mb-2">{row.value}</div>
+                        <div className="mie:lg:hidden mie:font-semibold mie:mb-2 mie:text-gray-900">{row.value}</div>
                         <div className="mie:flex mie:lg:flex-row mie:flex-col mie:items-start mie:lg:items-center mie:gap-4">
-                          <div className="mie:hidden mie:lg:block mie:w-32 mie:font-normal">{row.value}</div>
+                          <div className="mie:hidden mie:lg:block mie:w-32 mie:font-normal mie:text-gray-900">{row.value}</div>
                           {columns.map((col, colIndex) => {
                             const isSelected = selected[row.id] === col.id;
                             const inputId = `matrix-${fieldId}-${rowIndex}-${colIndex}`;
@@ -116,7 +116,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                     />
                     <button 
                       onClick={() => api.row.remove(row.id)}
-                      className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                      className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors mie:bg-transparent"
                       title="Remove row"
                     >
                       <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
@@ -129,7 +129,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
               ) : (
                 <button
                   onClick={() => api.row.add(`Row ${(f.rows || []).length + 1}`)}
-                  className="mie:mt-2 mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
+                  className="mie:mt-2 mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:bg-white mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
                 >
                   <PLUSOPTION_ICON className="mie:w-5 mie:h-5" /> Add Row
                 </button>
@@ -150,7 +150,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                     />
                     <button 
                       onClick={() => api.column.remove(col.id)}
-                      className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                      className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors mie:bg-transparent"
                       title="Remove column"
                     >
                       <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
@@ -163,7 +163,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
               ) : (
                 <button
                   onClick={() => api.column.add(`Column ${(f.columns || []).length + 1}`)}
-                  className="mie:mt-2 mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
+                  className="mie:mt-2 mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:bg-white mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
                 >
                   <PLUSOPTION_ICON className="mie:w-5 mie:h-5" /> Add Column
                 </button>

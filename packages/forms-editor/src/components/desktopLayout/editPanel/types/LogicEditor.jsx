@@ -310,7 +310,7 @@ export default function LogicEditor() {
         <div className="mie:flex mie:gap-2">
           <button 
             type="button" 
-            className="mie:flex-1 mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors mie:disabled:opacity-50 mie:disabled:cursor-not-allowed" 
+            className="mie:flex-1 mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-white mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors mie:disabled:opacity-50 mie:disabled:cursor-not-allowed" 
             onClick={addCond} 
             disabled={isDisabled}
           >
@@ -318,7 +318,7 @@ export default function LogicEditor() {
           </button>
           <button 
             type="button" 
-            className="mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-red-600 mie:border mie:border-red-300 mie:rounded-lg mie:hover:bg-red-50 mie:transition-colors mie:disabled:opacity-50 mie:disabled:cursor-not-allowed" 
+            className="mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-white mie:text-red-600 mie:border mie:border-red-300 mie:rounded-lg mie:hover:bg-red-50 mie:transition-colors mie:disabled:opacity-50 mie:disabled:cursor-not-allowed" 
             onClick={clear} 
             disabled={isDisabled}
           >
@@ -352,7 +352,7 @@ export default function LogicEditor() {
                     <button
                       type="button"
                       onClick={() => removeCond(i)}
-                      className="mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                      className="mie:bg-transparent mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
                       title="Remove condition"
                       disabled={isDisabled}
                     >

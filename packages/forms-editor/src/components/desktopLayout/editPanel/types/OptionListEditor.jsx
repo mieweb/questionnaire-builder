@@ -38,7 +38,7 @@ export default function OptionListEditor({ field, api }) {
             {!isBoolean && (
               <button
                 onClick={() => api.option.remove(opt.id)}
-                className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                className="mie:shrink-0 mie:bg-transparent mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
                 title="Remove option"
               >
                 <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
@@ -50,7 +50,7 @@ export default function OptionListEditor({ field, api }) {
       {!isBoolean && (
         <button
           onClick={() => api.option.add("")}
-          className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
+          className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-white mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
         >
           + Add {singular}
         </button>

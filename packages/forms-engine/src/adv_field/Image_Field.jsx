@@ -211,7 +211,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                     setPreviewUrl("");
                     setFileName("");
                   }}
-                  className="mie:absolute mie:top-3 mie:right-3 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                  className="mie:absolute mie:top-3 mie:right-3 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors mie:bg-transparent"
                   title="Delete image"
                   aria-label="Delete image"
                 >

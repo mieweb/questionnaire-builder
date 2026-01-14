@@ -51,10 +51,10 @@ function CommonEditor({ f, onUpdateField }) {
         <InputTypeEditor field={f} onUpdate={onUpdateField} />
       )}
 
-      <div>
+      <div className="mie:min-w-0">
         <label className="mie:block mie:text-sm mie:mb-1">Sublabel (optional)</label>
         <textarea
-          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
+          className="mie:w-full mie:min-w-0 mie:max-h-32 mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded mie:resize-y"
           value={f.sublabel || ""}
           onChange={(e) => onUpdateField("sublabel", e.target.value)}
           placeholder="Helper text / description"

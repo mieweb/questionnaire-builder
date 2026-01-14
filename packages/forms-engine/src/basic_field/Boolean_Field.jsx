@@ -37,7 +37,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
                           onUnselect={() => api.field.update("selected", null)}
                           className="mie:hidden"
                         />
-                        <span>{option.value}</span>
+                        <span className={isSelected ? "mie:text-white" : "mie:text-gray-900"}>{option.value}</span>
                       </label>
                     );
                   })}

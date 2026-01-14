@@ -47,7 +47,7 @@ export default function MatrixEditor({ field, api }) {
               />
               <button
                 onClick={() => api.row.remove(row.id)}
-                className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                className="mie:shrink-0 mie:bg-transparent mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
                 title="Remove row"
               >
                 <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
@@ -60,7 +60,7 @@ export default function MatrixEditor({ field, api }) {
         ) : (
           <button
             onClick={() => api.row.add("")}
-            className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
+            className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-white mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
           >
             + Add Row
           </button>
@@ -81,7 +81,7 @@ export default function MatrixEditor({ field, api }) {
               />
               <button
                 onClick={() => api.column.remove(col.id)}
-                className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                className="mie:shrink-0 mie:bg-transparent mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
                 title="Remove column"
               >
                 <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
@@ -94,7 +94,7 @@ export default function MatrixEditor({ field, api }) {
         ) : (
           <button
             onClick={() => api.column.add("")}
-            className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
+            className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-white mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
           >
             + Add Column
           </button>

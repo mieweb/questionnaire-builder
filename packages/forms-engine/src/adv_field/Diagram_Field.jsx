@@ -189,7 +189,7 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                           api.field.update("diagramImage", "");
                           api.field.update("fileName", "");
                         }}
-                        className="mie:absolute mie:top-2 mie:right-2 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                        className="mie:absolute mie:top-2 mie:right-2 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors mie:bg-transparent"
                         title="Remove diagram"
                       >
                         <X_ICON className="mie:w-5 mie:h-5" />
