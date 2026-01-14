@@ -109,6 +109,25 @@ If any box is unchecked, **simplify**.
   <button className="mie:bg-blue-500 mie:hover:bg-blue-600 mie:focus:ring-2 mie:md:px-6">
   ```
 
+- **CRITICAL: Always Use Explicit Classes in Package Components**: Components in `packages/forms-engine`, `packages/forms-editor`, and `packages/forms-renderer` are consumed by external applications that may have global CSS resets. **Never rely on CSS inheritance** - every element needs explicit utility classes:
+  - **All buttons**: `mie:bg-transparent` or `mie:bg-white`, `mie:text-gray-600`, `mie:border-0`, `mie:outline-none`, `mie:focus:outline-none`
+  - **All text content**: `mie:text-gray-900` or appropriate explicit color
+  - **All icons/SVGs**: `mie:text-gray-600` or appropriate explicit color
+  - **All interactive elements**: Explicit border, outline, background, and text colors
+  - **All form inputs**: Explicit width constraints with `mie:min-w-0` in flex/grid layouts
+  
+  ```jsx
+  // ❌ BAD - relies on inheritance, will break in consuming apps
+  <button className="mie:p-2 mie:rounded">
+    <TrashIcon />
+  </button>
+  
+  // ✅ GOOD - explicit classes prevent CSS reset issues
+  <button className="mie:p-2 mie:rounded mie:bg-transparent mie:text-gray-600 mie:border-0 mie:outline-none mie:focus:outline-none">
+    <TrashIcon className="mie:text-gray-600" />
+  </button>
+  ```
+
 - **Semantic Class Names Before Tailwind**: Always add semantic/descriptive class names BEFORE Tailwind utility classes for better readability and maintainability. Apply this to all components, HTML structures, and JSX elements. Semantic names do NOT get the `mie:` prefix.
   ```jsx
   // ❌ BAD - Tailwind only, no semantic context
