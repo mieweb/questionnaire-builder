@@ -11,9 +11,9 @@ export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? '/demos/' : '/',
   resolve: {
     alias: {
-      '@mieweb/forms-engine': path.resolve(__dirname, '../../packages/forms-engine/index.js'),
-      '@mieweb/forms-editor': path.resolve(__dirname, '../../packages/forms-editor/index.js'),
-      '@mieweb/forms-renderer': path.resolve(__dirname, '../../packages/forms-renderer/index.js'),
+      '@mieweb/forms-engine': path.resolve(__dirname, '../../packages/forms-engine/dist/index.js'),
+      '@mieweb/forms-editor': path.resolve(__dirname, '../../packages/forms-editor/dist/index.js'),
+      '@mieweb/forms-renderer': path.resolve(__dirname, '../../packages/forms-renderer/dist/react.js'),
     }
   },
   server: {
@@ -23,6 +23,7 @@ export default defineConfig({
     allowedHosts: true
   },
   optimizeDeps: {
-    exclude: ['@mieweb/forms-editor', '@mieweb/forms-renderer', '@mieweb/forms-engine']
+    include: ['@mieweb/forms-editor', '@mieweb/forms-renderer', '@mieweb/forms-engine'],
+    force: true
   }
 });

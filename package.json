@@ -8,28 +8,28 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run build:watch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer\" \"npm run start --workspace=apps/mieweb-forms-docs\"",
-    "dev:demo": "concurrently \"npm run build:watch --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer\" \"npm run dev --workspace=apps/web-demo-packages\"",
+    "dev": "concurrently \"npm run build:watch --workspace=packages/forms-engine\" \"npm run build:watch --workspace=packages/forms-editor\" \"npm run build:watch --workspace=packages/forms-renderer\" \"npm run start --workspace=apps/mieweb-forms-docs\"",
+    "dev:demo": "concurrently \"npm run build:watch --workspace=packages/forms-engine\" \"npm run build:watch --workspace=packages/forms-editor\" \"npm run build:watch --workspace=packages/forms-renderer\" \"npm run dev --workspace=apps/web-demo-packages\"",
     "prod": "npm run prod --workspace=apps/mieweb-forms-docs",
     "build": "npm run build:packages && npm run build:docs",
     "build:packages": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
     "build:docs": "npm run build --workspace=apps/mieweb-forms-docs",
+    "pack:local": "npm run build:packages && node scripts/pack-local.js",
     "lint": "eslint .",
     "publish": "node scripts/publish.js"
   },
   "devDependencies": {
-    "@eslint/js": "^9.13.0",
-    "@tailwindcss/vite": "^4.0.6",
-    "@vitejs/plugin-react": "^4.3.3",
-    "autoprefixer": "^10.4.21",
+    "@eslint/js": "^9.39.2",
+    "@tailwindcss/cli": "^4.1.18",
+    "@tailwindcss/vite": "^4.1.18",
+    "@vitejs/plugin-react": "^5.1.2",
     "concurrently": "^9.1.0",
-    "eslint": "^9.13.0",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.14",
-    "globals": "^15.11.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.14",
-    "vite": "^6.3.6"
+    "eslint": "^9.39.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.26",
+    "globals": "^17.0.0",
+    "tailwindcss": "^4.1.18",
+    "vite": "^7.3.0"
   }
 }

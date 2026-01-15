@@ -1,11 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
-@import "tailwindcss/utilities";
-@import "tailwindcss/theme";
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,909;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import "tailwindcss/theme" prefix(mie);
+@import "tailwindcss/utilities" prefix(mie);
+
+/* Scoped base styles - essential resets for mie: prefixed utilities */
+@layer base {
+  .qb-editor-root,
+  .qb-editor-root *,
+  .qb-editor-root *::before,
+  .qb-editor-root *::after,
+  .qb-renderer-root,
+  .qb-renderer-root *,
+  .qb-renderer-root *::before,
+  .qb-renderer-root *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: currentColor;
+  }
+}
 
 @theme {
   --font-titillium: "Titillium Web", sans-serif;
 }
 
-@utility custom-scrollbar {
-  @apply [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full;
+/* Custom scrollbar styles - auto-hide, appears on hover */
+.mie\:custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.mie\:custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.mie\:custom-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+  transition: background 0.2s;
+}
+.mie\:custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: #d1d5db; /* gray-300 */
+}
+/* Firefox */
+.mie\:custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.mie\:custom-scrollbar:hover {
+  scrollbar-color: #d1d5db transparent;
 }

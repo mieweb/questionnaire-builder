@@ -82,10 +82,10 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
         
         if (isPreview) {
           return (
-            <div className={`text-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 pb-4">
-                <div className="font-light wrap-break-word overflow-hidden">{f.question || "Question"}</div>
-                <div className="relative">
+            <div className={`text-field-preview ${insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}`}>
+              <div className="mie:grid mie:grid-cols-1 mie:gap-2 mie:sm:grid-cols-2 mie:pb-4">
+                <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <div className="mie:relative">
                   <input
                     type={isTel ? "tel" : inputType}
                     value={f.answer || ""}
@@ -97,10 +97,10 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
                       }
                     }}
                     placeholder={getPlaceholder()}
-                    className={`px-4 py-2 h-10 w-full min-w-0 border border-gray-300 shadow-sm rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors ${unit ? 'pr-16' : ''}`}
+                    className={`mie:px-4 mie:py-2 mie:h-10 mie:w-full mie:min-w-0 mie:border mie:border-gray-300 mie:shadow-sm mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors ${unit ? 'mie:pr-16' : ''}`}
                   />
                   {unit && (
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500 pointer-events-none">
+                    <span className="mie:absolute mie:right-3 mie:top-1/2 mie:-translate-y-1/2 mie:text-sm mie:text-gray-500 mie:pointer-events-none">
                       {unit}
                     </span>
                   )}
@@ -111,25 +111,25 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
         }
 
         return (
-          <div className="text-field-edit space-y-2">
+          <div className="mie:text-field-edit mie:space-y-2">
             <input
-              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
 
-            <div className="relative">
+            <div className="mie:relative">
               <input
                 type={inputType}
                 value={f.answer || ""}
                 placeholder={getPlaceholder()}
-                className={`px-4 py-2 w-full border border-gray-300 shadow-sm rounded-lg bg-gray-50 ${unit ? 'pr-16' : ''}`}
+                className={`mie:px-4 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:shadow-sm mie:rounded-lg mie:bg-gray-50 ${unit ? 'mie:pr-16' : ''}`}
                 disabled
               />
               {unit && (
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">
+                <span className="mie:absolute mie:right-3 mie:top-1/2 mie:-translate-y-1/2 mie:text-sm mie:text-gray-500">
                   {unit}
                 </span>
               )}

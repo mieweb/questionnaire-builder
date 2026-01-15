@@ -90,7 +90,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                 title="HTML Content"
               />
               {renderError && (
-                <div role="alert" className="render-error mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
+                <div role="alert" className="render-error mie:mt-2 mie:p-2 mie:bg-red-50 mie:border mie:border-red-200 mie:rounded mie:text-xs mie:text-red-700">
                   {renderError}
                 </div>
               )}
@@ -100,23 +100,23 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
 
         // Edit mode
         return (
-          <div className="space-y-4 w-full">
+          <div className="mie:space-y-4 mie:w-full">
             {/* Editor/Preview Toggle */}
-            <div className="flex gap-2">
+            <div className="mie:flex mie:gap-2">
               <button
                 onClick={() => setEditMode(false)}
-                className={`edit-mode-btn px-4 py-2 rounded transition-colors ${!editMode
-                  ? "bg-blue-500 hover:bg-blue-600 text-white"
-                  : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                className={`edit-mode-btn mie:px-4 mie:py-2 mie:rounded mie:transition-colors ${!editMode
+                  ? "mie:bg-blue-500 mie:hover:bg-blue-600 mie:text-white"
+                  : "mie:bg-gray-200 mie:hover:bg-gray-300 mie:text-gray-700"
                   }`}
               >
                 Edit
               </button>
               <button
                 onClick={() => setEditMode(true)}
-                className={`preview-mode-btn px-4 py-2 rounded transition-colors ${editMode
-                  ? "bg-blue-500 hover:bg-blue-600 text-white"
-                  : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                className={`preview-mode-btn mie:px-4 mie:py-2 mie:rounded mie:transition-colors ${editMode
+                  ? "mie:bg-blue-500 mie:hover:bg-blue-600 mie:text-white"
+                  : "mie:bg-gray-200 mie:hover:bg-gray-300 mie:text-gray-700"
                   }`}
               >
                 Preview
@@ -125,10 +125,10 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
 
             {/* Height Control */}
             <div>
-              <label className="height-control-label block text-sm font-medium text-gray-700 mb-1">
+              <label className="height-control-label mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
                 Preview Height (px)
               </label>
-              <div className="height-control-inputs flex gap-2 items-center">
+              <div className="height-control-inputs mie:flex mie:gap-2 mie:items-center">
                 <input
                   type="range"
                   min="50"
@@ -140,7 +140,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                     setIframeHeight(height);
                     api.field.update("iframeHeight", height);
                   }}
-                  className="height-slider flex-1"
+                  className="height-slider mie:flex-1"
                   aria-label="Preview height in pixels"
                 />
                 <input
@@ -154,17 +154,17 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                     setIframeHeight(Math.max(50, Math.min(800, height)));
                     api.field.update("iframeHeight", Math.max(50, Math.min(800, height)));
                   }}
-                  className="height-input w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
+                  className="height-input mie:w-20 mie:px-2 mie:py-1 mie:border mie:border-gray-300 mie:rounded mie:text-sm mie:text-center"
                   aria-label="Preview height in pixels"
                 />
-                <span className="height-unit text-sm text-gray-500">px</span>
+                <span className="height-unit mie:text-sm mie:text-gray-500">px</span>
               </div>
             </div>
 
             {editMode ? (
               // Preview Mode
               <div>
-                <label className="preview-label block text-sm font-medium text-gray-700 mb-2">
+                <label className="preview-label mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-2">
                   Preview
                 </label>
                 <iframe
@@ -180,7 +180,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                   title="HTML Preview"
                 />
                 {renderError && (
-                  <div className="preview-error mt-2 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700" role="alert">
+                  <div className="preview-error mie:mt-2 mie:p-2 mie:bg-red-50 mie:border mie:border-red-200 mie:rounded mie:text-xs mie:text-red-700" role="alert">
                     {renderError}
                   </div>
                 )}
@@ -188,11 +188,11 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
             ) : (
               // Edit Mode
               <div>
-                <label className="edit-label block text-sm font-medium text-gray-700 mb-2">
+                <label className="edit-label mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-2">
                   HTML Content
                 </label>
                 <textarea
-                  className="html-textarea px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors font-mono text-sm max-h-64 overflow-y-auto"
+                  className="html-textarea mie:px-3 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors mie:font-mono mie:text-sm mie:max-h-64 mie:overflow-y-auto"
                   value={f.htmlContent || ""}
                   onChange={(e) => api.field.update("htmlContent", e.target.value)}
                   placeholder="Enter your HTML content here... (e.g., &lt;p&gt;text&lt;/p&gt;)"

@@ -21,10 +21,10 @@ function NonSectionEditor({ f }) {
       <CommonEditor f={f} onUpdateField={onUpdateField} />
 
       {f.fieldType === "input" && (
-        <div className="non-section-editor-default-answer mt-4">
-          <div className="text-sm font-medium mb-1">Default Answer</div>
+        <div className="non-section-editor-default-answer mie:mt-4">
+          <div className="mie:text-sm mie:font-medium mie:mb-1">Default Answer</div>
           <input
-            className="w-full px-3 py-2 border border-black/20 rounded"
+            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
             value={f.answer || ""}
             onChange={(e) => onUpdateField("answer", e.target.value)}
             placeholder="Default value"

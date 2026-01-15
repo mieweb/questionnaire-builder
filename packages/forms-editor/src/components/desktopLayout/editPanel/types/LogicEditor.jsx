@@ -273,13 +273,13 @@ export default function LogicEditor() {
   const isDisabled = !field || !effectiveId;
 
   return (
-    <div className="logic-editor-container space-y-4">
+    <div className="logic-editor-container mie:space-y-4">
       {/* Target picker when a section is selected */}
       {isSectionCtx && (
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">Target Field</label>
+        <div className="mie:space-y-2">
+          <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700">Target Field</label>
           <select
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white"
+            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:bg-white"
             value={target}
             onChange={(e) => handleTargetChange(e.target.value)}
           >
@@ -293,13 +293,13 @@ export default function LogicEditor() {
         </div>
       )}
 
-      <div className="space-y-3">
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">Logic Operator</label>
+      <div className="mie:space-y-3">
+        <div className="mie:space-y-2">
+          <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700">Logic Operator</label>
           <select
             value={ew.logic || "AND"}
             onChange={(e) => writeEnableWhen({ ...ew, logic: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white"
+            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:bg-white"
             disabled={isDisabled}
           >
             <option value="AND">AND — All conditions must be true</option>
@@ -307,10 +307,10 @@ export default function LogicEditor() {
           </select>
         </div>
         
-        <div className="flex gap-2">
+        <div className="mie:flex mie:gap-2">
           <button 
             type="button" 
-            className="flex-1 px-3 py-2 text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+            className="mie:flex-1 mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-white mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors mie:disabled:opacity-50 mie:disabled:cursor-not-allowed" 
             onClick={addCond} 
             disabled={isDisabled}
           >
@@ -318,7 +318,7 @@ export default function LogicEditor() {
           </button>
           <button 
             type="button" 
-            className="px-3 py-2 text-sm font-medium text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+            className="mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-white mie:text-red-600 mie:border mie:border-red-300 mie:rounded-lg mie:hover:bg-red-50 mie:transition-colors mie:disabled:opacity-50 mie:disabled:cursor-not-allowed" 
             onClick={clear} 
             disabled={isDisabled}
           >
@@ -329,9 +329,9 @@ export default function LogicEditor() {
 
       {/* Conditions list */}
       {ew.conditions.length > 0 && (
-        <div className="space-y-3">
-          <h4 className="text-sm font-medium text-gray-700">Conditions ({ew.conditions.length})</h4>
-          <div className="space-y-3">
+        <div className="mie:space-y-3">
+          <h4 className="mie:text-sm mie:font-medium mie:text-gray-700">Conditions ({ew.conditions.length})</h4>
+          <div className="mie:space-y-3">
             {ew.conditions.map((c, i) => {
               const meta = findTarget(c.targetId);
               const allowedOps = getOperatorsForFieldType(meta?.fieldType, meta?.displayFormat, meta?.inputType);
@@ -346,25 +346,25 @@ export default function LogicEditor() {
               const isNumericComparison = numericOperators.includes(c.operator);
 
               return (
-                <div key={i} className="p-3 bg-gray-50 border border-gray-200 rounded-lg space-y-2">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Condition {i + 1}</span>
+                <div key={i} className="mie:p-3 mie:bg-gray-50 mie:border mie:border-gray-200 mie:rounded-lg mie:space-y-2">
+                  <div className="mie:flex mie:items-center mie:justify-between mie:mb-2">
+                    <span className="mie:text-xs mie:font-semibold mie:text-gray-500 mie:uppercase mie:tracking-wide">Condition {i + 1}</span>
                     <button
                       type="button"
                       onClick={() => removeCond(i)}
-                      className="text-gray-400 hover:text-red-600 transition-colors"
+                      className="mie:bg-transparent mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
                       title="Remove condition"
                       disabled={isDisabled}
                     >
-                      <TRASHCANTWO_ICON className="w-4 h-4" />
+                      <TRASHCANTWO_ICON className="mie:w-4 mie:h-4" />
                     </button>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="mie:space-y-2">
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">When Field</label>
+                      <label className="mie:block mie:text-xs mie:font-medium mie:text-gray-600 mie:mb-1">When Field</label>
                       <select
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white text-sm"
+                        className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:bg-white mie:text-sm"
                         value={c.targetId}
                         onChange={(e) => updateCond(i, { targetId: e.target.value })}
                         disabled={isDisabled}
@@ -381,9 +381,9 @@ export default function LogicEditor() {
                     {/* Property Accessor (optional - only for certain field types) */}
                     {hasPropertyAccessors && (
                       <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">Property (optional)</label>
+                        <label className="mie:block mie:text-xs mie:font-medium mie:text-gray-600 mie:mb-1">Property (optional)</label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white text-sm"
+                          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:bg-white mie:text-sm"
                           value={c.propertyAccessor || ''}
                           onChange={(e) => updateCond(i, { propertyAccessor: e.target.value || undefined })}
                           disabled={isDisabled || !meta}
@@ -395,17 +395,17 @@ export default function LogicEditor() {
                             </option>
                           ))}
                         </select>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="mie:text-xs mie:text-gray-500 mie:mt-1">
                           Use .length or .count to compare the number of items
                         </p>
                       </div>
                     )}
 
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="mie:grid mie:grid-cols-2 mie:gap-2">
                       <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">Operator</label>
+                        <label className="mie:block mie:text-xs mie:font-medium mie:text-gray-600 mie:mb-1">Operator</label>
                         <select
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white text-sm"
+                          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:bg-white mie:text-sm"
                           value={c.operator}
                           onChange={(e) => updateCond(i, { operator: e.target.value })}
                           disabled={isDisabled || !meta}
@@ -419,14 +419,14 @@ export default function LogicEditor() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">Value</label>
+                        <label className="mie:block mie:text-xs mie:font-medium mie:text-gray-600 mie:mb-1">Value</label>
                         {!needsValue ? (
-                          <div className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-gray-100 text-sm text-gray-500 flex items-center">
+                          <div className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-200 mie:rounded-lg mie:bg-gray-100 mie:text-sm mie:text-gray-500 mie:flex mie:items-center">
                             (no value needed)
                           </div>
                         ) : hasOptions && !c.propertyAccessor && !isNumericComparison ? (
                           <select
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none bg-white text-sm"
+                            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:bg-white mie:text-sm"
                             value={c.value}
                             onChange={(e) => updateCond(i, { value: e.target.value })}
                             disabled={isDisabled || !meta}
@@ -440,7 +440,7 @@ export default function LogicEditor() {
                           </select>
                         ) : (
                           <input
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none text-sm"
+                            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:text-sm"
                             placeholder={c.propertyAccessor || isNumericComparison ? "Enter number" : "Enter value"}
                             type={c.propertyAccessor || isNumericComparison ? "number" : "text"}
                             value={c.value}

@@ -15,18 +15,18 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
         
         if (isPreview) {
           return (
-            <div className={`rating-field-preview ${insideSection ? "border-b border-gray-200" : "border-0"}`}>
-              <div className={`grid gap-2 pb-4 ${options.length > 5 ? 'grid-cols-1' : 'grid-cols-1 lg:grid-cols-2'}`}>
-                <div className="font-light wrap-break-word overflow-hidden">{f.question || "Question"}</div>
-                <div className="py-2">
+            <div className={`rating-field-preview ${insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}`}>
+              <div className={`mie:grid mie:gap-2 mie:pb-4 ${options.length > 5 ? 'mie:grid-cols-1' : 'mie:grid-cols-1 mie:lg:grid-cols-2'}`}>
+                <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <div className="mie:py-2">
                   {options.length > 0 && (
-                    <div className="flex flex-wrap justify-evenly gap-2">
+                    <div className="mie:flex mie:flex-wrap mie:justify-evenly mie:gap-2">
                       {options.map((option, index) => {
                         const inputId = `${f.id}-${option.id}`;
                         const isSelected = selectedIndex === index;
                         const labelClasses = isSelected
-                          ? "flex items-center justify-center min-w-[44px] h-11 px-3 rounded-full border-2 transition-all cursor-pointer bg-blue-600 text-white border-blue-600 scale-105"
-                          : "flex items-center justify-center min-w-[44px] h-11 px-3 rounded-full border-2 transition-all cursor-pointer bg-white text-gray-700 border-gray-300 hover:border-blue-300 hover:bg-blue-50 hover:scale-105";
+                          ? "mie:flex mie:items-center mie:justify-center mie:min-w-[44px] mie:h-11 mie:px-3 mie:rounded-full mie:border-2 mie:transition-all mie:cursor-pointer mie:bg-blue-600 mie:text-white mie:border-blue-600 mie:scale-105"
+                          : "mie:flex mie:items-center mie:justify-center mie:min-w-[44px] mie:h-11 mie:px-3 mie:rounded-full mie:border-2 mie:transition-all mie:cursor-pointer mie:bg-white mie:text-gray-700 mie:border-gray-300 mie:hover:border-blue-300 mie:hover:bg-blue-50 mie:hover:scale-105";
                         
                         return (
                           <label
@@ -41,9 +41,9 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                               checked={isSelected}
                               onSelect={() => api.selection.single(option.id)}
                               onUnselect={() => api.field.update("selected", null)}
-                              className="hidden"
+                              className="mie:hidden"
                             />
-                            <span className="text-sm font-medium whitespace-nowrap">
+                            <span className="mie:text-sm mie:font-medium mie:whitespace-nowrap">
                               {option.text || option.value}
                             </span>
                           </label>
@@ -53,7 +53,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                   )}
                   
                   {options.length === 0 && (
-                    <div className="text-sm text-gray-400 italic">No options available</div>
+                    <div className="mie:text-sm mie:text-gray-400 mie:italic">No options available</div>
                   )}
                 </div>
               </div>
@@ -62,36 +62,36 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
         }
 
         return (
-          <div className="rating-field-edit space-y-3">
+          <div className="rating-field-edit mie:space-y-3">
             <input
-              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none"
+              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
 
-            <div className="text-sm text-gray-600">
+            <div className="mie:text-sm mie:text-gray-600">
               Options (each will be a rating button):
             </div>
 
-            <div className="space-y-2">
+            <div className="mie:space-y-2">
               {options.map((option) => (
-                <div key={option.id} className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-lg shadow-sm hover:border-gray-400 transition-colors">
-                  <div className="w-3 h-3 rounded-full bg-blue-400 shrink-0" />
+                <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-gray-400 mie:transition-colors">
+                  <div className="mie:w-3 mie:h-3 mie:rounded-full mie:bg-blue-400 mie:shrink-0" />
                   <input
                     type="text"
                     value={option.text || option.value}
                     onChange={(e) => api.option.update(option.id, { text: e.target.value, value: typeof option.value === 'number' ? option.value : e.target.value })}
                     placeholder={placeholder?.options || "Option label"}
-                    className="flex-1 min-w-0 outline-none bg-transparent"
+                    className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
                   />
                   <button 
                     onClick={() => api.option.remove(option.id)}
-                    className="shrink-0 text-gray-400 hover:text-red-600 transition-colors"
+                    className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors mie:bg-transparent"
                     title="Remove option"
                   >
-                    <TRASHCANTWO_ICON className="w-5 h-5" />
+                    <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
                   </button>
                 </div>
               ))}
@@ -99,9 +99,9 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
 
             <button 
               onClick={() => api.option.add()} 
-              className="w-full px-3 py-2 text-sm font-medium text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+              className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:bg-white mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
             >
-              <PLUSOPTION_ICON className="w-5 h-5" /> Add Option
+              <PLUSOPTION_ICON className="mie:w-5 mie:h-5" /> Add Option
             </button>
           </div>
         );

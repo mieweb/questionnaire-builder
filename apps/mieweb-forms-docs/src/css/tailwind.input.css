@@ -1,5 +1,4 @@
-@import "tailwindcss/theme" layer(theme);
-@import "tailwindcss/utilities" layer(utilities);
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
 
-@source "../../src/**/*.{js,jsx,ts,tsx,md,mdx}";
-@source "../../docs/**/*.{md,mdx}";
+@source "../../src/pages/**/*.{js,jsx,ts,tsx}";

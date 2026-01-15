@@ -67,31 +67,31 @@ function AlertModal({ alert, onClose }) {
   }, [onClose, alert.cancelText]);
 
   return (
-    <div className="alert-modal-overlay fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={handleOverlayClick}>
+    <div className="alert-modal-overlay mie:fixed mie:inset-0 mie:bg-black/50 mie:flex mie:items-center mie:justify-center mie:z-50" onClick={handleOverlayClick}>
       <div 
-        className="alert-modal-content bg-white rounded-lg shadow-2xl max-w-md w-full mx-4 overflow-hidden"
+        className="alert-modal-content mie:bg-white mie:rounded-lg mie:shadow-2xl mie:max-w-md mie:w-full mie:mx-4 mie:overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="alert-modal-header px-6 py-4 border-b border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-900">{alert.title}</h3>
+        <div className="alert-modal-header mie:px-6 mie:py-4 mie:border-b mie:border-slate-200">
+          <h3 className="mie:text-lg mie:font-semibold mie:text-slate-900">{alert.title}</h3>
         </div>
-        <div className="alert-modal-body px-6 py-5">
-          <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed">
+        <div className="alert-modal-body mie:px-6 mie:py-5">
+          <p className="mie:text-sm mie:text-slate-700 mie:whitespace-pre-line mie:leading-relaxed">
             {alert.message}
           </p>
         </div>
-        <div className="alert-modal-footer px-6 py-4 bg-slate-50 flex justify-end gap-2">
+        <div className="alert-modal-footer mie:px-6 mie:py-4 mie:bg-slate-50 mie:flex mie:justify-end mie:gap-2">
           {alert.cancelText && (
             <button
               onClick={() => onClose(false)}
-              className="alert-cancel-btn px-4 py-2 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded-md hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 transition-colors"
+              className="alert-cancel-btn mie:px-4 mie:py-2 mie:bg-white mie:border-0 mie:text-slate-700 mie:text-sm mie:font-medium mie:rounded-md mie:hover:bg-slate-50 mie:outline-none mie:focus:outline-none mie:focus:ring-2 mie:focus:ring-slate-500 mie:focus:ring-offset-2 mie:transition-colors"
             >
               {alert.cancelText}
             </button>
           )}
           <button
             onClick={() => onClose(true)}
-            className="alert-confirm-btn px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+            className="alert-confirm-btn mie:px-4 mie:py-2 mie:bg-blue-600 mie:border-0 mie:text-white mie:text-sm mie:font-medium mie:rounded-md mie:hover:bg-blue-700 mie:outline-none mie:focus:outline-none mie:focus:ring-2 mie:focus:ring-blue-500 mie:focus:ring-offset-2 mie:transition-colors"
           >
             {alert.confirmText}
           </button>

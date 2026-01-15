@@ -61,9 +61,9 @@ function QuestionnaireRendererInner({
   }, [onChange, onQuestionnaireResponse, questionnaireId, subjectId, formStore]);
 
   const rootClasses = [
-    'qb-render-root renderer-container font-titillium overflow-y-auto custom-scrollbar',
-    'max-w-4xl mx-auto px-2 pb-8 pt-4',
-    fullHeight && 'max-h-screen my-9',
+    'qb-render-root renderer-container mie:font-titillium mie:overflow-y-auto mie:custom-scrollbar',
+    'mie:max-w-4xl mie:mx-auto mie:px-2 mie:pb-8 mie:pt-4',
+    fullHeight && 'mie:max-h-screen mie:my-9',
     className,
   ].filter(Boolean).join(' ');
 

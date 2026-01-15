@@ -90,36 +90,36 @@ const ToolPanelImpl = ({ isPreview = false }) => {
 
   return (
     <div 
-      className=" border border-gray-200 rounded-lg  bg-white overflow-y-auto custom-scrollbar max-h-[calc(100svh-24rem)] lg:max-h-[calc(100dvh-20rem)]"
+      className=" mie:border mie:border-gray-200 mie:rounded-lg mie:bg-white mie:overflow-y-auto mie:custom-scrollbar mie:max-h-[calc(100svh-24rem)] mie:lg:max-h-[calc(100dvh-20rem)]"
       tabIndex="-1"
     >
-      <div className="tool-panel-container pb-4 rounded-lg shadow-sm">
-      <h3 className="tool-panel-title sticky top-0 z-20 bg-white text-base font-semibold pb-2 pt-3 px-4 border-b border-gray-200 flex items-center justify-between gap-2">
-        <span className="flex items-center gap-2 min-w-0">
-          <TOOLS_ICON className="w-5 h-5 text-gray-700 shrink-0" />
-          <span className="truncate">{isSectionSelected ? `Add to "${sectionTitle}"` : "Tools"}</span>
+      <div className="tool-panel-container mie:pb-4 mie:rounded-lg mie:shadow-sm">
+      <h3 className="tool-panel-title mie:sticky mie:top-0 mie:z-20 mie:bg-white mie:text-base mie:font-semibold mie:pb-2 mie:pt-3 mie:px-4 mie:border-b mie:border-gray-200 mie:flex mie:items-center mie:justify-between mie:gap-2">
+        <span className="mie:flex mie:items-center mie:gap-2 mie:min-w-0">
+          <TOOLS_ICON className="mie:w-5 mie:h-5 mie:text-gray-700 mie:shrink-0" />
+          <span className="mie:truncate">{isSectionSelected ? `Add to "${sectionTitle}"` : "Tools"}</span>
         </span>
         {isSectionSelected && (
           <button
             onClick={handleClearSelection}
-            className="text-gray-600 hover:text-red-600 hover:bg-red-50 p-1 rounded transition-colors shrink-0"
+            className="mie:bg-transparent mie:text-gray-600 mie:hover:text-red-600 mie:hover:bg-red-50 mie:p-1 mie:rounded mie:transition-colors mie:shrink-0"
             title="Unselect section"
           >
-            <X_ICON className="w-5 h-5" />
+            <X_ICON className="mie:w-5 mie:h-5" />
           </button>
         )}
       </h3>
       
       {Object.entries(categories).map(([categoryName, items]) => (
         <div key={categoryName} className="tool-category">
-          <h4 className="sticky top-11 z-10 bg-gray-50 text-sm font-semibold text-gray-700 px-4 py-3 border-b border-gray-100 uppercase tracking-wide flex items-center gap-2">
+          <h4 className="mie:sticky mie:top-11 mie:z-10 mie:bg-gray-50 mie:text-sm mie:font-semibold mie:text-gray-700 mie:px-4 mie:py-3 mie:border-b mie:border-gray-100 mie:uppercase mie:tracking-wide mie:flex mie:items-center mie:gap-2">
             {(() => {
               const IconComponent = getCategoryIcon(categoryName);
-              return IconComponent ? <IconComponent className="w-4 h-4 text-gray-600" /> : null;
+              return IconComponent ? <IconComponent className="mie:w-4 mie:h-4 mie:text-gray-600" /> : null;
             })()}
             {categoryName}
           </h4>
-          <div className="tool-items grid grid-cols-1 gap-2 px-4 py-3">
+          <div className="tool-items mie:grid mie:grid-cols-1 mie:gap-2 mie:px-4 mie:py-3">
             {items.map(({ type, label }) => {
               // Disable section field when adding to a section
               const isDisabled = isSectionSelected && type === "section";
@@ -127,10 +127,10 @@ const ToolPanelImpl = ({ isPreview = false }) => {
                 <button
                   key={type}
                   disabled={isDisabled}
-                  className={`px-3 py-2 text-sm text-left border rounded-md transition-colors duration-150 ${
+                  className={`mie:px-3 mie:py-2 mie:text-sm mie:text-left mie:border mie:rounded-md mie:transition-colors mie:duration-150 ${
                     isDisabled
-                      ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
-                      : "border-gray-300 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700"
+                      ? "mie:border-gray-200 mie:bg-gray-50 mie:text-gray-400 mie:cursor-not-allowed"
+                      : "mie:bg-white mie:text-gray-900 mie:border-gray-300 mie:hover:bg-blue-50 mie:hover:border-blue-400 mie:hover:text-blue-700"
                   }`}
                   onClick={handlers[type]}
                   title={isDisabled ? "Cannot add section to a section" : `Add ${label}`}

@@ -403,33 +403,33 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
       {({ api, isPreview, field: f }) => {
         if (isPreview) {
           return (
-            <div className="expression-field-preview space-y-2 pb-4">
-              {f.label && <div className="expression-label font-light text-sm text-gray-600">{f.label}</div>}
+            <div className="expression-field-preview mie:space-y-2 mie:pb-4">
+              {f.label && <div className="expression-label mie:font-light mie:text-sm mie:text-gray-600">{f.label}</div>}
               {f.hideDebugInfo ? (
                 // Show only result
                 evaluationResult.result != null && (
-                  <div className="flex flex-col gap-1">
+                  <div className="mie:flex mie:flex-col mie:gap-1">
                     {formatResult(evaluationResult.result, f.displayFormat, f.decimalPlaces).split('<nl>').map((line, i) => (
-                      <p key={i} className="text-lg font-semibold text-blue-600">{line}</p>
+                      <p key={i} className="mie:text-lg mie:font-semibold mie:text-blue-600">{line}</p>
                     ))}
                   </div>
                 )
               ) : (
                 // Show expression and result with labels
-                <div className="expression-preview-box p-3 bg-gray-50 border border-gray-300 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">
-                    <span className="font-medium">Expression:</span> {f.expression || "No expression defined"}
+                <div className="expression-preview-box mie:p-3 mie:bg-gray-50 mie:border mie:border-gray-300 mie:rounded-lg">
+                  <p className="mie:text-sm mie:text-gray-600 mie:mb-1">
+                    <span className="mie:font-medium">Expression:</span> {f.expression || "No expression defined"}
                   </p>
                   {evaluationResult.result != null && (
-                    <div className="flex flex-col gap-1 mt-2">
-                      <span className="text-sm text-gray-600">Result: </span>
+                    <div className="mie:flex mie:flex-col mie:gap-1 mie:mt-2">
+                      <span className="mie:text-sm mie:text-gray-600">Result: </span>
                       {formatResult(evaluationResult.result, f.displayFormat, f.decimalPlaces).split('<nl>').map((line, i) => (
-                        <p key={i} className="text-lg font-semibold text-blue-600">{line}</p>
+                        <p key={i} className="mie:text-lg mie:font-semibold mie:text-blue-600">{line}</p>
                       ))}
                     </div>
                   )}
                   {evaluationResult.error && (
-                    <p className="text-sm text-red-600 mt-2">Error: {evaluationResult.error}</p>
+                    <p className="mie:text-sm mie:text-red-600 mie:mt-2">Error: {evaluationResult.error}</p>
                   )}
                 </div>
               )}
@@ -438,14 +438,14 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
         }
 
         return (
-          <div className="expression-field-editor space-y-4 w-full">
+          <div className="expression-field-editor mie:space-y-4 mie:w-full">
             {/* Label */}
             <div className="label-field">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
                 Label (Optional)
               </label>
               <input
-                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+                className="mie:px-3 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
                 type="text"
                 value={f.label || ""}
                 onChange={(e) => api.field.update("label", e.target.value)}
@@ -455,20 +455,20 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
             {/* Expression Input */}
             <div className="expression-field">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
                 Expression / Formula
               </label>
               <textarea
-                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors font-mono text-sm"
+                className="mie:px-3 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors mie:font-mono mie:text-sm"
                 value={f.expression || ""}
                 onChange={(e) => api.field.update("expression", e.target.value)}
                 placeholder="{fieldId1} + {fieldId2}"
                 rows={4}
               />
               {samplePreview.error ? (
-                <p className="expression-error text-xs text-red-600 mt-1">Error: {samplePreview.error}</p>
+                <p className="expression-error mie:text-xs mie:text-red-600 mie:mt-1">Error: {samplePreview.error}</p>
               ) : (
-                <p className="expression-help text-xs text-gray-500 mt-1">
+                <p className="expression-help mie:text-xs mie:text-gray-500 mie:mt-1">
                   Use {'{fieldId}'} to reference other fields. Arithmetic: {'{price} * {quantity}'}. Comparison: {'{age} >= 18'} → true/false. "contains" is not supported for numeric fields.
                 </p>
               )}
@@ -476,11 +476,11 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
             {/* Display Format */}
             <div className="display-format-field">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
                 Display Format
               </label>
               <select
-                className="display-format px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none cursor-pointer transition-colors"
+                className="display-format mie:px-3 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:cursor-pointer mie:transition-colors"
                 value={f.displayFormat || "number"}
                 onChange={(e) => api.field.update("displayFormat", e.target.value)}
               >
@@ -495,11 +495,11 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
             {/* Decimal Places (only show for numeric formats) */}
             {NUMERIC_EXPRESSION_FORMATS.includes(f.displayFormat) && (
               <div className="decimal-places-field">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
                   Decimal Places
                 </label>
                 <input
-                  className="decimal-places px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+                  className="decimal-places mie:px-3 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
                   type="number"
                   min="0"
                   max="10"
@@ -511,28 +511,28 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
             {/* Hide Debug Info */}
             <div className="hide-debug-info-field">
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="mie:flex mie:items-center mie:gap-2 mie:cursor-pointer">
                 <input
                   type="checkbox"
                   checked={f.hideDebugInfo || false}
                   onChange={(e) => api.field.update("hideDebugInfo", e.target.checked)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="mie:w-4 mie:h-4 mie:text-blue-600 mie:border-gray-300 mie:rounded mie:focus:ring-blue-500"
                 />
-                <span className="text-sm font-medium text-gray-700">
+                <span className="mie:text-sm mie:font-medium mie:text-gray-700">
                   Hide Expression and Result labels (show result only)
                 </span>
               </label>
             </div>
 
             {/* Sample Data for Preview */}
-            <div className="sample-data-section border-t pt-4">
-              <div className="sample-data-header flex items-center justify-between mb-3">
-                <label className="block text-sm font-medium text-gray-700">
+            <div className="sample-data-section mie:border-t mie:pt-4">
+              <div className="sample-data-header mie:flex mie:items-center mie:justify-between mie:mb-3">
+                <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700">
                   Sample Data (for preview testing)
                 </label>
                 <button
                   onClick={addSampleDataField}
-                  className="px-3 py-1 text-xs bg-blue-500 hover:bg-blue-600 text-white rounded transition-colors"
+                  className="mie:px-3 mie:py-1 mie:text-xs mie:bg-blue-500 mie:hover:bg-blue-600 mie:text-white mie:rounded mie:transition-colors"
                   aria-label="Add sample data field"
                 >
                   + Add Field
@@ -540,26 +540,26 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
               </div>
 
               {(sampleDataFields || []).length === 0 ? (
-                <p className="text-sm text-gray-500 italic">No sample fields added yet. Add fields to preview the expression result.</p>
+                <p className="mie:text-sm mie:text-gray-500 mie:italic">No sample fields added yet. Add fields to preview the expression result.</p>
               ) : (
-                <div className="sample-data-list space-y-2">
+                <div className="sample-data-list mie:space-y-2">
                   {sampleDataFields.map((field, idx) => {
                     // Ensure a stable unique key for React reconciliation
                     const stableKey = field._id || `sample-${field.fieldId || 'empty'}-${idx}`;
                     return (
-                      <div key={stableKey} className="sample-data-row flex gap-2 items-end">
-                        <div className="field-id-input flex-1">
+                      <div key={stableKey} className="sample-data-row mie:flex mie:gap-2 mie:items-end">
+                        <div className="field-id-input mie:flex-1">
                           <input
-                            className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors text-sm"
+                            className="mie:px-3 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors mie:text-sm"
                             type="text"
                             value={field.fieldId || ""}
                             onChange={(e) => updateSampleDataField(idx, "fieldId", e.target.value)}
                             placeholder="Field ID (e.g., completed)"
                           />
                         </div>
-                        <div className="field-value-input flex-1">
+                        <div className="field-value-input mie:flex-1">
                           <input
-                            className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors text-sm"
+                            className="mie:px-3 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors mie:text-sm"
                             type="text"
                             value={field.value || ""}
                             onChange={(e) => updateSampleDataField(idx, "value", e.target.value)}
@@ -568,7 +568,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                         </div>
                         <button
                           onClick={() => removeSampleDataField(idx)}
-                          className="remove-sample-btn px-3 py-2 text-xs bg-red-100 hover:bg-red-200 text-red-700 rounded transition-colors"
+                          className="remove-sample-btn mie:px-3 mie:py-2 mie:text-xs mie:bg-red-100 mie:hover:bg-red-200 mie:text-red-700 mie:rounded mie:transition-colors"
                         >
                           Remove
                         </button>
@@ -581,14 +581,14 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
             {/* Preview Result */}
             {sampleDataFields?.length > 0 && (
-              <div className="expression-preview-result p-3 bg-blue-50 border border-blue-300 rounded-lg">
-                <p className="text-sm font-medium text-gray-700 mb-2">Preview Result:</p>
+              <div className="expression-preview-result mie:p-3 mie:bg-blue-50 mie:border mie:border-blue-300 mie:rounded-lg">
+                <p className="mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-2">Preview Result:</p>
                 {samplePreview.error ? (
-                  <p className="text-sm text-red-600">Error: {samplePreview.error}</p>
+                  <p className="mie:text-sm mie:text-red-600">Error: {samplePreview.error}</p>
                 ) : (
-                  <div className="flex flex-col gap-1">
+                  <div className="mie:flex mie:flex-col mie:gap-1">
                     {(samplePreview.result || "No result").split('<nl>').map((line, i) => (
-                      <p key={i} className="text-lg font-semibold text-blue-600">{line}</p>
+                      <p key={i} className="mie:text-lg mie:font-semibold mie:text-blue-600">{line}</p>
                     ))}
                   </div>
                 )}

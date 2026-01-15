@@ -96,12 +96,12 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
       {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
-            <div className={insideSection ? "border-b border-gray-200" : "border-0"}>
-              <div className="px-6 pt-6 pb-2">
-                <div className="font-light mb-2 wrap-break-word overflow-hidden">{f.question || "Question"}</div>
+            <div className={insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}>
+              <div className="mie:px-6 mie:pt-6 mie:pb-2">
+                <div className="mie:font-light mie:mb-2 mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
               </div>
-              <div className="flex justify-center mx-auto px-2 pb-2 lg:px-6 lg:pb-4">
-                <div className="w-full max-w-[80vw] md:max-w-[75vw] lg:max-w-full">
+              <div className="mie:flex mie:justify-center mie:mx-auto mie:px-2 mie:pb-2 mie:lg:px-6 mie:lg:pb-4">
+                <div className="mie:w-full mie:max-w-[80vw] mie:md:max-w-[75vw] mie:lg:max-w-full">
                   <DrawingCanvas
                     onDrawingChange={handleMarkupChange}
                     existingDrawing={f.markupData}
@@ -126,23 +126,23 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
         }
 
         return (
-          <div ref={containerRef} tabIndex={-1} className="space-y-3">
+          <div ref={containerRef} tabIndex={-1} className="mie:space-y-3">
             <input
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Question / Title"}
-              className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
             />
 
-            <div className="p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-sm">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <div className="mie:p-4 mie:border mie:border-gray-300 mie:rounded-lg mie:bg-gray-50 mie:shadow-sm">
+              <label className="mie:block mie:text-sm mie:font-semibold mie:text-gray-700 mie:mb-3">
                 Diagram Settings
               </label>
 
-              <div className="space-y-3">
+              <div className="mie:space-y-3">
                 <div>
-                  <label className="block text-sm text-gray-600 mb-1">
+                  <label className="mie:block mie:text-sm mie:text-gray-600 mie:mb-1">
                     Placeholder Text
                   </label>
                   <input
@@ -150,17 +150,17 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                     value={f.placeholder || ""}
                     onChange={(e) => api.field.update("placeholder", e.target.value)}
                     placeholder={placeholder?.pad || "e.g., Draw on the diagram"}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors bg-white"
+                    className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors mie:bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gray-600 mb-2">
+                  <label className="mie:block mie:text-sm mie:text-gray-600 mie:mb-2">
                     Background Diagram Image
                   </label>
 
-                  <div className="mb-3">
-                    <label className="block text-sm text-gray-600 mb-2">
+                  <div className="mie:mb-3">
+                    <label className="mie:block mie:text-sm mie:text-gray-600 mie:mb-2">
                       Quick Presets
                     </label>
                     <CustomDropdown
@@ -182,26 +182,26 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                   </div>
                   
                   {f.diagramImage ? (
-                    <div className="p-3 border border-gray-300 rounded-lg bg-white relative">
+                    <div className="mie:p-3 mie:border mie:border-gray-300 mie:rounded-lg mie:bg-white mie:relative">
                       <button
                         onClick={(e) => {
                           e.preventDefault();
                           api.field.update("diagramImage", "");
                           api.field.update("fileName", "");
                         }}
-                        className="absolute top-2 right-2 text-gray-400 hover:text-red-600 transition-colors"
+                        className="mie:absolute mie:top-2 mie:right-2 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors mie:bg-transparent"
                         title="Remove diagram"
                       >
-                        <X_ICON className="w-5 h-5" />
+                        <X_ICON className="mie:w-5 mie:h-5" />
                       </button>
                       <img
                         src={f.diagramImage}
                         alt="Diagram background"
-                        className="w-full h-auto max-h-48 object-contain"
+                        className="mie:w-full mie:h-auto mie:max-h-48 mie:object-contain"
                       />
                       {f.fileName && (
-                        <p className="text-xs text-gray-500 mt-2">
-                          <span className="font-medium">File:</span> {f.fileName}
+                        <p className="mie:text-xs mie:text-gray-500 mie:mt-2">
+                          <span className="mie:font-medium">File:</span> {f.fileName}
                         </p>
                       )}
                     </div>
@@ -212,18 +212,18 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
-                        className="hidden"
+                        className="mie:hidden"
                       />
                       <div
                         onClick={() => fileInputRef.current?.click()}
-                        className="p-6 border-2 border-dashed border-gray-300 rounded-lg bg-white hover:border-blue-400 hover:bg-blue-50 transition-all cursor-pointer"
+                        className="mie:p-6 mie:border-2 mie:border-dashed mie:border-gray-300 mie:rounded-lg mie:bg-white mie:hover:border-blue-400 mie:hover:bg-blue-50 mie:transition-all mie:cursor-pointer"
                       >
-                        <div className="text-center">
-                          <UPLOAD_ICON className="w-8 h-8 mx-auto mb-2 text-gray-400" />
-                          <p className="text-sm font-medium text-gray-700 mb-1">
+                        <div className="mie:text-center">
+                          <UPLOAD_ICON className="mie:w-8 mie:h-8 mie:mx-auto mie:mb-2 mie:text-gray-400" />
+                          <p className="mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
                             Upload Diagram or Paste
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="mie:text-xs mie:text-gray-500">
                             Click to select or press Ctrl+V to paste
                           </p>
                         </div>
@@ -232,15 +232,15 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                   )}
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="mie:flex mie:items-center mie:gap-2">
                   <input
                     type="checkbox"
                     id="required-diagram"
                     checked={f.required === true}
                     onChange={(e) => api.field.update("required", e.target.checked)}
-                    className="w-4 h-4 cursor-pointer"
+                    className="mie:w-4 mie:h-4 mie:cursor-pointer"
                   />
-                  <label htmlFor="required-diagram" className="text-sm text-gray-700 cursor-pointer">
+                  <label htmlFor="required-diagram" className="mie:text-sm mie:text-gray-700 mie:cursor-pointer">
                     Required diagram
                   </label>
                 </div>

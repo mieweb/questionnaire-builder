@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Scan only app files for utilities */
+@source "../**/*.{js,jsx}";
+
 /* Demo app styles */
 html, body, #root { height: 100%; margin: 0; }
 body { font-family: system-ui, sans-serif; }
+

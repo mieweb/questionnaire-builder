@@ -30,7 +30,7 @@ function CommonEditor({ f, onUpdateField }) {
   }, [byId]);
 
   return (
-    <div className="common-editor-container space-y-3">
+    <div className="common-editor-container mie:space-y-3">
       <DraftIdEditor
         id={f.id ?? ""}
         validate={validateId}
@@ -38,9 +38,9 @@ function CommonEditor({ f, onUpdateField }) {
       />
 
       <div>
-        <label className="block text-sm mb-1">Label / Question</label>
+        <label className="mie:block mie:text-sm mie:mb-1">Label / Question</label>
         <input
-          className="w-full px-3 py-2 border border-black/20 rounded"
+          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
           value={f.question || ""}
           onChange={(e) => onUpdateField?.("question", e.target.value)}
           placeholder="Enter question text"
@@ -51,10 +51,10 @@ function CommonEditor({ f, onUpdateField }) {
         <InputTypeEditor field={f} onUpdate={onUpdateField} />
       )}
 
-      <div>
-        <label className="block text-sm mb-1">Sublabel (optional)</label>
+      <div className="mie:min-w-0">
+        <label className="mie:block mie:text-sm mie:mb-1">Sublabel (optional)</label>
         <textarea
-          className="w-full px-3 py-2 border border-black/20 rounded"
+          className="mie:w-full mie:min-w-0 mie:max-h-32 mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded mie:resize-y"
           value={f.sublabel || ""}
           onChange={(e) => onUpdateField("sublabel", e.target.value)}
           placeholder="Helper text / description"
@@ -62,7 +62,7 @@ function CommonEditor({ f, onUpdateField }) {
       </div>
 
       <div>
-        <label className="inline-flex items-center gap-2 text-sm">
+        <label className="mie:inline-flex mie:items-center mie:gap-2 mie:text-sm">
           <input
             type="checkbox"
             checked={!!f.required}

@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 *.tgz
+local-packages/
 
 # Generated CSS files
 **/styles.output.css

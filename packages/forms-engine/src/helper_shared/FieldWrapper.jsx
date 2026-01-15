@@ -7,7 +7,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
   // ────────── PREVIEW: no collapsible ──────────
   if (ctrl.isPreview || ctrl.insideSection) {
     const wrapperClassName = noPadding && ctrl.isPreview
-      ? ctrl.wrapperClass.replace("p-6", "p-0")
+      ? ctrl.wrapperClass.replace("mie:p-6", "mie:p-0")
       : ctrl.wrapperClass;
     
     return (
@@ -61,12 +61,12 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
     if (!ctrl.insideSection) ctrl.onRowClick?.(e);
   };
   let wrapperClassName = noPadding 
-    ? (ctrl.wrapperClass + " group").replace("p-6", "p-0")
-    : (ctrl.wrapperClass + " group");
+    ? (ctrl.wrapperClass + " mie:group").replace("mie:p-6", "mie:p-0")
+    : (ctrl.wrapperClass + " mie:group");
   
   // Remove padding when collapsed
   if (!open) {
-    wrapperClassName = wrapperClassName.replace("p-6", "p-0");
+    wrapperClassName = wrapperClassName.replace("mie:p-6", "mie:p-0");
   }
   
   return (
@@ -79,16 +79,16 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
       aria-selected={ctrl.selected || undefined}
       tabIndex={-1}
     >
-      <div className={`field-wrapper-edit-header flex justify-between items-center gap-3 px-3 py-2.5 ${open ? "-mx-6 -mt-6 mb-4" : "m-0"} bg-linear-to-r from-gray-50 to-gray-100 border-b border-gray-200 ${open ? "rounded-t-lg" : "rounded-lg"} ${ctrl.insideSection ? "hidden" : ""}`}>
-        <div className="text-left flex-1 select-none text-sm font-medium text-gray-700 truncate">
+      <div className={`field-wrapper-edit-header mie:flex mie:justify-between mie:items-center mie:gap-3 mie:px-3 mie:py-2.5 ${open ? "mie:-mx-6 mie:-mt-6 mie:mb-4" : "mie:m-0"} mie:bg-linear-to-r mie:from-gray-50 mie:to-gray-100 mie:border-b mie:border-gray-200 ${open ? "mie:rounded-t-lg" : "mie:rounded-lg"} ${ctrl.insideSection ? "mie:hidden" : ""}`}>
+        <div className="mie:text-left mie:flex-1 mie:select-none mie:text-sm mie:font-medium mie:text-gray-700 mie:truncate">
           {ctrl.insideSection ? (`${ctrl.label}`) :
             (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title || ""}`) : (`${ctrl.label} ${ctrl.field.question || ""}`))}
         </div>
 
         {/* actions: Edit (mobile), Toggle (small/big view), Delete */}
-        <div className="field-wrapper-actions flex items-center gap-1 shrink-0">
-          <button onClick={onEditClick} className="field-edit-btn block lg:hidden p-1.5 hover:bg-white rounded transition-colors" title="Edit" aria-label="Edit field">
-            <EDIT_ICON className="h-5 w-5 text-gray-600" />
+        <div className="field-wrapper-actions mie:flex mie:items-center mie:gap-1 mie:shrink-0">
+          <button onClick={onEditClick} className="field-edit-btn mie:block mie:lg:hidden mie:p-1.5 mie:bg-transparent mie:text-gray-600 mie:hover:bg-white mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none" title="Edit" aria-label="Edit field">
+            <EDIT_ICON className="mie:h-5 mie:w-5 mie:text-gray-600" />
           </button>
 
           <button
@@ -102,13 +102,13 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
             aria-controls={`fw-body-${ctrl.field?.id}`}
             title={open ? "Collapse" : "Expand"}
             aria-label={open ? "Collapse field" : "Expand field"}
-            className="field-collapse-btn p-1.5 hover:bg-white rounded transition-colors"
+            className="field-collapse-btn mie:p-1.5 mie:bg-transparent mie:text-gray-600 mie:hover:bg-white mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none"
           >
-            {open ? <VIEWSMALL_ICON className="collapse-icon h-5 w-5 text-gray-600" /> : <VIEWBIG_ICON className="collapse-icon h-5 w-5 text-gray-600" />}
+            {open ? <VIEWSMALL_ICON className="mie:collapse-icon mie:h-5 mie:w-5 mie:text-gray-600" /> : <VIEWBIG_ICON className="mie:collapse-icon mie:h-5 mie:w-5 mie:text-gray-600" />}
           </button>
 
-          <button onClick={onRemoveClick} className="field-delete-btn p-1.5 hover:bg-red-50 rounded transition-colors" title="Delete" aria-label="Delete field">
-            <TRASHCAN_ICON className="h-5 w-5 text-gray-600 hover:text-red-600" />
+          <button onClick={onRemoveClick} className="field-delete-btn mie:p-1.5 mie:bg-transparent mie:text-gray-600 mie:hover:bg-red-50 mie:hover:text-red-600 mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none" title="Delete" aria-label="Delete field">
+            <TRASHCAN_ICON className="mie:h-5 mie:w-5 mie:text-gray-600 mie:hover:text-red-600" />
           </button>
         </div>
       </div>

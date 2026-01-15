@@ -67,53 +67,53 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
         if (isPreview) {
           const imageUri = f.imageUri || previewUrl;
           const sizeClass = {
-            small: "w-1/2",
-            medium: "w-3/4",
-            full: "w-full",
-          }[f.size || "full"] || "w-full";
+            small: "mie:w-1/2",
+            medium: "mie:w-3/4",
+            full: "mie:w-full",
+          }[f.size || "full"] || "mie:w-full";
 
           const alignmentClass = {
-            left: "justify-start",
-            center: "justify-center",
-            right: "justify-end",
-          }[f.alignment || "center"] || "justify-center";
+            left: "mie:justify-start",
+            center: "mie:justify-center",
+            right: "mie:justify-end",
+          }[f.alignment || "center"] || "mie:justify-center";
 
-          const previewPaddingClass = f.padding === "full-bleed" ? "" : "pb-4";
+          const previewPaddingClass = f.padding === "full-bleed" ? "" : "mie:pb-4";
 
           return (
             <div className={previewPaddingClass}>
-              {f.question && <div className="font-light mb-2 wrap-break-word overflow-hidden">{f.question}</div>}
+              {f.question && <div className="mie:font-light mie:mb-2 mie:wrap-break-word mie:overflow-hidden">{f.question}</div>}
               {imageUri && (
-                <div className={`flex ${alignmentClass} ${f.padding !== "full-bleed" ? "mb-4" : ""}`}>
+                <div className={`mie:flex ${alignmentClass} ${f.padding !== "full-bleed" ? "mie:mb-4" : ""}`}>
                   <img
                     src={imageUri}
                     alt={f.altText || "Image"}
-                    className={`${sizeClass} h-auto object-contain ${f.padding === "full-bleed" ? "w-full" : ""}`}
+                    className={`${sizeClass} mie:h-auto mie:object-contain ${f.padding === "full-bleed" ? "mie:w-full" : ""}`}
                   />
                 </div>
               )}
-              {f.caption && <p className="text-sm text-gray-600 text-center mb-2">{f.caption}</p>}
+              {f.caption && <p className="mie:text-sm mie:text-gray-600 mie:text-center mie:mb-2">{f.caption}</p>}
             </div>
           );
         }
 
         const currentImageUri = f.imageUri || previewUrl;
         const sizeClass = {
-          small: "w-1/2",
-          medium: "w-3/4",
-          full: "w-full",
-        }[f.size || "full"] || "w-full";
+          small: "mie:w-1/2",
+          medium: "mie:w-3/4",
+          full: "mie:w-full",
+        }[f.size || "full"] || "mie:w-full";
 
         const alignmentClass = {
-          left: "justify-start",
-          center: "justify-center",
-          right: "justify-end",
-        }[f.alignment || "center"] || "justify-center";
+          left: "mie:justify-start",
+          center: "mie:justify-center",
+          right: "mie:justify-end",
+        }[f.alignment || "center"] || "mie:justify-center";
 
         return (
-          <div ref={containerRef} tabIndex={-1} className="space-y-3 w-full overflow-hidden">
+          <div ref={containerRef} tabIndex={-1} className="mie:space-y-3 mie:w-full mie:overflow-hidden">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
                 Question / Title
               </label>
               <input
@@ -121,17 +121,17 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                 value={f.question || ""}
                 onChange={(e) => api.field.update("question", e.target.value)}
                 placeholder={placeholder?.question || "Question / Title"}
-                className="px-3 py-2 h-10 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+                className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
                 Alt Text (Accessibility)
               </label>
               <input
                 type="text"
-                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+                className="mie:px-3 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
                 value={f.altText || ""}
                 onChange={(e) => api.field.update("altText", e.target.value)}
                 placeholder={placeholder?.altText || "Descriptive alt text for accessibility"}
@@ -139,21 +139,21 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
                 Caption (Optional)
               </label>
               <input
                 type="text"
-                className="px-3 py-2 w-full border border-gray-300 rounded-lg focus:border-blue-400 focus:ring-1 focus:ring-blue-400 outline-none transition-colors"
+                className="mie:px-3 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
                 value={f.caption || ""}
                 onChange={(e) => api.field.update("caption", e.target.value)}
                 placeholder={placeholder?.caption || "Optional caption below image"}
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="mie:grid mie:grid-cols-2 mie:gap-3">
               <div>
-                <label className={`block text-sm font-medium mb-1 ${f.padding === "full-bleed" ? "text-gray-400" : "text-gray-700"}`}>
+                <label className={`mie:block mie:text-sm mie:font-medium mie:mb-1 ${f.padding === "full-bleed" ? "mie:text-gray-400" : "mie:text-gray-700"}`}>
                   Size
                 </label>
                 <CustomDropdown
@@ -170,7 +170,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
                   Alignment
                 </label>
                 <CustomDropdown
@@ -187,7 +187,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-2">
                 Padding
               </label>
               <CustomDropdown
@@ -202,7 +202,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
             </div>
 
             {currentImageUri ? (
-              <div className="p-4 border border-gray-300 rounded-lg bg-gray-50 w-full overflow-hidden relative shadow-sm">
+              <div className="mie:p-4 mie:border mie:border-gray-300 mie:rounded-lg mie:bg-gray-50 mie:w-full mie:overflow-hidden mie:relative mie:shadow-sm">
                 <button
                   onClick={(e) => {
                     e.preventDefault();
@@ -211,24 +211,24 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                     setPreviewUrl("");
                     setFileName("");
                   }}
-                  className="absolute top-3 right-3 text-gray-400 hover:text-red-600 transition-colors"
+                  className="mie:absolute mie:top-3 mie:right-3 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors mie:bg-transparent"
                   title="Delete image"
                   aria-label="Delete image"
                 >
-                  <X_ICON className="w-5 h-5" />
+                  <X_ICON className="mie:w-5 mie:h-5" />
                 </button>
-                <p className="text-sm font-semibold text-gray-700 mb-3">Preview</p>
-                <div className={`flex ${alignmentClass} mb-2`}>
+                <p className="mie:text-sm mie:font-semibold mie:text-gray-700 mie:mb-3">Preview</p>
+                <div className={`mie:flex ${alignmentClass} mie:mb-2`}>
                   <img
                     src={currentImageUri}
                     alt={f.altText || "Preview"}
-                    className={`${sizeClass} h-auto object-contain max-w-full`}
+                    className={`${sizeClass} mie:h-auto mie:object-contain mie:max-w-full`}
                   />
                 </div>
-                {f.caption && <p className="text-sm text-gray-600 text-center mb-2">{f.caption}</p>}
+                {f.caption && <p className="mie:text-sm mie:text-gray-600 mie:text-center mie:mb-2">{f.caption}</p>}
                 {fileName && (
-                  <p className="text-xs text-gray-500 border-t pt-2">
-                    <span className="font-medium">Source:</span> {fileName}
+                  <p className="mie:text-xs mie:text-gray-500 mie:border-t mie:pt-2">
+                    <span className="mie:font-medium">Source:</span> {fileName}
                   </p>
                 )}
               </div>
@@ -239,16 +239,16 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}
-                  className="hidden"
+                  className="mie:hidden"
                 />
                 <div
                   onClick={() => fileInputRef.current?.click()}
-                  className="p-8 border-2 border-dashed border-blue-300 rounded-lg bg-linear-to-br from-blue-50 to-gray-50 w-full overflow-hidden flex items-center justify-center min-h-64 cursor-pointer hover:border-blue-400 hover:from-blue-100 hover:to-gray-100 transition-all shadow-sm"
+                  className="mie:p-8 mie:border-2 mie:border-dashed mie:border-blue-300 mie:rounded-lg mie:bg-linear-to-br mie:from-blue-50 mie:to-gray-50 mie:w-full mie:overflow-hidden mie:flex mie:items-center mie:justify-center mie:min-h-64 mie:cursor-pointer mie:hover:border-blue-400 mie:hover:from-blue-100 mie:hover:to-gray-100 mie:transition-all mie:shadow-sm"
                 >
-                  <div className="text-center">
-                    <UPLOAD_ICON className="w-12 h-12 mx-auto mb-3 text-blue-600" />
-                    <p className="text-lg font-semibold text-gray-700 mb-2">Paste Image or Click to Upload</p>
-                    <p className="text-sm text-gray-500">Press Ctrl+V (Cmd+V on Mac) to paste an image from your clipboard, or click here to select a file</p>
+                  <div className="mie:text-center">
+                    <UPLOAD_ICON className="mie:w-12 mie:h-12 mie:mx-auto mie:mb-3 mie:text-blue-600" />
+                    <p className="mie:text-lg mie:font-semibold mie:text-gray-700 mie:mb-2">Paste Image or Click to Upload</p>
+                    <p className="mie:text-sm mie:text-gray-500">Press Ctrl+V (Cmd+V on Mac) to paste an image from your clipboard, or click here to select a file</p>
                   </div>
                 </div>
               </>
