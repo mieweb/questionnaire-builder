@@ -1,4 +1,4 @@
-import './src/styles.css';
+import './src/index.css';
 
 // advanced fields
 export { default as Section_Field } from './src/adv_field/section_Field.jsx';

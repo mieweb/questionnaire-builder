@@ -3,7 +3,7 @@ import { FormStoreContext, UIStoreContext, createFormStore, createUIStore } from
 import { useQuestionnaireInit } from './hooks';
 import { RendererBody } from './components';
 import { buildQuestionnaireResponse } from './utils/fhirResponse';
-import './styles.input.css';
+import './index.css';
 
 /**
  * QuestionnaireRenderer - Read-only questionnaire form renderer
