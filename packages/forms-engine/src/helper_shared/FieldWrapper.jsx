@@ -10,6 +10,11 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
       ? ctrl.wrapperClass.replace("mie:p-6", "mie:p-0")
       : ctrl.wrapperClass;
     
+    // Add border-bottom class for fields inside sections
+    const contentClassName = ctrl.insideSection 
+      ? "mie:border-b mie:border-gray-200" 
+      : "mie:border-0";
+    
     return (
       <div
         className={wrapperClassName}
@@ -30,17 +35,19 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
           </div>
         )}
 
-        {typeof children === "function"
-          ? children({
-            api: ctrl.api,
-            isPreview: ctrl.isPreview,
-            field: ctrl.field,
-            insideSection: ctrl.insideSection,
-            sectionId: ctrl.sectionId,
-            selected: ctrl.selected,
-            placeholder: ctrl.placeholder,
-          })
-          : children}
+        <div className={contentClassName}>
+          {typeof children === "function"
+            ? children({
+              api: ctrl.api,
+              isPreview: ctrl.isPreview,
+              field: ctrl.field,
+              insideSection: ctrl.insideSection,
+              sectionId: ctrl.sectionId,
+              selected: ctrl.selected,
+              placeholder: ctrl.placeholder,
+            })
+            : children}
+        </div>
       </div>
     );
   }

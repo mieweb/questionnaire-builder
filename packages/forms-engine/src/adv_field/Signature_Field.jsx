@@ -24,7 +24,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
       {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
-            <div className={insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}>
+            <div>
               <div className="mie:px-6 mie:pt-6 mie:pb-2">
                 <div className="mie:font-light mie:mb-2 mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
               </div>

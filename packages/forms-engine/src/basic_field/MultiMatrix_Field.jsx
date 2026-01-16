@@ -35,7 +35,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
           };
 
           return (
-            <div className={`multimatrix-field-preview ${insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}`}>
+            <div className="multimatrix-field-preview">
               <div className="mie:pb-4">
                 <div className="mie:font-light mie:mb-3 mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 

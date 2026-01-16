@@ -125,7 +125,7 @@ const SectionField = React.memo(function SectionField({ field }) {
 
         if (isPreview) {
           return (
-            <section className={`section-field-preview ${insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}`}>
+            <section className="section-field-preview">
               <div className="mie:bg-blue-500 mie:text-white mie:text-xl mie:px-4 mie:py-2 mie:rounded-t-lg mie:wrap-break-word mie:overflow-hidden">
                 {f.title || "Section"}
               </div>

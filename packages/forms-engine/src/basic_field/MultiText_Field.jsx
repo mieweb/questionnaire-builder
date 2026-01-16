@@ -11,7 +11,7 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
       {({ api, isPreview, insideSection, field: f, placeholder }) => {
         if (isPreview) {
           return (
-            <div className={`multitext-field-preview ${insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}`}>
+            <div className="multitext-field-preview">
               <div className="mie:space-y-3 mie:pb-4">
                 {f.question && <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question}</div>}
                 <div className="mie:space-y-2 mie:w-full">

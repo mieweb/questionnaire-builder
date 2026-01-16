@@ -18,7 +18,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
           const selected = f.selected || {};
 
           return (
-            <div className={`singlematrix-field-preview ${insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}`}>
+            <div className="singlematrix-field-preview">
               <div className="mie:pb-4">
                 <div className="mie:font-light mie:mb-3 mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 
