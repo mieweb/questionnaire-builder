@@ -30,57 +30,31 @@ button:focus-visible {
 @theme {
   --font-titillium: "Titillium Web", sans-serif;
   
-  /* Semantic color variants - can be customized via theme */
+  /* Semantic color variants - use opacity modifiers for hover/text effects */
   --mie-color-primary: #3b82f6;        /* blue-500 */
-  --mie-color-primary-hover: #2563eb;  /* blue-600 */
-  --mie-color-primary-text: #ffffff;
-  
   --mie-color-secondary: #6b7280;      /* gray-500 */
-  --mie-color-secondary-hover: #4b5563; /* gray-600 */
-  --mie-color-secondary-text: #ffffff;
-  
   --mie-color-accent: #10b981;         /* green-500 */
-  --mie-color-accent-hover: #059669;   /* green-600 */
-  --mie-color-accent-text: #ffffff;
-  
   --mie-color-danger: #ef4444;         /* red-500 */
-  --mie-color-danger-hover: #dc2626;   /* red-600 */
-  --mie-color-danger-text: #ffffff;
   
   --mie-color-surface: #ffffff;
-  --mie-color-surface-hover: #f9fafb;  /* gray-50 */
   --mie-color-border: #e5e7eb;         /* gray-200 */
   --mie-color-text: #111827;           /* gray-900 */
   --mie-color-text-muted: #6b7280;     /* gray-500 */
   --mie-color-background: #f9fafb;     /* gray-50 */
-  --mie-color-background-secondary: #f3f4f6; /* gray-100 */
 }
 
 /* Dark mode theme overrides */
 .qb-editor-root.dark {
   --mie-color-primary: #60a5fa;        /* blue-400 - brighter for dark */
-  --mie-color-primary-hover: #3b82f6;  /* blue-500 */
-  --mie-color-primary-text: #000000;
-  
   --mie-color-secondary: #9ca3af;      /* gray-400 */
-  --mie-color-secondary-hover: #6b7280; /* gray-500 */
-  --mie-color-secondary-text: #000000;
-  
   --mie-color-accent: #34d399;         /* green-400 */
-  --mie-color-accent-hover: #10b981;   /* green-500 */
-  --mie-color-accent-text: #000000;
-  
   --mie-color-danger: #f87171;         /* red-400 */
-  --mie-color-danger-hover: #ef4444;   /* red-500 */
-  --mie-color-danger-text: #000000;
   
   --mie-color-surface: #1f2937;        /* gray-800 */
-  --mie-color-surface-hover: #374151;  /* gray-700 */
   --mie-color-border: #4b5563;         /* gray-600 */
   --mie-color-text: #f9fafb;           /* gray-50 */
   --mie-color-text-muted: #9ca3af;     /* gray-400 */
   --mie-color-background: #111827;     /* gray-900 */
-  --mie-color-background-secondary: #1f2937; /* gray-800 */
 }
 
 /* Custom scrollbar styles - auto-hide, appears on hover */
