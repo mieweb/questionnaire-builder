@@ -2,6 +2,8 @@
 @import "tailwindcss/theme" prefix(mie);
 @import "tailwindcss/utilities" prefix(mie);
 
+@custom-variant dark (&:where(.qb-editor-root.dark, .qb-editor-root.dark *, .qb-renderer-root.dark, .qb-renderer-root.dark *));
+
 /* Scoped base styles - essential resets for mie: prefixed utilities */
 @layer base {
   .qb-editor-root,
@@ -21,6 +23,33 @@
 
 @theme {
   --font-titillium: "Titillium Web", sans-serif;
+  
+  /* Semantic color variants - use opacity modifiers for hover/text effects */
+  --color-mieprimary: #3b82f6;        /* blue-500 */
+  --color-miesecondary: #6b7280;      /* gray-500 */
+  --color-mieaccent: #10b981;         /* green-500 */
+  --color-miedanger: #ef4444;         /* red-500 */
+  
+  --color-miesurface: #ffffff;
+  --color-mieborder: #e5e7eb;         /* gray-200 */
+  --color-mietext: #111827;           /* gray-900 */
+  --color-mietextmuted: #6b7280;      /* gray-500 */
+  --color-miebackground: #f9fafb;     /* gray-50 */
+}
+
+/* Dark mode theme overrides */
+.qb-editor-root.dark,
+.qb-renderer-root.dark {
+  --color-mieprimary: #60a5fa;        /* blue-400 - brighter for dark */
+  --color-miesecondary: #9ca3af;      /* gray-400 */
+  --color-mieaccent: #34d399;         /* green-400 */
+  --color-miedanger: #f87171;         /* red-400 */
+  
+  --color-miesurface: #1f2937;        /* gray-800 */
+  --color-mieborder: #4b5563;         /* gray-600 */
+  --color-mietext: #f9fafb;           /* gray-50 */
+  --color-mietextmuted: #9ca3af;      /* gray-400 */
+  --color-miebackground: #111827;     /* gray-900 */
 }
 
 /* Custom scrollbar styles - auto-hide, appears on hover */
@@ -46,3 +75,5 @@
 .mie\:custom-scrollbar:hover {
   scrollbar-color: #d1d5db transparent;
 }
+
+

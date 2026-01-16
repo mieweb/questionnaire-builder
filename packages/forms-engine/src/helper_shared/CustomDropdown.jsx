@@ -58,18 +58,18 @@ const CustomDropdown = function CustomDropdown({
       <div ref={dropdownRef} className="custom-dropdown custom-dropdown-multi mie:relative mie:w-full mie:overflow-visible">
         {/* Selected items display as pills */}
         <div
-          className={`custom-dropdown-trigger mie:w-full mie:min-h-10 mie:px-3 mie:py-2 mie:shadow mie:border mie:border-gray-300 mie:rounded-lg mie:cursor-pointer mie:bg-white mie:flex mie:flex-wrap mie:gap-2 mie:items-center mie:hover:border-blue-300 mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:transition-colors ${
-            disabled ? "mie:opacity-50 mie:cursor-not-allowed mie:bg-gray-50 mie:border-gray-200" : ""
+          className={`custom-dropdown-trigger mie:w-full mie:min-h-10 mie:px-3 mie:py-2 mie:shadow mie:border mie:border-mieborder mie:rounded-lg mie:cursor-pointer mie:bg-miesurface mie:flex mie:flex-wrap mie:gap-2 mie:items-center mie:hover:border-mieprimary/50 mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:transition-colors ${
+            disabled ? "mie:opacity-50 mie:cursor-not-allowed mie:bg-miebackground mie:border-mieborder" : ""
           }`}
           onClick={() => !disabled && setIsOpen(!isOpen)}
         >
           {selectedOptions.length === 0 ? (
-            <span className="mie:text-gray-400">{placeholder}</span>
+            <span className="mie:text-mietextmuted">{placeholder}</span>
           ) : (
             selectedOptions.map((option) => (
               <span
                 key={option.id}
-                className="custom-dropdown-selected-pill mie:inline-flex mie:items-center mie:gap-1 mie:px-3 mie:py-1 mie:bg-blue-600 mie:text-white mie:rounded mie:text-sm"
+                className="custom-dropdown-selected-pill mie:inline-flex mie:items-center mie:gap-1 mie:px-3 mie:py-1 mie:bg-mieprimary mie:text-miesurface mie:rounded mie:text-sm"
               >
                 {option.value}
                 <button
@@ -77,7 +77,7 @@ const CustomDropdown = function CustomDropdown({
                     e.stopPropagation();
                     handleRemove(option.id);
                   }}
-                  className="custom-dropdown-remove-btn mie:flex mie:items-center mie:justify-center mie:bg-transparent mie:text-white mie:hover:bg-blue-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none"
+                  className="custom-dropdown-remove-btn mie:flex mie:items-center mie:justify-center mie:bg-transparent mie:text-miesurface mie:hover:bg-mieprimary/80 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none"
                   aria-label={`Remove ${option.value}`}
                 >
                   <svg className="mie:w-4 mie:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,7 +90,7 @@ const CustomDropdown = function CustomDropdown({
 
           {/* Dropdown arrow */}
           <svg
-            className={`mie:w-5 mie:h-5 mie:ml-auto mie:transition-transform mie:shrink-0 mie:text-gray-600 ${isOpen ? "mie:rotate-180" : ""}`}
+            className={`mie:w-5 mie:h-5 mie:ml-auto mie:transition-transform mie:shrink-0 mie:text-mietextmuted ${isOpen ? "mie:rotate-180" : ""}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -102,12 +102,12 @@ const CustomDropdown = function CustomDropdown({
         {/* Dropdown menu */}
         {isOpen && availableOptions.length > 0 && (
           <div
-            className={`custom-dropdown-menu mie:absolute mie:z-9999 mie:w-full mie:mt-1 mie:bg-white mie:border mie:border-gray-200 mie:rounded-lg mie:shadow-lg ${maxHeight} mie:overflow-y-auto`}
+            className={`custom-dropdown-menu mie:absolute mie:z-9999 mie:w-full mie:mt-1 mie:bg-miesurface mie:border mie:border-mieborder mie:rounded-lg mie:shadow-lg ${maxHeight} mie:overflow-y-auto`}
           >
             {availableOptions.map((option) => (
               <div
                 key={option.id}
-                className="custom-dropdown-option mie:px-4 mie:py-2 mie:text-gray-900 mie:hover:bg-blue-50 mie:cursor-pointer mie:transition-colors"
+                className="custom-dropdown-option mie:px-4 mie:py-2 mie:text-mietext mie:hover:bg-mieprimary/10 mie:cursor-pointer mie:transition-colors"
                 onClick={() => handleSelect(option.id)}
               >
                 {option.value}
@@ -125,18 +125,18 @@ const CustomDropdown = function CustomDropdown({
     <div ref={dropdownRef} className="custom-dropdown custom-dropdown-single-container mie:relative mie:w-full mie:overflow-visible">
       {/* Dropdown trigger button */}
       <div
-        className={`custom-dropdown-trigger mie:w-full mie:px-4 mie:py-2 mie:h-10 mie:shadow mie:border mie:border-gray-300 mie:rounded-lg mie:cursor-pointer mie:bg-white mie:flex mie:items-center mie:justify-between mie:hover:border-blue-300 mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:transition-colors ${
-          disabled ? "mie:opacity-50 mie:cursor-not-allowed mie:bg-gray-50 mie:border-gray-200" : ""
+        className={`custom-dropdown-trigger mie:w-full mie:px-4 mie:py-2 mie:h-10 mie:shadow mie:border mie:border-mieborder mie:rounded-lg mie:cursor-pointer mie:bg-miesurface mie:flex mie:items-center mie:justify-between mie:hover:border-mieprimary/50 mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:transition-colors ${
+          disabled ? "mie:opacity-50 mie:cursor-not-allowed mie:bg-miebackground mie:border-mieborder" : ""
         }`}
         onClick={() => !disabled && setIsOpen(!isOpen)}
       >
-        <span className={`custom-dropdown-value-text mie:truncate mie:min-w-0 ${selectedOption ? "mie:text-gray-900" : "mie:text-gray-400"}`}>
+        <span className={`custom-dropdown-value-text mie:truncate mie:min-w-0 ${selectedOption ? "mie:text-mietext" : "mie:text-mietextmuted"}`}>
           {selectedOption ? selectedOption.value : placeholder}
         </span>
 
         {/* Dropdown arrow */}
         <svg
-          className={`custom-dropdown-arrow mie:w-5 mie:h-5 mie:transition-transform mie:shrink-0 mie:text-gray-600 ${isOpen ? "mie:rotate-180" : ""}`}
+          className={`custom-dropdown-arrow mie:w-5 mie:h-5 mie:transition-transform mie:shrink-0 mie:text-mietextmuted ${isOpen ? "mie:rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -148,11 +148,11 @@ const CustomDropdown = function CustomDropdown({
       {/* Dropdown menu */}
       {isOpen && options.length > 0 && (
         <div
-          className={`custom-dropdown-menu mie:absolute mie:z-50 mie:w-full mie:mt-1 mie:bg-white mie:border mie:border-gray-200 mie:rounded-lg mie:shadow-lg ${maxHeight} mie:overflow-y-auto`}
+          className={`custom-dropdown-menu mie:absolute mie:z-50 mie:w-full mie:mt-1 mie:bg-miesurface mie:border mie:border-mieborder mie:rounded-lg mie:shadow-lg ${maxHeight} mie:overflow-y-auto`}
         >
           {showClearOption && (
             <div
-              className="custom-dropdown-clear-option mie:px-4 mie:py-2 mie:text-gray-900 mie:hover:bg-blue-50 mie:cursor-pointer mie:transition-colors"
+              className="custom-dropdown-clear-option mie:px-4 mie:py-2 mie:text-mietext mie:hover:bg-mieprimary/10 mie:cursor-pointer mie:transition-colors"
               onClick={() => {
                 onChange(null);
                 setIsOpen(false);
@@ -164,8 +164,8 @@ const CustomDropdown = function CustomDropdown({
           {options.map((option) => (
             <div
               key={option.id}
-              className={`custom-dropdown-option mie:px-4 mie:py-2 mie:hover:bg-blue-50 mie:cursor-pointer mie:transition-colors ${
-                value === option.id ? "mie:bg-blue-100 mie:text-blue-900" : ""
+              className={`custom-dropdown-option mie:px-4 mie:py-2 mie:hover:bg-mieprimary/10 mie:cursor-pointer mie:transition-colors ${
+                value === option.id ? "mie:bg-mieprimary/20 mie:text-mieprimary" : "mie:text-mietext"
               }`}
               onClick={() => handleSelect(option.id)}
             >

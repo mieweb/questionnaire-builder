@@ -20,8 +20,8 @@
     "**/*.css"
   ],
   "scripts": {
-    "build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-engine/src/styles.css -o packages/forms-engine/src/styles.output.css",
-    "build:css:watch": "cd ../.. && npx @tailwindcss/cli -i packages/forms-engine/src/styles.css -o packages/forms-engine/src/styles.output.css --watch",
+    "build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-engine/src/index.css -o packages/forms-engine/src/index.output.css",
+    "build:css:watch": "cd ../.. && npx @tailwindcss/cli -i packages/forms-engine/src/index.css -o packages/forms-engine/src/index.output.css --watch",
     "build": "npm run build:css && vite build",
     "build:watch": "concurrently \"npm run build:css:watch\" \"vite build --watch\""
   },

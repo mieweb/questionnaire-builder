@@ -27,7 +27,7 @@
     "**/*.css"
   ],
   "scripts": {
-    "build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-renderer/src/styles.input.css -o packages/forms-renderer/src/styles.output.css",
+    "build:css": "cd ../.. && npx @tailwindcss/cli -i packages/forms-renderer/src/index.css -o packages/forms-renderer/src/index.output.css",
     "build": "npm run build:css && vite build && vite build --config vite.config.standalone.js && vite build --config vite.config.blaze.js",
     "build:watch": "npm run build:css && vite build --watch"
   },

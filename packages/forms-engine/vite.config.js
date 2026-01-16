@@ -11,25 +11,25 @@ export default defineConfig({
     {
       name: 'inline-css-engine',
       generateBundle(options, bundle) {
-        const cssPath = resolve(__dirname, 'src/styles.output.css');
+        const cssPath = resolve(__dirname, 'src/index.output.css');
         if (fs.existsSync(cssPath)) {
           const cssContent = fs.readFileSync(cssPath, 'utf-8');
           
           Object.keys(bundle).forEach(fileName => {
             if (fileName.endsWith('.js') && bundle[fileName].type === 'chunk') {
               const cssInjection = `
-(function() {
-  if (typeof document === 'undefined') return;
-  if (window.__QUESTIONNAIRE_ENGINE_CSS_INJECTED) return;
-  if (!document.querySelector('#questionnaire-engine-styles')) {
-    const style = document.createElement('style');
-    style.id = 'questionnaire-engine-styles';
-    style.textContent = ${JSON.stringify(cssContent)};
-    document.head.appendChild(style);
-  }
-  window.__QUESTIONNAIRE_ENGINE_CSS_INJECTED = true;
-})();
-`;
+                                    (function() {
+                                      if (typeof document === 'undefined') return;
+                                      if (window.__QUESTIONNAIRE_ENGINE_CSS_INJECTED) return;
+                                      if (!document.querySelector('#questionnaire-engine-styles')) {
+                                        const style = document.createElement('style');
+                                        style.id = 'questionnaire-engine-styles';
+                                        style.textContent = ${JSON.stringify(cssContent)};
+                                        document.head.appendChild(style);
+                                      }
+                                      window.__QUESTIONNAIRE_ENGINE_CSS_INJECTED = true;
+                                    })();
+                                    `;
               bundle[fileName].code = cssInjection + bundle[fileName].code;
             }
           });

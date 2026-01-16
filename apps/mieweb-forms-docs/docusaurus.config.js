@@ -150,8 +150,8 @@ const config = {
       image: 'img/mie_forms_2.svg',
       colorMode: {
         defaultMode: 'light',
-        disableSwitch: true,
-        respectPrefersColorScheme: false,
+        disableSwitch: false,
+        respectPrefersColorScheme: true,
       },
       navbar: {
         title: 'MIE Forms',

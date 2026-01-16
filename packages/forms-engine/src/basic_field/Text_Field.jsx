@@ -59,7 +59,7 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder }) => {
         const inputType = f.inputType || "text";
         const unit = f.unit || "";
         const isTel = inputType === "tel";
@@ -82,9 +82,9 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
         
         if (isPreview) {
           return (
-            <div className={`text-field-preview ${insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}`}>
+            <div className="text-field-preview">
               <div className="mie:grid mie:grid-cols-1 mie:gap-2 mie:sm:grid-cols-2 mie:pb-4">
-                <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <div className="mie:relative">
                   <input
                     type={isTel ? "tel" : inputType}
@@ -97,10 +97,10 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
                       }
                     }}
                     placeholder={getPlaceholder()}
-                    className={`mie:px-4 mie:py-2 mie:h-10 mie:w-full mie:min-w-0 mie:border mie:border-gray-300 mie:shadow-sm mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors ${unit ? 'mie:pr-16' : ''}`}
+                    className={`mie:px-4 mie:py-2 mie:h-10 mie:w-full mie:min-w-0 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:shadow-sm mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:transition-colors ${unit ? 'mie:pr-16' : ''}`}
                   />
                   {unit && (
-                    <span className="mie:absolute mie:right-3 mie:top-1/2 mie:-translate-y-1/2 mie:text-sm mie:text-gray-500 mie:pointer-events-none">
+                    <span className="mie:absolute mie:right-3 mie:top-1/2 mie:-translate-y-1/2 mie:text-sm mie:text-mietextmuted mie:pointer-events-none">
                       {unit}
                     </span>
                   )}
@@ -113,7 +113,7 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
         return (
           <div className="mie:text-field-edit mie:space-y-2">
             <input
-              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
+              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:transition-colors"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
@@ -125,11 +125,11 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
                 type={inputType}
                 value={f.answer || ""}
                 placeholder={getPlaceholder()}
-                className={`mie:px-4 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:shadow-sm mie:rounded-lg mie:bg-gray-50 ${unit ? 'mie:pr-16' : ''}`}
+                className={`mie:px-4 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:shadow-sm mie:rounded-lg mie:bg-miebackground mie:text-mietextmuted ${unit ? 'mie:pr-16' : ''}`}
                 disabled
               />
               {unit && (
-                <span className="mie:absolute mie:right-3 mie:top-1/2 mie:-translate-y-1/2 mie:text-sm mie:text-gray-500">
+                <span className="mie:absolute mie:right-3 mie:top-1/2 mie:-translate-y-1/2 mie:text-sm mie:text-mietextmuted">
                   {unit}
                 </span>
               )}
