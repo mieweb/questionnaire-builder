@@ -21,7 +21,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
 
   return (
     <FieldWrapper ctrl={ctrl} noPadding={ ctrl.isPreview === true ? true : false }>
-      {({ api, isPreview, insideSection, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder }) => {
         if (isPreview) {
           return (
             <div>
@@ -57,17 +57,17 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
-              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
+              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
             />
 
-            <div className="mie:p-4 mie:border mie:border-gray-300 mie:rounded-lg mie:bg-gray-50 mie:shadow-sm">
-              <label className="mie:block mie:text-sm mie:font-semibold mie:text-gray-700 mie:mb-3">
+            <div className="mie:p-4 mie:border mie:border-mieborder mie:rounded-lg mie:bg-miebackground mie:shadow-sm">
+              <label className="mie:block mie:text-sm mie:font-semibold mie:text-mietext mie:mb-3">
                 Signature Pad Settings
               </label>
 
               <div className="mie:space-y-3">
                 <div>
-                  <label className="mie:block mie:text-sm mie:text-gray-600 mie:mb-1">
+                  <label className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-1">
                     Placeholder Text
                   </label>
                   <input
@@ -75,7 +75,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                     value={f.placeholder || ""}
                     onChange={(e) => api.field.update("placeholder", e.target.value)}
                     placeholder={placeholder?.pad || "e.g., Please sign here"}
-                    className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors mie:bg-white"
+                    className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:bg-miesurface mie:text-mietext"
                   />
                 </div>
 
@@ -85,9 +85,9 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
                     id="required-sig"
                     checked={f.required === true}
                     onChange={(e) => api.field.update("required", e.target.checked)}
-                    className="mie:w-4 mie:h-4 mie:cursor-pointer"
+                    className="mie:w-4 mie:h-4 mie:cursor-pointer mie:accent-mieprimary"
                   />
-                  <label htmlFor="required-sig" className="mie:text-sm mie:text-gray-700 mie:cursor-pointer">
+                  <label htmlFor="required-sig" className="mie:text-sm mie:text-mietext mie:cursor-pointer">
                     Required signature
                   </label>
                 </div>

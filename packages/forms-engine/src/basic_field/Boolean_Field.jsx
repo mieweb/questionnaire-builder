@@ -8,12 +8,12 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder }) => {
         if (isPreview) {
           return (
             <div className="boolean-field-preview">
               <div className="mie:grid mie:grid-cols-1 mie:gap-2 mie:sm:grid-cols-2 mie:pb-4">
-                <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <div className="mie:flex mie:gap-2">
                   {(f.options || []).map((option) => {
                     const inputId = `${f.id}-${option.id}`;
@@ -25,8 +25,8 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
                         htmlFor={inputId}
                         className={`mie:flex-1 mie:flex mie:items-center mie:justify-center mie:px-4 mie:py-2 mie:h-10 mie:border-2 mie:rounded-lg mie:cursor-pointer mie:transition-all ${
                           isSelected
-                            ? "mie:bg-blue-600 mie:text-white mie:border-blue-600"
-                            : "mie:border-gray-300 mie:hover:bg-blue-50 mie:hover:border-blue-300"
+                            ? "mie:bg-mieprimary mie:text-white mie:border-mieprimary"
+                            : "mie:border-mieborder mie:bg-miesurface mie:hover:bg-mieprimary/10 mie:hover:border-mieprimary/50"
                         }`}
                       >
                         <UnselectableRadio
@@ -38,7 +38,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
                           onUnselect={() => api.field.update("selected", null)}
                           className="mie:hidden"
                         />
-                        <span className={isSelected ? "mie:text-white" : "mie:text-gray-900"}>{option.value}</span>
+                        <span className={isSelected ? "mie:text-white" : "mie:text-mietext"}>{option.value}</span>
                       </label>
                     );
                   })}
@@ -56,7 +56,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
         return (
           <div className="boolean-field-edit mie:space-y-2">
             <input
-              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none"
+              className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
@@ -65,14 +65,14 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
 
             <div className="mie:space-y-2">
             {options.map((opt) => (
-              <div key={opt.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-gray-400 mie:transition-colors">
-                <input type="radio" name={`${f.fieldId}-edit`} checked={false} disabled className="mie:shrink-0" />
+              <div key={opt.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
+                <span className="mie:shrink-0 mie:w-4 mie:h-4 mie:rounded-full mie:border mie:border-mieborder mie:bg-miesurface" />
                 <input
                   type="text"
                   value={opt.value}
                   onChange={(e) => api.option.update(opt.id, e.target.value)}
                   placeholder={placeholder?.options || `Option ${opt.id}`}
-                  className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
+                  className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent mie:text-mietext"
                 />
               </div>
             ))}

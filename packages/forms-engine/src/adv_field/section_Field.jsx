@@ -102,7 +102,7 @@ const SectionField = React.memo(function SectionField({ field }) {
         ref={(el) => el && (childRefs.current[child.id] = el)}
         className={[
           "mie:rounded-lg mie:mb-3 mie:cursor-pointer",
-          isHighlighted ? "mie:border-2 mie:border-blue-400 mie:border-dashed" : "mie:border mie:border-transparent",
+          isHighlighted ? "mie:border-2 mie:border-mieprimary mie:border-dashed" : "mie:border mie:border-transparent",
         ].join(" ")}
         onClick={(e) => {
           e.stopPropagation();
@@ -120,13 +120,13 @@ const SectionField = React.memo(function SectionField({ field }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f }) => {
+      {({ api, isPreview, field: f }) => {
         const children = Array.isArray(f.fields) ? f.fields : [];
 
         if (isPreview) {
           return (
             <section className="section-field-preview">
-              <div className="mie:bg-blue-500 mie:text-white mie:text-xl mie:px-4 mie:py-2 mie:rounded-t-lg mie:wrap-break-word mie:overflow-hidden">
+              <div className="mie:bg-mieprimary mie:text-miesurface mie:text-xl mie:px-4 mie:py-2 mie:rounded-t-lg mie:wrap-break-word mie:overflow-hidden">
                 {f.title || "Section"}
               </div>
               {children.map((c) => renderChildPreview(c, f.id))}
@@ -142,7 +142,7 @@ const SectionField = React.memo(function SectionField({ field }) {
               <div className="mie:flex-1">
                 <input
                   type="text"
-                  className="mie:w-full mie:min-w-0 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
+                  className="mie:w-full mie:min-w-0 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
                   value={f.title || ""}
                   onChange={(e) => api.field.update("title", e.target.value)}
                   placeholder="Section title (e.g., Data Consent)"
@@ -150,12 +150,12 @@ const SectionField = React.memo(function SectionField({ field }) {
               </div>
             </div>
             {isEmpty ? (
-              <div className="mie:flex mie:flex-col mie:items-center mie:justify-center mie:p-8 mie:bg-linear-to-br mie:from-gray-50 mie:to-gray-100 mie:border-2 mie:border-dashed mie:border-blue-200 mie:rounded-lg mie:shadow-md mie:text-center">
-                <p className="mie:text-sm mie:font-semibold mie:text-gray-700 mie:mb-2">No fields in this section</p>
-                <p className="mie:text-xs mie:text-gray-500 mie:leading-relaxed">
-                  Use the <span className="mie:font-semibold mie:text-blue-500">Tool Panel</span> on the left to add fields.
+              <div className="mie:flex mie:flex-col mie:items-center mie:justify-center mie:p-8 mie:bg-linear-to-br mie:from-miebackground mie:to-mieborder/30 mie:border-2 mie:border-dashed mie:border-mieprimary/30 mie:rounded-lg mie:shadow-md mie:text-center">
+                <p className="mie:text-sm mie:font-semibold mie:text-mietext mie:mb-2">No fields in this section</p>
+                <p className="mie:text-xs mie:text-mietextmuted mie:leading-relaxed">
+                  Use the <span className="mie:font-semibold mie:text-mieprimary">Tool Panel</span> on the left to add fields.
                   <br />
-                  Press <span className="mie:font-semibold mie:text-blue-500">ESC</span> or click <span className="mie:font-semibold mie:text-blue-500">X</span> to unselect.
+                  Press <span className="mie:font-semibold mie:text-mieprimary">ESC</span> or click <span className="mie:font-semibold mie:text-mieprimary">X</span> to unselect.
                 </p>
               </div>
             ) : (

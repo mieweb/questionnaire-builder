@@ -504,7 +504,7 @@ export default function DrawingCanvas({
       {/* Canvas */}
       <div
         className={`canvas-wrapper mie:relative mie:rounded mie:bg-white mie:overflow-hidden ${
-          existingDrawing ? "" : "mie:border-2 mie:border-gray-300"
+          existingDrawing ? "" : "mie:border-2 mie:border-mieborder"
         }`}
       >
         <canvas
@@ -551,7 +551,7 @@ export default function DrawingCanvas({
             <button
               onClick={undo}
               disabled={!canUndo}
-              className="undo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-gray-100 mie:hover:bg-gray-200 mie:text-gray-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
+              className="undo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-miebackground mie:hover:bg-mieborder mie:text-mietext mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
               title="Undo"
             >
               <svg className="undo-icon mie:w-4 mie:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -561,7 +561,7 @@ export default function DrawingCanvas({
             <button
               onClick={redo}
               disabled={!canRedo}
-              className="redo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-gray-100 mie:hover:bg-gray-200 mie:text-gray-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
+              className="redo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-miebackground mie:hover:bg-mieborder mie:text-mietext mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
               title="Redo"
             >
               <svg className="redo-icon mie:w-4 mie:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -570,7 +570,7 @@ export default function DrawingCanvas({
             </button>
             <button
               onClick={clearCanvas}
-              className="mie:clear-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-red-100 mie:hover:bg-red-200 mie:text-red-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation"
+              className="mie:clear-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-miedanger/10 mie:hover:bg-miedanger/20 mie:text-miedanger mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation"
               title="Clear"
             >
               <X_ICON className="mie:h-4 mie:w-4" />
@@ -587,8 +587,8 @@ export default function DrawingCanvas({
             onClick={() => setCurrentTool("pen")}
             className={`tool-btn tool-btn-pen mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-colors mie:touch-manipulation ${
               currentTool === "pen"
-                ? "mie:bg-blue-500 mie:text-white"
-                : "mie:bg-gray-100 mie:text-gray-700 mie:hover:bg-gray-200"
+                ? "mie:bg-mieprimary mie:text-miesurface"
+                : "mie:bg-miebackground mie:text-mietext mie:hover:bg-mieborder"
             }`}
             title="Pen"
           >
@@ -599,8 +599,8 @@ export default function DrawingCanvas({
               onClick={() => setCurrentTool("eraser")}
               className={`tool-btn tool-btn-eraser mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-colors mie:touch-manipulation ${
                 currentTool === "eraser"
-                  ? "mie:bg-blue-500 mie:text-white"
-                  : "mie:bg-gray-100 mie:text-gray-700 mie:hover:bg-gray-200"
+                  ? "mie:bg-mieprimary mie:text-miesurface"
+                  : "mie:bg-miebackground mie:text-mietext mie:hover:bg-mieborder"
               }`}
               title="Eraser"
             >
@@ -609,7 +609,7 @@ export default function DrawingCanvas({
           )}
 
           {/* Divider */}
-          {currentTool === "pen" && <div className="toolbar-divider mie:w-px mie:bg-gray-300" />}
+          {currentTool === "pen" && <div className="toolbar-divider mie:w-px mie:bg-mieborder" />}
 
           {/* Color Selector */}
           {currentTool === "pen" && (
@@ -622,8 +622,8 @@ export default function DrawingCanvas({
                   }}
                   className={`color-btn mie:w-7 mie:h-7 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-all mie:touch-manipulation ${
                     currentColor === color
-                      ? "mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
-                      : "mie:hover:ring-2 mie:hover:ring-gray-300"
+                      ? "mie:ring-2 mie:ring-mieprimary mie:ring-offset-2"
+                      : "mie:hover:ring-2 mie:hover:ring-mieborder"
                   }`}
                   style={{ backgroundColor: color }}
                   title={color}
@@ -634,8 +634,8 @@ export default function DrawingCanvas({
               <div
                 className={`custom-color-slot mie:w-7 mie:h-7 mie:rounded mie:cursor-pointer mie:transition-all mie:touch-manipulation ${
                   customColor && currentColor === customColor
-                    ? "mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
-                    : "mie:hover:ring-2 mie:hover:ring-gray-300"
+                    ? "mie:ring-2 mie:ring-mieprimary mie:ring-offset-2"
+                    : "mie:hover:ring-2 mie:hover:ring-mieborder"
                 }`}
                 style={{ backgroundColor: customColor || "#808080" }}
               >
@@ -652,7 +652,7 @@ export default function DrawingCanvas({
               </div>
 
               {/* Divider */}
-              <div className="toolbar-divider mie:w-px mie:bg-gray-300" />
+              <div className="toolbar-divider mie:w-px mie:bg-mieborder" />
 
               {/* Size Selector */}
               {sizePalette.map((size) => (
@@ -663,13 +663,13 @@ export default function DrawingCanvas({
                   }}
                   className={`size-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-all mie:touch-manipulation ${
                     currentSize === size
-                      ? "mie:bg-blue-500 mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
-                      : "mie:bg-gray-100 mie:hover:bg-gray-200"
+                      ? "mie:bg-mieprimary mie:ring-2 mie:ring-mieprimary mie:ring-offset-2"
+                      : "mie:bg-miebackground mie:hover:bg-mieborder"
                   }`}
                   title={`Size ${size}px`}
                 >
                   <div
-                    className={`size-indicator mie:rounded-full ${currentSize === size ? "mie:bg-white" : "mie:bg-gray-700"}`}
+                    className={`size-indicator mie:rounded-full ${currentSize === size ? "mie:bg-miesurface" : "mie:bg-mietext"}`}
                     style={{ width: `${size * 2}px`, height: `${size * 2}px` }}
                   />
                 </button>
@@ -684,24 +684,24 @@ export default function DrawingCanvas({
                   }}
                   className={`custom-size-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:outline-none mie:focus:outline-none mie:transition-colors mie:touch-manipulation ${
                     currentSize === customSize && customSize !== null
-                      ? "mie:bg-blue-500 mie:ring-2 mie:ring-blue-500 mie:ring-offset-2 mie:border-0"
-                      : "mie:bg-gray-100 mie:hover:bg-gray-200 mie:border-2 mie:border-dashed mie:border-gray-300"
+                      ? "mie:bg-mieprimary mie:ring-2 mie:ring-mieprimary mie:ring-offset-2 mie:border-0"
+                      : "mie:bg-miebackground mie:hover:bg-mieborder mie:border-2 mie:border-dashed mie:border-mieborder"
                   }`}
                   title="Custom size"
                 >
                   {customSize ? (
                     <div
-                      className={`size-indicator mie:rounded-full ${currentSize === customSize ? "mie:bg-white" : "mie:bg-gray-700"}`}
+                      className={`size-indicator mie:rounded-full ${currentSize === customSize ? "mie:bg-miesurface" : "mie:bg-mietext"}`}
                       style={{ width: `${Math.min(customSize * 1.5, 20)}px`, height: `${Math.min(customSize * 1.5, 20)}px` }}
                     />
                   ) : (
-                    <span className="mie:text-xs mie:text-gray-500">+</span>
+                    <span className="mie:text-xs mie:text-mietextmuted">+</span>
                   )}
                 </button>
 
                 {/* Size Picker Modal - Vertical Slider */}
                 {showSizePicker && (
-                  <div className="mie:size-picker-modal mie:absolute mie:bottom-full mie:-left-2 mie:mb-2 mie:flex mie:flex-col mie:items-center mie:gap-1 mie:bg-white mie:rounded-lg mie:shadow-lg mie:border mie:border-gray-200 mie:p-2 mie:z-50 mie:w-fit">
+                  <div className="mie:size-picker-modal mie:absolute mie:bottom-full mie:-left-2 mie:mb-2 mie:flex mie:flex-col mie:items-center mie:gap-1 mie:bg-miesurface mie:rounded-lg mie:shadow-lg mie:border mie:border-mieborder mie:p-2 mie:z-50 mie:w-fit">
                     <input
                       type="range"
                       min="4"
@@ -726,11 +726,11 @@ export default function DrawingCanvas({
                     />
                     <div className="mie:size-preview mie:flex mie:items-center mie:justify-center mie:w-6 mie:h-6">
                       <div
-                        className="mie:size-preview-dot mie:rounded-full mie:bg-gray-700 mie:transition-all"
+                        className="mie:size-preview-dot mie:rounded-full mie:bg-mietext mie:transition-all"
                         style={{ width: `${tempSize}px`, height: `${tempSize}px` }}
                       />
                     </div>
-                    <span className="mie:text-xs mie:font-medium mie:text-gray-600">{tempSize}px</span>
+                    <span className="mie:text-xs mie:font-medium mie:text-mietextmuted">{tempSize}px</span>
                   </div>
                 )}
               </div>

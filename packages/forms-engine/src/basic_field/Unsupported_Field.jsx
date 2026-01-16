@@ -12,33 +12,33 @@ function UnsupportedField({ field }) {
         <span className="mie:text-xl">⚠️</span>
         <div className="mie:flex-1">
           <strong className="mie:text-orange-700">Unsupported Field Type: {unsupportedType}</strong>
-          <div className="mie:text-sm mie:text-gray-600 mie:mt-1">
+          <div className="mie:text-sm mie:text-mietextmuted mie:mt-1">
             {field.question || data.title || data.name || 'No title'}
           </div>
         </div>
       </div>
       
-      <div className="mie:mt-3 mie:p-3 mie:bg-white mie:border mie:border-gray-300 mie:rounded mie:text-sm unsupported-field-preview">
-        <div className="mie:text-xs mie:text-gray-500 mie:mb-2 mie:font-semibold">Original Data Preview:</div>
-        <div className="mie:space-y-1 mie:text-gray-700">
+      <div className="mie:mt-3 mie:p-3 mie:bg-miesurface mie:border mie:border-mieborder mie:rounded mie:text-sm unsupported-field-preview">
+        <div className="mie:text-xs mie:text-mietextmuted mie:mb-2 mie:font-semibold">Original Data Preview:</div>
+        <div className="mie:space-y-1 mie:text-mietext">
           {Object.entries(data).slice(0, 5).map(([key, value]) => {
             if (typeof value === 'object' && value !== null) {
               return (
                 <div key={key} className="mie:truncate">
-                  <span className="mie:font-mono mie:text-xs mie:text-blue-600">{key}:</span>{' '}
-                  <span className="mie:text-gray-500 mie:italic">{Array.isArray(value) ? '[Array]' : '{Object}'}</span>
+                  <span className="mie:font-mono mie:text-xs mie:text-mieprimary">{key}:</span>{' '}
+                  <span className="mie:text-mietextmuted mie:italic">{Array.isArray(value) ? '[Array]' : '{Object}'}</span>
                 </div>
               );
             }
             return (
               <div key={key} className="mie:truncate">
-                <span className="mie:font-mono mie:text-xs mie:text-blue-600">{key}:</span>{' '}
-                <span className="mie:text-gray-800">{String(value)}</span>
+                <span className="mie:font-mono mie:text-xs mie:text-mieprimary">{key}:</span>{' '}
+                <span className="mie:text-mietext">{String(value)}</span>
               </div>
             );
           })}
           {Object.keys(data).length > 5 && (
-            <div className="mie:text-xs mie:text-gray-400 mie:italic">... and {Object.keys(data).length - 5} more properties</div>
+            <div className="mie:text-xs mie:text-mietextmuted mie:italic">... and {Object.keys(data).length - 5} more properties</div>
           )}
         </div>
       </div>
@@ -53,16 +53,16 @@ function UnsupportedField({ field }) {
       
       {showDetails && (
         <div className="unsupported-field-details mie:mt-3">
-          <div className="mie:text-xs mie:text-gray-600 mie:mb-2 mie:font-semibold">
+          <div className="mie:text-xs mie:text-mietextmuted mie:mb-2 mie:font-semibold">
             Full SurveyJS data for manual conversion:
           </div>
-          <pre className="mie:bg-gray-100 mie:p-3 mie:rounded mie:text-xs mie:overflow-auto mie:max-h-75 mie:border mie:border-gray-300">
+          <pre className="mie:bg-miebackground mie:p-3 mie:rounded mie:text-xs mie:overflow-auto mie:max-h-75 mie:border mie:border-mieborder">
             {JSON.stringify(data, null, 2)}
           </pre>
         </div>
       )}
       
-      <div className="mie:mt-3 mie:text-xs mie:text-gray-600 mie:italic">
+      <div className="mie:mt-3 mie:text-xs mie:text-mietextmuted mie:italic">
         💡 This field type is not yet supported. Manual implementation required.
       </div>
     </div>
