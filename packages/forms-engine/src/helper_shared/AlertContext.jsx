@@ -67,7 +67,7 @@ function AlertModal({ alert, onClose }) {
   }, [onClose, alert.cancelText]);
 
   return (
-    <div className="alert-modal-overlay mie:fixed mie:inset-0 mie:bg-black/50 mie:flex mie:items-center mie:justify-center mie:z-50" onClick={handleOverlayClick}>
+    <div className="alert-modal-overlay mie:fixed mie:inset-0 mie:bg-mieoverlay mie:flex mie:items-center mie:justify-center mie:z-50" onClick={handleOverlayClick}>
       <div 
         className="alert-modal-content mie:bg-miesurface mie:rounded-lg mie:shadow-2xl mie:max-w-md mie:w-full mie:mx-4 mie:overflow-hidden"
         onClick={(e) => e.stopPropagation()}

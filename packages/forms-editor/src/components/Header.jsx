@@ -184,8 +184,8 @@ export default function Header() {
           </div>
 
           <div className="header-actions mie:flex mie:gap-1 mie:items-center">
-            <label className="header-import-label mie:px-2 mie:py-2 mie:lg:px-3 mie:lg:py-2 mie:rounded-lg mie:border mie:border-mieborder mie:bg-miesurface mie:hover:bg-miebackground mie:cursor-pointer mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:flex mie:items-center mie:lg:gap-2 mie:gap-0">
-              <UPLOAD_ICON className="mie:w-4 mie:h-4 mie:lg:w-4 mie:lg:h-4" />
+            <label className="header-import-label mie:group mie:px-2 mie:py-2 mie:lg:px-3 mie:lg:py-2 mie:rounded-lg mie:border mie:border-mieborder mie:bg-miesurface mie:hover:bg-mieprimary mie:hover:text-mietextsecondary mie:hover:border-mieprimary mie:cursor-pointer mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:flex mie:items-center mie:lg:gap-2 mie:gap-0 mie:text-mietext">
+              <UPLOAD_ICON className="mie:w-4 mie:h-4 mie:lg:w-4 mie:lg:h-4 mie:text-mietext mie:group-hover:text-mietextsecondary mie:transition-colors" />
               <span className="mie:hidden min-[445px]:inline">Import</span>
               <input
                 className="mie:hidden"
@@ -203,11 +203,11 @@ export default function Header() {
             </label>
 
             <button
-              className="mie:px-2 mie:py-2 mie:lg:px-3 mie:lg:py-2 mie:rounded-lg mie:border mie:border-mieborder mie:bg-miesurface mie:hover:bg-miebackground mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:flex mie:items-center mie:lg:gap-2 mie:gap-0"
+              className="mie:group mie:px-2 mie:py-2 mie:lg:px-3 mie:lg:py-2 mie:rounded-lg mie:border mie:border-mieborder mie:bg-miesurface mie:hover:bg-mieprimary mie:hover:text-mietextsecondary mie:hover:border-mieprimary mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:flex mie:items-center mie:lg:gap-2 mie:gap-0 mie:outline-none mie:focus:outline-none mie:text-mietext"
               onClick={onExport}
               title="Export"
             >
-              <DOWNLOAD_ICON className="mie:w-4 mie:h-4 mie:lg:w-4 mie:lg:h-4" />
+              <DOWNLOAD_ICON className="mie:w-4 mie:h-4 mie:lg:w-4 mie:lg:h-4 mie:text-mietext mie:group-hover:text-mietextsecondary mie:transition-colors" />
               <span className="mie:hidden min-[445px]:inline">Export</span>
             </button>
           </div>
@@ -216,7 +216,7 @@ export default function Header() {
 
       {/* Schema Type Confirmation Modal */}
       {showSchemaConfirm && pendingImport && (
-        <div className="import-modal-overlay mie:fixed mie:inset-0 mie:z-50 mie:flex mie:items-center mie:justify-center mie:bg-mietext/50 mie:p-4">
+        <div className="import-modal-overlay mie:fixed mie:inset-0 mie:z-50 mie:flex mie:items-center mie:justify-center mie:bg-mieoverlay mie:p-4">
           <div className="import-modal-content mie:bg-miesurface mie:rounded-2xl mie:shadow-2xl mie:max-w-md mie:w-full mie:p-6">
             <div className="import-modal-header mie:mb-6">
               <h3 className="mie:text-xl mie:font-semibold mie:text-mietext mie:mb-2">

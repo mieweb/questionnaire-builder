@@ -52,12 +52,14 @@ button:focus-visible {
   
   --color-miesurface: #ffffff;
   --color-mieborder: #e5e7eb;         /* gray-200 */
+  --color-mieborderinactive: #9ca3af; /* gray-400 - for unchecked inputs */
   --color-mietext: #111827;           /* gray-900 */
   --color-mietextsecondary: #f8fafc;  /* text on primary bg - slate-50 */
   --color-mietextmuted: #6b7280;      /* gray-500 */
   --color-miebackground: #f9fafb;     /* gray-50 */
   --color-miebackgroundsecondary: #f3f4f6; /* gray-100 */
   --color-miebackgroundhover: #eceef1; /* gray-150 for hover states */
+  --color-mieoverlay: rgba(0, 0, 0, 0.5); /* modal/dialog backdrop */
 }
 
 /* Dark mode theme overrides */

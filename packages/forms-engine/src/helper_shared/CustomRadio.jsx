@@ -93,7 +93,7 @@ const CustomRadio = React.memo(function CustomRadio({
         className={`custom-radio-display mie:inline-flex mie:items-center mie:justify-center mie:rounded-full mie:border-2 mie:transition-all mie:pointer-events-none mie:shrink-0 ${
           checked
             ? "mie:border-mieprimary mie:bg-mieprimary"
-            : "mie:border-gray-400 mie:bg-miesurface"
+            : "mie:border-mieborderinactive mie:bg-miesurface"
         } ${disabled ? "mie:opacity-50" : ""}`}
         style={{ width: currentSize.outer, height: currentSize.outer }}
         aria-hidden="true"

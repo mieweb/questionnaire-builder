@@ -237,8 +237,8 @@ export default function CodeEditor() {
               onClick={() => handleFormatChange("yaml")}
               className={`mie:px-3 mie:py-1 mie:rounded-md mie:text-sm mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
                 format === "yaml"
-                  ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
-                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
+                  ? "mie:bg-mieprimary mie:text-mietextsecondary mie:shadow-sm"
+                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext mie:hover:bg-miesurface"
               }`}
             >
               YAML
@@ -247,8 +247,8 @@ export default function CodeEditor() {
               onClick={() => handleFormatChange("json")}
               className={`mie:px-3 mie:py-1 mie:rounded-md mie:text-sm mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
                 format === "json"
-                  ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
-                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
+                  ? "mie:bg-mieprimary mie:text-mietextsecondary mie:shadow-sm"
+                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext mie:hover:bg-miesurface"
               }`}
             >
               JSON
