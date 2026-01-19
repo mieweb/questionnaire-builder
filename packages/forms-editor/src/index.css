@@ -64,22 +64,22 @@ button:focus-visible {
 
 /* Dark mode theme overrides */
 .qb-editor-root.dark {
-  --color-mieprimary: #60a5fa;        /* blue-400 - brighter for dark */
-  --color-miesecondary: #9ca3af;      /* gray-400 */
-  --color-mieaccent: #34d399;         /* green-400 */
-  --color-miedanger: #f87171;         /* red-400 */
-  --color-miewarning: #fb923c;        /* orange-400 */
+  --mie-color-mieprimary: #6b7fa3;        /* grayish-blue for dark mode */
+  --mie-color-miesecondary: #9ca3af;      /* gray-400 */
+  --mie-color-mieaccent: #34d399;         /* green-400 */
+  --mie-color-miedanger: #f87171;         /* red-400 */
+  --mie-color-miewarning: #fb923c;        /* orange-400 */
   
-  --color-miesurface: #1f2937;        /* gray-800 */
-  --color-mieborder: #4b5563;         /* gray-600 */
-  --color-mieborderinactive: #6b7280; /* gray-500 - for unchecked inputs */
-  --color-mietext: #f9fafb;           /* gray-50 */
-  --color-mietextsecondary: #1f2937;  /* text on primary bg - gray-800 */
-  --color-mietextmuted: #9ca3af;      /* gray-400 */
-  --color-miebackground: #111827;     /* gray-900 */
-  --color-miebackgroundsecondary: #1f2937; /* gray-800 */
-  --color-miebackgroundhover: #374151; /* gray-700 for hover states */
-  --color-mieoverlay: rgba(0, 0, 0, 0.7); /* darker overlay for dark mode */
+  --mie-color-miesurface: #252526;        /* VS Code sidebar - slightly lighter than bg */
+  --mie-color-mieborder: #3c3c3c;         /* VS Code border */
+  --mie-color-mieborderinactive: #5a5a5a; /* slightly lighter for unchecked inputs */
+  --mie-color-mietext: #d4d4d4;           /* VS Code foreground */
+  --mie-color-mietextsecondary: #1e1e1e;  /* text on primary bg */
+  --mie-color-mietextmuted: #808080;      /* VS Code muted text */
+  --mie-color-miebackground: #1e1e1e;     /* VS Code editor background */
+  --mie-color-miebackgroundsecondary: #252526; /* VS Code sidebar */
+  --mie-color-miebackgroundhover: #2a2d2e; /* VS Code list hover */
+  --mie-color-mieoverlay: rgba(0, 0, 0, 0.7); /* darker overlay for dark mode */
 }
 
 /* Custom scrollbar styles - auto-hide, appears on hover */

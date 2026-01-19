@@ -14,6 +14,24 @@ export default function CodeEditor() {
   const hasUnsavedChanges = React.useRef(false);
   
   const [format, setFormat] = React.useState("yaml"); // "json" or "yaml"
+  const [isDark, setIsDark] = React.useState(false);
+  
+  // Detect dark mode from parent .qb-editor-root element
+  React.useEffect(() => {
+    const editorRoot = document.querySelector(".qb-editor-root");
+    if (!editorRoot) return;
+    
+    const checkDarkMode = () => {
+      setIsDark(editorRoot.classList.contains("dark"));
+    };
+    
+    checkDarkMode();
+    
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(editorRoot, { attributes: true, attributeFilter: ["class"] });
+    
+    return () => observer.disconnect();
+  }, []);
   const [editorHeight, setEditorHeight] = React.useState(640);
   const [code, setCode] = React.useState(() => {
     try {
@@ -276,7 +294,7 @@ export default function CodeEditor() {
           value={code}
           onChange={handleCodeChange}
           onMount={handleEditorDidMount}
-          theme="light"
+          theme={isDark ? "vs-dark" : "light"}
           options={{
             minimap: { enabled: false },
             fontSize: 13,
