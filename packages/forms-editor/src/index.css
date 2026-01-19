@@ -72,9 +72,14 @@ button:focus-visible {
   
   --color-miesurface: #1f2937;        /* gray-800 */
   --color-mieborder: #4b5563;         /* gray-600 */
+  --color-mieborderinactive: #6b7280; /* gray-500 - for unchecked inputs */
   --color-mietext: #f9fafb;           /* gray-50 */
+  --color-mietextsecondary: #1f2937;  /* text on primary bg - gray-800 */
   --color-mietextmuted: #9ca3af;      /* gray-400 */
   --color-miebackground: #111827;     /* gray-900 */
+  --color-miebackgroundsecondary: #1f2937; /* gray-800 */
+  --color-miebackgroundhover: #374151; /* gray-700 for hover states */
+  --color-mieoverlay: rgba(0, 0, 0, 0.7); /* darker overlay for dark mode */
 }
 
 /* Custom scrollbar styles - auto-hide, appears on hover */
