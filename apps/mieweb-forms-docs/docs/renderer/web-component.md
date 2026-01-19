@@ -47,12 +47,14 @@ These attributes are supported:
 - `full-height` (boolean attribute)
 - `hide-unsupported-fields` (boolean attribute)
 - `form-data` (JSON string)
+- `theme` (`'light'` | `'dark'` | `'auto'`, default: `'auto'`)
 
 If you use `form-data`, it must be JSON (not YAML):
 
 ```html
 <questionnaire-renderer
   form-data='{"schemaType":"mieforms-v1.0","fields":[]}'
+  theme="dark"
 ></questionnaire-renderer>
 ```
 
@@ -61,5 +63,6 @@ If you use `form-data`, it must be JSON (not YAML):
 - `el.formData` - Set/get schema (object, YAML string, or JSON string)
 - `el.schemaType` - Optional schema hint (`'mieforms' | 'surveyjs'`)
 - `el.hideUnsupportedFields` - Boolean (default `true`)
+- `el.theme` - Theme mode (`'light'` | `'dark'` | `'auto'`, default `'auto'`)
 - `el.onChange` - Callback receiving full `{ schemaType, ...metadata, fields }`
 - `el.getQuestionnaireResponse(questionnaireId, subjectId)` - Get a `QuestionnaireResponse`

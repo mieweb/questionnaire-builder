@@ -24,6 +24,7 @@ const sidebars = {
         'getting-started/installation',
         'getting-started/quickstart-renderer',
         'getting-started/quickstart-editor',
+        'getting-started/theming',
       ],
     },
     'schema-format',

@@ -76,6 +76,18 @@ Shows/hides the built-in header.
 
 Appends CSS classes on the editor root container.
 
+### `theme` (optional)
+
+- Type: `'light' | 'dark' | 'auto'`
+- Default: `'auto'`
+
+Controls the color theme:
+- `'auto'` - Auto-detects from `data-theme` or `.dark` class on document
+- `'light'` - Forces light theme
+- `'dark'` - Forces dark theme
+
+See [Theming](/docs/getting-started/theming) for customization options.
+
 ## Notes
 
 - Import/parsing happens only on initial mount (or when `initialFormData` changes before initialization completes).
