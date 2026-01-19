@@ -20,7 +20,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
           return (
             <div className="singlematrix-field-preview mie:text-mietext">
               <div className="mie:pb-4">
-                <div className="mie:font-light mie:mb-3 mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <div className="mie:font-light mie:mb-3 mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 
                 {rows.length > 0 && columns.length > 0 ? (
                   <div className="singlematrix-field-grid mie:space-y-1 mie:border-t mie:border-mieborder mie:pt-3">

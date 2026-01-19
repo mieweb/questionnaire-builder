@@ -27,7 +27,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
           return (
             <div>
               <div className="mie:px-6 mie:pt-6 mie:pb-2">
-                <div className="mie:font-light mie:mb-2 mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <div className="mie:font-light mie:mb-2 mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
               </div>
               <div className="mie:flex mie:justify-center mie:mx-auto mie:px-2 mie:pb-2 mie:lg:px-6 mie:lg:pb-4">
                 <div style={{ width: '100%', maxWidth: '80vw' }} className="mie:md:max-w-[75vw] mie:lg:max-w-full">

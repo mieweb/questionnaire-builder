@@ -16,7 +16,7 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
           return (
               <div className="slider-field-preview mie:text-mietext">
               <div className={`mie:grid mie:gap-2 mie:pb-4 ${options.length > 5 ? 'mie:grid-cols-1' : 'mie:grid-cols-1 mie:sm:grid-cols-2'}`}>
-                <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <div className="mie:py-2">
                   {options.length > 0 && (
                     <div className="mie:relative mie:pt-1">

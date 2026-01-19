@@ -26,7 +26,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
           return (
             <div className="multiselect-dropdown-preview mie:text-mietext">
               <div className="mie:grid mie:grid-cols-1 mie:gap-2 mie:sm:grid-cols-2 mie:pb-4">
-                <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <CustomDropdown
                   options={f.options || []}
                   value={selectedIds}

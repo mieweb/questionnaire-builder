@@ -195,7 +195,7 @@ If any box is unchecked, **simplify**.
   ```
 
 - **Mobile Overflow Prevention for Form Fields**: All text inputs, textareas, and long text content in preview mode must include overflow safeguards to prevent mobile layout breakage:
-  - Add `break-words overflow-hidden` to question text divs
+  - Add `wrap-break-word overflow-hidden` to question text divs
   - Add `min-w-0` to inputs/textareas in flex or grid layouts to prevent content from expanding parent
   - Never let user input expand container width on mobile
   ```jsx
@@ -207,7 +207,7 @@ If any box is unchecked, **simplify**.
   
   // ✅ GOOD - constrained and safe on mobile
   <div className="flex">
-    <div className="font-light break-words overflow-hidden">{f.question}</div>
+    <div className="font-light wrap-break-word overflow-hidden">{f.question}</div>
     <input className="w-full min-w-0 px-4 py-2 border..." />
   </div>
   ```

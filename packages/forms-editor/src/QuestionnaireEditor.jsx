@@ -130,8 +130,10 @@ function QuestionnaireEditorInner({
 
   return (
     <div className={`qb-editor-root editor-container mie:w-full mie:max-w-7xl mie:mx-auto mie:bg-miebackground mie:font-titillium ${isDark ? 'dark' : ''} ${className}`}>
-      {showHeader && <Header codeFormat={codeFormat} onCodeFormatChange={setCodeFormat} />}
-      <Layout selectedField={selectedField} codeFormat={codeFormat} />
+      <AlertProvider>
+        {showHeader && <Header codeFormat={codeFormat} onCodeFormatChange={setCodeFormat} />}
+        <Layout selectedField={selectedField} codeFormat={codeFormat} />
+      </AlertProvider>
     </div>
   );
 }
@@ -141,12 +143,10 @@ export function QuestionnaireEditor(props) {
   const uiStore = React.useRef(createUIStore()).current;
 
   return (
-    <AlertProvider>
-      <FormStoreContext.Provider value={formStore}>
-        <UIStoreContext.Provider value={uiStore}>
-          <QuestionnaireEditorInner {...props} />
-        </UIStoreContext.Provider>
-      </FormStoreContext.Provider>
-    </AlertProvider>
+    <FormStoreContext.Provider value={formStore}>
+      <UIStoreContext.Provider value={uiStore}>
+        <QuestionnaireEditorInner {...props} />
+      </UIStoreContext.Provider>
+    </FormStoreContext.Provider>
   );
 }

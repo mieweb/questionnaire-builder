@@ -58,7 +58,7 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
           return (
             <div className="ranking-field-preview mie:text-mietext">
               <div className="mie:grid mie:grid-cols-1 mie:gap-2 mie:sm:grid-cols-2 mie:pb-4">
-                <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <div>
                   {ranking.map((optId, index) => {
                     const optionText = optionsMap[optId] || "Unknown option";

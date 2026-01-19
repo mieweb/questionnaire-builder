@@ -126,7 +126,7 @@ const SectionField = React.memo(function SectionField({ field }) {
         if (isPreview) {
           return (
             <section className="section-field-preview">
-              <div className="mie:bg-mieprimary mie:text-miesurface mie:text-xl mie:px-4 mie:py-2 mie:rounded-t-lg mie:wrap-break-word mie:overflow-hidden">
+              <div className="mie:bg-mieprimary mie:text-mietextsecondary mie:text-xl mie:px-4 mie:py-2 mie:rounded-t-lg mie:wrap-break-word mie:overflow-hidden">
                 {f.title || "Section"}
               </div>
               {children.map((c) => renderChildPreview(c, f.id))}

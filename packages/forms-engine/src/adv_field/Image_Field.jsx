@@ -82,7 +82,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
 
           return (
             <div className={previewPaddingClass}>
-              {f.question && <div className="mie:font-light mie:mb-2 mie:wrap-break-word mie:overflow-hidden">{f.question}</div>}
+              {f.question && <div className="mie:font-light mie:mb-2 mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question}</div>}
               {imageUri && (
                 <div className={`mie:flex ${alignmentClass} ${f.padding !== "full-bleed" ? "mie:mb-4" : ""}`}>
                   <img

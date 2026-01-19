@@ -13,7 +13,7 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
           return (
             <div className="multitext-field-preview mie:text-mietext">
               <div className="mie:space-y-3 mie:pb-4">
-                {f.question && <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question}</div>}
+                {f.question && <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question}</div>}
                 <div className="mie:space-y-2 mie:w-full">
                   {(f.options || []).map((option) => (
                     <div key={option.id} className="mie:flex mie:flex-col mie:gap-1">
