@@ -94,10 +94,10 @@ const ToolPanelImpl = ({ isPreview = false }) => {
       tabIndex="-1"
     >
       <div className="tool-panel-container mie:pb-4 mie:rounded-lg mie:shadow-sm">
-      <h3 className="tool-panel-title mie:sticky mie:top-0 mie:z-20 mie:bg-miesurface mie:text-base mie:font-semibold mie:pb-2 mie:pt-3 mie:px-4 mie:border-b mie:border-mieborder mie:flex mie:items-center mie:justify-between mie:gap-2">
+      <h3 className="tool-panel-title mie:sticky mie:top-0 mie:z-20 mie:bg-miesurface mie:text-base mie:font-semibold mie:text-mietext mie:pb-2 mie:pt-3 mie:px-4 mie:border-b mie:border-mieborder mie:flex mie:items-center mie:justify-between mie:gap-2">
         <span className="mie:flex mie:items-center mie:gap-2 mie:min-w-0">
           <TOOLS_ICON className="mie:w-5 mie:h-5 mie:text-mietext mie:shrink-0" />
-          <span className="mie:truncate">{isSectionSelected ? `Add to "${sectionTitle}"` : "Tools"}</span>
+          <span className="mie:truncate mie:text-mietext">{isSectionSelected ? `Add to "${sectionTitle}"` : "Tools"}</span>
         </span>
         {isSectionSelected && (
           <button
