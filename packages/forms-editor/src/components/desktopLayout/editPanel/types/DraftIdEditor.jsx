@@ -41,7 +41,7 @@ export default function DraftIdEditor({
 
   return (
     <div className={className ? `draft-id-editor-container ${className}` : "draft-id-editor-container"}>
-      <label className="mie:block mie:text-sm mie:mb-1">{label}</label>
+      <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">{label}</label>
       <input
         className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
         value={draft}

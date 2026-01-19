@@ -40,7 +40,7 @@ export default function MatrixEditor({ field, api }) {
           {rows.map((row) => (
             <div key={row.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm mie:hover:border-mieprimary/50 mie:transition-colors">
               <input
-                className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
+                className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent mie:text-mietext mie:placeholder:text-mietextmuted"
                 value={row.value}
                 onChange={(e) => api.row.update(row.id, e.target.value)}
                 placeholder="Row text"
@@ -74,7 +74,7 @@ export default function MatrixEditor({ field, api }) {
           {columns.map((col) => (
             <div key={col.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm mie:hover:border-mieprimary/50 mie:transition-colors">
               <input
-                className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
+                className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent mie:text-mietext mie:placeholder:text-mietextmuted"
                 value={col.value}
                 onChange={(e) => api.column.update(col.id, e.target.value)}
                 placeholder="Column text"
