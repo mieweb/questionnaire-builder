@@ -7,11 +7,11 @@ function UnsupportedField({ field }) {
   const data = field.unsupportedData || field._sourceData || {};
   
   return (
-    <div className="unsupported-field-container mie:border-2 mie:border-dashed mie:border-orange-500 mie:rounded-lg mie:p-4 mie:bg-orange-50 mie:mb-4">
+    <div className="unsupported-field-container mie:border-2 mie:border-dashed mie:border-miewarning mie:rounded-lg mie:p-4 mie:bg-miewarning/10 mie:mb-4">
       <div className="unsupported-field-header mie:flex mie:items-center mie:gap-2 mie:mb-2">
         <span className="mie:text-xl">⚠️</span>
         <div className="mie:flex-1">
-          <strong className="mie:text-orange-700">Unsupported Field Type: {unsupportedType}</strong>
+          <strong className="mie:text-miewarning">Unsupported Field Type: {unsupportedType}</strong>
           <div className="mie:text-sm mie:text-mietextmuted mie:mt-1">
             {field.question || data.title || data.name || 'No title'}
           </div>
@@ -46,7 +46,7 @@ function UnsupportedField({ field }) {
       <button
         type="button"
         onClick={() => setShowDetails(!showDetails)}
-        className="mie:mt-3 mie:px-3 mie:py-1.5 mie:bg-orange-500 mie:text-white mie:rounded mie:hover:bg-orange-600 mie:text-sm mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none"
+        className="mie:mt-3 mie:px-3 mie:py-1.5 mie:bg-miewarning mie:text-miesurface mie:rounded mie:hover:bg-miewarning/90 mie:text-sm mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none"
       >
         {showDetails ? '▼ Hide' : '▶ Show'} Full Data
       </button>

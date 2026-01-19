@@ -40,7 +40,7 @@ function CommonEditor({ f, onUpdateField }) {
       <div>
         <label className="mie:block mie:text-sm mie:mb-1">Label / Question</label>
         <input
-          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
+          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
           value={f.question || ""}
           onChange={(e) => onUpdateField?.("question", e.target.value)}
           placeholder="Enter question text"
@@ -54,7 +54,7 @@ function CommonEditor({ f, onUpdateField }) {
       <div className="mie:min-w-0">
         <label className="mie:block mie:text-sm mie:mb-1">Sublabel (optional)</label>
         <textarea
-          className="mie:w-full mie:min-w-0 mie:max-h-32 mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded mie:resize-y"
+          className="mie:w-full mie:min-w-0 mie:max-h-32 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:resize-y mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
           value={f.sublabel || ""}
           onChange={(e) => onUpdateField("sublabel", e.target.value)}
           placeholder="Helper text / description"

@@ -173,9 +173,9 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                   sandbox=""
                   style={{
                     width: "100%",
-                    border: "1px solid #ddd",
+                    border: "1px solid var(--color-mieborder)",
                     height: `${getResponsiveHeight(iframeHeight)}px`,
-                    background: "#fafafa",
+                    background: "var(--color-miebackground)",
                   }}
                   title="HTML Preview"
                 />

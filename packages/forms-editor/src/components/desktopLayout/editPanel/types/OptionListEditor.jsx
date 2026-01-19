@@ -25,10 +25,10 @@ export default function OptionListEditor({ field, api }) {
 
   return (
     <div className="mie:space-y-3">
-      <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700">{label}</label>
+      <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext">{label}</label>
       <div ref={containerRef} className="mie:space-y-2">
         {opts.map((opt) => (
-          <div key={opt.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-gray-400 mie:transition-colors">
+          <div key={opt.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm mie:hover:border-mieprimary/50 mie:transition-colors">
             <input
               className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
               value={opt.value}
@@ -38,7 +38,7 @@ export default function OptionListEditor({ field, api }) {
             {!isBoolean && (
               <button
                 onClick={() => api.option.remove(opt.id)}
-                className="mie:shrink-0 mie:bg-transparent mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                className="mie:shrink-0 mie:bg-transparent mie:text-mietextmuted/70 mie:hover:text-miedanger mie:transition-colors"
                 title="Remove option"
               >
                 <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
@@ -50,7 +50,7 @@ export default function OptionListEditor({ field, api }) {
       {!isBoolean && (
         <button
           onClick={() => api.option.add("")}
-          className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-white mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
+          className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-miesurface mie:text-mieprimary mie:border mie:border-mieprimary/50 mie:rounded-lg mie:hover:bg-mieprimary/10 mie:transition-colors"
         >
           + Add {singular}
         </button>

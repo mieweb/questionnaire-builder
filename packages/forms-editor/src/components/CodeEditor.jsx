@@ -228,27 +228,27 @@ export default function CodeEditor() {
   }, [parseCode, replaceAll, ui, formData]);
 
   return (
-    <div ref={containerRef} className="code-editor-container mie:flex mie:flex-col mie:bg-gray-50 mie:max-w-7xl mie:w-full" style={{ height: `${editorHeight}px` }}>
+    <div ref={containerRef} className="code-editor-container mie:flex mie:flex-col mie:bg-miebackground mie:max-w-7xl mie:w-full" style={{ height: `${editorHeight}px` }}>
       {/* Header with format toggle and save button */}
-      <div className="code-editor-header mie:flex mie:items-center mie:justify-between mie:gap-3 mie:p-4 mie:bg-white mie:border-b mie:border-black/10">
+      <div className="code-editor-header mie:flex mie:items-center mie:justify-between mie:gap-3 mie:p-4 mie:bg-miesurface mie:border-b mie:border-mieborder">
         <div className="mie:flex mie:items-center mie:gap-2">
-          <div className="mie:flex mie:gap-1 mie:rounded-lg mie:border mie:border-black/10 mie:bg-black/5 mie:p-1">
+          <div className="mie:flex mie:gap-1 mie:rounded-lg mie:border mie:border-mieborder mie:bg-miebackground mie:p-1">
             <button
               onClick={() => handleFormatChange("yaml")}
-              className={`mie:px-3 mie:py-1 mie:rounded-md mie:text-sm mie:font-medium mie:transition-colors ${
+              className={`mie:px-3 mie:py-1 mie:rounded-md mie:text-sm mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
                 format === "yaml"
-                  ? "mie:bg-white mie:text-slate-900 mie:shadow-sm"
-                  : "mie:text-slate-600 mie:hover:text-slate-900"
+                  ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
+                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
               }`}
             >
               YAML
             </button>
             <button
               onClick={() => handleFormatChange("json")}
-              className={`mie:px-3 mie:py-1 mie:rounded-md mie:text-sm mie:font-medium mie:transition-colors ${
+              className={`mie:px-3 mie:py-1 mie:rounded-md mie:text-sm mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
                 format === "json"
-                  ? "mie:bg-white mie:text-slate-900 mie:shadow-sm"
-                  : "mie:text-slate-600 mie:hover:text-slate-900"
+                  ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
+                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
               }`}
             >
               JSON
@@ -257,11 +257,11 @@ export default function CodeEditor() {
         </div>
 
         <div className="mie:flex mie:items-center mie:gap-2">
-          <div className="mie:text-xs mie:text-gray-500 mie:px-3 mie:py-1">
+          <div className="mie:text-xs mie:text-mietextmuted mie:px-3 mie:py-1">
             Auto-saves when switching tabs
           </div>
           {error && (
-            <div className="mie:text-xs mie:text-red-600 mie:bg-red-50 mie:px-3 mie:py-1 mie:rounded-lg">
+            <div className="mie:text-xs mie:text-miedanger mie:bg-miedanger/10 mie:px-3 mie:py-1 mie:rounded-lg">
               {error}
             </div>
           )}

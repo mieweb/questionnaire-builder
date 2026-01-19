@@ -135,23 +135,23 @@ export default function Header() {
   };
 
   return (
-    <header className="editor-header mie:w-full mie:bg-white mie:border mie:border-gray-200 mie:rounded-lg mie:shadow-sm">
+    <header className="editor-header mie:w-full mie:bg-miesurface mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm">
       <div className="mie:px-4 mie:py-4">
         {/* Top row: Logo/Title */}
         <div className="mie:mb-4">
-          <h1 className="mie:text-lg mie:lg:text-2xl mie:font-bold mie:text-slate-900">Editor</h1>
+          <h1 className="mie:text-lg mie:lg:text-2xl mie:font-bold mie:text-mietext">Editor</h1>
         </div>
 
         {/* Bottom row: View Mode Tabs + Import/Export */}
         <div className="mie:flex mie:flex-wrap mie:items-center mie:justify-between mie:gap-3">
-          <div className="header-mode-toggle mie:flex mie:gap-1 mie:rounded-lg mie:border mie:border-black/10 mie:bg-black/5 mie:p-1 mie:w-fit">
+          <div className="header-mode-toggle mie:flex mie:gap-1 mie:rounded-lg mie:border mie:border-mieborder mie:bg-miebackground mie:p-1 mie:w-fit">
             <button
-              className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors ${
+              className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
                 !isPreview && !isCodeEditor
-                  ? "mie:bg-white mie:text-slate-900 mie:shadow-sm"
+                  ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
                   : codeEditorHasError
-                  ? "mie:text-slate-400 mie:cursor-not-allowed"
-                  : "mie:text-slate-600 mie:hover:text-slate-900"
+                  ? "mie:bg-transparent mie:text-mietextmuted/50 mie:cursor-not-allowed"
+                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
               }`}
               onClick={onEdit}
               disabled={codeEditorHasError}
@@ -161,9 +161,9 @@ export default function Header() {
               <span>Build</span>
             </button>
             <button
-              className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors ${isCodeEditor
-                  ? "mie:bg-white mie:text-slate-900 mie:shadow-sm"
-                  : "mie:text-slate-600 mie:hover:text-slate-900"
+              className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${isCodeEditor
+                  ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
+                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
                 }`}
               onClick={onCodeEditor}
               title="Code Editor"
@@ -172,12 +172,12 @@ export default function Header() {
               <span>Code</span>
             </button>
             <button
-              className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors ${
+              className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
                 isPreview
-                  ? "mie:bg-white mie:text-slate-900 mie:shadow-sm"
+                  ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
                   : codeEditorHasError
-                  ? "mie:text-slate-400 mie:cursor-not-allowed"
-                  : "mie:text-slate-600 mie:hover:text-slate-900"
+                  ? "mie:bg-transparent mie:text-mietextmuted/50 mie:cursor-not-allowed"
+                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
               }`}
               onClick={onPreview}
               disabled={codeEditorHasError}
@@ -189,7 +189,7 @@ export default function Header() {
           </div>
 
           <div className="header-actions mie:flex mie:gap-1 mie:items-center">
-            <label className="header-import-label mie:px-2 mie:py-2 mie:lg:px-3 mie:lg:py-2 mie:rounded-lg mie:border mie:border-black/15 mie:bg-white mie:hover:bg-black/5 mie:cursor-pointer mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:flex mie:items-center mie:lg:gap-2 mie:gap-0">
+            <label className="header-import-label mie:px-2 mie:py-2 mie:lg:px-3 mie:lg:py-2 mie:rounded-lg mie:border mie:border-mieborder mie:bg-miesurface mie:hover:bg-miebackground mie:cursor-pointer mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:flex mie:items-center mie:lg:gap-2 mie:gap-0">
               <UPLOAD_ICON className="mie:w-4 mie:h-4 mie:lg:w-4 mie:lg:h-4" />
               <span className="mie:hidden min-[445px]:inline">Import</span>
               <input
@@ -208,7 +208,7 @@ export default function Header() {
             </label>
 
             <button
-              className="mie:px-2 mie:py-2 mie:lg:px-3 mie:lg:py-2 mie:rounded-lg mie:border mie:border-black/15 mie:bg-white mie:hover:bg-black/5 mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:flex mie:items-center mie:lg:gap-2 mie:gap-0"
+              className="mie:px-2 mie:py-2 mie:lg:px-3 mie:lg:py-2 mie:rounded-lg mie:border mie:border-mieborder mie:bg-miesurface mie:hover:bg-miebackground mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:flex mie:items-center mie:lg:gap-2 mie:gap-0"
               onClick={onExport}
               title="Export"
             >
@@ -221,17 +221,17 @@ export default function Header() {
 
       {/* Schema Type Confirmation Modal */}
       {showSchemaConfirm && pendingImport && (
-        <div className="import-modal-overlay mie:fixed mie:inset-0 mie:z-50 mie:flex mie:items-center mie:justify-center mie:bg-black/50 mie:p-4">
-          <div className="import-modal-content mie:bg-white mie:rounded-2xl mie:shadow-2xl mie:max-w-md mie:w-full mie:p-6">
+        <div className="import-modal-overlay mie:fixed mie:inset-0 mie:z-50 mie:flex mie:items-center mie:justify-center mie:bg-mietext/50 mie:p-4">
+          <div className="import-modal-content mie:bg-miesurface mie:rounded-2xl mie:shadow-2xl mie:max-w-md mie:w-full mie:p-6">
             <div className="import-modal-header mie:mb-6">
-              <h3 className="mie:text-xl mie:font-semibold mie:text-slate-900 mie:mb-2">
+              <h3 className="mie:text-xl mie:font-semibold mie:text-mietext mie:mb-2">
                 Confirm Schema Type
               </h3>
-              <p className="mie:text-sm mie:text-slate-600">
-                Is this a <strong className="mie:text-slate-900">{pendingImport.detectedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}</strong> schema?
+              <p className="mie:text-sm mie:text-mietextmuted">
+                Is this a <strong className="mie:text-mietext">{pendingImport.detectedSchemaType === 'surveyjs' ? 'SurveyJS' : 'MIE Forms'}</strong> schema?
               </p>
               {pendingImport.detectedSchemaType === 'surveyjs' && (
-                <p className="mie:text-xs mie:text-slate-500 mie:mt-2">
+                <p className="mie:text-xs mie:text-mietextmuted mie:mt-2">
                   SurveyJS schemas will be converted to MIE Forms format.
                 </p>
               )}
@@ -240,14 +240,14 @@ export default function Header() {
             <div className="import-modal-actions mie:flex mie:gap-3">
               <button
                 onClick={() => confirmImport(pendingImport.detectedSchemaType)}
-                className="mie:flex-1 mie:px-6 mie:py-3 mie:rounded-xl mie:bg-blue-500 mie:text-white mie:font-semibold mie:hover:bg-blue-600 mie:transition-colors mie:shadow-sm mie:hover:shadow"
+                className="mie:flex-1 mie:px-6 mie:py-3 mie:rounded-xl mie:bg-mieprimary mie:text-miesurface mie:font-semibold mie:hover:bg-mieprimary/90 mie:transition-colors mie:shadow-sm mie:hover:shadow"
               >
                 Yes, Import
               </button>
 
               <button
                 onClick={cancelImport}
-                className="mie:flex-1 mie:px-6 mie:py-3 mie:rounded-xl mie:border-2 mie:border-slate-300 mie:bg-white mie:hover:bg-slate-50 mie:text-slate-700 mie:font-semibold mie:transition-colors"
+                className="mie:flex-1 mie:px-6 mie:py-3 mie:rounded-xl mie:border-2 mie:border-mieborder mie:bg-miesurface mie:hover:bg-miebackground mie:text-mietext mie:font-semibold mie:transition-colors"
               >
                 Abort
               </button>

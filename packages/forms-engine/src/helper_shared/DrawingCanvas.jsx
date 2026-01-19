@@ -503,7 +503,7 @@ export default function DrawingCanvas({
     <div ref={containerRef} className="drawing-canvas-container mie:w-full">
       {/* Canvas */}
       <div
-        className={`canvas-wrapper mie:relative mie:rounded mie:bg-white mie:overflow-hidden ${
+        className={`canvas-wrapper mie:relative mie:rounded mie:bg-miesurface mie:overflow-hidden ${
           existingDrawing ? "" : "mie:border-2 mie:border-mieborder"
         }`}
       >
@@ -518,7 +518,7 @@ export default function DrawingCanvas({
             height: `${displaySize.height}px`,
             cursor: currentTool === "eraser" ? eraserCursor : penCursor,
             display: "block",
-            border: "1px solid #e5e7eb",
+            border: "1px solid var(--color-mieborder)",
             touchAction: "none",
           }}
         />
@@ -537,8 +537,8 @@ export default function DrawingCanvas({
               top: `${cursorPosition.y}px`,
               width: `${currentTool === "eraser" ? eraserWidth : currentSize * 2}px`,
               height: `${currentTool === "eraser" ? eraserWidth : currentSize * 2}px`,
-              borderColor: currentTool === "eraser" ? "#ef4444" : currentColor,
-              backgroundColor: currentTool === "eraser" ? "rgba(239, 68, 68, 0.1)" : `${currentColor}20`,
+              borderColor: currentTool === "eraser" ? "var(--color-miedanger)" : currentColor,
+              backgroundColor: currentTool === "eraser" ? "color-mix(in srgb, var(--color-miedanger) 10%, transparent)" : `${currentColor}20`,
               transform: "translate(-50%, -50%)",
               transition: "width 0.1s, height 0.1s",
             }}

@@ -35,23 +35,23 @@ export default function EditPanel({ isMobileModal = false }) {
 
   return (
     <div
-      className={`edit-panel-container mie:bg-white mie:border mie:border-gray-200 mie:rounded-lg mie:shadow-sm ${
+      className={`edit-panel-container mie:bg-miesurface mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm ${
         isMobileModal
           ? "mie:overflow-visible mie:max-h-none"
           : "mie:overflow-y-auto mie:custom-scrollbar mie:max-h-[calc(100svh-24rem)] mie:lg:max-h-[calc(100dvh-20rem)]"
       }`}
     >
       {/* Sticky Header with Mode Toggle */}
-      <div className="mie:sticky mie:top-0 mie:z-20 mie:bg-white mie:border-b mie:border-gray-200 mie:px-4 mie:pt-3 mie:pb-2">
+      <div className="mie:sticky mie:top-0 mie:z-20 mie:bg-miesurface mie:border-b mie:border-mieborder mie:px-4 mie:pt-3 mie:pb-2">
         {/* Mode Toggle */}
-        <div className="mie:flex mie:gap-1 mie:rounded-lg mie:border mie:border-black/10 mie:bg-black/5 mie:p-1 mie:w-full">
+        <div className="mie:flex mie:gap-1 mie:rounded-lg mie:border mie:border-mieborder mie:bg-miebackground mie:p-1 mie:w-full">
           <button
             type="button"
             onClick={() => setTab("EDIT")}
-            className={`mie:flex-1 mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-3 mie:py-2 mie:rounded-lg mie:text-xs mie:font-medium mie:transition-colors ${
+            className={`mie:flex-1 mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-3 mie:py-2 mie:rounded-lg mie:text-xs mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
               tab === "EDIT"
-                ? "mie:bg-white mie:text-slate-900 mie:shadow-sm"
-                : "mie:text-slate-600 mie:hover:text-slate-900"
+                ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
+                : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
             }`}
           >
             <EDIT_ICON className="mie:w-4 mie:h-4" />
@@ -60,10 +60,10 @@ export default function EditPanel({ isMobileModal = false }) {
           <button
             type="button"
             onClick={() => setTab("LOGIC")}
-            className={`mie:flex-1 mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-3 mie:py-2 mie:rounded-lg mie:text-xs mie:font-medium mie:transition-colors ${
+            className={`mie:flex-1 mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-3 mie:py-2 mie:rounded-lg mie:text-xs mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
               tab === "LOGIC"
-                ? "mie:bg-white mie:text-slate-900 mie:shadow-sm"
-                : "mie:text-slate-600 mie:hover:text-slate-900"
+                ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
+                : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
             }`}
           >
             <EYEEDIT_ICON className="mie:w-4 mie:h-4" />
@@ -75,7 +75,7 @@ export default function EditPanel({ isMobileModal = false }) {
       {/* Content Area */}
       <div className="mie:p-4">
         {isNone && (
-          <div className="edit-panel-empty mie:text-gray-600">
+          <div className="edit-panel-empty mie:text-mietextmuted">
             <p>Select a field in the center panel to edit its properties.</p>
           </div>
         )}

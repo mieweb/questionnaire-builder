@@ -66,16 +66,16 @@ const FieldRow = React.memo(function FieldRow({ id }) {
 
 function EmptyState() {
   return (
-    <div className="form-builder-empty-state mie:flex mie:flex-col mie:items-center mie:justify-center mie:h-72 mie:bg-linear-to-br mie:from-gray-50 mie:to-gray-100 mie:border-2 mie:border-dashed mie:border-blue-200 mie:rounded-xl mie:shadow-md mie:text-center mie:px-8 mie:py-10"
+    <div className="form-builder-empty-state mie:flex mie:flex-col mie:items-center mie:justify-center mie:h-72 mie:bg-miebackground mie:border-2 mie:border-dashed mie:border-mieprimary/30 mie:rounded-xl mie:shadow-md mie:text-center mie:px-8 mie:py-10"
     >
-      <div className="empty-state-title mie:text-xl mie:font-semibold mie:text-gray-700 mie:mb-2">Forms</div>
-      <div className="empty-state-description mie:text-base mie:text-gray-500">
+      <div className="empty-state-title mie:text-xl mie:font-semibold mie:text-mietext mie:mb-2">Forms</div>
+      <div className="empty-state-description mie:text-base mie:text-mietextmuted">
         <div className="mie:lg:hidden">
-          Tap the <span className="mie:font-semibold mie:text-blue-500">Tool Panel</span> button to add fields.
+          Tap the <span className="mie:font-semibold mie:text-mieprimary">Tool Panel</span> button to add fields.
         </div>
         <div className="mie:hidden mie:lg:block">
-          Add fields using the <span className="mie:font-semibold mie:text-blue-500">Tool Panel</span> on the left.<br />
-          Edit field properties using the <span className="mie:font-semibold mie:text-blue-500">Edit Panel</span> on the right.
+          Add fields using the <span className="mie:font-semibold mie:text-mieprimary">Tool Panel</span> on the left.<br />
+          Edit field properties using the <span className="mie:font-semibold mie:text-mieprimary">Edit Panel</span> on the right.
         </div>
       </div>
     </div>

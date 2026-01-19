@@ -90,19 +90,19 @@ const ToolPanelImpl = ({ isPreview = false }) => {
 
   return (
     <div 
-      className=" mie:border mie:border-gray-200 mie:rounded-lg mie:bg-white mie:overflow-y-auto mie:custom-scrollbar mie:max-h-[calc(100svh-24rem)] mie:lg:max-h-[calc(100dvh-20rem)]"
+      className=" mie:border mie:border-mieborder mie:rounded-lg mie:bg-miesurface mie:overflow-y-auto mie:custom-scrollbar mie:max-h-[calc(100svh-24rem)] mie:lg:max-h-[calc(100dvh-20rem)]"
       tabIndex="-1"
     >
       <div className="tool-panel-container mie:pb-4 mie:rounded-lg mie:shadow-sm">
-      <h3 className="tool-panel-title mie:sticky mie:top-0 mie:z-20 mie:bg-white mie:text-base mie:font-semibold mie:pb-2 mie:pt-3 mie:px-4 mie:border-b mie:border-gray-200 mie:flex mie:items-center mie:justify-between mie:gap-2">
+      <h3 className="tool-panel-title mie:sticky mie:top-0 mie:z-20 mie:bg-miesurface mie:text-base mie:font-semibold mie:pb-2 mie:pt-3 mie:px-4 mie:border-b mie:border-mieborder mie:flex mie:items-center mie:justify-between mie:gap-2">
         <span className="mie:flex mie:items-center mie:gap-2 mie:min-w-0">
-          <TOOLS_ICON className="mie:w-5 mie:h-5 mie:text-gray-700 mie:shrink-0" />
+          <TOOLS_ICON className="mie:w-5 mie:h-5 mie:text-mietext mie:shrink-0" />
           <span className="mie:truncate">{isSectionSelected ? `Add to "${sectionTitle}"` : "Tools"}</span>
         </span>
         {isSectionSelected && (
           <button
             onClick={handleClearSelection}
-            className="mie:bg-transparent mie:text-gray-600 mie:hover:text-red-600 mie:hover:bg-red-50 mie:p-1 mie:rounded mie:transition-colors mie:shrink-0"
+            className="mie:bg-transparent mie:text-mietextmuted mie:hover:text-miedanger mie:hover:bg-miedanger/10 mie:p-1 mie:rounded mie:transition-colors mie:shrink-0"
             title="Unselect section"
           >
             <X_ICON className="mie:w-5 mie:h-5" />
@@ -112,10 +112,10 @@ const ToolPanelImpl = ({ isPreview = false }) => {
       
       {Object.entries(categories).map(([categoryName, items]) => (
         <div key={categoryName} className="tool-category">
-          <h4 className="mie:sticky mie:top-11 mie:z-10 mie:bg-gray-50 mie:text-sm mie:font-semibold mie:text-gray-700 mie:px-4 mie:py-3 mie:border-b mie:border-gray-100 mie:uppercase mie:tracking-wide mie:flex mie:items-center mie:gap-2">
+          <h4 className="mie:sticky mie:top-11 mie:z-10 mie:bg-miebackground mie:text-sm mie:font-semibold mie:text-mietext mie:px-4 mie:py-3 mie:border-b mie:border-mieborder mie:uppercase mie:tracking-wide mie:flex mie:items-center mie:gap-2">
             {(() => {
               const IconComponent = getCategoryIcon(categoryName);
-              return IconComponent ? <IconComponent className="mie:w-4 mie:h-4 mie:text-gray-600" /> : null;
+              return IconComponent ? <IconComponent className="mie:w-4 mie:h-4 mie:text-mietextmuted" /> : null;
             })()}
             {categoryName}
           </h4>
@@ -129,8 +129,8 @@ const ToolPanelImpl = ({ isPreview = false }) => {
                   disabled={isDisabled}
                   className={`mie:px-3 mie:py-2 mie:text-sm mie:text-left mie:border mie:rounded-md mie:transition-colors mie:duration-150 ${
                     isDisabled
-                      ? "mie:border-gray-200 mie:bg-gray-50 mie:text-gray-400 mie:cursor-not-allowed"
-                      : "mie:bg-white mie:text-gray-900 mie:border-gray-300 mie:hover:bg-blue-50 mie:hover:border-blue-400 mie:hover:text-blue-700"
+                      ? "mie:border-mieborder mie:bg-miebackground mie:text-mietextmuted/50 mie:cursor-not-allowed"
+                      : "mie:bg-miesurface mie:text-mietext mie:border-mieborder mie:hover:bg-mieprimary/10 mie:hover:border-mieprimary/50 mie:hover:text-mieprimary"
                   }`}
                   onClick={handlers[type]}
                   title={isDisabled ? "Cannot add section to a section" : `Add ${label}`}

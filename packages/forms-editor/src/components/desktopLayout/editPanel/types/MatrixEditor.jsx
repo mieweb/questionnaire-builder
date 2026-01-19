@@ -35,10 +35,10 @@ export default function MatrixEditor({ field, api }) {
     <div className="mie:space-y-4">
       {/* Rows Section */}
       <div className="mie:space-y-3">
-        <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700">Rows</label>
+        <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Rows</label>
         <div ref={rowsContainerRef} className="mie:space-y-2">
           {rows.map((row) => (
-            <div key={row.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-gray-400 mie:transition-colors">
+            <div key={row.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm mie:hover:border-mieprimary/50 mie:transition-colors">
               <input
                 className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
                 value={row.value}
@@ -47,7 +47,7 @@ export default function MatrixEditor({ field, api }) {
               />
               <button
                 onClick={() => api.row.remove(row.id)}
-                className="mie:shrink-0 mie:bg-transparent mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                className="mie:shrink-0 mie:bg-transparent mie:text-mietextmuted/70 mie:hover:text-miedanger mie:transition-colors"
                 title="Remove row"
               >
                 <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
@@ -56,11 +56,11 @@ export default function MatrixEditor({ field, api }) {
           ))}
         </div>
         {rows.length >= 10 ? (
-          <div className="mie:px-3 mie:py-2 mie:text-sm mie:text-gray-500 mie:text-center mie:bg-gray-50 mie:rounded-lg">Max rows reached (10)</div>
+          <div className="mie:px-3 mie:py-2 mie:text-sm mie:text-mietextmuted mie:text-center mie:bg-miebackground mie:rounded-lg">Max rows reached (10)</div>
         ) : (
           <button
             onClick={() => api.row.add("")}
-            className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-white mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
+            className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-miesurface mie:text-mieprimary mie:border mie:border-mieprimary/50 mie:rounded-lg mie:hover:bg-mieprimary/10 mie:transition-colors"
           >
             + Add Row
           </button>
@@ -69,10 +69,10 @@ export default function MatrixEditor({ field, api }) {
 
       {/* Columns Section */}
       <div className="mie:space-y-3">
-        <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700">Columns</label>
+        <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Columns</label>
         <div ref={colsContainerRef} className="mie:space-y-2">
           {columns.map((col) => (
-            <div key={col.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-gray-400 mie:transition-colors">
+            <div key={col.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm mie:hover:border-mieprimary/50 mie:transition-colors">
               <input
                 className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
                 value={col.value}
@@ -81,7 +81,7 @@ export default function MatrixEditor({ field, api }) {
               />
               <button
                 onClick={() => api.column.remove(col.id)}
-                className="mie:shrink-0 mie:bg-transparent mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors"
+                className="mie:shrink-0 mie:bg-transparent mie:text-mietextmuted/70 mie:hover:text-miedanger mie:transition-colors"
                 title="Remove column"
               >
                 <TRASHCANTWO_ICON className="mie:w-5 mie:h-5" />
@@ -90,11 +90,11 @@ export default function MatrixEditor({ field, api }) {
           ))}
         </div>
         {columns.length >= 10 ? (
-          <div className="mie:px-3 mie:py-2 mie:text-sm mie:text-gray-500 mie:text-center mie:bg-gray-50 mie:rounded-lg">Max columns reached (10)</div>
+          <div className="mie:px-3 mie:py-2 mie:text-sm mie:text-mietextmuted mie:text-center mie:bg-miebackground mie:rounded-lg">Max columns reached (10)</div>
         ) : (
           <button
             onClick={() => api.column.add("")}
-            className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-white mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:hover:bg-blue-50 mie:transition-colors"
+            className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:bg-miesurface mie:text-mieprimary mie:border mie:border-mieprimary/50 mie:rounded-lg mie:hover:bg-mieprimary/10 mie:transition-colors"
           >
             + Add Column
           </button>

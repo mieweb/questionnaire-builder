@@ -97,7 +97,7 @@ function QuestionnaireEditorInner({
   );
 
   return (
-    <div className={`qb-editor-root editor-container mie:w-full mie:max-w-7xl mie:mx-auto mie:bg-gray-100 mie:font-titillium ${className}`}>
+    <div className={`qb-editor-root editor-container mie:w-full mie:max-w-7xl mie:mx-auto mie:bg-miebackground mie:font-titillium ${className}`}>
       {showHeader && <Header codeFormat={codeFormat} onCodeFormatChange={setCodeFormat} />}
       <Layout selectedField={selectedField} codeFormat={codeFormat} />
     </div>

@@ -24,7 +24,7 @@ function NonSectionEditor({ f }) {
         <div className="non-section-editor-default-answer mie:mt-4">
           <div className="mie:text-sm mie:font-medium mie:mb-1">Default Answer</div>
           <input
-            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
+            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
             value={f.answer || ""}
             onChange={(e) => onUpdateField("answer", e.target.value)}
             placeholder="Default value"

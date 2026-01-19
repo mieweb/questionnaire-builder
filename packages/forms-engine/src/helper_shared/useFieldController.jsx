@@ -26,7 +26,7 @@ export default function useFieldController(field, sectionId) {
   }, [api, selected, ui]);
 
   const wrapperClass = [
-    "mie:rounded-lg mie:bg-white",
+    "mie:rounded-lg mie:bg-miesurface",
     !ui.state.isPreview ? "mie:border" : "",
     !insideSection && ui.state.isPreview ? "mie:border" : "",
     field.fieldType === "section" && ui.state.isPreview ? "mie:p-0 mie:border" : "mie:p-6",

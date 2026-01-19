@@ -29,6 +29,7 @@
   --color-miesecondary: #6b7280;      /* gray-500 */
   --color-mieaccent: #10b981;         /* green-500 */
   --color-miedanger: #ef4444;         /* red-500 */
+  --color-miewarning: #f97316;        /* orange-500 */
   
   --color-miesurface: #ffffff;
   --color-mieborder: #e5e7eb;         /* gray-200 */
@@ -44,6 +45,7 @@
   --color-miesecondary: #9ca3af;      /* gray-400 */
   --color-mieaccent: #34d399;         /* green-400 */
   --color-miedanger: #f87171;         /* red-400 */
+  --color-miewarning: #fb923c;        /* orange-400 */
   
   --color-miesurface: #1f2937;        /* gray-800 */
   --color-mieborder: #4b5563;         /* gray-600 */
