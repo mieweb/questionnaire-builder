@@ -3,6 +3,7 @@ import CustomDropdown from "../helper_shared/CustomDropdown";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 import DrawingCanvas from "../helper_shared/DrawingCanvas";
+import CustomCheckbox from "../helper_shared/CustomCheckbox";
 import { UPLOAD_ICON, X_ICON } from "../helper_shared/icons";
 import maleChart from "../assets/body-male.png";
 import femaleChart from "../assets/body-female.png";
@@ -233,12 +234,11 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                 </div>
 
                 <div className="mie:flex mie:items-center mie:gap-2">
-                  <input
-                    type="checkbox"
+                  <CustomCheckbox
                     id="required-diagram"
                     checked={f.required === true}
-                    onChange={(e) => api.field.update("required", e.target.checked)}
-                    className="mie:w-4 mie:h-4 mie:cursor-pointer mie:accent-mieprimary"
+                    onChange={(checked) => api.field.update("required", checked)}
+                    size="md"
                   />
                   <label htmlFor="required-diagram" className="mie:text-sm mie:text-mietext mie:cursor-pointer">
                     Required diagram

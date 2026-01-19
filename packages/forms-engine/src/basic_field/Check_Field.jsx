@@ -2,6 +2,7 @@ import React from "react";
 import { PLUSOPTION_ICON, TRASHCANTWO_ICON } from "../helper_shared/icons";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
+import CustomCheckbox from "../helper_shared/CustomCheckbox";
 
 const CheckField = React.memo(function CheckField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
@@ -16,12 +17,11 @@ const CheckField = React.memo(function CheckField({ field, sectionId }) {
                 <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <div className="mie:space-y-2">
                   {(f.options || []).map((option) => (
-                    <label key={option.id} className="mie:flex mie:items-center mie:px-3 mie:py-2 mie:cursor-pointer mie:rounded-lg mie:hover:bg-mieprimary/10 mie:transition-colors mie:gap-2">
-                      <input
-                        type="checkbox"
-                        className="mie:shrink-0 mie:w-9 mie:h-9 mie:cursor-pointer mie:accent-mieprimary mie:bg-miesurface"
+                    <label key={option.id} className="mie:flex mie:items-center mie:gap-3 mie:px-3 mie:py-2 mie:cursor-pointer mie:rounded-lg mie:hover:bg-mieprimary/10 mie:transition-colors">
+                      <CustomCheckbox
                         checked={Array.isArray(f.selected) && f.selected.includes(option.id)}
                         onChange={() => api.selection.multiToggle(option.id)}
+                        size="lg"
                       />
                       <span className="mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{option.value}</span>
                     </label>

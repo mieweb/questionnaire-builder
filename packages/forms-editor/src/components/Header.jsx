@@ -137,21 +137,16 @@ export default function Header() {
   return (
     <header className="editor-header mie:w-full mie:bg-miesurface mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm">
       <div className="mie:px-4 mie:py-4">
-        {/* Top row: Logo/Title */}
-        <div className="mie:mb-4">
-          <h1 className="mie:text-lg mie:lg:text-2xl mie:font-bold mie:text-mietext">Editor</h1>
-        </div>
-
-        {/* Bottom row: View Mode Tabs + Import/Export */}
+        {/* View Mode Tabs + Import/Export */}
         <div className="mie:flex mie:flex-wrap mie:items-center mie:justify-between mie:gap-3">
           <div className="header-mode-toggle mie:flex mie:gap-1 mie:rounded-lg mie:border mie:border-mieborder mie:bg-miebackground mie:p-1 mie:w-fit">
             <button
               className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
                 !isPreview && !isCodeEditor
-                  ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
+                  ? "mie:bg-mieprimary mie:text-mietextsecondary mie:shadow-sm"
                   : codeEditorHasError
                   ? "mie:bg-transparent mie:text-mietextmuted/50 mie:cursor-not-allowed"
-                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
+                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext mie:hover:bg-miesurface"
               }`}
               onClick={onEdit}
               disabled={codeEditorHasError}
@@ -162,8 +157,8 @@ export default function Header() {
             </button>
             <button
               className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${isCodeEditor
-                  ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
-                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
+                  ? "mie:bg-mieprimary mie:text-mietextsecondary mie:shadow-sm"
+                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext mie:hover:bg-miesurface"
                 }`}
               onClick={onCodeEditor}
               title="Code Editor"
@@ -174,10 +169,10 @@ export default function Header() {
             <button
               className={`mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-2 mie:lg:px-4 mie:py-2 mie:lg:py-2 mie:rounded-lg mie:text-xs mie:lg:text-sm mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
                 isPreview
-                  ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
+                  ? "mie:bg-mieprimary mie:text-mietextsecondary mie:shadow-sm"
                   : codeEditorHasError
                   ? "mie:bg-transparent mie:text-mietextmuted/50 mie:cursor-not-allowed"
-                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
+                  : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext mie:hover:bg-miesurface"
               }`}
               onClick={onPreview}
               disabled={codeEditorHasError}

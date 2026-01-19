@@ -50,8 +50,8 @@ export default function EditPanel({ isMobileModal = false }) {
             onClick={() => setTab("EDIT")}
             className={`mie:flex-1 mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-3 mie:py-2 mie:rounded-lg mie:text-xs mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
               tab === "EDIT"
-                ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
-                : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
+                ? "mie:bg-mieprimary mie:text-mietextsecondary mie:shadow-sm"
+                : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext mie:hover:bg-miesurface"
             }`}
           >
             <EDIT_ICON className="mie:w-4 mie:h-4" />
@@ -62,8 +62,8 @@ export default function EditPanel({ isMobileModal = false }) {
             onClick={() => setTab("LOGIC")}
             className={`mie:flex-1 mie:flex mie:items-center mie:justify-center mie:gap-2 mie:px-3 mie:py-2 mie:rounded-lg mie:text-xs mie:font-medium mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none ${
               tab === "LOGIC"
-                ? "mie:bg-miesurface mie:text-mietext mie:shadow-sm"
-                : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext"
+                ? "mie:bg-mieprimary mie:text-mietextsecondary mie:shadow-sm"
+                : "mie:bg-transparent mie:text-mietextmuted mie:hover:text-mietext mie:hover:bg-miesurface"
             }`}
           >
             <EYEEDIT_ICON className="mie:w-4 mie:h-4" />

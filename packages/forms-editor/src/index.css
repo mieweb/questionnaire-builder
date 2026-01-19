@@ -19,6 +19,19 @@
     border-style: solid;
     border-color: currentColor;
   }
+
+  .qb-editor-root {
+    font-family: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* Form elements don't inherit font by default */
+  .qb-editor-root input,
+  .qb-editor-root textarea,
+  .qb-editor-root select,
+  .qb-editor-root button {
+    font-family: inherit;
+    font-size: inherit;
+  }
 }
 
 /* Remove focus-visible outline on divs and buttons to prevent Escape key outline */
@@ -40,8 +53,11 @@ button:focus-visible {
   --color-miesurface: #ffffff;
   --color-mieborder: #e5e7eb;         /* gray-200 */
   --color-mietext: #111827;           /* gray-900 */
+  --color-mietextsecondary: #f8fafc;  /* text on primary bg - slate-50 */
   --color-mietextmuted: #6b7280;      /* gray-500 */
   --color-miebackground: #f9fafb;     /* gray-50 */
+  --color-miebackgroundsecondary: #f3f4f6; /* gray-100 */
+  --color-miebackgroundhover: #eceef1; /* gray-150 for hover states */
 }
 
 /* Dark mode theme overrides */

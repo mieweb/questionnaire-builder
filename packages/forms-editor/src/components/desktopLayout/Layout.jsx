@@ -17,7 +17,7 @@ export default function Layout({ selectedField }) {
   const editMode = !isPreview;
 
   return (
-    <div className="layout-container mie:w-full mie:h-fit mie:rounded-lg mie:mt-2 mie:md:mt-4 mie:lg:mt-6">
+    <div className="layout-container mie:w-full mie:h-fit mie:rounded-lg mie:mt-3">
       {isCodeEditor ? (
         <div className="mie:border mie:border-mieborder mie:rounded-lg">
           <CodeEditor />

@@ -3,6 +3,7 @@ import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 import { useFormStore } from "../state/formStore";
 import { NUMERIC_EXPRESSION_FORMATS } from "../helper_shared/fieldTypes-config";
+import CustomCheckbox from "../helper_shared/CustomCheckbox";
 
 // Helper: Check if all referenced fields exist (they can be empty)
 const hasAllFields = (expression, data) => {
@@ -512,11 +513,10 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
             {/* Hide Debug Info */}
             <div className="hide-debug-info-field">
               <label className="mie:flex mie:items-center mie:gap-2 mie:cursor-pointer">
-                <input
-                  type="checkbox"
+                <CustomCheckbox
                   checked={f.hideDebugInfo || false}
-                  onChange={(e) => api.field.update("hideDebugInfo", e.target.checked)}
-                  className="mie:w-4 mie:h-4 mie:text-mieprimary mie:border-mieborder mie:rounded mie:focus:ring-mieprimary mie:accent-mieprimary"
+                  onChange={(checked) => api.field.update("hideDebugInfo", checked)}
+                  size="md"
                 />
                 <span className="mie:text-sm mie:font-medium mie:text-mietext">
                   Hide Expression and Result labels (show result only)

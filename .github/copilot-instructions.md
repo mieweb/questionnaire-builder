@@ -156,7 +156,7 @@ If any box is unchecked, **simplify**.
   <input type="radio" className="hidden" />
   ```
 
-- **Use UnselectableRadio for radio inputs**: When creating fields with radio buttons that need unselect functionality, use the `UnselectableRadio` component with `onSelect`/`onUnselect` callbacks instead of inline click handlers.
+- **Use CustomRadio and CustomCheckbox for form inputs**: When creating fields with radio buttons or checkboxes, use the `CustomRadio` and `CustomCheckbox` components from `@mieweb/forms-engine`. These components support semantic theming (light/dark mode) and `CustomRadio` supports unselect functionality via `onSelect`/`onUnselect` callbacks.
 
 - **Avoid Index as Key**: Using array index as `key` is only acceptable for truly static lists where order/count never changes. For dynamic lists (items can be reordered, added, or removed), always use stable unique identifiers (like `item.id`).
   ```jsx

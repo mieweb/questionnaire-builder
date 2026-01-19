@@ -23,6 +23,8 @@ export { default as Unsupported_Field } from './src/basic_field/Unsupported_Fiel
 export { default as FieldWrapper } from './src/helper_shared/FieldWrapper.jsx';
 export { default as useFieldController } from './src/helper_shared/useFieldController.jsx';
 export { default as CustomDropdown } from './src/helper_shared/CustomDropdown.jsx';
+export { default as CustomRadio } from './src/helper_shared/CustomRadio.jsx';
+export { default as CustomCheckbox } from './src/helper_shared/CustomCheckbox.jsx';
 export { default as fieldTypes, getFieldComponent, registerFieldComponent, NUMERIC_EXPRESSION_FORMATS } from './src/helper_shared/fieldTypes-config.js';
 export { initializeField, initializeFieldOptions } from './src/helper_shared/initializedField.js';
 export { isVisible } from './src/helper_shared/logicVisibility.js';

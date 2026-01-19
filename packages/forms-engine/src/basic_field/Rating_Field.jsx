@@ -2,7 +2,7 @@ import React from "react";
 import { TRASHCANTWO_ICON, PLUSOPTION_ICON } from "../helper_shared/icons";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
-import UnselectableRadio from "../helper_shared/UnselectableRadio";
+import CustomRadio from "../helper_shared/CustomRadio";
 
 const RatingField = React.memo(function RatingField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
@@ -34,14 +34,14 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                             htmlFor={inputId}
                             className={labelClasses}
                           >
-                            <UnselectableRadio
+                            <CustomRadio
                               id={inputId}
                               name={`rating-${f.id}`}
                               value={option.id}
                               checked={isSelected}
                               onSelect={() => api.selection.single(option.id)}
                               onUnselect={() => api.field.update("selected", null)}
-                              className="mie:hidden"
+                              hidden
                             />
                             <span className="mie:text-sm mie:font-medium mie:whitespace-nowrap">
                               {option.text || option.value}

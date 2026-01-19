@@ -2,7 +2,7 @@ import React from "react";
 import { TRASHCANTWO_ICON, PLUSOPTION_ICON } from "../helper_shared/icons";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
-import UnselectableRadio from "../helper_shared/UnselectableRadio";
+import CustomRadio from "../helper_shared/CustomRadio";
 
 const SingleMatrixField = React.memo(function SingleMatrixField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
@@ -45,11 +45,12 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                             
                             return (
                               <div key={col.id} className="mie:flex-1 mie:flex mie:lg:justify-center mie:items-center mie:gap-3">
-                                <UnselectableRadio
+                                <CustomRadio
                                   id={inputId}
                                   name={`matrix-${fieldId}-${row.id}`}
                                   value={col.id}
                                   checked={isSelected}
+                                  size="lg"
                                   onSelect={() => {
                                     // Rebuild selected in row order
                                     const updatedSelected = {};
@@ -72,7 +73,6 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                                     });
                                     api.field.update("selected", updatedSelected);
                                   }}
-                                  className="mie:h-9 mie:w-9 mie:cursor-pointer mie:shrink-0 mie:accent-mieprimary mie:bg-miesurface"
                                 />
                                 <span className="mie:lg:hidden">{col.value}</span>
                               </div>

@@ -2,6 +2,7 @@ import React from "react";
 import { TRASHCANTWO_ICON, PLUSOPTION_ICON } from "../helper_shared/icons";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
+import CustomCheckbox from "../helper_shared/CustomCheckbox";
 
 const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
@@ -65,14 +66,13 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
                               
                               return (
                                 <div key={col.id} className="mie:flex-1 mie:flex mie:lg:justify-center mie:items-center mie:gap-3">
-                                  <input
-                                    type="checkbox"
+                                  <CustomCheckbox
                                     id={inputId}
                                     checked={isChecked}
                                     onChange={() => toggleSelection(row.id, col.id)}
-                                    className="mie:h-9 mie:w-9 mie:cursor-pointer mie:shrink-0 mie:accent-mieprimary mie:bg-miesurface"
+                                    size="lg"
                                   />
-                                  <label htmlFor={inputId} className="mie:lg:hidden mie:cursor-pointer">
+                                  <label htmlFor={inputId} className="mie:lg:hidden mie:cursor-pointer mie:text-mietext">
                                     {col.value}
                                   </label>
                                 </div>

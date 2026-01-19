@@ -1,5 +1,5 @@
 import React from "react";
-import { useFormStore } from "@mieweb/forms-engine";
+import { useFormStore, CustomCheckbox } from "@mieweb/forms-engine";
 import DraftIdEditor from "./DraftIdEditor"
 import InputTypeEditor from "./InputTypeEditor";
 
@@ -62,11 +62,11 @@ function CommonEditor({ f, onUpdateField }) {
       </div>
 
       <div>
-        <label className="mie:inline-flex mie:items-center mie:gap-2 mie:text-sm">
-          <input
-            type="checkbox"
+        <label className="mie:inline-flex mie:items-center mie:gap-2 mie:text-sm mie:text-mietext mie:cursor-pointer">
+          <CustomCheckbox
             checked={!!f.required}
-            onChange={(e) => onUpdateField?.("required", e.target.checked)}
+            onChange={(checked) => onUpdateField?.("required", checked)}
+            size="md"
           />
           Required
         </label>

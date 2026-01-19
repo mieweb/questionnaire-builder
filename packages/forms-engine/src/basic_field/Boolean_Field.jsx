@@ -1,7 +1,7 @@
 import React from "react";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
-import UnselectableRadio from "../helper_shared/UnselectableRadio";
+import CustomRadio from "../helper_shared/CustomRadio";
 
 const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
@@ -25,20 +25,20 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
                         htmlFor={inputId}
                         className={`mie:flex-1 mie:flex mie:items-center mie:justify-center mie:px-4 mie:py-2 mie:h-10 mie:border-2 mie:rounded-lg mie:cursor-pointer mie:transition-all ${
                           isSelected
-                            ? "mie:bg-mieprimary mie:text-white mie:border-mieprimary"
+                            ? "mie:bg-mieprimary mie:text-miesurface mie:border-mieprimary"
                             : "mie:border-mieborder mie:bg-miesurface mie:hover:bg-mieprimary/10 mie:hover:border-mieprimary/50"
                         }`}
                       >
-                        <UnselectableRadio
+                        <CustomRadio
                           id={inputId}
                           name={`question-${f.id}`}
                           value={option.id}
                           checked={isSelected}
                           onSelect={() => api.selection.single(option.id)}
                           onUnselect={() => api.field.update("selected", null)}
-                          className="mie:hidden"
+                          hidden
                         />
-                        <span className={isSelected ? "mie:text-white" : "mie:text-mietext"}>{option.value}</span>
+                        <span className={isSelected ? "mie:text-miesurface" : "mie:text-mietext"}>{option.value}</span>
                       </label>
                     );
                   })}

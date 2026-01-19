@@ -86,7 +86,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
       aria-selected={ctrl.selected || undefined}
       tabIndex={-1}
     >
-      <div className={`field-wrapper-edit-header mie:flex mie:justify-between mie:items-center mie:gap-3 mie:px-3 mie:py-2.5 ${open ? "mie:-mx-6 mie:-mt-6 mie:mb-4" : "mie:m-0"} mie:bg-linear-to-r mie:from-miebackground mie:to-mieborder mie:border-b mie:border-mieborder ${open ? "mie:rounded-t-lg" : "mie:rounded-lg"} ${ctrl.insideSection ? "mie:hidden" : ""}`}>
+      <div className={`field-wrapper-edit-header mie:flex mie:justify-between mie:items-center mie:gap-3 mie:px-3 mie:py-2.5 ${open ? "mie:-mx-6 mie:-mt-6 mie:mb-4" : "mie:m-0"} mie:bg-miebackgroundsecondary mie:border-b mie:border-mieborder ${open ? "mie:rounded-t-lg" : "mie:rounded-lg"} ${ctrl.insideSection ? "mie:hidden" : ""}`}>
         <div className="mie:text-left mie:flex-1 mie:select-none mie:text-sm mie:font-medium mie:text-mietext mie:truncate">
           {ctrl.insideSection ? (`${ctrl.label}`) :
             (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title || ""}`) : (`${ctrl.label} ${ctrl.field.question || ""}`))}
@@ -94,7 +94,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
 
         {/* actions: Edit (mobile), Toggle (small/big view), Delete */}
         <div className="field-wrapper-actions mie:flex mie:items-center mie:gap-1 mie:shrink-0">
-          <button onClick={onEditClick} className="field-edit-btn mie:block mie:lg:hidden mie:p-1.5 mie:bg-transparent mie:text-mietextmuted mie:hover:bg-miesurface mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none" title="Edit" aria-label="Edit field">
+          <button onClick={onEditClick} className="field-edit-btn mie:block mie:lg:hidden mie:p-1.5 mie:bg-transparent mie:text-mietextmuted mie:hover:bg-miebackgroundhover mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none" title="Edit" aria-label="Edit field">
             <EDIT_ICON className="mie:h-5 mie:w-5 mie:text-mietextmuted" />
           </button>
 
@@ -109,7 +109,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
             aria-controls={`fw-body-${ctrl.field?.id}`}
             title={open ? "Collapse" : "Expand"}
             aria-label={open ? "Collapse field" : "Expand field"}
-            className="field-collapse-btn mie:p-1.5 mie:bg-transparent mie:text-mietextmuted mie:hover:bg-miesurface mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none"
+            className="field-collapse-btn mie:p-1.5 mie:bg-transparent mie:text-mietextmuted mie:hover:bg-miebackgroundhover mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none"
           >
             {open ? <VIEWSMALL_ICON className="mie:collapse-icon mie:h-5 mie:w-5 mie:text-mietextmuted" /> : <VIEWBIG_ICON className="mie:collapse-icon mie:h-5 mie:w-5 mie:text-mietextmuted" />}
           </button>
