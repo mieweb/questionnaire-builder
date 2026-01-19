@@ -17,6 +17,7 @@ import './index.css';
  * @param {boolean} [fullHeight=false] - Apply min-h-screen
  * @param {boolean} [hideUnsupportedFields=true] - Hide unsupported field types
  * @param {React.MutableRefObject} [storeRef] - Optional ref to access the store instance
+ * @param {'light'|'dark'|'auto'} [theme='auto'] - Theme: 'light', 'dark', or 'auto' (detects from parent)
  */
 function QuestionnaireRendererInner({
   formData,
@@ -29,8 +30,39 @@ function QuestionnaireRendererInner({
   fullHeight = false,
   hideUnsupportedFields = true,
   storeRef,
+  theme = 'auto',
 }) {
   const formStore = React.useContext(FormStoreContext);
+  
+  // Theme detection
+  const [isDark, setIsDark] = React.useState(() => {
+    if (theme === 'dark') return true;
+    if (theme === 'light') return false;
+    // Auto-detect from document
+    if (typeof document !== 'undefined') {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ||
+             document.documentElement.classList.contains('dark') ||
+             document.body.classList.contains('dark');
+    }
+    return false;
+  });
+
+  React.useEffect(() => {
+    if (theme !== 'auto') {
+      setIsDark(theme === 'dark');
+      return;
+    }
+    // Watch for theme changes (Docusaurus, etc.)
+    const observer = new MutationObserver(() => {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+                   document.documentElement.classList.contains('dark') ||
+                   document.body.classList.contains('dark');
+      setIsDark(dark);
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, [theme]);
   
   // Expose store to parent via ref
   React.useEffect(() => {
@@ -61,8 +93,9 @@ function QuestionnaireRendererInner({
   }, [onChange, onQuestionnaireResponse, questionnaireId, subjectId, formStore]);
 
   const rootClasses = [
-    'qb-render-root renderer-container mie:font-titillium mie:overflow-y-auto mie:custom-scrollbar',
+    'qb-renderer-root renderer-container mie:font-titillium mie:overflow-y-auto mie:custom-scrollbar',
     'mie:max-w-4xl mie:mx-auto mie:px-2 mie:pb-8 mie:pt-4',
+    isDark && 'dark',
     fullHeight && 'mie:max-h-screen mie:my-9',
     className,
   ].filter(Boolean).join(' ');

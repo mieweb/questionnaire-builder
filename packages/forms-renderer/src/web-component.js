@@ -4,7 +4,7 @@ import { QuestionnaireRenderer } from './QuestionnaireRenderer.jsx';
 import { buildQuestionnaireResponse } from './utils/fhirResponse';
 
 class QuestionnaireRendererElement extends HTMLElement {
-  static observedAttributes = ['form-data', 'schema-type', 'full-height', 'hide-unsupported-fields'];
+  static observedAttributes = ['form-data', 'schema-type', 'full-height', 'hide-unsupported-fields', 'theme'];
 
   constructor() {
     super();
@@ -12,6 +12,7 @@ class QuestionnaireRendererElement extends HTMLElement {
     this._formData = [];
     this._schemaType = undefined;
     this._hideUnsupportedFields = true;
+    this._theme = 'auto';
     this._onChange = null;
     this._storeRef = React.createRef(); // Store reference for accessing state
   }
@@ -60,6 +61,15 @@ class QuestionnaireRendererElement extends HTMLElement {
     return this._hideUnsupportedFields;
   }
 
+  set theme(value) {
+    this._theme = value;
+    this._render();
+  }
+
+  get theme() {
+    return this._theme;
+  }
+
   getQuestionnaireResponse(questionnaireId = 'questionnaire-1', subjectId) {
     if (!this._storeRef.current) {
       console.warn('Store not initialized yet');
@@ -105,6 +115,7 @@ class QuestionnaireRendererElement extends HTMLElement {
         onChange: this._onChange,
         className: this.getAttribute('class') || '',
         fullHeight: this.hasAttribute('full-height'),
+        theme: this.getAttribute('theme') || this._theme || 'auto',
         storeRef: this._storeRef,
       })
     );
