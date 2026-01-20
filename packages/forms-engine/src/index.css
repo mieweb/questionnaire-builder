@@ -1,26 +1,27 @@
-@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,909;1,200;1,300;1,400;1,600;1,700&display=swap');
 @import "tailwindcss/theme" prefix(mie);
 @import "tailwindcss/utilities" prefix(mie);
 
-@custom-variant dark (&:where(.qb-editor-root.dark, .qb-editor-root.dark *));
-
-/* Tell Tailwind which files to scan for utility classes */
-@source "../../../packages/forms-editor/src/**/*.{js,jsx}";
-@source "../../../packages/forms-engine/src/**/*.{js,jsx}";
+@custom-variant dark (&:where(.qb-editor-root.dark, .qb-editor-root.dark *, .qb-renderer-root.dark, .qb-renderer-root.dark *));
 
 /* Scoped base styles - essential resets for mie: prefixed utilities */
 @layer base {
   .qb-editor-root,
   .qb-editor-root *,
   .qb-editor-root *::before,
-  .qb-editor-root *::after {
+  .qb-editor-root *::after,
+  .qb-renderer-root,
+  .qb-renderer-root *,
+  .qb-renderer-root *::before,
+  .qb-renderer-root *::after {
     box-sizing: border-box;
     border-width: 0;
     border-style: solid;
     border-color: currentColor;
   }
 
-  .qb-editor-root {
+  .qb-editor-root,
+  .qb-renderer-root {
     font-family: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
   }
 
@@ -28,16 +29,14 @@
   .qb-editor-root input,
   .qb-editor-root textarea,
   .qb-editor-root select,
-  .qb-editor-root button {
+  .qb-editor-root button,
+  .qb-renderer-root input,
+  .qb-renderer-root textarea,
+  .qb-renderer-root select,
+  .qb-renderer-root button {
     font-family: inherit;
     font-size: inherit;
   }
-}
-
-/* Remove focus-visible outline on divs and buttons to prevent Escape key outline */
-div:focus-visible,
-button:focus-visible {
-  outline: none;
 }
 
 @theme {
@@ -63,7 +62,8 @@ button:focus-visible {
 }
 
 /* Dark mode theme overrides */
-.qb-editor-root.dark {
+.qb-editor-root.dark,
+.qb-renderer-root.dark {
   --mie-color-mieprimary: #6b7fa3;        /* grayish-blue for dark mode */
   --mie-color-miesecondary: #9ca3af;      /* gray-400 */
   --mie-color-mieaccent: #34d399;         /* green-400 */
@@ -105,3 +105,5 @@ button:focus-visible {
 .mie\:custom-scrollbar:hover {
   scrollbar-color: #d1d5db transparent;
 }
+
+

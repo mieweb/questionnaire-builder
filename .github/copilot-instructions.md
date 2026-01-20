@@ -89,11 +89,11 @@ If any box is unchecked, **simplify**.
 ### React & Tailwind Specific
 
 - **CRITICAL: Always Use `mie:` Prefix for ALL Tailwind Classes**: This project uses Tailwind CSS v4 with `prefix(mie)` scoping. **Every single Tailwind utility class MUST have the `mie:` prefix**. This applies to:
-  - Regular classes: `mie:flex`, `mie:p-4`, `mie:bg-white`
-  - Pseudo-state variants: `mie:hover:bg-blue-500`, `mie:focus:ring-2`
+  - Regular classes: `mie:flex`, `mie:p-4`, `mie:bg-miesurface`
+  - Pseudo-state variants: `mie:hover:bg-mieprimary`, `mie:focus:ring-2`
   - Responsive variants: `mie:md:flex-row`, `mie:lg:hidden`
-  - Combined variants: `mie:hover:mie:bg-blue-600` → **NO!** Use `mie:hover:bg-blue-600`
-  - Template literals: `` `mie:px-4 ${condition ? "mie:bg-blue-500" : "mie:bg-gray-200"}` ``
+  - Combined variants: `mie:hover:mie:bg-mieprimary` → **NO!** Use `mie:hover:bg-mieprimary`
+  - Template literals: `` `mie:px-4 ${condition ? "mie:bg-mieprimary" : "mie:bg-miebackground"}` ``
   
   The prefix goes BEFORE variant modifiers (hover:, focus:, md:, lg:, etc.).
   ```jsx
@@ -101,18 +101,45 @@ If any box is unchecked, **simplify**.
   <div className="flex gap-2 p-4 bg-white rounded">
   <button className={`px-4 py-2 ${active ? "bg-blue-500" : "bg-gray-200"}`}>
   
-  // ✅ GOOD - all classes have mie: prefix
-  <div className="mie:flex mie:gap-2 mie:p-4 mie:bg-white mie:rounded">
-  <button className={`mie:px-4 mie:py-2 ${active ? "mie:bg-blue-500" : "mie:bg-gray-200"}`}>
+  // ✅ GOOD - all classes have mie: prefix with semantic colors
+  <div className="mie:flex mie:gap-2 mie:p-4 mie:bg-miesurface mie:rounded">
+  <button className={`mie:px-4 mie:py-2 ${active ? "mie:bg-mieprimary" : "mie:bg-miebackground"}`}>
   
   // ✅ GOOD - variants with prefix (mie: comes first)
-  <button className="mie:bg-blue-500 mie:hover:bg-blue-600 mie:focus:ring-2 mie:md:px-6">
+  <button className="mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:focus:ring-2 mie:md:px-6">
+  ```
+
+- **CRITICAL: Always Use Semantic Color Variables**: This project has a semantic color system. **Always use semantic colors instead of hardcoded Tailwind colors**:
+  - `mieprimary` (blue) - primary actions, selected states
+  - `miesecondary` (gray) - secondary elements
+  - `mieaccent` (green) - success states
+  - `miedanger` (red) - destructive actions, errors
+  - `miewarning` (orange) - warnings
+  - `miesurface` (white) - card/panel backgrounds
+  - `mieborder` (gray-200) - borders
+  - `mieborderinactive` (gray-400) - unchecked input borders
+  - `mietext` (gray-900) - primary text
+  - `mietextsecondary` (slate-50) - text on primary bg
+  - `mietextmuted` (gray-500) - secondary/muted text
+  - `miebackground` (gray-50) - page background
+  - `miebackgroundsecondary` (gray-100) - section backgrounds
+  - `miebackgroundhover` (gray-150) - hover states
+  - `mieoverlay` (black/50) - modal backdrops
+  
+  ```jsx
+  // ❌ BAD - hardcoded colors
+  <div className="mie:bg-white mie:text-gray-900 mie:border-gray-200">
+  <button className="mie:bg-blue-500 mie:hover:bg-blue-600">
+  
+  // ✅ GOOD - semantic colors
+  <div className="mie:bg-miesurface mie:text-mietext mie:border-mieborder">
+  <button className="mie:bg-mieprimary mie:hover:bg-mieprimary/90">
   ```
 
 - **CRITICAL: Always Use Explicit Classes in Package Components**: Components in `packages/forms-engine`, `packages/forms-editor`, and `packages/forms-renderer` are consumed by external applications that may have global CSS resets. **Never rely on CSS inheritance** - every element needs explicit utility classes:
-  - **All buttons**: `mie:bg-transparent` or `mie:bg-white`, `mie:text-gray-600`, `mie:border-0`, `mie:outline-none`, `mie:focus:outline-none`
-  - **All text content**: `mie:text-gray-900` or appropriate explicit color
-  - **All icons/SVGs**: `mie:text-gray-600` or appropriate explicit color
+  - **All buttons**: `mie:bg-transparent` or `mie:bg-miesurface`, `mie:text-mietextmuted`, `mie:border-0`, `mie:outline-none`, `mie:focus:outline-none`
+  - **All text content**: `mie:text-mietext` or appropriate semantic color
+  - **All icons/SVGs**: `mie:text-mietextmuted` or appropriate semantic color
   - **All interactive elements**: Explicit border, outline, background, and text colors
   - **All form inputs**: Explicit width constraints with `mie:min-w-0` in flex/grid layouts
   
@@ -122,20 +149,20 @@ If any box is unchecked, **simplify**.
     <TrashIcon />
   </button>
   
-  // ✅ GOOD - explicit classes prevent CSS reset issues
-  <button className="mie:p-2 mie:rounded mie:bg-transparent mie:text-gray-600 mie:border-0 mie:outline-none mie:focus:outline-none">
-    <TrashIcon className="mie:text-gray-600" />
+  // ✅ GOOD - explicit classes with semantic colors prevent CSS reset issues
+  <button className="mie:p-2 mie:rounded mie:bg-transparent mie:text-mietextmuted mie:border-0 mie:outline-none mie:focus:outline-none">
+    <TrashIcon className="mie:text-mietextmuted" />
   </button>
   ```
 
 - **Semantic Class Names Before Tailwind**: Always add semantic/descriptive class names BEFORE Tailwind utility classes for better readability and maintainability. Apply this to all components, HTML structures, and JSX elements. Semantic names do NOT get the `mie:` prefix.
   ```jsx
   // ❌ BAD - Tailwind only, no semantic context
-  <div className="mie:flex mie:gap-2 mie:p-4 mie:bg-white mie:rounded mie:shadow-md">
+  <div className="mie:flex mie:gap-2 mie:p-4 mie:bg-miesurface mie:rounded mie:shadow-md">
   
   // ✅ GOOD - semantic name first (no prefix), then Tailwind (with prefix)
-  <div className="tool-selector mie:flex mie:gap-2 mie:p-4 mie:bg-white mie:rounded mie:shadow-md">
-  <button className="size-picker-btn mie:w-7 mie:h-7 mie:rounded mie:bg-blue-500">
+  <div className="tool-selector mie:flex mie:gap-2 mie:p-4 mie:bg-miesurface mie:rounded mie:shadow-md">
+  <button className="size-picker-btn mie:w-7 mie:h-7 mie:rounded mie:bg-mieprimary">
   ```
 
 - **Prefer Standard Tailwind Classes Over Arbitrary Values**: Always use Tailwind's built-in utility classes instead of arbitrary values (e.g., `shadow-[...]`, `text-[14px]`, `z-[9999]`). Arbitrary values should be avoided unless absolutely necessary and no preset class exists. This maintains design system consistency and makes the code more maintainable.
@@ -156,7 +183,7 @@ If any box is unchecked, **simplify**.
   <input type="radio" className="hidden" />
   ```
 
-- **Use UnselectableRadio for radio inputs**: When creating fields with radio buttons that need unselect functionality, use the `UnselectableRadio` component with `onSelect`/`onUnselect` callbacks instead of inline click handlers.
+- **Use CustomRadio and CustomCheckbox for form inputs**: When creating fields with radio buttons or checkboxes, use the `CustomRadio` and `CustomCheckbox` components from `@mieweb/forms-engine`. These components support semantic theming (light/dark mode) and `CustomRadio` supports unselect functionality via `onSelect`/`onUnselect` callbacks.
 
 - **Avoid Index as Key**: Using array index as `key` is only acceptable for truly static lists where order/count never changes. For dynamic lists (items can be reordered, added, or removed), always use stable unique identifiers (like `item.id`).
   ```jsx
@@ -168,7 +195,7 @@ If any box is unchecked, **simplify**.
   ```
 
 - **Mobile Overflow Prevention for Form Fields**: All text inputs, textareas, and long text content in preview mode must include overflow safeguards to prevent mobile layout breakage:
-  - Add `break-words overflow-hidden` to question text divs
+  - Add `wrap-break-word overflow-hidden` to question text divs
   - Add `min-w-0` to inputs/textareas in flex or grid layouts to prevent content from expanding parent
   - Never let user input expand container width on mobile
   ```jsx
@@ -180,7 +207,7 @@ If any box is unchecked, **simplify**.
   
   // ✅ GOOD - constrained and safe on mobile
   <div className="flex">
-    <div className="font-light break-words overflow-hidden">{f.question}</div>
+    <div className="font-light wrap-break-word overflow-hidden">{f.question}</div>
     <input className="w-full min-w-0 px-4 py-2 border..." />
   </div>
   ```

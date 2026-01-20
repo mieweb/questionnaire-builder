@@ -24,6 +24,7 @@ import './index.css';
  * @param {boolean} [showHeader=true] - Show editor header
  * @param {boolean} [startInPreview=false] - Start in preview mode
  * @param {boolean} [hideUnsupportedFields=false] - Hide unsupported field types
+ * @param {'light'|'dark'|'auto'} [theme='auto'] - Theme: 'light', 'dark', or 'auto' (detects from parent)
  */
 function QuestionnaireEditorInner({
   initialFormData,
@@ -33,6 +34,7 @@ function QuestionnaireEditorInner({
   showHeader = true,
   startInPreview = false,
   hideUnsupportedFields = false,
+  theme = 'auto',
 }) {
   const [codeFormat, setCodeFormat] = React.useState("json");
   const ui = useUIApi();
@@ -96,10 +98,42 @@ function QuestionnaireEditorInner({
     ui.selectedFieldId.value ? s.byId[ui.selectedFieldId.value] : null
   );
 
+  // Theme detection
+  const [isDark, setIsDark] = React.useState(() => {
+    if (theme === 'dark') return true;
+    if (theme === 'light') return false;
+    // Auto-detect from document
+    if (typeof document !== 'undefined') {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ||
+             document.documentElement.classList.contains('dark') ||
+             document.body.classList.contains('dark');
+    }
+    return false;
+  });
+
+  React.useEffect(() => {
+    if (theme !== 'auto') {
+      setIsDark(theme === 'dark');
+      return;
+    }
+    // Watch for theme changes (Docusaurus, etc.)
+    const observer = new MutationObserver(() => {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
+                   document.documentElement.classList.contains('dark') ||
+                   document.body.classList.contains('dark');
+      setIsDark(dark);
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, [theme]);
+
   return (
-    <div className={`qb-editor-root editor-container mie:w-full mie:max-w-7xl mie:mx-auto mie:bg-gray-100 mie:font-titillium ${className}`}>
-      {showHeader && <Header codeFormat={codeFormat} onCodeFormatChange={setCodeFormat} />}
-      <Layout selectedField={selectedField} codeFormat={codeFormat} />
+    <div className={`qb-editor-root editor-container mie:w-full mie:max-w-7xl mie:mx-auto mie:bg-miebackground mie:font-titillium ${isDark ? 'dark' : ''} ${className}`}>
+      <AlertProvider>
+        {showHeader && <Header codeFormat={codeFormat} onCodeFormatChange={setCodeFormat} />}
+        <Layout selectedField={selectedField} codeFormat={codeFormat} />
+      </AlertProvider>
     </div>
   );
 }
@@ -109,12 +143,10 @@ export function QuestionnaireEditor(props) {
   const uiStore = React.useRef(createUIStore()).current;
 
   return (
-    <AlertProvider>
-      <FormStoreContext.Provider value={formStore}>
-        <UIStoreContext.Provider value={uiStore}>
-          <QuestionnaireEditorInner {...props} />
-        </UIStoreContext.Provider>
-      </FormStoreContext.Provider>
-    </AlertProvider>
+    <FormStoreContext.Provider value={formStore}>
+      <UIStoreContext.Provider value={uiStore}>
+        <QuestionnaireEditorInner {...props} />
+      </UIStoreContext.Provider>
+    </FormStoreContext.Provider>
   );
 }

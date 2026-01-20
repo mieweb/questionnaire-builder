@@ -92,6 +92,18 @@ Appends CSS classes on the renderer root container.
 
 If provided, the renderer sets `storeRef.current` to the internal store instance (advanced usage).
 
+### `theme` (optional)
+
+- Type: `'light' | 'dark' | 'auto'`
+- Default: `'auto'`
+
+Controls the color theme:
+- `'auto'` - Auto-detects from `data-theme` or `.dark` class on document
+- `'light'` - Forces light theme
+- `'dark'` - Forces dark theme
+
+See [Theming](/docs/getting-started/theming) for customization options.
+
 ## Related
 
 - [Get Response](/docs/renderer/get-response)

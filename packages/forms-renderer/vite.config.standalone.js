@@ -12,10 +12,10 @@ export default defineConfig({
     {
       name: 'inline-css',
       generateBundle(options, bundle) {
-        const cssPath = resolve(__dirname, 'src/styles.output.css');
+        const cssPath = resolve(__dirname, 'src/index.output.css');
         if (fs.existsSync(cssPath)) {
           const cssContent = fs.readFileSync(cssPath, 'utf-8');
-          
+
           Object.keys(bundle).forEach(fileName => {
             if (fileName.endsWith('.js') && bundle[fileName].type === 'chunk') {
               const cssInjection = `
@@ -57,7 +57,7 @@ export default defineConfig({
   ],
   build: {
     emptyOutDir: false,
-  minify: 'esbuild',
+    minify: 'esbuild',
     define: {
       'process.env.NODE_ENV': JSON.stringify('production')
     },

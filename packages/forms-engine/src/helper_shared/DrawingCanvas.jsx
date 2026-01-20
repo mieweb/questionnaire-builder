@@ -71,7 +71,41 @@ export default function DrawingCanvas({
   const [backgroundLoaded, setBackgroundLoaded] = React.useState(false);
   const backgroundImageRef = React.useRef(null);
   const [currentTool, setCurrentTool] = React.useState("pen");
-  const [currentColor, setCurrentColor] = React.useState("#000000");
+  const [isDark, setIsDark] = React.useState(false);
+  
+  // Dark mode detection - watch for .dark class on editor/renderer root
+  React.useEffect(() => {
+    const checkDarkMode = () => {
+      const root = containerRef.current?.closest('.qb-editor-root, .qb-renderer-root');
+      setIsDark(root?.classList.contains('dark') ?? false);
+    };
+    
+    checkDarkMode();
+    
+    // Watch for class changes on root
+    const root = containerRef.current?.closest('.qb-editor-root, .qb-renderer-root');
+    if (root) {
+      const observer = new MutationObserver(checkDarkMode);
+      observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+      return () => observer.disconnect();
+    }
+  }, []);
+  
+  // Theme-aware colors
+  const themedBackgroundColor = isDark ? "#1e1e1e" : backgroundColor;
+  const themedStrokeColor = isDark ? "#FFFFFF" : strokeColor;
+  
+  // Initialize currentColor based on current theme (lazy init)
+  const [currentColor, setCurrentColor] = React.useState(() => {
+    // Check initial dark mode state
+    if (typeof document !== 'undefined') {
+      const root = document.querySelector('.qb-editor-root, .qb-renderer-root');
+      if (root?.classList.contains('dark')) {
+        return "#FFFFFF";
+      }
+    }
+    return strokeColor;
+  });
   const [currentSize, setCurrentSize] = React.useState(2);
   const [customColor, setCustomColor] = React.useState(null);
   const [customSize, setCustomSize] = React.useState(null);
@@ -84,13 +118,38 @@ export default function DrawingCanvas({
   const undoStackRef = React.useRef([]);
   const [cursorPosition, setCursorPosition] = React.useState(null);
   
-  // Predefined color palette
-  const colorPalette = ["#000000", "#FF0000", "#0000FF"];
+  // Update current color when theme changes (only if using default color)
+  React.useEffect(() => {
+    // If current color matches the opposite theme's default, switch it
+    if (isDark && currentColor === "#000000") {
+      setCurrentColor("#FFFFFF");
+    } else if (!isDark && currentColor === "#FFFFFF") {
+      setCurrentColor("#000000");
+    }
+  }, [isDark]);
+  
+  // Color mapping between light and dark themes
+  const colorMap = {
+    light: ["#000000", "#FF0000", "#0000FF"],
+    dark:  ["#FFFFFF", "#FF6B6B", "#6BB3FF"],
+  };
+  
+  // Map a color from one theme to another
+  const mapColorForTheme = (color, toDark) => {
+    const fromPalette = toDark ? colorMap.light : colorMap.dark;
+    const toPalette = toDark ? colorMap.dark : colorMap.light;
+    const idx = fromPalette.findIndex(c => c.toLowerCase() === color.toLowerCase());
+    return idx >= 0 ? toPalette[idx] : color; // Return mapped color or original if not in palette
+  };
+  
+  // Predefined color palette - adapts to theme
+  const colorPalette = isDark ? colorMap.dark : colorMap.light;
   const sizePalette = [1, 2, 3];
 
-  // Custom cursors using SVG from icon components
-  const penCursor = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L18.5 9.5a2.828 2.828 0 1 0 -4 -4L4 16v4'/%3E%3Cpath d='m13.5 6.5 4 4'/%3E%3C/svg%3E") 2 22, crosshair`;
-  const eraserCursor = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 20H8.5l-4.21 -4.3a1 1 0 0 1 0 -1.41l10 -10a1 1 0 0 1 1.41 0l5 5a1 1 0 0 1 0 1.41L11.5 20'/%3E%3Cpath d='M18 13.3 11.7 7'/%3E%3C/svg%3E") 2 22, cell`;
+  // Custom cursors using SVG from icon components - theme-aware
+  const cursorStroke = isDark ? 'white' : 'black';
+  const penCursor = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='${cursorStroke}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L18.5 9.5a2.828 2.828 0 1 0 -4 -4L4 16v4'/%3E%3Cpath d='m13.5 6.5 4 4'/%3E%3C/svg%3E") 2 22, crosshair`;
+  const eraserCursor = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='${cursorStroke}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 20H8.5l-4.21 -4.3a1 1 0 0 1 0 -1.41l10 -10a1 1 0 0 1 1.41 0l5 5a1 1 0 0 1 0 1.41L11.5 20'/%3E%3Cpath d='M18 13.3 11.7 7'/%3E%3C/svg%3E") 2 22, cell`;
 
   // Helper: setup canvas dimensions and context
   const setupCanvas = (canvas, scale = true) => {
@@ -107,7 +166,7 @@ export default function DrawingCanvas({
     // Scale font size based on canvas dimensions (responsive)
     const fontSize = Math.max(12, Math.min(20, displaySize.width / 30));
     ctx.font = `${fontSize}px Arial`;
-    ctx.fillStyle = "#ccc";
+    ctx.fillStyle = isDark ? "#666666" : "#cccccc"; // Theme-aware placeholder color
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(placeholder, displaySize.width / 2, displaySize.height / 2);
@@ -149,7 +208,7 @@ export default function DrawingCanvas({
 
     const ctx = displayCanvas.getContext("2d");
     ctx.clearRect(0, 0, displaySize.width, displaySize.height);
-    ctx.fillStyle = backgroundColor;
+    ctx.fillStyle = themedBackgroundColor;
     ctx.fillRect(0, 0, displaySize.width, displaySize.height);
 
     if (backgroundImageRef.current && backgroundLoaded) {
@@ -162,7 +221,7 @@ export default function DrawingCanvas({
 
     // Draw the drawing canvas to display canvas at the correct size
     ctx.drawImage(drawingCanvas, 0, 0, displaySize.width * DPR, displaySize.height * DPR, 0, 0, displaySize.width, displaySize.height);
-  }, [displaySize.width, displaySize.height, backgroundColor, backgroundLoaded, hasDrawing, existingDrawing, placeholder]);
+  }, [displaySize.width, displaySize.height, themedBackgroundColor, backgroundLoaded, hasDrawing, existingDrawing, placeholder, isDark]);
 
   // Load background image
   React.useEffect(() => {
@@ -318,7 +377,9 @@ export default function DrawingCanvas({
           ctx.clearRect(pt.x - half, pt.y - half, eraserWidth, eraserWidth);
         });
       } else {
-        ctx.strokeStyle = stroke.color;
+        // Map stroke color to current theme
+        const themedColor = mapColorForTheme(stroke.color, isDark);
+        ctx.strokeStyle = themedColor;
         ctx.lineWidth = stroke.size;
         ctx.lineCap = "round";
         ctx.lineJoin = "round";
@@ -334,7 +395,7 @@ export default function DrawingCanvas({
         ctx.stroke();
       }
     });
-  }, [mode, displaySize.width, displaySize.height, eraserWidth]);
+  }, [mode, displaySize.width, displaySize.height, eraserWidth, isDark]);
 
   const clearCanvas = React.useCallback(() => {
     const drawingCanvas = drawingCanvasRef.current;
@@ -444,7 +505,7 @@ export default function DrawingCanvas({
     // Redraw markup from strokes
     redrawMarkup();
     compositeDisplay();
-  }, [displaySize, hasDrawing, backgroundLoaded, placeholder, backgroundColor, redrawMarkup, compositeDisplay]);
+  }, [displaySize, hasDrawing, backgroundLoaded, placeholder, themedBackgroundColor, redrawMarkup, compositeDisplay]);
 
   // Handle responsive sizing
   React.useEffect(() => {
@@ -503,8 +564,8 @@ export default function DrawingCanvas({
     <div ref={containerRef} className="drawing-canvas-container mie:w-full">
       {/* Canvas */}
       <div
-        className={`canvas-wrapper mie:relative mie:rounded mie:bg-white mie:overflow-hidden ${
-          existingDrawing ? "" : "mie:border-2 mie:border-gray-300"
+        className={`canvas-wrapper mie:relative mie:rounded mie:bg-miesurface mie:overflow-hidden ${
+          existingDrawing ? "" : "mie:border-2 mie:border-mieborder"
         }`}
       >
         <canvas
@@ -518,7 +579,7 @@ export default function DrawingCanvas({
             height: `${displaySize.height}px`,
             cursor: currentTool === "eraser" ? eraserCursor : penCursor,
             display: "block",
-            border: "1px solid #e5e7eb",
+            border: "1px solid var(--mie-color-mieborder)",
             touchAction: "none",
           }}
         />
@@ -537,8 +598,8 @@ export default function DrawingCanvas({
               top: `${cursorPosition.y}px`,
               width: `${currentTool === "eraser" ? eraserWidth : currentSize * 2}px`,
               height: `${currentTool === "eraser" ? eraserWidth : currentSize * 2}px`,
-              borderColor: currentTool === "eraser" ? "#ef4444" : currentColor,
-              backgroundColor: currentTool === "eraser" ? "rgba(239, 68, 68, 0.1)" : `${currentColor}20`,
+              borderColor: currentTool === "eraser" ? "var(--mie-color-miedanger)" : currentColor,
+              backgroundColor: currentTool === "eraser" ? "color-mix(in srgb, var(--mie-color-miedanger) 10%, transparent)" : `${currentColor}20`,
               transform: "translate(-50%, -50%)",
               transition: "width 0.1s, height 0.1s",
             }}
@@ -551,7 +612,7 @@ export default function DrawingCanvas({
             <button
               onClick={undo}
               disabled={!canUndo}
-              className="undo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-gray-100 mie:hover:bg-gray-200 mie:text-gray-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
+              className="undo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-miebackground mie:hover:bg-mieborder mie:text-mietext mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
               title="Undo"
             >
               <svg className="undo-icon mie:w-4 mie:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -561,7 +622,7 @@ export default function DrawingCanvas({
             <button
               onClick={redo}
               disabled={!canRedo}
-              className="redo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-gray-100 mie:hover:bg-gray-200 mie:text-gray-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
+              className="redo-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-miebackground mie:hover:bg-mieborder mie:text-mietext mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation mie:disabled:opacity-40 mie:disabled:cursor-not-allowed"
               title="Redo"
             >
               <svg className="redo-icon mie:w-4 mie:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -570,7 +631,7 @@ export default function DrawingCanvas({
             </button>
             <button
               onClick={clearCanvas}
-              className="mie:clear-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-red-100 mie:hover:bg-red-200 mie:text-red-700 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation"
+              className="mie:clear-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:bg-miedanger/10 mie:hover:bg-miedanger/20 mie:text-miedanger mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:shadow-md mie:transition mie:touch-manipulation"
               title="Clear"
             >
               <X_ICON className="mie:h-4 mie:w-4" />
@@ -587,8 +648,8 @@ export default function DrawingCanvas({
             onClick={() => setCurrentTool("pen")}
             className={`tool-btn tool-btn-pen mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-colors mie:touch-manipulation ${
               currentTool === "pen"
-                ? "mie:bg-blue-500 mie:text-white"
-                : "mie:bg-gray-100 mie:text-gray-700 mie:hover:bg-gray-200"
+                ? "mie:bg-mieprimary mie:text-miesurface"
+                : "mie:bg-miebackground mie:text-mietext mie:hover:bg-mieborder"
             }`}
             title="Pen"
           >
@@ -599,8 +660,8 @@ export default function DrawingCanvas({
               onClick={() => setCurrentTool("eraser")}
               className={`tool-btn tool-btn-eraser mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-colors mie:touch-manipulation ${
                 currentTool === "eraser"
-                  ? "mie:bg-blue-500 mie:text-white"
-                  : "mie:bg-gray-100 mie:text-gray-700 mie:hover:bg-gray-200"
+                  ? "mie:bg-mieprimary mie:text-miesurface"
+                  : "mie:bg-miebackground mie:text-mietext mie:hover:bg-mieborder"
               }`}
               title="Eraser"
             >
@@ -609,7 +670,7 @@ export default function DrawingCanvas({
           )}
 
           {/* Divider */}
-          {currentTool === "pen" && <div className="toolbar-divider mie:w-px mie:bg-gray-300" />}
+          {currentTool === "pen" && <div className="toolbar-divider mie:w-px mie:bg-mieborder" />}
 
           {/* Color Selector */}
           {currentTool === "pen" && (
@@ -622,8 +683,8 @@ export default function DrawingCanvas({
                   }}
                   className={`color-btn mie:w-7 mie:h-7 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-all mie:touch-manipulation ${
                     currentColor === color
-                      ? "mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
-                      : "mie:hover:ring-2 mie:hover:ring-gray-300"
+                      ? "mie:ring-2 mie:ring-mieprimary mie:ring-offset-2"
+                      : "mie:hover:ring-2 mie:hover:ring-mieborder"
                   }`}
                   style={{ backgroundColor: color }}
                   title={color}
@@ -634,8 +695,8 @@ export default function DrawingCanvas({
               <div
                 className={`custom-color-slot mie:w-7 mie:h-7 mie:rounded mie:cursor-pointer mie:transition-all mie:touch-manipulation ${
                   customColor && currentColor === customColor
-                    ? "mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
-                    : "mie:hover:ring-2 mie:hover:ring-gray-300"
+                    ? "mie:ring-2 mie:ring-mieprimary mie:ring-offset-2"
+                    : "mie:hover:ring-2 mie:hover:ring-mieborder"
                 }`}
                 style={{ backgroundColor: customColor || "#808080" }}
               >
@@ -652,7 +713,7 @@ export default function DrawingCanvas({
               </div>
 
               {/* Divider */}
-              <div className="toolbar-divider mie:w-px mie:bg-gray-300" />
+              <div className="toolbar-divider mie:w-px mie:bg-mieborder" />
 
               {/* Size Selector */}
               {sizePalette.map((size) => (
@@ -663,13 +724,13 @@ export default function DrawingCanvas({
                   }}
                   className={`size-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:transition-all mie:touch-manipulation ${
                     currentSize === size
-                      ? "mie:bg-blue-500 mie:ring-2 mie:ring-blue-500 mie:ring-offset-2"
-                      : "mie:bg-gray-100 mie:hover:bg-gray-200"
+                      ? "mie:bg-mieprimary mie:ring-2 mie:ring-mieprimary mie:ring-offset-2"
+                      : "mie:bg-miebackground mie:hover:bg-mieborder"
                   }`}
                   title={`Size ${size}px`}
                 >
                   <div
-                    className={`size-indicator mie:rounded-full ${currentSize === size ? "mie:bg-white" : "mie:bg-gray-700"}`}
+                    className={`size-indicator mie:rounded-full ${currentSize === size ? "mie:bg-miesurface" : "mie:bg-mietext"}`}
                     style={{ width: `${size * 2}px`, height: `${size * 2}px` }}
                   />
                 </button>
@@ -684,24 +745,24 @@ export default function DrawingCanvas({
                   }}
                   className={`custom-size-btn mie:w-7 mie:h-7 mie:flex mie:items-center mie:justify-center mie:rounded mie:outline-none mie:focus:outline-none mie:transition-colors mie:touch-manipulation ${
                     currentSize === customSize && customSize !== null
-                      ? "mie:bg-blue-500 mie:ring-2 mie:ring-blue-500 mie:ring-offset-2 mie:border-0"
-                      : "mie:bg-gray-100 mie:hover:bg-gray-200 mie:border-2 mie:border-dashed mie:border-gray-300"
+                      ? "mie:bg-mieprimary mie:ring-2 mie:ring-mieprimary mie:ring-offset-2 mie:border-0"
+                      : "mie:bg-miebackground mie:hover:bg-mieborder mie:border-2 mie:border-dashed mie:border-mieborder"
                   }`}
                   title="Custom size"
                 >
                   {customSize ? (
                     <div
-                      className={`size-indicator mie:rounded-full ${currentSize === customSize ? "mie:bg-white" : "mie:bg-gray-700"}`}
+                      className={`size-indicator mie:rounded-full ${currentSize === customSize ? "mie:bg-miesurface" : "mie:bg-mietext"}`}
                       style={{ width: `${Math.min(customSize * 1.5, 20)}px`, height: `${Math.min(customSize * 1.5, 20)}px` }}
                     />
                   ) : (
-                    <span className="mie:text-xs mie:text-gray-500">+</span>
+                    <span className="mie:text-xs mie:text-mietextmuted">+</span>
                   )}
                 </button>
 
                 {/* Size Picker Modal - Vertical Slider */}
                 {showSizePicker && (
-                  <div className="mie:size-picker-modal mie:absolute mie:bottom-full mie:-left-2 mie:mb-2 mie:flex mie:flex-col mie:items-center mie:gap-1 mie:bg-white mie:rounded-lg mie:shadow-lg mie:border mie:border-gray-200 mie:p-2 mie:z-50 mie:w-fit">
+                  <div className="mie:size-picker-modal mie:absolute mie:bottom-full mie:-left-2 mie:mb-2 mie:flex mie:flex-col mie:items-center mie:gap-1 mie:bg-miesurface mie:rounded-lg mie:shadow-lg mie:border mie:border-mieborder mie:p-2 mie:z-50 mie:w-fit">
                     <input
                       type="range"
                       min="4"
@@ -726,11 +787,11 @@ export default function DrawingCanvas({
                     />
                     <div className="mie:size-preview mie:flex mie:items-center mie:justify-center mie:w-6 mie:h-6">
                       <div
-                        className="mie:size-preview-dot mie:rounded-full mie:bg-gray-700 mie:transition-all"
+                        className="mie:size-preview-dot mie:rounded-full mie:bg-mietext mie:transition-all"
                         style={{ width: `${tempSize}px`, height: `${tempSize}px` }}
                       />
                     </div>
-                    <span className="mie:text-xs mie:font-medium mie:text-gray-600">{tempSize}px</span>
+                    <span className="mie:text-xs mie:font-medium mie:text-mietextmuted">{tempSize}px</span>
                   </div>
                 )}
               </div>

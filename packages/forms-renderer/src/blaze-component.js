@@ -33,7 +33,8 @@ export function registerBlazeTemplate() {
         subjectId: templateInstance.data.subjectId,
         onSubmit: templateInstance.data.onSubmit,
         fullHeight: templateInstance.data.fullHeight,
-        className: templateInstance.data.className
+        className: templateInstance.data.className,
+        theme: templateInstance.data.theme || 'auto'
       };
       
       root.render(React.createElement(QuestionnaireRenderer, props));

@@ -17,9 +17,9 @@ export default function Layout({ selectedField }) {
   const editMode = !isPreview;
 
   return (
-    <div className="layout-container mie:w-full mie:h-fit mie:rounded-lg mie:mt-2 mie:md:mt-4 mie:lg:mt-6">
+    <div className="layout-container mie:w-full mie:h-fit mie:rounded-lg mie:mt-3">
       {isCodeEditor ? (
-        <div className="mie:border mie:border-gray-200 mie:rounded-lg">
+        <div className="mie:border mie:border-mieborder mie:rounded-lg">
           <CodeEditor />
         </div>
 
@@ -46,10 +46,10 @@ export default function Layout({ selectedField }) {
               {isEditModalOpen && selectedField && (
                 <>
                   <div
-                    className="mie:fixed mie:inset-0 mie:z-40 mie:bg-black/30 mie:lg:hidden"
+                    className="mie:fixed mie:inset-0 mie:z-40 mie:bg-mieoverlay mie:lg:hidden"
                     onClick={() => ui.modal.set(false)}
                   />
-                  <div className="mie:fixed mie:bottom-0 mie:left-0 mie:right-0 mie:z-50 mie:bg-white mie:rounded-t-2xl mie:shadow-2xl mie:max-h-[60vh] mie:overflow-y-auto mie:custom-scrollbar mie:lg:hidden">
+                  <div className="mie:fixed mie:bottom-0 mie:left-0 mie:right-0 mie:z-50 mie:bg-miesurface mie:rounded-t-2xl mie:shadow-2xl mie:max-h-[60vh] mie:overflow-y-auto mie:custom-scrollbar mie:lg:hidden">
                     <EditPanel key={panelResetKey} isMobileModal={true} />
                   </div>
                 </>
@@ -65,7 +65,7 @@ export default function Layout({ selectedField }) {
           {/* Floating button to open mobile tool panel */}
           <button
             onClick={() => setIsMobileToolPanelOpen(!isMobileToolPanelOpen)}
-            className="mie:lg:hidden mie:fixed mie:bottom-5 mie:left-5 mie:z-40 mie:bg-blue-500 mie:hover:bg-blue-600 mie:text-white mie:rounded-full mie:w-12 mie:h-12 mie:flex mie:items-center mie:justify-center mie:shadow-lg mie:transition-all"
+            className="mie:lg:hidden mie:fixed mie:bottom-5 mie:left-5 mie:z-40 mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-miesurface mie:rounded-full mie:w-12 mie:h-12 mie:flex mie:items-center mie:justify-center mie:shadow-lg mie:transition-all"
             title="Add field"
           >
             <svg className="mie:w-6 mie:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,10 +76,10 @@ export default function Layout({ selectedField }) {
           {/* Mobile Tool Panel Sheet */}
           {isMobileToolPanelOpen && (
             <>
-              <div className="mie:fixed mie:inset-0 mie:z-40 mie:bg-black/30 mie:lg:hidden"
+              <div className="mie:fixed mie:inset-0 mie:z-40 mie:bg-mieoverlay mie:lg:hidden"
                 onClick={() => setIsMobileToolPanelOpen(false)}
               />
-              <div className="mie:fixed mie:bottom-0 mie:left-0 mie:right-0 mie:z-50 mie:bg-white mie:rounded-t-2xl mie:shadow-2xl mie:max-h-[60vh] mie:overflow-y-auto mie:custom-scrollbar mie:lg:hidden">
+              <div className="mie:fixed mie:bottom-0 mie:left-0 mie:right-0 mie:z-50 mie:bg-miesurface mie:rounded-t-2xl mie:shadow-2xl mie:max-h-[60vh] mie:overflow-y-auto mie:custom-scrollbar mie:lg:hidden">
                 <ToolPanel />
               </div>
             </>

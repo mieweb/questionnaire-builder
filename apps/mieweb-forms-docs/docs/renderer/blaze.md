@@ -24,10 +24,18 @@ import '@mieweb/forms-renderer/blaze';
 {{> questionnaireRenderer
     formData=currentFormData
     hideUnsupportedFields=true
-  onChange=handleChange
-  onQuestionnaireResponse=handleResponse
-  questionnaireId="my-questionnaire-id"
-  subjectId="patient-123"}}
+    theme="auto"
+    onChange=handleChange
+    onQuestionnaireResponse=handleResponse
+    questionnaireId="my-questionnaire-id"
+    subjectId="patient-123"}}
+```
+
+### Theme Options
+
+- `"auto"` (default) - Auto-detects from document's `data-theme` or `.dark` class
+- `"light"` - Forces light theme
+- `"dark"` - Forces dark theme
 ```
 
 ## Helper example

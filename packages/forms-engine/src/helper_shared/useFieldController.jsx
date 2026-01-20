@@ -26,11 +26,11 @@ export default function useFieldController(field, sectionId) {
   }, [api, selected, ui]);
 
   const wrapperClass = [
-    "mie:rounded-lg mie:bg-white",
+    "mie:rounded-lg mie:bg-miesurface",
     !ui.state.isPreview ? "mie:border" : "",
     !insideSection && ui.state.isPreview ? "mie:border" : "",
     field.fieldType === "section" && ui.state.isPreview ? "mie:p-0 mie:border" : "mie:p-6",
-    selected ? "mie:border-blue-300 mie:border-2 mie:border-dashed" : "mie:border-gray-200",
+    selected ? "mie:border-mieprimary mie:border-2 mie:border-dashed" : "mie:border-mieborder",
   ].join(" ");
 
   return {

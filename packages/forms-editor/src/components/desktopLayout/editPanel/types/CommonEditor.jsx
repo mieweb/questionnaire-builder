@@ -1,5 +1,5 @@
 import React from "react";
-import { useFormStore } from "@mieweb/forms-engine";
+import { useFormStore, CustomCheckbox } from "@mieweb/forms-engine";
 import DraftIdEditor from "./DraftIdEditor"
 import InputTypeEditor from "./InputTypeEditor";
 
@@ -38,9 +38,9 @@ function CommonEditor({ f, onUpdateField }) {
       />
 
       <div>
-        <label className="mie:block mie:text-sm mie:mb-1">Label / Question</label>
+        <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Label / Question</label>
         <input
-          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
+          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
           value={f.question || ""}
           onChange={(e) => onUpdateField?.("question", e.target.value)}
           placeholder="Enter question text"
@@ -52,9 +52,9 @@ function CommonEditor({ f, onUpdateField }) {
       )}
 
       <div className="mie:min-w-0">
-        <label className="mie:block mie:text-sm mie:mb-1">Sublabel (optional)</label>
+        <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Sublabel (optional)</label>
         <textarea
-          className="mie:w-full mie:min-w-0 mie:max-h-32 mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded mie:resize-y"
+          className="mie:w-full mie:min-w-0 mie:max-h-32 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:resize-y mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
           value={f.sublabel || ""}
           onChange={(e) => onUpdateField("sublabel", e.target.value)}
           placeholder="Helper text / description"
@@ -62,11 +62,11 @@ function CommonEditor({ f, onUpdateField }) {
       </div>
 
       <div>
-        <label className="mie:inline-flex mie:items-center mie:gap-2 mie:text-sm">
-          <input
-            type="checkbox"
+        <label className="mie:inline-flex mie:items-center mie:gap-2 mie:text-sm mie:text-mietext mie:cursor-pointer">
+          <CustomCheckbox
             checked={!!f.required}
-            onChange={(e) => onUpdateField?.("required", e.target.checked)}
+            onChange={(checked) => onUpdateField?.("required", checked)}
+            size="md"
           />
           Required
         </label>

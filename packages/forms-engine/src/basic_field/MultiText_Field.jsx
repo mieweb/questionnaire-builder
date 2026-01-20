@@ -8,22 +8,22 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, insideSection, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder }) => {
         if (isPreview) {
           return (
-            <div className={`multitext-field-preview ${insideSection ? "mie:border-b mie:border-gray-200" : "mie:border-0"}`}>
+            <div className="multitext-field-preview mie:text-mietext">
               <div className="mie:space-y-3 mie:pb-4">
-                {f.question && <div className="mie:font-light mie:wrap-break-word mie:overflow-hidden">{f.question}</div>}
+                {f.question && <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question}</div>}
                 <div className="mie:space-y-2 mie:w-full">
                   {(f.options || []).map((option) => (
                     <div key={option.id} className="mie:flex mie:flex-col mie:gap-1">
-                      <label className="mie:text-xs mie:font-medium mie:text-gray-600 mie:px-0 mie:text-left">{option.value}</label>
+                      <label className="mie:text-xs mie:font-medium mie:text-mietextmuted mie:px-0 mie:text-left">{option.value}</label>
                       <input
                         type="text"
                         value={option.answer || ""}
                         onChange={(e) => api.option.updateAnswer(option.id, e.target.value)}
                         placeholder=""
-                        className="mie:w-full mie:px-4 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors mie:min-w-0"
+                        className="mie:w-full mie:px-4 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:min-w-0"
                       />
                     </div>
                   ))}
@@ -36,7 +36,7 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
         return (
           <div className="multitext-field-edit mie:space-y-3">
             <div>
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
+              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
                 Question
               </label>
               <input
@@ -44,27 +44,27 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
                 value={f.question || ""}
                 onChange={(e) => api.field.update("question", e.target.value)}
                 placeholder={placeholder?.question || "Enter question"}
-                className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors"
+                className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
               />
             </div>
 
             <div>
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-2">
+              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
                 Fields
               </label>
               <div className="mie:space-y-2">
                 {(f.options || []).map((option) => (
-                  <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-gray-300 mie:rounded-lg mie:shadow-sm mie:hover:border-gray-400 mie:transition-colors">
+                  <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                     <input
                       type="text"
                       value={option.value}
                       onChange={(e) => api.option.update(option.id, e.target.value)}
                       placeholder={placeholder?.options || "Field label"}
-                      className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
+                      className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent mie:text-mietext"
                     />
                     <button 
                       onClick={() => api.option.remove(option.id)}
-                      className="mie:shrink-0 mie:text-gray-400 mie:hover:text-red-600 mie:transition-colors mie:bg-transparent"
+                      className="mie:shrink-0 mie:text-mietextmuted mie:hover:text-miedanger mie:transition-colors mie:bg-transparent mie:border-0 mie:outline-none mie:focus:outline-none"
                       title="Remove field"
                     >
                       <TRASHCANTWO_ICON className="mie:w-4 mie:h-4" />
@@ -76,7 +76,7 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
 
             <button 
               onClick={() => api.option.add()} 
-              className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-blue-600 mie:border mie:border-blue-300 mie:rounded-lg mie:bg-white mie:hover:bg-blue-50 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
+              className="mie:w-full mie:px-3 mie:py-2 mie:text-sm mie:font-medium mie:text-mieprimary mie:border mie:border-mieprimary/50 mie:rounded-lg mie:bg-miesurface mie:hover:bg-mieprimary/10 mie:transition-colors mie:flex mie:items-center mie:justify-center mie:gap-2"
             >
               <PLUSOPTION_ICON className="mie:w-5 mie:h-5" /> Add Field
             </button>

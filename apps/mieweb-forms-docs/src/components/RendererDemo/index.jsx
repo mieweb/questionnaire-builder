@@ -34,8 +34,8 @@ export default function RendererDemo() {
   });
 
   return (
-    <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '20px', marginBottom: '20px', backgroundColor: '#fff' }}>
-      <QuestionnaireRenderer formData={formData} />
+    <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
+      <QuestionnaireRenderer formData={formData} theme="auto" />
     </div>
   );
 }

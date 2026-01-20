@@ -41,9 +41,9 @@ export default function DraftIdEditor({
 
   return (
     <div className={className ? `draft-id-editor-container ${className}` : "draft-id-editor-container"}>
-      <label className="mie:block mie:text-sm mie:mb-1">{label}</label>
+      <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">{label}</label>
       <input
-        className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
+        className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
         value={draft}
         onChange={(e) => {
           if (err) setErr("");
@@ -58,7 +58,7 @@ export default function DraftIdEditor({
         }}
         placeholder={placeholder}
       />
-      {err ? <p className="mie:text-xs mie:text-red-600 mie:mt-1">{err}</p> : null}
+      {err ? <p className="mie:text-xs mie:text-miedanger mie:mt-1">{err}</p> : null}
     </div>
   );
 }

@@ -90,7 +90,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                 title="HTML Content"
               />
               {renderError && (
-                <div role="alert" className="render-error mie:mt-2 mie:p-2 mie:bg-red-50 mie:border mie:border-red-200 mie:rounded mie:text-xs mie:text-red-700">
+                <div role="alert" className="render-error mie:mt-2 mie:p-2 mie:bg-miedanger/10 mie:border mie:border-miedanger/30 mie:rounded mie:text-xs mie:text-miedanger">
                   {renderError}
                 </div>
               )}
@@ -106,8 +106,8 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
               <button
                 onClick={() => setEditMode(false)}
                 className={`edit-mode-btn mie:px-4 mie:py-2 mie:rounded mie:transition-colors ${!editMode
-                  ? "mie:bg-blue-500 mie:hover:bg-blue-600 mie:text-white"
-                  : "mie:bg-gray-200 mie:hover:bg-gray-300 mie:text-gray-700"
+                  ? "mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-miesurface"
+                  : "mie:bg-miebackground mie:hover:bg-mieborder mie:text-mietext"
                   }`}
               >
                 Edit
@@ -115,8 +115,8 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
               <button
                 onClick={() => setEditMode(true)}
                 className={`preview-mode-btn mie:px-4 mie:py-2 mie:rounded mie:transition-colors ${editMode
-                  ? "mie:bg-blue-500 mie:hover:bg-blue-600 mie:text-white"
-                  : "mie:bg-gray-200 mie:hover:bg-gray-300 mie:text-gray-700"
+                  ? "mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-miesurface"
+                  : "mie:bg-miebackground mie:hover:bg-mieborder mie:text-mietext"
                   }`}
               >
                 Preview
@@ -125,7 +125,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
 
             {/* Height Control */}
             <div>
-              <label className="height-control-label mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-1">
+              <label className="height-control-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
                 Preview Height (px)
               </label>
               <div className="height-control-inputs mie:flex mie:gap-2 mie:items-center">
@@ -140,7 +140,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                     setIframeHeight(height);
                     api.field.update("iframeHeight", height);
                   }}
-                  className="height-slider mie:flex-1"
+                  className="height-slider mie:flex-1 mie:accent-mieprimary"
                   aria-label="Preview height in pixels"
                 />
                 <input
@@ -154,17 +154,17 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                     setIframeHeight(Math.max(50, Math.min(800, height)));
                     api.field.update("iframeHeight", Math.max(50, Math.min(800, height)));
                   }}
-                  className="height-input mie:w-20 mie:px-2 mie:py-1 mie:border mie:border-gray-300 mie:rounded mie:text-sm mie:text-center"
+                  className="height-input mie:w-20 mie:px-2 mie:py-1 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:text-sm mie:text-center"
                   aria-label="Preview height in pixels"
                 />
-                <span className="height-unit mie:text-sm mie:text-gray-500">px</span>
+                <span className="height-unit mie:text-sm mie:text-mietextmuted">px</span>
               </div>
             </div>
 
             {editMode ? (
               // Preview Mode
               <div>
-                <label className="preview-label mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-2">
+                <label className="preview-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
                   Preview
                 </label>
                 <iframe
@@ -173,14 +173,14 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                   sandbox=""
                   style={{
                     width: "100%",
-                    border: "1px solid #ddd",
+                    border: "1px solid var(--mie-color-mieborder)",
                     height: `${getResponsiveHeight(iframeHeight)}px`,
-                    background: "#fafafa",
+                    background: "var(--mie-color-miebackground)",
                   }}
                   title="HTML Preview"
                 />
                 {renderError && (
-                  <div className="preview-error mie:mt-2 mie:p-2 mie:bg-red-50 mie:border mie:border-red-200 mie:rounded mie:text-xs mie:text-red-700" role="alert">
+                  <div className="preview-error mie:mt-2 mie:p-2 mie:bg-miedanger/10 mie:border mie:border-miedanger/30 mie:rounded mie:text-xs mie:text-miedanger" role="alert">
                     {renderError}
                   </div>
                 )}
@@ -188,11 +188,11 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
             ) : (
               // Edit Mode
               <div>
-                <label className="edit-label mie:block mie:text-sm mie:font-medium mie:text-gray-700 mie:mb-2">
+                <label className="edit-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
                   HTML Content
                 </label>
                 <textarea
-                  className="html-textarea mie:px-3 mie:py-2 mie:w-full mie:border mie:border-gray-300 mie:rounded-lg mie:focus:border-blue-400 mie:focus:ring-1 mie:focus:ring-blue-400 mie:outline-none mie:transition-colors mie:font-mono mie:text-sm mie:max-h-64 mie:overflow-y-auto"
+                  className="html-textarea mie:px-3 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:font-mono mie:text-sm mie:max-h-64 mie:overflow-y-auto"
                   value={f.htmlContent || ""}
                   onChange={(e) => api.field.update("htmlContent", e.target.value)}
                   placeholder="Enter your HTML content here... (e.g., &lt;p&gt;text&lt;/p&gt;)"

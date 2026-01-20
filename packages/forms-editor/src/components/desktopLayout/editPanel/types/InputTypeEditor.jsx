@@ -59,9 +59,9 @@ export default function InputTypeEditor({ field, onUpdate }) {
   return (
     <div className="mie:space-y-3">
       <div>
-        <label className="mie:block mie:text-sm mie:mb-1">Input Type</label>
+        <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Input Type</label>
         <select
-          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
+          className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:cursor-pointer mie:transition-colors"
           value={inputType}
           onChange={(e) => onUpdate("inputType", e.target.value)}
         >
@@ -73,9 +73,9 @@ export default function InputTypeEditor({ field, onUpdate }) {
       
       {showUnitSelector && (
         <div>
-          <label className="mie:block mie:text-sm mie:mb-1">Unit (optional)</label>
+          <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Unit (optional)</label>
           <select
-            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-black/20 mie:rounded"
+            className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:cursor-pointer mie:transition-colors"
             value={unit}
             onChange={(e) => onUpdate("unit", e.target.value)}
           >
