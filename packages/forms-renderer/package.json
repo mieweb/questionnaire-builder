@@ -1,6 +1,6 @@
 {
   "name": "@mieweb/forms-renderer",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Read-only questionnaire form renderer as Web Component producing FHIR QuestionnaireResponse",
   "type": "module",
   "main": "./dist/react.js",

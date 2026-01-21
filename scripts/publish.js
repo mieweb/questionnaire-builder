@@ -9,7 +9,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const PACKAGES = ['forms-engine', 'forms-editor', 'forms-renderer', 'all'];
+const PACKAGES = ['forms-engine', 'forms-editor', 'forms-renderer'];
 const BUMP_TYPES = ['major', 'minor', 'patch'];
 
 const rl = readline.createInterface({
@@ -138,20 +138,43 @@ async function main() {
     }
   }
   
-  // Select package
+  // Select packages (multi-select)
   console.log('Available packages:');
   PACKAGES.forEach((pkg, i) => console.log(`  ${i + 1}. ${pkg}`));
+  console.log(`  ${PACKAGES.length + 1}. all`);
   
-  let packageChoice = await question('\nSelect package (1-4): ');
-  packageChoice = parseInt(packageChoice) - 1;
+  let packageInput = await question('\nSelect packages (comma-separated, e.g. 1,3 or 4 for all): ');
   
-  if (packageChoice < 0 || packageChoice >= PACKAGES.length) {
-    console.error('❌ Invalid package selection');
+  let selectedPackages = [];
+  
+  if (packageInput.trim() === String(PACKAGES.length + 1)) {
+    // "all" selected
+    selectedPackages = [...PACKAGES];
+  } else {
+    const choices = packageInput.split(',').map(s => parseInt(s.trim()) - 1);
+    for (const choice of choices) {
+      if (choice < 0 || choice >= PACKAGES.length) {
+        console.error(`❌ Invalid selection: ${choice + 1}`);
+        rl.close();
+        process.exit(1);
+      }
+      if (!selectedPackages.includes(PACKAGES[choice])) {
+        selectedPackages.push(PACKAGES[choice]);
+      }
+    }
+  }
+  
+  if (selectedPackages.length === 0) {
+    console.error('❌ No packages selected');
     rl.close();
     process.exit(1);
   }
   
-  const selectedPackage = PACKAGES[packageChoice];
+  // Sort by dependency order: engine -> editor -> renderer
+  const ORDER = ['forms-engine', 'forms-editor', 'forms-renderer'];
+  selectedPackages.sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b));
+  
+  console.log(`\n📋 Selected: ${selectedPackages.join(', ')}`);
   
   // Select bump type
   console.log('\nVersion bump types:');
@@ -174,28 +197,27 @@ async function main() {
   
   rl.close();
   
-  // Process packages
-  if (selectedPackage === 'all') {
-    console.log('\n📦 Publishing all packages...\n');
+  // Process selected packages
+  if (selectedPackages.length > 1) {
+    console.log(`\n📦 Publishing ${selectedPackages.length} packages...\n`);
     
-    // Build all first
-    console.log('🔨 Building all packages...');
-    if (!exec('npm run build:packages')) {
-      process.exit(1);
-    }
-    
-    // Process in order: engine first, then editor and renderer
-    for (const pkg of ['forms-engine', 'forms-editor', 'forms-renderer']) {
-      if (!await publishPackage(pkg, bumpType, shouldPublish)) {
-        console.error(`\n❌ Failed to process ${pkg}`);
+    // Build all selected first
+    console.log('🔨 Building selected packages...');
+    for (const pkg of selectedPackages) {
+      if (!exec(`npm run build --workspace=packages/${pkg}`)) {
         process.exit(1);
       }
     }
-    
-    console.log('\n✅ All packages processed successfully!');
-  } else {
-    await publishPackage(selectedPackage, bumpType, shouldPublish);
   }
+  
+  for (const pkg of selectedPackages) {
+    if (!await publishPackage(pkg, bumpType, shouldPublish)) {
+      console.error(`\n❌ Failed to process ${pkg}`);
+      process.exit(1);
+    }
+  }
+  
+  console.log(`\n✅ ${selectedPackages.length === 1 ? selectedPackages[0] : 'All selected packages'} processed successfully!`);
 }
 
 main().catch(error => {
