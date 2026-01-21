@@ -94,13 +94,10 @@ If provided, the renderer sets `storeRef.current` to the internal store instance
 
 ### `theme` (optional)
 
-- Type: `'light' | 'dark' | 'auto'`
-- Default: `'auto'`
+- Type: `'light' | 'dark'`
+- Default: `'light'`
 
-Controls the color theme:
-- `'auto'` - Auto-detects from `data-theme` or `.dark` class on document
-- `'light'` - Forces light theme
-- `'dark'` - Forces dark theme
+Controls the color theme. Pass dynamically from parent to switch themes.
 
 See [Theming](/docs/getting-started/theming) for customization options.
 

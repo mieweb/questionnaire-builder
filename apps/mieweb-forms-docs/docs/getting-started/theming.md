@@ -8,13 +8,14 @@ Both `@mieweb/forms-editor` and `@mieweb/forms-renderer` support light and dark 
 
 ## Theme Modes
 
-Both components accept a `theme` prop with three options:
+Both components accept a `theme` prop:
 
 | Value | Behavior |
 |-------|----------|
-| `'auto'` | **(default)** Auto-detects from `data-theme` attribute or `.dark` class on `<html>` or `<body>` |
-| `'light'` | Forces light theme |
-| `'dark'` | Forces dark theme |
+| `'light'` | **(default)** Light theme |
+| `'dark'` | Dark theme |
+
+The theme is controlled by the parent application - pass the theme prop dynamically to switch themes.
 
 ### React
 
@@ -22,26 +23,26 @@ Both components accept a `theme` prop with three options:
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
-// Auto-detect (default) - works with Docusaurus, Next.js, etc.
+// Light mode (default)
 <QuestionnaireEditor />
 <QuestionnaireRenderer formData={data} />
 
-// Force dark mode
+// Dark mode
 <QuestionnaireEditor theme="dark" />
 <QuestionnaireRenderer formData={data} theme="dark" />
 
-// Force light mode
-<QuestionnaireEditor theme="light" />
-<QuestionnaireRenderer formData={data} theme="light" />
+// Dynamic theme from parent state
+const [theme, setTheme] = useState('light');
+<QuestionnaireEditor theme={theme} />
 ```
 
 ### Web Component
 
 ```html
-<!-- Auto-detect (default) -->
+<!-- Light mode (default) -->
 <questionnaire-renderer></questionnaire-renderer>
 
-<!-- Force dark mode -->
+<!-- Dark mode -->
 <questionnaire-renderer theme="dark"></questionnaire-renderer>
 
 <!-- Via JavaScript -->
@@ -56,19 +57,6 @@ import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 ```handlebars
 {{> questionnaireRenderer formData=formData theme="dark"}}
 ```
-
-## Auto-Detection
-
-With `theme="auto"` (the default), the components automatically detect dark mode by watching for:
-
-- `data-theme="dark"` attribute on `<html>` or `<body>`
-- `.dark` class on `<html>` or `<body>`
-
-This works out-of-the-box with:
-- **Docusaurus** (uses `data-theme`)
-- **Next.js** with next-themes
-- **Tailwind CSS** dark mode (uses `.dark` class)
-- Any custom dark mode implementation using these patterns
 
 ## Custom Themes
 

@@ -1,7 +1,9 @@
 import React from 'react';
+import { useColorMode } from '@docusaurus/theme-common';
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
 
 export default function EditorDemo() {
+  const { colorMode } = useColorMode();
   const [formData, setFormData] = React.useState({
     schemaType: 'mieforms-v1.0',
     title: 'Sample Questionnaire',
@@ -29,6 +31,7 @@ export default function EditorDemo() {
         initialFormData={formData}
         onChange={setFormData}
         hideUnsupportedFields={true}
+        theme={colorMode === 'dark' ? 'dark' : 'light'}
       />
     </div>
   );

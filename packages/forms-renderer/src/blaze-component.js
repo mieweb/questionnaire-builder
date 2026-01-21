@@ -22,31 +22,25 @@ export function registerBlazeTemplate() {
     }
 
     const root = ReactDOM.createRoot(mountNode);
-    const render = () => {
-      const props = {
-        formData: templateInstance.data.formData || [],
-        schemaType: templateInstance.data.schemaType,
-        hideUnsupportedFields: templateInstance.data.hideUnsupportedFields,
-        onChange: templateInstance.data.onChange,
-        onQuestionnaireResponse: templateInstance.data.onQuestionnaireResponse,
-        questionnaireId: templateInstance.data.questionnaireId,
-        subjectId: templateInstance.data.subjectId,
-        onSubmit: templateInstance.data.onSubmit,
-        fullHeight: templateInstance.data.fullHeight,
-        className: templateInstance.data.className,
-        theme: templateInstance.data.theme || 'auto'
-      };
-      
-      root.render(React.createElement(QuestionnaireRenderer, props));
-    };
 
-    if (typeof Tracker !== 'undefined') {
-      templateInstance.autorun(() => {
-        render();
-      });
-    } else {
-      render();
-    }
+    templateInstance.autorun(() => {
+      // Use Template.currentData() for reactive data
+      const data = Template.currentData() || {};
+      const props = {
+        formData: data.formData || [],
+        schemaType: data.schemaType,
+        hideUnsupportedFields: data.hideUnsupportedFields,
+        onChange: data.onChange,
+        onQuestionnaireResponse: data.onQuestionnaireResponse,
+        questionnaireId: data.questionnaireId,
+        subjectId: data.subjectId,
+        onSubmit: data.onSubmit,
+        fullHeight: data.fullHeight,
+        className: data.className,
+        theme: data.theme || 'light'
+      };
+      root.render(React.createElement(QuestionnaireRenderer, props));
+    });
 
     templateInstance.view.onViewDestroyed(() => {
       root.unmount();

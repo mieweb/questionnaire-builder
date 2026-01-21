@@ -17,7 +17,7 @@ import './index.css';
  * @param {boolean} [fullHeight=false] - Apply min-h-screen
  * @param {boolean} [hideUnsupportedFields=true] - Hide unsupported field types
  * @param {React.MutableRefObject} [storeRef] - Optional ref to access the store instance
- * @param {'light'|'dark'|'auto'} [theme='auto'] - Theme: 'light', 'dark', or 'auto' (detects from parent)
+ * @param {'light'|'dark'} [theme='light'] - Theme: 'light' or 'dark'
  */
 function QuestionnaireRendererInner({
   formData,
@@ -30,39 +30,11 @@ function QuestionnaireRendererInner({
   fullHeight = false,
   hideUnsupportedFields = true,
   storeRef,
-  theme = 'auto',
+  theme = 'light',
 }) {
   const formStore = React.useContext(FormStoreContext);
   
-  // Theme detection
-  const [isDark, setIsDark] = React.useState(() => {
-    if (theme === 'dark') return true;
-    if (theme === 'light') return false;
-    // Auto-detect from document
-    if (typeof document !== 'undefined') {
-      return document.documentElement.getAttribute('data-theme') === 'dark' ||
-             document.documentElement.classList.contains('dark') ||
-             document.body.classList.contains('dark');
-    }
-    return false;
-  });
-
-  React.useEffect(() => {
-    if (theme !== 'auto') {
-      setIsDark(theme === 'dark');
-      return;
-    }
-    // Watch for theme changes (Docusaurus, etc.)
-    const observer = new MutationObserver(() => {
-      const dark = document.documentElement.getAttribute('data-theme') === 'dark' ||
-                   document.documentElement.classList.contains('dark') ||
-                   document.body.classList.contains('dark');
-      setIsDark(dark);
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, [theme]);
+  const isDark = theme === 'dark';
   
   // Expose store to parent via ref
   React.useEffect(() => {

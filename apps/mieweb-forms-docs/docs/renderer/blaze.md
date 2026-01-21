@@ -33,9 +33,8 @@ import '@mieweb/forms-renderer/blaze';
 
 ### Theme Options
 
-- `"auto"` (default) - Auto-detects from document's `data-theme` or `.dark` class
-- `"light"` - Forces light theme
-- `"dark"` - Forces dark theme
+- `"light"` (default) - Light theme
+- `"dark"` - Dark theme
 ```
 
 ## Helper example

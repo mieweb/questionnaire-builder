@@ -12,7 +12,7 @@ class QuestionnaireRendererElement extends HTMLElement {
     this._formData = [];
     this._schemaType = undefined;
     this._hideUnsupportedFields = true;
-    this._theme = 'auto';
+    this._theme = 'light';
     this._onChange = null;
     this._storeRef = React.createRef(); // Store reference for accessing state
   }
@@ -115,7 +115,7 @@ class QuestionnaireRendererElement extends HTMLElement {
         onChange: this._onChange,
         className: this.getAttribute('class') || '',
         fullHeight: this.hasAttribute('full-height'),
-        theme: this.getAttribute('theme') || this._theme || 'auto',
+        theme: this.getAttribute('theme') || this._theme || 'light',
         storeRef: this._storeRef,
       })
     );

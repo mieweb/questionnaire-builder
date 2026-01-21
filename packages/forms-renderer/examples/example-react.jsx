@@ -166,6 +166,7 @@ function App() {
           // Optional props (auto-detected if not provided):
           // schemaType: 'mieforms' | 'surveyjs' - Auto-detects from schema metadata
           // hideUnsupportedFields: boolean - Hide unsupported field types (default: true)
+          // theme: 'light' | 'dark' - Theme mode (default: 'light')
         />
         
         <div style={{ marginTop: '1rem', textAlign: 'center' }}>

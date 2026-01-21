@@ -100,23 +100,23 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
 
         // Edit mode
         return (
-          <div className="mie:space-y-4 mie:w-full">
+          <div className="mie:space-y-4 mie:w-full mie:bg-miesurface">
             {/* Editor/Preview Toggle */}
             <div className="mie:flex mie:gap-2">
               <button
                 onClick={() => setEditMode(false)}
-                className={`edit-mode-btn mie:px-4 mie:py-2 mie:rounded mie:transition-colors ${!editMode
-                  ? "mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-miesurface"
-                  : "mie:bg-miebackground mie:hover:bg-mieborder mie:text-mietext"
+                className={`edit-mode-btn mie:px-4 mie:py-2 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:cursor-pointer mie:transition-colors ${!editMode
+                  ? "mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-mietextsecondary"
+                  : "mie:bg-miebackgroundsecondary mie:hover:bg-miebackgroundhover mie:text-mietext"
                   }`}
               >
                 Edit
               </button>
               <button
                 onClick={() => setEditMode(true)}
-                className={`preview-mode-btn mie:px-4 mie:py-2 mie:rounded mie:transition-colors ${editMode
-                  ? "mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-miesurface"
-                  : "mie:bg-miebackground mie:hover:bg-mieborder mie:text-mietext"
+                className={`preview-mode-btn mie:px-4 mie:py-2 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:cursor-pointer mie:transition-colors ${editMode
+                  ? "mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-mietextsecondary"
+                  : "mie:bg-miebackgroundsecondary mie:hover:bg-miebackgroundhover mie:text-mietext"
                   }`}
               >
                 Preview
@@ -140,7 +140,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                     setIframeHeight(height);
                     api.field.update("iframeHeight", height);
                   }}
-                  className="height-slider mie:flex-1 mie:accent-mieprimary"
+                  className="height-slider mie:flex-1 mie:accent-mieprimary mie:bg-transparent mie:cursor-pointer"
                   aria-label="Preview height in pixels"
                 />
                 <input
@@ -154,7 +154,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                     setIframeHeight(Math.max(50, Math.min(800, height)));
                     api.field.update("iframeHeight", Math.max(50, Math.min(800, height)));
                   }}
-                  className="height-input mie:w-20 mie:px-2 mie:py-1 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:text-sm mie:text-center"
+                  className="height-input mie:w-20 mie:px-2 mie:py-1 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:text-sm mie:text-center mie:outline-none mie:focus:border-mieprimary"
                   aria-label="Preview height in pixels"
                 />
                 <span className="height-unit mie:text-sm mie:text-mietextmuted">px</span>
