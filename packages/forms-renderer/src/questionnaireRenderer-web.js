@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QuestionnaireRenderer } from './QuestionnaireRenderer.jsx';
-import { buildQuestionnaireResponse } from './utils/fhirResponse';
 
 class QuestionnaireRendererElement extends HTMLElement {
   static observedAttributes = ['form-data', 'schema-type', 'full-height', 'hide-unsupported-fields', 'theme'];
@@ -9,12 +8,15 @@ class QuestionnaireRendererElement extends HTMLElement {
   constructor() {
     super();
     this._root = null;
+    this._rendererRef = React.createRef();
     this._formData = [];
     this._schemaType = undefined;
     this._hideUnsupportedFields = true;
     this._theme = 'light';
-    this._onChange = null;
-    this._storeRef = React.createRef(); // Store reference for accessing state
+  }
+
+  getResponse() {
+    return this._rendererRef.current?.getResponse?.() ?? null;
   }
 
   connectedCallback() {
@@ -36,11 +38,6 @@ class QuestionnaireRendererElement extends HTMLElement {
 
   get formData() {
     return this._formData;
-  }
-
-  set onChange(fn) {
-    this._onChange = fn;
-    this._render();
   }
 
   set schemaType(value) {
@@ -68,16 +65,6 @@ class QuestionnaireRendererElement extends HTMLElement {
 
   get theme() {
     return this._theme;
-  }
-
-  getQuestionnaireResponse(questionnaireId = 'questionnaire-1', subjectId) {
-    if (!this._storeRef.current) {
-      console.warn('Store not initialized yet');
-      return null;
-    }
-    const state = this._storeRef.current.getState();
-    const fields = state.order.map(id => state.byId[id]);
-    return buildQuestionnaireResponse(fields, questionnaireId, subjectId);
   }
 
   _mount() {
@@ -109,14 +96,12 @@ class QuestionnaireRendererElement extends HTMLElement {
 
     this._root.render(
       React.createElement(QuestionnaireRenderer, {
+        ref: this._rendererRef,
         formData,
         schemaType: this.getAttribute('schema-type') || this._schemaType || undefined,
         hideUnsupportedFields: this.hasAttribute('hide-unsupported-fields') || this._hideUnsupportedFields,
-        onChange: this._onChange,
         className: this.getAttribute('class') || '',
-        fullHeight: this.hasAttribute('full-height'),
         theme: this.getAttribute('theme') || this._theme || 'light',
-        storeRef: this._storeRef,
       })
     );
   }

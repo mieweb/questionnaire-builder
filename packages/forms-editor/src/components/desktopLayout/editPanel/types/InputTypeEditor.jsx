@@ -1,7 +1,7 @@
 import React from "react";
 
 const INPUT_TYPES = [
-  { value: "text", label: "Text" },
+  { value: "string", label: "String" },
   { value: "number", label: "Number" },
   { value: "email", label: "Email" },
   { value: "tel", label: "Phone Number" },

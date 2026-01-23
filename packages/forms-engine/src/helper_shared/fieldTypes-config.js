@@ -68,7 +68,6 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "section",
-      title: "",
       fields: [],
     },
     placeholder: {
@@ -85,10 +84,7 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "text",
-      question: "",
-      answer: "",
-      inputType: "text",  // text, number, email, tel, date, datetime-local, month, time, range
-      unit: "",           // For number/range: feet, inches, meters, mm, kg, lbs, etc.
+      inputType: "string",  // string, number, email, tel, date, datetime-local, month, time, range
     },
     placeholder: {
       question: "Enter your question...",
@@ -104,8 +100,6 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "longtext",
-      question: "",
-      answer: "",
     },
     placeholder: {
       question: "Enter your question...",
@@ -121,7 +115,6 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "multitext",
-      question: "",
       options: [
         { value: "Option 1" },
         { value: "Option 2" },
@@ -141,13 +134,11 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "radio",
-      question: "",
       options: [
         { value: "Option 1" },
         { value: "Option 2" },
         { value: "Option 3" },
       ],
-      selected: null,
     },
     placeholder: {
       question: "Enter your question...",
@@ -162,13 +153,11 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "check",
-      question: "",
       options: [
         { value: "Option 1" },
         { value: "Option 2" },
         { value: "Option 3" },
       ],
-      answer: [],
     },
     placeholder: {
       question: "Enter your question...",
@@ -183,12 +172,10 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "boolean",
-      question: "",
       options: [
         { value: "Yes" },
         { value: "No" },
       ],
-      selected: null,
     },
     placeholder: {
       question: "Enter your question...",
@@ -203,13 +190,11 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "dropdown",
-      question: "",
       options: [
         { value: "Option 1" },
         { value: "Option 2" },
         { value: "Option 3" },
       ],
-      selected: null,
     },
     placeholder: {
       question: "Enter your question...",
@@ -224,13 +209,11 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "multiselectdropdown",
-      question: "",
       options: [
         { value: "Option 1" },
         { value: "Option 2" },
         { value: "Option 3" },
       ],
-      selected: [],
     },
     placeholder: {
       question: "Enter your question...",
@@ -245,7 +228,6 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "rating",
-      question: "",
       options: [
         { text: "1", value: 1 },
         { text: "2", value: 2 },
@@ -253,7 +235,6 @@ const fieldTypes = {
         { text: "4", value: 4 },
         { text: "5", value: 5 },
       ],
-      selected: null,
     },
     placeholder: {
       question: "Enter your question...",
@@ -268,13 +249,11 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "ranking",
-      question: "",
       options: [
         { value: "Item 1" },
         { value: "Item 2" },
         { value: "Item 3" },
       ],
-      selected: [],
     },
     placeholder: {
       question: "Enter your question...",
@@ -289,13 +268,11 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "slider",
-      question: "",
       options: [
         { value: "Low" },
         { value: "Medium" },
         { value: "High" },
       ],
-      selected: null,
     },
     placeholder: {
       question: "Enter your question...",
@@ -310,7 +287,6 @@ const fieldTypes = {
     hasMatrix: true,
     defaultProps: {
       fieldType: "multimatrix",
-      question: "",
       rows: [
         { value: "Row 1" },
         { value: "Row 2" },
@@ -321,7 +297,6 @@ const fieldTypes = {
         { value: "Column 2" },
         { value: "Column 3" },
       ],
-      selected: {},
     },
     placeholder: {
       question: "Enter your question...",
@@ -337,7 +312,6 @@ const fieldTypes = {
     hasMatrix: true,
     defaultProps: {
       fieldType: "singlematrix",
-      question: "",
       rows: [
         { value: "Row 1" },
         { value: "Row 2" },
@@ -348,7 +322,6 @@ const fieldTypes = {
         { value: "Column 2" },
         { value: "Column 3" },
       ],
-      selected: {},
     },
     placeholder: {
       question: "Enter your question...",
@@ -362,11 +335,7 @@ const fieldTypes = {
     componentKey: "signature",
     defaultProps: {
       fieldType: "signature",
-      question: "",
       placeholder: "Sign here",
-      signatureData: "",
-      signatureImage: "",
-      required: false,
     },
     placeholder: {
       question: "Enter your question...",
@@ -379,12 +348,7 @@ const fieldTypes = {
     componentKey: "diagram",
     defaultProps: {
       fieldType: "diagram",
-      question: "",
       placeholder: "Draw on the diagram",
-      diagramImage: "",
-      markupData: "",
-      markupImage: "",
-      required: false,
     },
     placeholder: {
       question: "Enter your question...",
@@ -416,10 +380,6 @@ const fieldTypes = {
     hasMatrix: false,
     defaultProps: {
       fieldType: "image",
-      label: "",
-      imageUri: "",
-      altText: "",
-      caption: "",
       size: "full",
       alignment: "center",
       padding: "padded",
@@ -436,7 +396,6 @@ const fieldTypes = {
     componentKey: "html",
     defaultProps: {
       fieldType: "html",
-      htmlContent: "",
       iframeHeight: 400,
     },
     placeholder: {
@@ -452,11 +411,8 @@ const fieldTypes = {
     defaultProps: {
       fieldType: "expression",
       label: "Calculated Result",
-      expression: "",
       displayFormat: "number",
       decimalPlaces: 2,
-      sampleDataFields: [],
-      answer: "",
     },
     placeholder: {
       label: "Expression Field",

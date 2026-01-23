@@ -4,120 +4,98 @@ sidebar_position: 3
 
 # Get Response
 
-Use the `onQuestionnaireResponse` prop to receive a FHIR `QuestionnaireResponse` whenever answers change.
+Use the `ref` prop to get form responses on demand via `ref.current.getResponse()`.
 
-If you already have a `fields` array (e.g., from `onChange`), you can also build the response manually using:
-
-```js
-buildQuestionnaireResponse(fields, questionnaireId, subjectId)
-```
-
-## React usage
-
-Use the `onQuestionnaireResponse` prop to receive a response whenever answers change (returned as a FHIR `QuestionnaireResponse`). This avoids refs:
+## React Usage
 
 ```jsx
-import React from 'react';
-import {
-  QuestionnaireRenderer,
-} from '@mieweb/forms-renderer';
+import React, { useRef } from 'react';
+import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
 export function MyForm() {
+  const rendererRef = useRef();
+
   const formData = {
     schemaType: 'mieforms-v1.0',
     fields: [
-      { id: 'name', fieldType: 'text', question: 'Name', answer: '' },
+      { id: 'name', fieldType: 'text', question: 'Name' },
+      { id: 'email', fieldType: 'text', question: 'Email', inputType: 'email' },
     ],
   };
 
-  const [response, setResponse] = React.useState(null);
+  const handleSubmit = () => {
+    const response = rendererRef.current.getResponse();
+    console.log('Form response:', response);
+    // Send to server, etc.
+  };
 
   return (
     <div>
-      <QuestionnaireRenderer
-        formData={formData}
-        questionnaireId="my-questionnaire-id"
-        subjectId="patient-123"
-        onQuestionnaireResponse={setResponse}
-      />
-
-      <pre>{JSON.stringify(response, null, 2)}</pre>
+      <QuestionnaireRenderer ref={rendererRef} formData={formData} />
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 }
 ```
 
-## Meteor Blaze usage
+## Response Format
 
-Use `onQuestionnaireResponse` to capture the response as it changes:
+`getResponse()` returns the current form state with answers:
 
-```handlebars
-{{> questionnaireRenderer
-    formData=currentFormData
-    questionnaireId="my-questionnaire-id"
-    subjectId="patient-123"
-    onQuestionnaireResponse=handleResponse}}
+```json
+{
+  "schemaType": "mieforms-v1.0",
+  "fields": [
+    {
+      "id": "name",
+      "fieldType": "text",
+      "question": "Name",
+      "answer": "John Doe"
+    },
+    {
+      "id": "email",
+      "fieldType": "text",
+      "question": "Email",
+      "inputType": "email",
+      "answer": "john@example.com"
+    }
+  ]
+}
 ```
 
-```js
-import { Template } from 'meteor/templating';
-import '@mieweb/forms-renderer/blaze';
+## Web Component Usage
 
-Template.myForm.helpers({
-  handleResponse() {
-    return (response) => {
-      console.log(response);
-    };
-  },
-});
-```
+```html
+<questionnaire-renderer id="myForm"></questionnaire-renderer>
 
-## Web Component usage
+<script type="module">
+  import '@mieweb/forms-renderer/standalone';
 
-If you’re using the standalone `<questionnaire-renderer>` element, call its built-in method:
+  const el = document.getElementById('myForm');
+  el.formData = { schemaType: 'mieforms-v1.0', fields: [...] };
 
-```js
-const renderer = document.querySelector('questionnaire-renderer');
-const fhir = renderer.getQuestionnaireResponse('my-questionnaire-id', 'patient-123');
+  document.getElementById('submitBtn').addEventListener('click', () => {
+    const response = el.getResponse();
+    console.log(response);
+  });
+</script>
 ```
 
 See [Standalone Web Component](/docs/renderer/web-component) for the full API.
 
-## Manual helper usage (advanced)
+## Meteor Blaze Usage
 
-If you want to build a response from the fields array yourself:
+```js
+Template.myForm.onRendered(function() {
+  // The template instance exposes getResponse()
+});
 
-```jsx
-import React from 'react';
-import {
-  QuestionnaireRenderer,
-  buildQuestionnaireResponse,
-} from '@mieweb/forms-renderer';
-
-export function MyForm() {
-  const formData = {
-    schemaType: 'mieforms-v1.0',
-    fields: [
-      { id: 'name', fieldType: 'text', question: 'Name', answer: '' },
-    ],
-  };
-
-  const [latestFields, setLatestFields] = React.useState([]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const fhir = buildQuestionnaireResponse(latestFields, 'my-questionnaire-id', 'patient-123');
-    console.log(fhir);
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer
-        formData={formData}
-        onChange={(fd) => setLatestFields(fd.fields)}
-      />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
+Template.myForm.events({
+  'click .submit-btn'(event, templateInstance) {
+    const response = templateInstance.getResponse();
+    console.log('Form response:', response);
+  }
+});
 ```
+
+See [Meteor Blaze](/docs/renderer/blaze) for the full API.

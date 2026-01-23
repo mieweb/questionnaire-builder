@@ -683,7 +683,7 @@ function convertSurveyJSExpression(expression) {
 
 function checkLostInputFeatures(element, warnings) {
   // We now support these inputTypes, so only warn for unsupported ones
-  const supportedInputTypes = ['text', 'number', 'email', 'tel', 'date', 'datetime', 'datetime-local', 'month', 'time', 'range'];
+  const supportedInputTypes = ['string', 'number', 'email', 'tel', 'date', 'datetime', 'datetime-local', 'month', 'time', 'range'];
   if (element.inputType && !supportedInputTypes.includes(element.inputType)) {
     warnings.push({
       type: 'input_type_lost',

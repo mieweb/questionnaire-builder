@@ -1,10 +1,10 @@
 import React from "react";
 import Editor from "@monaco-editor/react";
-import { useFormStore, useFormData, useUIApi, parseAndDetect, adaptSchema, MIE_FORMS_SCHEMA_TYPE, useAlert } from "@mieweb/forms-engine";
+import { useFormStore, useFormDefinition, useUIApi, parseAndDetect, adaptSchema, MIE_FORMS_SCHEMA_TYPE, useAlert } from "@mieweb/forms-engine";
 import YAML from "js-yaml";
 
 export default function CodeEditor() {
-  const formData = useFormData();
+  const definition = useFormDefinition();
   const replaceAll = useFormStore((s) => s.replaceAll);
   const ui = useUIApi();
   const { showAlert } = useAlert();
@@ -35,7 +35,7 @@ export default function CodeEditor() {
   const [editorHeight, setEditorHeight] = React.useState(640);
   const [code, setCode] = React.useState(() => {
     try {
-      return YAML.dump(formData, { indent: 2, lineWidth: -1 });
+      return YAML.dump(definition, { indent: 2, lineWidth: -1 });
     } catch {
       return "";
     }
@@ -80,13 +80,13 @@ export default function CodeEditor() {
     return () => window.removeEventListener("resize", calculateHeight);
   }, []);
 
-  // Update code when formData changes (syncing from visual editor)
+  // Update code when definition changes (syncing from visual editor)
   React.useEffect(() => {
     // Don't overwrite if user has unsaved pasted content
     if (hasUnsavedChanges.current) return;
     
     try {
-      const newCode = serializeData(formData);
+      const newCode = serializeData(definition);
       setCode(newCode);
       codeRef.current = newCode;
       setError("");
@@ -95,7 +95,7 @@ export default function CodeEditor() {
       setError(`Failed to serialize: ${err.message}`);
       ui.setCodeEditorHasError(true);
     }
-  }, [formData, serializeData, ui]);
+  }, [definition, serializeData, ui]);
 
   const handleCodeChange = (value) => {
     setCode(value || "");
@@ -220,8 +220,8 @@ export default function CodeEditor() {
 
         if (!parsed || typeof parsed !== "object") return;
 
-        // Compare with current formData - only save if different
-        if (JSON.stringify(formData) === JSON.stringify(parsed)) return;
+        // Compare with current definition - only save if different
+        if (JSON.stringify(definition) === JSON.stringify(parsed)) return;
 
         const { schemaType } = parseAndDetect(parsed);
         const { fields, conversionReport } = adaptSchema(parsed, schemaType);
@@ -243,7 +243,7 @@ export default function CodeEditor() {
         // Silently fail - error already shown in editor header
       }
     };
-  }, [parseCode, replaceAll, ui, formData]);
+  }, [parseCode, replaceAll, ui, definition]);
 
   return (
     <div ref={containerRef} className="code-editor-container mie:flex mie:flex-col mie:bg-miebackground mie:max-w-7xl mie:w-full" style={{ height: `${editorHeight}px` }}>
