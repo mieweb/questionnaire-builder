@@ -11,7 +11,14 @@ sidebar_position: 2
 ```jsx
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
-<QuestionnaireRenderer formData={formData} />
+<QuestionnaireRenderer 
+  ref={rendererRef}
+  formData={formData}             // object | JSON string | YAML string (required)
+  schemaType="mieforms"           // "mieforms" | "surveyjs" (auto-detected if omitted)
+  theme="light"                   // "light" | "dark"
+  className="my-form"             // additional CSS classes
+  hideUnsupportedFields={true}    // hide unsupported field types (default: true)
+/>
 ```
 
 ## Props
@@ -33,38 +40,22 @@ import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
 If omitted, schema type is auto-detected.
 
-### `onChange` (optional)
+### `ref` (optional)
 
-- Type: `(formData: object) => void`
+- Type: `React.Ref`
 
-Called whenever answers change. The payload is the current schema + responses:
+Exposes a `getResponse()` method to retrieve form responses on demand:
 
-```js
-{
-  schemaType: 'mieforms-v1.0',
-  // ...any schema metadata
-  fields: [ /* fields including current answers */ ]
-}
+```jsx
+const rendererRef = useRef();
 
-### `onQuestionnaireResponse` (optional)
+<QuestionnaireRenderer ref={rendererRef} formData={formData} />
 
-- Type: `(response: object) => void`
-
-Called whenever answers change. The payload is a FHIR `QuestionnaireResponse`.
-
-### `questionnaireId` (optional)
-
-- Type: `string`
-- Default: `'questionnaire-1'`
-
-Used as the Questionnaire identifier in the generated `QuestionnaireResponse`.
-
-### `subjectId` (optional)
-
-- Type: `string`
-
-If provided, the `QuestionnaireResponse.subject` will be set to `Patient/{subjectId}`.
+// Later, when you want the response:
+const response = rendererRef.current.getResponse();
 ```
+
+See [Get Response](/docs/renderer/get-response) for full usage examples.
 
 ### `hideUnsupportedFields` (optional)
 
@@ -73,24 +64,11 @@ If provided, the `QuestionnaireResponse.subject` will be set to `Patient/{subjec
 
 Hides `fieldType: "unsupported"` during rendering.
 
-### `fullHeight` (optional)
-
-- Type: `boolean`
-- Default: `false`
-
-Applies a full-height rendering mode.
-
 ### `className` (optional)
 
 - Type: `string`
 
 Appends CSS classes on the renderer root container.
-
-### `storeRef` (optional)
-
-- Type: `React.MutableRefObject`
-
-If provided, the renderer sets `storeRef.current` to the internal store instance (advanced usage).
 
 ### `theme` (optional)
 

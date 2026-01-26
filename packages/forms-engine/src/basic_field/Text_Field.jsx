@@ -60,7 +60,7 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
   return (
     <FieldWrapper ctrl={ctrl}>
       {({ api, isPreview, field: f, placeholder }) => {
-        const inputType = f.inputType || "text";
+        const inputType = f.inputType || "string";
         const unit = f.unit || "";
         const isTel = inputType === "tel";
         
@@ -68,7 +68,7 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
         const getPlaceholder = () => {
           if (f.placeholder) return f.placeholder;
           const placeholderMap = {
-            'text': 'Enter text',
+            'string': 'Enter text',
             'number': 'Enter number',
             'email': 'example@email.com',
             'tel': '(555) 555-5555',
@@ -87,7 +87,7 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
                 <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <div className="mie:relative">
                   <input
-                    type={isTel ? "tel" : inputType}
+                    type={inputType}
                     value={f.answer || ""}
                     onChange={(e) => {
                       if (isTel) {

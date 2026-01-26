@@ -1,11 +1,11 @@
 import React from "react";
-import { useFormStore, useFormData, useUIApi, adaptSchema, parseAndDetect, useAlert, CODE_ICON, VEDITOR_ICON, PICTURE_ICON, UPLOAD_ICON, DOWNLOAD_ICON } from "@mieweb/forms-engine";
+import { useFormStore, useFormDefinition, useUIApi, adaptSchema, parseAndDetect, useAlert, CODE_ICON, VEDITOR_ICON, PICTURE_ICON, UPLOAD_ICON, DOWNLOAD_ICON } from "@mieweb/forms-engine";
 
 export default function Header() {
   const [showSchemaConfirm, setShowSchemaConfirm] = React.useState(false);
   const [pendingImport, setPendingImport] = React.useState(null);
   const replaceAll = useFormStore((s) => s.replaceAll);
-  const formData = useFormData(); // Get complete form data with metadata
+  const definition = useFormDefinition(); // Get definition without response values
   const { showAlert } = useAlert();
 
   const ui = useUIApi();
@@ -124,7 +124,7 @@ export default function Header() {
   };
 
   const onExport = () => {
-    const json = JSON.stringify(formData, null, 2);
+    const json = JSON.stringify(definition, null, 2);
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

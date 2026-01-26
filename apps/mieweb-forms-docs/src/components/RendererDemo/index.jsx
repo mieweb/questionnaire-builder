@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useColorMode } from '@docusaurus/theme-common';
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
 export default function RendererDemo() {
   const { colorMode } = useColorMode();
-  const [formData] = React.useState({
+  const rendererRef = useRef();
+  
+  const formData = {
     schemaType: 'mieforms-v1.0',
     title: 'Patient Survey',
     fields: [
@@ -12,8 +14,7 @@ export default function RendererDemo() {
         id: 'name',
         fieldType: 'text',
         question: 'What is your full name?',
-        required: true,
-        answer: ''
+        required: true
       },
       {
         id: 'rating',
@@ -23,24 +24,45 @@ export default function RendererDemo() {
           { value: 'Excellent' },
           { value: 'Good' },
           { value: 'Fair' }
-        ],
-        selected: null
+        ]
       },
       {
         id: 'feedback',
-        fieldType: 'textarea',
-        question: 'Additional comments',
-        answer: ''
+        fieldType: 'longtext',
+        question: 'Additional comments'
       }
     ]
-  });
+  };
+
+  const handleSubmit = () => {
+    const response = rendererRef.current.getResponse();
+    console.log('Raw response:', response);
+    console.log('Formatted response:', JSON.stringify(response, null, 2));
+    alert('Response logged to console! for the demo!');
+  };
 
   return (
     <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '20px', marginBottom: '20px' }}>
       <QuestionnaireRenderer 
+        ref={rendererRef}
         formData={formData} 
         theme={colorMode === 'dark' ? 'dark' : 'light'} 
       />
+      <div style={{ marginTop: '16px', textAlign: 'center' }}>
+        <button 
+          onClick={handleSubmit}
+          style={{ 
+            padding: '16px 32px', 
+            backgroundColor: '#3b82f6', 
+            color: 'white', 
+            border: 'none', 
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
+        >
+          Submit
+        </button>
+      </div>
     </div>
   );
 }

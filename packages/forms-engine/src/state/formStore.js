@@ -1,6 +1,6 @@
 import React from "react";
 import { createStore, useStore } from "zustand";
-import fieldTypes from "../helper_shared/fieldTypes-config";
+import fieldTypes, { FIELDS_BY_ANSWER_TYPE } from "../helper_shared/fieldTypes-config";
 import { initializeField } from "../helper_shared/initializedField";
 import { isVisible } from "../helper_shared/logicVisibility";
 import { generateFieldId, generateOptionId } from "../helper_shared/idGenerator";
@@ -503,5 +503,153 @@ export const useVisibleFields = (isPreview) => {
     const visible = fields.filter(f => isVisible(f, allFlat));
     return { fields: visible, allFlat };
   }, [order, byId, isPreview]);
+};
+
+// ────────── Response Value Helpers ──────────
+
+// Resolve option ID to its display value
+const resolveOptionValue = (options, optionId) => {
+  if (!Array.isArray(options)) return optionId;
+  const opt = options.find(o => o.id === optionId);
+  return opt?.value ?? optionId;
+};
+
+// Strip response values from a single field (returns definition-only)
+const stripFieldResponseValues = (field) => {
+  if (!field) return field;
+  
+  const { answer, selected, ...definition } = field;
+  
+  // Handle sections with nested fields
+  if (definition.fieldType === 'section' && Array.isArray(definition.fields)) {
+    return {
+      ...definition,
+      fields: definition.fields.map(stripFieldResponseValues),
+    };
+  }
+  
+  // Handle multitext options that may have answer values
+  if (Array.isArray(definition.options)) {
+    definition.options = definition.options.map(({ answer, ...opt }) => opt);
+  }
+  
+  return definition;
+};
+
+// Build response item for a single field
+const buildFieldResponse = (field) => {
+  if (!field) return null;
+  
+  const { id, fieldType, question, title, answer, selected, options, rows, columns } = field;
+  
+  // Skip fields that don't collect responses
+  if (FIELDS_BY_ANSWER_TYPE.container?.has(fieldType) || FIELDS_BY_ANSWER_TYPE.display?.has(fieldType)) {
+    return null;
+  }
+  
+  const text = question || title || '';
+  
+  // Text-based fields (text, longtext, expression)
+  if (FIELDS_BY_ANSWER_TYPE.text?.has(fieldType)) {
+    if (!answer && answer !== 0) return null;
+    return { id, text, answer: [{ value: String(answer) }] };
+  }
+  
+  // Single selection fields (radio, dropdown, boolean, rating, slider)
+  if (FIELDS_BY_ANSWER_TYPE.selection?.has(fieldType)) {
+    if (!selected) return null;
+    const value = resolveOptionValue(options, selected);
+    return { id, text, answer: [{ id: selected, value }] };
+  }
+  
+  // Multi selection fields (check, multiselectdropdown, ranking)
+  if (FIELDS_BY_ANSWER_TYPE.multiselection?.has(fieldType)) {
+    if (!Array.isArray(selected) || selected.length === 0) return null;
+    const answers = selected.map(optId => ({
+      id: optId,
+      value: resolveOptionValue(options, optId)
+    }));
+    return { id, text, answer: answers };
+  }
+  
+  // Matrix fields (singlematrix, multimatrix)
+  if (FIELDS_BY_ANSWER_TYPE.matrix?.has(fieldType)) {
+    if (!selected || typeof selected !== 'object' || Object.keys(selected).length === 0) return null;
+    const answers = [];
+    Object.entries(selected).forEach(([rowId, colValue]) => {
+      const rowLabel = resolveOptionValue(rows, rowId);
+      if (Array.isArray(colValue)) {
+        // Multi-select per row
+        colValue.forEach(colId => {
+          answers.push({ rowId, row: rowLabel, id: colId, value: resolveOptionValue(columns, colId) });
+        });
+      } else if (colValue) {
+        // Single-select per row
+        answers.push({ rowId, row: rowLabel, id: colValue, value: resolveOptionValue(columns, colValue) });
+      }
+    });
+    if (answers.length === 0) return null;
+    return { id, text, answer: answers };
+  }
+  
+  // Multitext fields (each option has its own answer)
+  if (FIELDS_BY_ANSWER_TYPE.multitext?.has(fieldType)) {
+    if (!Array.isArray(options)) return null;
+    const answers = options
+      .filter(opt => opt.answer)
+      .map(opt => ({ id: opt.id, label: opt.value, value: opt.answer }));
+    if (answers.length === 0) return null;
+    return { id, text, answer: answers };
+  }
+  
+  return null;
+};
+
+// ────────── Definition-Only Selector ──────────
+
+// Get form definition without response values (for export/save)
+export const useFormDefinition = () => {
+  const order = useFormStore((s) => s.order);
+  const byId = useFormStore((s) => s.byId);
+  const schemaType = useFormStore((s) => s.schemaType);
+  const schemaMetadata = useFormStore((s) => s.schemaMetadata);
+  
+  return React.useMemo(() => ({
+    schemaType,
+    ...schemaMetadata,
+    fields: order.map((id) => stripFieldResponseValues(byId[id])),
+  }), [order, byId, schemaType, schemaMetadata]);
+};
+
+// ────────── Response-Only Selector ──────────
+
+// Get form response (answers only) for submission
+export const useFormResponse = () => {
+  const order = useFormStore((s) => s.order);
+  const byId = useFormStore((s) => s.byId);
+  
+  return React.useMemo(() => {
+    const responses = [];
+    
+    order.forEach((id) => {
+      const field = byId[id];
+      if (!field) return;
+      
+      // Handle sections - extract from nested fields
+      if (field.fieldType === 'section' && Array.isArray(field.fields)) {
+        field.fields.forEach((child) => {
+          const response = buildFieldResponse(child);
+          if (response) responses.push(response);
+        });
+        return;
+      }
+      
+      // Handle regular fields
+      const response = buildFieldResponse(field);
+      if (response) responses.push(response);
+    });
+    
+    return responses;
+  }, [order, byId]);
 };
 

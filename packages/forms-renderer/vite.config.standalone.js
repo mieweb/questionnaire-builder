@@ -62,7 +62,7 @@ export default defineConfig({
       'process.env.NODE_ENV': JSON.stringify('production')
     },
     lib: {
-      entry: resolve(__dirname, 'src/web-component.js'),
+      entry: resolve(__dirname, 'src/questionnaireRenderer-web.js'),
       name: 'QuestionnaireRenderer',
       fileName: 'standalone',
       formats: ['es', 'umd']

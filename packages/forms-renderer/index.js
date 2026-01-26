@@ -5,7 +5,7 @@ export { QuestionnaireRenderer } from './src/QuestionnaireRenderer.jsx';
 export { RendererBody, FieldNode } from './src/components';
 
 // Utilities for building FHIR responses
-export { buildQuestionnaireResponse } from './src/utils/fhirResponse';
+export { toFhirQuestionnaireResponse } from './src/utils/fhirResponse';
 
-// Re-export useful hook from forms-engine for convenience
-export { useFieldsArray } from '@mieweb/forms-engine';
+// Re-export useful hooks/functions from forms-engine for convenience
+export { useFieldsArray, useFormResponse, useFormData } from '@mieweb/forms-engine';

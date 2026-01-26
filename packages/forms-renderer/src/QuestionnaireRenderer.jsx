@@ -1,93 +1,57 @@
 import React from 'react';
-import { FormStoreContext, UIStoreContext, createFormStore, createUIStore } from '@mieweb/forms-engine';
+import { FormStoreContext, UIStoreContext, createFormStore, createUIStore, useFormResponse } from '@mieweb/forms-engine';
 import { useQuestionnaireInit } from './hooks';
 import { RendererBody } from './components';
-import { buildQuestionnaireResponse } from './utils/fhirResponse';
 import './index.css';
 
 /**
  * QuestionnaireRenderer - Read-only questionnaire form renderer
  * @param {string|object} formData - YAML string, JSON string, or form data object
  * @param {string} [schemaType] - Optional: 'mieforms' or 'surveyjs' (auto-detected if not provided)
- * @param {function} [onChange] - Callback fired when form data changes
- * @param {function} [onQuestionnaireResponse] - Callback fired when answers change (receives FHIR QuestionnaireResponse)
- * @param {string} [questionnaireId] - Questionnaire identifier used in QuestionnaireResponse
- * @param {string} [subjectId] - Optional subject id used in QuestionnaireResponse (Patient/{subjectId})
  * @param {string} [className] - Additional CSS classes
- * @param {boolean} [fullHeight=false] - Apply min-h-screen
  * @param {boolean} [hideUnsupportedFields=true] - Hide unsupported field types
- * @param {React.MutableRefObject} [storeRef] - Optional ref to access the store instance
  * @param {'light'|'dark'} [theme='light'] - Theme: 'light' or 'dark'
+ * @param {React.Ref} [ref] - Ref exposing getResponse() method
  */
-function QuestionnaireRendererInner({
-  formData,
-  schemaType,
-  onChange,
-  onQuestionnaireResponse,
-  questionnaireId = 'questionnaire-1',
-  subjectId,
-  className = '',
-  fullHeight = false,
-  hideUnsupportedFields = true,
-  storeRef,
-  theme = 'light',
-}) {
-  const formStore = React.useContext(FormStoreContext);
-  
-  const isDark = theme === 'dark';
-  
-  // Expose store to parent via ref
-  React.useEffect(() => {
-    if (storeRef && formStore) {
-      storeRef.current = formStore;
-    }
-  }, [storeRef, formStore]);
-  
-  useQuestionnaireInit(formData, schemaType, hideUnsupportedFields);
-
-  React.useEffect(() => {
-    if ((!onChange && !onQuestionnaireResponse) || !formStore) return;
-    return formStore.subscribe((s) => {
-      const fields = s.order.map((id) => s.byId[id]);
-
-      if (onChange) {
-        onChange({
-          schemaType: s.schemaType || 'mieforms-v1.0',
-          ...s.schemaMetadata,
-          fields,
-        });
-      }
-
-      if (onQuestionnaireResponse) {
-        onQuestionnaireResponse(buildQuestionnaireResponse(fields, questionnaireId, subjectId));
-      }
-    });
-  }, [onChange, onQuestionnaireResponse, questionnaireId, subjectId, formStore]);
-
-  const rootClasses = [
-    'qb-renderer-root renderer-container mie:font-titillium mie:overflow-y-auto mie:custom-scrollbar',
-    'mie:max-w-4xl mie:mx-auto mie:px-2 mie:pb-8 mie:pt-4',
-    isDark && 'dark',
-    fullHeight && 'mie:max-h-screen mie:my-9',
-    className,
-  ].filter(Boolean).join(' ');
-
-  return (
-    <div className={rootClasses}>
-      <RendererBody />
-    </div>
-  );
-}
-
-export function QuestionnaireRenderer(props) {
+export const QuestionnaireRenderer = React.forwardRef((props, ref) => {
   const formStore = React.useRef(createFormStore()).current;
   const uiStore = React.useRef(createUIStore()).current;
 
   return (
     <FormStoreContext.Provider value={formStore}>
       <UIStoreContext.Provider value={uiStore}>
-        <QuestionnaireRendererInner {...props} />
+        <QuestionnaireRendererInner {...props} ref={ref} />
       </UIStoreContext.Provider>
     </FormStoreContext.Provider>
   );
-}
+});
+
+const QuestionnaireRendererInner = React.forwardRef(({
+  formData,
+  schemaType,
+  className = '',
+  hideUnsupportedFields = true,
+  theme = 'light',
+}, ref) => {
+  const isDark = theme === 'dark';
+  const response = useFormResponse();
+  
+  React.useImperativeHandle(ref, () => ({
+    getResponse: () => response,
+  }), [response]);
+  
+  const rootClasses = [
+    isDark && 'dark',
+    'qb-renderer-root renderer-container mie:font-titillium mie:overflow-y-auto mie:custom-scrollbar',
+    'mie:max-w-4xl mie:mx-auto mie:px-2 mie:pb-8 mie:pt-4',
+    className,
+  ].filter(Boolean).join(' ');
+  
+  useQuestionnaireInit(formData, schemaType, hideUnsupportedFields);
+
+  return (
+    <div className={rootClasses}>
+      <RendererBody />
+    </div>
+  );
+});

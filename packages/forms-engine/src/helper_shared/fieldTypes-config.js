@@ -21,42 +21,25 @@ import ExpressionField from "../adv_field/Expression_Field"
 /**
  * Field Type Configuration Schema
  * 
- * Each field type is configured with the following properties:
- * 
- * @property {string} label - Display name for the field type (shown in UI)
- * @property {string} category - Category grouping for the tool panel
- *   Available categories:
- *   - "Text Fields" - Single/long/multi text input fields
- *   - "Selection Fields" - Radio, checkbox, dropdown selections
- *   - "Rating & Ranking" - Rating scales, ranking, sliders
- *   - "Matrix Fields" - Single/multi matrix questions
- *   - "Rich Content" - Images, HTML, signature pads, and other rich media content
- *   - "Organization" - Sections and field grouping
- *   - "Other" - Miscellaneous fields
- * 
+ * @property {string} label - Display name shown in UI
+ * @property {string} category - Tool panel grouping (Text Fields | Selection Fields | Rating & Ranking | Matrix Fields | Rich Content | Organization | Other)
  * @property {string} componentKey - Internal key for component mapping
- * @property {boolean} hasOptions - If true, field has selectable answer options (radio, check, dropdown)
- * @property {boolean} hasMatrix - If true, field has matrix structure with rows/columns
- * 
+ * @property {string} answerType - Answer extraction behavior (text | selection | multiselection | multitext | matrix | media | display | container | none)
+ * @property {boolean} hasOptions - Has selectable answer options (radio, check, dropdown)
+ * @property {boolean} hasMatrix - Has matrix structure with rows/columns
  * @property {Object} defaultProps - Default properties when field is created
- *   Structure varies by field type:
- *   - Text fields: fieldType, question, answer
- *   - Option fields: fieldType, question, options[], selected
- *   - Matrix fields: fieldType, question, rows[], columns[], selected{}
- *   - Media fields: fieldType, label, imageUri, altText, etc.
- *   - Section: fieldType, title, fields[]
+ * @property {Object} placeholder - Placeholder text for form editors
  * 
- * @property {Object} placeholder - Placeholder text/help text for form editors
- *   Keys: question, answer, options, rows, columns, altText, caption, etc.
- * 
- * Available Categories:
+ * Field Types by Category:
  * - Text Fields: text, longtext, multitext
  * - Selection Fields: radio, check, boolean, dropdown, multiselectdropdown
  * - Rating & Ranking: rating, slider, ranking
  * - Matrix Fields: singlematrix, multimatrix
- * - Rich Content: image
+ * - Rich Content: image, html, signature, diagram, expression
  * - Organization: section
  * - Other: unsupported
+ * 
+ * @see FIELDS_BY_ANSWER_TYPE for field groupings by answer extraction behavior
  */
 
 const fieldTypes = {
@@ -64,64 +47,57 @@ const fieldTypes = {
     label: "Section Field",
     category: "Organization",
     componentKey: "section",
+    answerType: "container",
     hasOptions: false,
     hasMatrix: false,
     defaultProps: {
       fieldType: "section",
-      title: "",
       fields: [],
     },
     placeholder: {
       title: "Enter section title...",
-      question: "Not applicable for section",
-      options: "Not applicable for section",
     }
   },
   text: {
     label: "Text Field",
     category: "Text Fields",
     componentKey: "text",
+    answerType: "text",
     hasOptions: false,
     hasMatrix: false,
     defaultProps: {
       fieldType: "text",
-      question: "",
-      answer: "",
-      inputType: "text",  // text, number, email, tel, date, datetime-local, month, time, range
-      unit: "",           // For number/range: feet, inches, meters, mm, kg, lbs, etc.
+      inputType: "string",  // string, number, email, tel, date, datetime-local, month, time, range
     },
     placeholder: {
       question: "Enter your question...",
       answer: "Enter answer...",
-      options: "Not applicable for text field",
     }
   },
   longtext: {
     label: "Long Text Field",
     category: "Text Fields",
     componentKey: "longtext",
+    answerType: "text",
     hasOptions: false,
     hasMatrix: false,
     defaultProps: {
       fieldType: "longtext",
-      question: "",
-      answer: "",
     },
     placeholder: {
       question: "Enter your question...",
       answer: "Enter detailed answer...",
-      options: "Not applicable for long text field",
     }
   },
   multitext: {
     label: "Multi Text Field",
     category: "Text Fields",
     componentKey: "multitext",
+    answerType: "multitext",
     hasOptions: true,
     hasMatrix: false,
     defaultProps: {
       fieldType: "multitext",
-      question: "",
       options: [
         { value: "Option 1" },
         { value: "Option 2" },
@@ -137,17 +113,16 @@ const fieldTypes = {
     label: "Radio Field",
     category: "Selection Fields",
     componentKey: "radio",
+    answerType: "selection",
     hasOptions: true,
     hasMatrix: false,
     defaultProps: {
       fieldType: "radio",
-      question: "",
       options: [
         { value: "Option 1" },
         { value: "Option 2" },
         { value: "Option 3" },
       ],
-      selected: null,
     },
     placeholder: {
       question: "Enter your question...",
@@ -158,17 +133,16 @@ const fieldTypes = {
     label: "Check Field",
     category: "Selection Fields",
     componentKey: "check",
+    answerType: "multiselection",
     hasOptions: true,
     hasMatrix: false,
     defaultProps: {
       fieldType: "check",
-      question: "",
       options: [
         { value: "Option 1" },
         { value: "Option 2" },
         { value: "Option 3" },
       ],
-      answer: [],
     },
     placeholder: {
       question: "Enter your question...",
@@ -179,16 +153,15 @@ const fieldTypes = {
     label: "Boolean Field",
     category: "Selection Fields",
     componentKey: "boolean",
+    answerType: "selection",
     hasOptions: true,
     hasMatrix: false,
     defaultProps: {
       fieldType: "boolean",
-      question: "",
       options: [
         { value: "Yes" },
         { value: "No" },
       ],
-      selected: null,
     },
     placeholder: {
       question: "Enter your question...",
@@ -199,17 +172,16 @@ const fieldTypes = {
     label: "Dropdown Field",
     category: "Selection Fields",
     componentKey: "dropdown",
+    answerType: "selection",
     hasOptions: true,
     hasMatrix: false,
     defaultProps: {
       fieldType: "dropdown",
-      question: "",
       options: [
         { value: "Option 1" },
         { value: "Option 2" },
         { value: "Option 3" },
       ],
-      selected: null,
     },
     placeholder: {
       question: "Enter your question...",
@@ -220,17 +192,16 @@ const fieldTypes = {
     label: "Multi-Select Dropdown",
     category: "Selection Fields",
     componentKey: "multiselectdropdown",
+    answerType: "multiselection",
     hasOptions: true,
     hasMatrix: false,
     defaultProps: {
       fieldType: "multiselectdropdown",
-      question: "",
       options: [
         { value: "Option 1" },
         { value: "Option 2" },
         { value: "Option 3" },
       ],
-      selected: [],
     },
     placeholder: {
       question: "Enter your question...",
@@ -241,11 +212,11 @@ const fieldTypes = {
     label: "Rating Field",
     category: "Rating & Ranking",
     componentKey: "rating",
+    answerType: "selection",
     hasOptions: true,
     hasMatrix: false,
     defaultProps: {
       fieldType: "rating",
-      question: "",
       options: [
         { text: "1", value: 1 },
         { text: "2", value: 2 },
@@ -253,7 +224,6 @@ const fieldTypes = {
         { text: "4", value: 4 },
         { text: "5", value: 5 },
       ],
-      selected: null,
     },
     placeholder: {
       question: "Enter your question...",
@@ -264,17 +234,16 @@ const fieldTypes = {
     label: "Ranking Field",
     category: "Rating & Ranking",
     componentKey: "ranking",
+    answerType: "multiselection",
     hasOptions: true,
     hasMatrix: false,
     defaultProps: {
       fieldType: "ranking",
-      question: "",
       options: [
         { value: "Item 1" },
         { value: "Item 2" },
         { value: "Item 3" },
       ],
-      selected: [],
     },
     placeholder: {
       question: "Enter your question...",
@@ -285,17 +254,16 @@ const fieldTypes = {
     label: "Slider Field",
     category: "Rating & Ranking",
     componentKey: "slider",
+    answerType: "selection",
     hasOptions: true,
     hasMatrix: false,
     defaultProps: {
       fieldType: "slider",
-      question: "",
       options: [
         { value: "Low" },
         { value: "Medium" },
         { value: "High" },
       ],
-      selected: null,
     },
     placeholder: {
       question: "Enter your question...",
@@ -306,11 +274,11 @@ const fieldTypes = {
     label: "Multi Matrix Field",
     category: "Matrix Fields",
     componentKey: "multimatrix",
+    answerType: "matrix",
     hasOptions: false,
     hasMatrix: true,
     defaultProps: {
       fieldType: "multimatrix",
-      question: "",
       rows: [
         { value: "Row 1" },
         { value: "Row 2" },
@@ -321,7 +289,6 @@ const fieldTypes = {
         { value: "Column 2" },
         { value: "Column 3" },
       ],
-      selected: {},
     },
     placeholder: {
       question: "Enter your question...",
@@ -333,11 +300,11 @@ const fieldTypes = {
     label: "Single Matrix Field",
     category: "Matrix Fields",
     componentKey: "singlematrix",
+    answerType: "matrix",
     hasOptions: false,
     hasMatrix: true,
     defaultProps: {
       fieldType: "singlematrix",
-      question: "",
       rows: [
         { value: "Row 1" },
         { value: "Row 2" },
@@ -348,7 +315,6 @@ const fieldTypes = {
         { value: "Column 2" },
         { value: "Column 3" },
       ],
-      selected: {},
     },
     placeholder: {
       question: "Enter your question...",
@@ -360,13 +326,12 @@ const fieldTypes = {
     label: "Signature Field",
     category: "Rich Content",
     componentKey: "signature",
+    answerType: "media",
+    hasOptions: false,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "signature",
-      question: "",
       placeholder: "Sign here",
-      signatureData: "",
-      signatureImage: "",
-      required: false,
     },
     placeholder: {
       question: "Enter your question...",
@@ -377,14 +342,12 @@ const fieldTypes = {
     label: "Diagram Field",
     category: "Rich Content",
     componentKey: "diagram",
+    answerType: "media",
+    hasOptions: false,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "diagram",
-      question: "",
       placeholder: "Draw on the diagram",
-      diagramImage: "",
-      markupData: "",
-      markupImage: "",
-      required: false,
     },
     placeholder: {
       question: "Enter your question...",
@@ -395,6 +358,7 @@ const fieldTypes = {
     label: "Unsupported Field",
     category: "Other",
     componentKey: "unsupported",
+    answerType: "none",
     hasOptions: false,
     hasMatrix: false,
     defaultProps: {
@@ -405,21 +369,17 @@ const fieldTypes = {
     },
     placeholder: {
       question: "Unsupported field type",
-      options: "Cannot edit unsupported field",
     }
   },
   image: {
     label: "Image Field",
     category: "Rich Content",
     componentKey: "image",
+    answerType: "display",
     hasOptions: false,
     hasMatrix: false,
     defaultProps: {
       fieldType: "image",
-      label: "",
-      imageUri: "",
-      altText: "",
-      caption: "",
       size: "full",
       alignment: "center",
       padding: "padded",
@@ -434,29 +394,29 @@ const fieldTypes = {
     label: "HTML Block",
     category: "Rich Content",
     componentKey: "html",
+    answerType: "display",
+    hasOptions: false,
+    hasMatrix: false,
     defaultProps: {
       fieldType: "html",
-      htmlContent: "",
       iframeHeight: 400,
     },
     placeholder: {
       htmlContent: "<p>Enter your HTML content here...</p>",
     }
   },
- expression: {
+  expression: {
     label: "Expression Field",
     category: "Rich Content",
     componentKey: "expression",
+    answerType: "text",
     hasOptions: false,
     hasMatrix: false,
     defaultProps: {
       fieldType: "expression",
       label: "Calculated Result",
-      expression: "",
       displayFormat: "number",
       decimalPlaces: 2,
-      sampleDataFields: [],
-      answer: "",
     },
     placeholder: {
       label: "Expression Field",
@@ -496,6 +456,31 @@ export function registerFieldComponent(key, component) {
  * Used for formatting computed values in expression fields
  */
 export const NUMERIC_EXPRESSION_FORMATS = ["number", "currency", "percentage"];
+
+/**
+ * Field types grouped by answerType (derived from fieldTypes config)
+ * 
+ * Answer Types:
+ * - text: Single stringified value (text, longtext, expression)
+ * - selection: Single choice (radio, dropdown, boolean, rating, slider)
+ * - multiselection: Multiple choices (check, multiselectdropdown, ranking)
+ * - multitext: Multiple text inputs per field
+ * - matrix: Row/column selections (singlematrix, multimatrix)
+ * - media: Binary/image data (signature, diagram)
+ * - display: No user answer (image, html)
+ * - container: Groups other fields (section)
+ * - none: No answer support (unsupported)
+ * 
+ * @example FIELDS_BY_ANSWER_TYPE.text.has('expression') // true
+ */
+export const FIELDS_BY_ANSWER_TYPE = Object.entries(fieldTypes).reduce((acc, [key, config]) => {
+  const type = config.answerType;
+  if (type) {
+    if (!acc[type]) acc[type] = new Set();
+    acc[type].add(key);
+  }
+  return acc;
+}, {});
 
 export function getFieldComponent(type) {
   return componentMap[type] || null;

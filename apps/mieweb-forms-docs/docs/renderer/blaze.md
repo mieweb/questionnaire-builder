@@ -18,26 +18,21 @@ meteor npm install @mieweb/forms-renderer
 import '@mieweb/forms-renderer/blaze';
 ```
 
-## Template usage
+## Template Usage
 
 ```handlebars
 {{> questionnaireRenderer
     formData=currentFormData
     hideUnsupportedFields=true
-    theme="auto"
-    onChange=handleChange
-    onQuestionnaireResponse=handleResponse
-    questionnaireId="my-questionnaire-id"
-    subjectId="patient-123"}}
+    theme="light"}}
 ```
 
 ### Theme Options
 
 - `"light"` (default) - Light theme
 - `"dark"` - Dark theme
-```
 
-## Helper example
+## Helper Example
 
 ```js
 import { Template } from 'meteor/templating';
@@ -47,19 +42,23 @@ Template.myForm.helpers({
     return {
       schemaType: 'mieforms-v1.0',
       fields: [
-        { id: 'q1', fieldType: 'text', question: 'Name?', answer: '' }
+        { id: 'q1', fieldType: 'text', question: 'Name?' }
       ]
     };
-  },
-  handleChange() {
-    return (updatedFormData) => {
-      console.log('Form changed:', updatedFormData);
-    };
-  },
-  handleResponse() {
-    return (response) => {
-      console.log('QuestionnaireResponse:', response);
-    };
+  }
+});
+```
+
+## Getting Response
+
+The template instance exposes a `getResponse()` method:
+
+```js
+Template.myForm.events({
+  'click .submit-btn'(event, templateInstance) {
+    const response = templateInstance.getResponse();
+    console.log('Form response:', response);
+    // Send to server, etc.
   }
 });
 ```

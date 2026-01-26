@@ -54,7 +54,7 @@ export default defineConfig({
   build: {
     emptyOutDir: false,
     lib: {
-      entry: resolve(__dirname, 'src/blaze-component.js'),
+      entry: resolve(__dirname, 'src/questionnaireRenderer-blaze.js'),
       name: 'QuestionnaireRendererBlaze',
       formats: ['es', 'umd'],
       fileName: (format) => `blaze.${format === 'es' ? 'js' : 'umd.cjs'}`

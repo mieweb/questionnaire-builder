@@ -22,22 +22,19 @@ export function registerBlazeTemplate() {
     }
 
     const root = ReactDOM.createRoot(mountNode);
+    const rendererRef = React.createRef();
+    
+    templateInstance.getResponse = () => rendererRef.current?.getResponse?.() ?? null;
 
     templateInstance.autorun(() => {
-      // Use Template.currentData() for reactive data
       const data = Template.currentData() || {};
       const props = {
+        ref: rendererRef,
         formData: data.formData || [],
         schemaType: data.schemaType,
         hideUnsupportedFields: data.hideUnsupportedFields,
-        onChange: data.onChange,
-        onQuestionnaireResponse: data.onQuestionnaireResponse,
-        questionnaireId: data.questionnaireId,
-        subjectId: data.subjectId,
-        onSubmit: data.onSubmit,
-        fullHeight: data.fullHeight,
         className: data.className,
-        theme: data.theme || 'light'
+        theme: data.theme || 'light',
       };
       root.render(React.createElement(QuestionnaireRenderer, props));
     });

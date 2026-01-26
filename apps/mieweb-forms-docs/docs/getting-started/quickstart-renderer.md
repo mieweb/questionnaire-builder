@@ -5,11 +5,13 @@ Get started with `@mieweb/forms-renderer` to display questionnaires in your app.
 ## Basic React Example
 
 ```jsx
-import React from 'react';
+import React, { useRef } from 'react';
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
 function MyForm() {
-  const [formData] = React.useState({
+  const rendererRef = useRef();
+  
+  const formData = {
     schemaType: 'mieforms-v1.0',
     title: 'Patient Survey',
     fields: [
@@ -17,14 +19,13 @@ function MyForm() {
         id: 'name',
         fieldType: 'text',
         question: 'What is your full name?',
-        required: true,
-        answer: ''
+        required: true
       },
       {
         id: 'age',
         fieldType: 'text',
         question: 'What is your age?',
-        answer: ''
+        inputType: 'number'
       },
       {
         id: 'gender',
@@ -34,22 +35,21 @@ function MyForm() {
           { value: 'Male' },
           { value: 'Female' },
           { value: 'Other' }
-        ],
-        selected: null
+        ]
       }
     ]
-  });
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted!', formData);
+  const handleSubmit = () => {
+    const response = rendererRef.current.getResponse();
+    console.log('Form submitted!', response);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer formData={formData} />
-      <button type="submit">Submit</button>
-    </form>
+    <div>
+      <QuestionnaireRenderer ref={rendererRef} formData={formData} />
+      <button onClick={handleSubmit}>Submit</button>
+    </div>
   );
 }
 
@@ -58,38 +58,33 @@ export default MyForm;
 
 ## Get Response
 
-Get the FHIR QuestionnaireResponse as answers change using the callback prop:
+Use the `ref` prop to get form responses on demand:
 
 ```jsx
-import React from 'react';
+import React, { useRef } from 'react';
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 
 function MyForm() {
-  const [formData] = React.useState({
+  const rendererRef = useRef();
+  
+  const formData = {
     schemaType: 'mieforms-v1.0',
     fields: [
-      { id: 'q1', fieldType: 'text', question: 'Name?', answer: '' }
+      { id: 'q1', fieldType: 'text', question: 'Name?' }
     ]
-  });
+  };
 
-  const [response, setResponse] = React.useState(null);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Submitting FHIR Response:', response);
-    // Send response to your FHIR server
+  const handleSubmit = () => {
+    const response = rendererRef.current.getResponse();
+    console.log('Submitting response:', response);
+    // Send response to your server
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <QuestionnaireRenderer 
-        formData={formData}
-        questionnaireId="my-questionnaire-id"
-        subjectId="patient-123"
-        onQuestionnaireResponse={setResponse}
-      />
-      <button type="submit">Submit</button>
-    </form>
+    <div>
+      <QuestionnaireRenderer ref={rendererRef} formData={formData} />
+      <button onClick={handleSubmit}>Submit</button>
+    </div>
   );
 }
 
@@ -110,7 +105,6 @@ fields:
   - id: name
     fieldType: text
     question: What is your name?
-    answer: ''
 `;
 
 function MyForm() {

@@ -14,13 +14,12 @@ export default function EditorDemo() {
         fieldType: 'text',
         question: 'What is your name?',
         required: true,
-        answer: ''
       },
       {
         id: 'email',
         fieldType: 'text',
+        inputType: 'email',
         question: 'Email address',
-        answer: ''
       }
     ]
   });
