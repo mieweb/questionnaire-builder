@@ -1,6 +1,6 @@
 import React from "react";
 import { createStore, useStore } from "zustand";
-import fieldTypes from "../helper_shared/fieldTypes-config";
+import fieldTypes, { FIELDS_BY_ANSWER_TYPE } from "../helper_shared/fieldTypes-config";
 import { initializeField } from "../helper_shared/initializedField";
 import { isVisible } from "../helper_shared/logicVisibility";
 import { generateFieldId, generateOptionId } from "../helper_shared/idGenerator";
@@ -543,28 +543,27 @@ const buildFieldResponse = (field) => {
   const { id, fieldType, question, title, answer, selected, options, rows, columns } = field;
   
   // Skip fields that don't collect responses
-  if (fieldType === 'section' || fieldType === 'html' || fieldType === 'image') {
+  if (FIELDS_BY_ANSWER_TYPE.container?.has(fieldType) || FIELDS_BY_ANSWER_TYPE.display?.has(fieldType)) {
     return null;
   }
   
   const text = question || title || '';
   
   // Text-based fields (text, longtext, expression)
-  if (fieldType === 'text' || fieldType === 'longtext' || fieldType === 'expression') {
+  if (FIELDS_BY_ANSWER_TYPE.text?.has(fieldType)) {
     if (!answer && answer !== 0) return null;
     return { id, text, answer: [{ value: String(answer) }] };
   }
   
   // Single selection fields (radio, dropdown, boolean, rating, slider)
-  if (fieldType === 'radio' || fieldType === 'dropdown' || fieldType === 'boolean' || 
-      fieldType === 'rating' || fieldType === 'slider' || fieldType === 'selection') {
+  if (FIELDS_BY_ANSWER_TYPE.selection?.has(fieldType)) {
     if (!selected) return null;
     const value = resolveOptionValue(options, selected);
     return { id, text, answer: [{ id: selected, value }] };
   }
   
   // Multi selection fields (check, multiselectdropdown, ranking)
-  if (fieldType === 'check' || fieldType === 'multiselectdropdown' || fieldType === 'ranking') {
+  if (FIELDS_BY_ANSWER_TYPE.multiselection?.has(fieldType)) {
     if (!Array.isArray(selected) || selected.length === 0) return null;
     const answers = selected.map(optId => ({
       id: optId,
@@ -574,7 +573,7 @@ const buildFieldResponse = (field) => {
   }
   
   // Matrix fields (singlematrix, multimatrix)
-  if (fieldType === 'singlematrix' || fieldType === 'multimatrix') {
+  if (FIELDS_BY_ANSWER_TYPE.matrix?.has(fieldType)) {
     if (!selected || typeof selected !== 'object' || Object.keys(selected).length === 0) return null;
     const answers = [];
     Object.entries(selected).forEach(([rowId, colValue]) => {
@@ -594,7 +593,7 @@ const buildFieldResponse = (field) => {
   }
   
   // Multitext fields (each option has its own answer)
-  if (fieldType === 'multitext') {
+  if (FIELDS_BY_ANSWER_TYPE.multitext?.has(fieldType)) {
     if (!Array.isArray(options)) return null;
     const answers = options
       .filter(opt => opt.answer)
