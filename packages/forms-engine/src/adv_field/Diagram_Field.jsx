@@ -14,7 +14,7 @@ import feetChart from "../assets/feet.png";
 import dentalChart from "../assets/dental_chart.webp";
 
 // Preset diagrams configuration
-const DIAGRAM_PRESETS = [
+export const DIAGRAM_PRESETS = [
   { id: "male", label: "Male Body", image: maleChart },
   { id: "female", label: "Female Body", image: femaleChart },
   { id: "neutral", label: "Neutral Body", image: neutralChart },
@@ -29,11 +29,14 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
   const fileInputRef = React.useRef(null);
   const containerRef = React.useRef(null);
 
-  // Helper to determine which preset is selected
-  const getSelectedPreset = () => {
-    const preset = DIAGRAM_PRESETS.find(p => p.image === field.diagramImage);
-    return preset?.id || "";
-  };
+  // Resolve the background image - preset ID takes priority over custom image
+  const resolvedDiagramImage = React.useMemo(() => {
+    if (field.diagramPreset) {
+      const preset = DIAGRAM_PRESETS.find(p => p.id === field.diagramPreset);
+      return preset?.image || "";
+    }
+    return field.diagramImage || "";
+  }, [field.diagramPreset, field.diagramImage]);
 
   const handleMarkupChange = (data) => {
     // data is { strokes: string, image: string }
@@ -55,8 +58,8 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
     const reader = new FileReader();
     reader.onload = (event) => {
       const base64String = event.target.result;
+      ctrl.api.field.drop("diagramPreset");
       ctrl.api.field.update("diagramImage", base64String);
-      ctrl.api.field.update("fileName", file.name);
     };
     reader.readAsDataURL(file);
   };
@@ -75,8 +78,8 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
         const reader = new FileReader();
         reader.onload = (event) => {
           const base64String = event.target.result;
+          ctrl.api.field.drop("diagramPreset");
           ctrl.api.field.update("diagramImage", base64String);
-          ctrl.api.field.update("fileName", "");
         };
         reader.readAsDataURL(file);
         break;
@@ -106,7 +109,7 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                   <DrawingCanvas
                     onDrawingChange={handleMarkupChange}
                     existingDrawing={f.markupData}
-                    backgroundImage={f.diagramImage}
+                    backgroundImage={resolvedDiagramImage}
                     placeholder={f.placeholder || "Draw on the diagram"}
                     mode="diagram"
                     config={{
@@ -165,30 +168,34 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                       Quick Presets
                     </label>
                     <CustomDropdown
-                      options={DIAGRAM_PRESETS.map(preset => ({
-                        id: preset.id,
-                        value: preset.label
-                      }))}
-                      value={getSelectedPreset()}
+                      options={[
+                        ...DIAGRAM_PRESETS.map(preset => ({
+                          id: preset.id,
+                          value: preset.label
+                        })),
+                        ...(f.diagramImage && !f.diagramPreset ? [{ id: "custom", value: "Custom" }] : [])
+                      ]}
+                      value={f.diagramPreset || (f.diagramImage ? "custom" : "")}
                       onChange={(presetId) => {
-                        const preset = DIAGRAM_PRESETS.find(p => p.id === presetId);
-                        if (preset) {
-                          api.field.update("diagramImage", preset.image);
-                          api.field.update("fileName", preset.label);
+                        if (presetId && presetId !== "custom") {
+                          api.field.drop("diagramImage");
+                          api.field.update("diagramPreset", presetId);
+                        } else if (!presetId) {
+                          api.field.drop("diagramPreset", "diagramImage");
                         }
+                        // If "custom" is selected, do nothing - keep custom image
                       }}
                       placeholder="Select a diagram..."
                       showClearOption={true}
                     />
                   </div>
                   
-                  {f.diagramImage ? (
+                  {resolvedDiagramImage ? (
                     <div className="mie:p-3 mie:border mie:border-mieborder mie:rounded-lg mie:bg-miesurface mie:relative">
                       <button
                         onClick={(e) => {
                           e.preventDefault();
-                          api.field.update("diagramImage", "");
-                          api.field.update("fileName", "");
+                          api.field.drop("diagramPreset", "diagramImage");
                         }}
                         className="mie:absolute mie:top-2 mie:right-2 mie:text-mietextmuted mie:hover:text-miedanger mie:transition-colors mie:bg-transparent mie:border-0 mie:outline-none mie:focus:outline-none"
                         title="Remove diagram"
@@ -196,13 +203,13 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                         <X_ICON className="mie:w-5 mie:h-5" />
                       </button>
                       <img
-                        src={f.diagramImage}
+                        src={resolvedDiagramImage}
                         alt="Diagram background"
                         className="mie:w-full mie:h-auto mie:max-h-48 mie:object-contain"
                       />
-                      {f.fileName && (
+                      {f.diagramPreset && (
                         <p className="mie:text-xs mie:text-mietextmuted mie:mt-2">
-                          <span className="mie:font-medium">File:</span> {f.fileName}
+                          <span className="mie:font-medium">Preset:</span> {DIAGRAM_PRESETS.find(p => p.id === f.diagramPreset)?.label}
                         </p>
                       )}
                     </div>
