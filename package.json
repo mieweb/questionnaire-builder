@@ -14,7 +14,7 @@
     "build": "npm run build:packages && npm run build:docs && npm run build:demo",
     "build:packages": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
     "build:docs": "npm run build --workspace=apps/mieweb-forms-docs",
-    "build:demo": "npm run build:packages && npm run build --workspace=apps/web-demo-packages",
+    "build:demo": "npm run build --workspace=apps/web-demo-packages",
     "pack:local": "npm run build:packages && node scripts/pack-local.js",
     "lint": "eslint .",
     "publish": "node scripts/publish.js"
