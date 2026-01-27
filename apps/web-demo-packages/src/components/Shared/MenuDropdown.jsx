@@ -14,6 +14,9 @@ export function MenuDropdown({
 }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
+  const showExamples = onSelectExample && onLoadData;
+  const showHideToggle = setHideUnsupportedFields !== undefined;
+
   return (
     <div className="fixed top-6 right-3 z-50">
       <motion.button
@@ -33,7 +36,7 @@ export function MenuDropdown({
 
       {isOpen && (
         <motion.div
-          initial={{ opacity: 1, y: -10 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ type: 'spring', stiffness: 400, damping: 25 }}
@@ -45,15 +48,19 @@ export function MenuDropdown({
           >
             ← Back to Home
           </Link>
-          <HideUnsupportedToggle
-            hideUnsupportedFields={hideUnsupportedFields}
-            setHideUnsupportedFields={setHideUnsupportedFields}
-          />
-          <ExamplesDropdown
-            selectedExample={selectedExample}
-            onSelectExample={onSelectExample}
-            onLoadData={onLoadData}
-          />
+          {showHideToggle && (
+            <HideUnsupportedToggle
+              hideUnsupportedFields={hideUnsupportedFields}
+              setHideUnsupportedFields={setHideUnsupportedFields}
+            />
+          )}
+          {showExamples && (
+            <ExamplesDropdown
+              selectedExample={selectedExample}
+              onSelectExample={onSelectExample}
+              onLoadData={onLoadData}
+            />
+          )}
         </motion.div>
       )}
 

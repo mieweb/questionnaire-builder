@@ -8,11 +8,11 @@ export function DemoCard({ title, desc, to }) {
       <motion.div
         whileHover={{ y: -4, scale: 1.01 }}
         whileTap={{ scale: 0.98 }}
-        className="cursor-pointer rounded-3xl p-7 px-6 bg-white/75 backdrop-blur-2xl backdrop-saturate-150 border border-white/40 shadow-xl relative overflow-hidden hover:bg-white/90 hover:border-white/60 hover:shadow-[0_20px_48px_-12px_rgba(0,0,0,0.15),0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,1)]"
+        className="h-full flex flex-col cursor-pointer rounded-3xl p-7 px-6 bg-white/75 backdrop-blur-2xl backdrop-saturate-150 border border-white/40 shadow-xl relative overflow-hidden hover:bg-white/90 hover:border-white/60 hover:shadow-[0_20px_48px_-12px_rgba(0,0,0,0.15),0_4px_12px_rgba(0,0,0,0.06),inset_0_1px_0_rgba(255,255,255,1)]"
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
         <h3 className="m-0 mb-2.5 text-xl font-semibold tracking-tight text-slate-900">{title}</h3>
-        <p className="m-0 text-base leading-relaxed text-slate-500">{desc}</p>
+        <p className="m-0 text-base leading-relaxed text-slate-500 flex-1">{desc}</p>
         <div className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-500">
           <span>Explore</span>
           <motion.svg
