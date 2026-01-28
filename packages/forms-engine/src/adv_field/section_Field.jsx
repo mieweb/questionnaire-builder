@@ -120,7 +120,7 @@ const SectionField = React.memo(function SectionField({ field }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f }) => {
+      {({ api, isPreview, field: f, instanceId }) => {
         const children = Array.isArray(f.fields) ? f.fields : [];
 
         if (isPreview) {

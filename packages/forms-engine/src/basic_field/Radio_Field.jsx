@@ -9,7 +9,7 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           return (
             <div className="radio-field-preview">
@@ -17,7 +17,7 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
                 <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <div>
                   {(f.options || []).map((option) => {
-                    const inputId = `${f.id}-${option.id}`;
+                    const inputId = `${instanceId}-${f.id}-${option.id}`;
                     const isSelected = f.selected === option.id;
                     
                     return (

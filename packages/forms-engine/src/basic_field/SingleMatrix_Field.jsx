@@ -9,7 +9,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         const fieldId = field.id || f.id || 'matrix';
         
         if (isPreview) {
@@ -41,7 +41,7 @@ const SingleMatrixField = React.memo(function SingleMatrixField({ field, section
                           <div className="mie:hidden mie:lg:block mie:w-32 mie:font-normal mie:text-mietext">{row.value}</div>
                           {columns.map((col, colIndex) => {
                             const isSelected = selected[row.id] === col.id;
-                            const inputId = `matrix-${fieldId}-${rowIndex}-${colIndex}`;
+                            const inputId = `${instanceId}-matrix-${fieldId}-${rowIndex}-${colIndex}`;
                             
                             return (
                               <div key={col.id} className="mie:flex-1 mie:flex mie:lg:justify-center mie:items-center mie:gap-3">

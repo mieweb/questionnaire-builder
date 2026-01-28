@@ -9,7 +9,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         const fieldId = field.id || f.id || 'multimatrix';
         
         if (isPreview) {
@@ -62,7 +62,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
                             <div className="mie:hidden mie:lg:block mie:w-32 mie:font-normal mie:text-mietext">{row.value}</div>
                             {columns.map((col, colIndex) => {
                               const isChecked = rowSelections.includes(col.id);
-                              const inputId = `multimatrix-${fieldId}-${rowIndex}-${colIndex}`;
+                              const inputId = `${instanceId}-multimatrix-${fieldId}-${rowIndex}-${colIndex}`;
                               
                               return (
                                 <div key={col.id} className="mie:flex-1 mie:flex mie:lg:justify-center mie:items-center mie:gap-3">

@@ -8,7 +8,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           return (
             <div className="boolean-field-preview">
@@ -16,7 +16,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
                 <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <div className="mie:flex mie:gap-2">
                   {(f.options || []).map((option) => {
-                    const inputId = `${f.id}-${option.id}`;
+                    const inputId = `${instanceId}-${f.id}-${option.id}`;
                     const isSelected = f.selected === option.id;
                     
                     return (

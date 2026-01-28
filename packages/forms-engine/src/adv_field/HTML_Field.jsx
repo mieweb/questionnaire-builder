@@ -73,7 +73,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl} noPadding={ctrl.isPreview}>
-      {({ api, isPreview, field: f }) => {
+      {({ api, isPreview, field: f, instanceId }) => {
         if (isPreview) {
           const displayHeight = getResponsiveHeight(f.iframeHeight || 400);
           return (

@@ -9,7 +9,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         const options = f.options || [];
         const selectedIndex = options.findIndex(opt => opt.id === f.selected);
         
@@ -22,7 +22,7 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                   {options.length > 0 && (
                     <div className="mie:flex mie:flex-wrap mie:justify-evenly mie:gap-2">
                       {options.map((option, index) => {
-                        const inputId = `${f.id}-${option.id}`;
+                        const inputId = `${instanceId}-${f.id}-${option.id}`;
                         const isSelected = selectedIndex === index;
                         const labelClasses = isSelected
                           ? "mie:flex mie:items-center mie:justify-center mie:min-w-[44px] mie:h-11 mie:px-3 mie:rounded-full mie:border-2 mie:transition-all mie:cursor-pointer mie:bg-mieprimary mie:text-miesurface mie:border-mieprimary mie:scale-105"

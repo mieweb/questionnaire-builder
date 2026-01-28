@@ -401,7 +401,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f }) => {
+      {({ api, isPreview, field: f, instanceId }) => {
         if (isPreview) {
           return (
             <div className="expression-field-preview mie:space-y-2 mie:pb-4">

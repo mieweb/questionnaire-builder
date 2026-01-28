@@ -44,7 +44,7 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           const ranking = Array.isArray(f.selected) && f.selected.length > 0 
             ? f.selected 

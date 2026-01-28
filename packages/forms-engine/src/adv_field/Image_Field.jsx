@@ -63,7 +63,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl} noPadding={ctrl.isPreview && field.padding === "full-bleed"}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           const imageUri = f.imageUri || previewUrl;
           const sizeClass = {

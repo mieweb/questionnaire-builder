@@ -94,7 +94,7 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl} noPadding={ctrl.isPreview === true ? true : false}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           return (
             <div>
@@ -235,12 +235,12 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
 
                 <div className="mie:flex mie:items-center mie:gap-2">
                   <CustomCheckbox
-                    id="required-diagram"
+                    id={`${instanceId}-required-diagram-${f.id}`}
                     checked={f.required === true}
                     onChange={(checked) => api.field.update("required", checked)}
                     size="md"
                   />
-                  <label htmlFor="required-diagram" className="mie:text-sm mie:text-mietext mie:cursor-pointer">
+                  <label htmlFor={`${instanceId}-required-diagram-${f.id}`} className="mie:text-sm mie:text-mietext mie:cursor-pointer">
                     Required diagram
                   </label>
                 </div>

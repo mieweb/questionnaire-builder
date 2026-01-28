@@ -8,20 +8,22 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         const options = f.options || [];
         const selectedIndex = options.findIndex(opt => opt.id === f.selected);
         
         if (isPreview) {
+          const inputId = `${instanceId}-slider-${f.id}`;
           return (
               <div className="slider-field-preview mie:text-mietext">
               <div className={`mie:grid mie:gap-2 mie:pb-4 ${options.length > 5 ? 'mie:grid-cols-1' : 'mie:grid-cols-1 mie:sm:grid-cols-2'}`}>
-                <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
+                <label htmlFor={inputId} className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</label>
                 <div className="mie:py-2">
                   {options.length > 0 && (
                     <div className="mie:relative mie:pt-1">
                       {/* Slider Track */}
                       <input
+                        id={inputId}
                         type="range"
                         min="0"
                         max={options.length - 1}
@@ -91,9 +93,12 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
           );
         }
 
+        const questionInputId = `${instanceId}-slider-question-${f.id}`;
         return (
           <div className="slider-field-edit mie:space-y-3">
+            <label htmlFor={questionInputId} className="mie:sr-only">Question</label>
             <input
+              id={questionInputId}
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none"
               type="text"
               value={f.question || ""}

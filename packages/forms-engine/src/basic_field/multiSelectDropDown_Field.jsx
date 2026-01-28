@@ -9,7 +9,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         const selectedIds = Array.isArray(f.selected) ? f.selected : [];
 
         const handleChange = (newSelectedIds) => {

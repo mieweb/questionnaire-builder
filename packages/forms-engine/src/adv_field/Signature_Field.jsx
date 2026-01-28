@@ -22,7 +22,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
 
   return (
     <FieldWrapper ctrl={ctrl} noPadding={ ctrl.isPreview === true ? true : false }>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           return (
             <div>
@@ -82,12 +82,12 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
 
                 <div className="mie:flex mie:items-center mie:gap-2">
                   <CustomCheckbox
-                    id="required-sig"
+                    id={`${instanceId}-required-sig-${f.id}`}
                     checked={f.required === true}
                     onChange={(checked) => api.field.update("required", checked)}
                     size="md"
                   />
-                  <label htmlFor="required-sig" className="mie:text-sm mie:text-mietext mie:cursor-pointer">
+                  <label htmlFor={`${instanceId}-required-sig-${f.id}`} className="mie:text-sm mie:text-mietext mie:cursor-pointer">
                     Required signature
                   </label>
                 </div>
