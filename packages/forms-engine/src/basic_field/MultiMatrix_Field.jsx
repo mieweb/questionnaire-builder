@@ -96,6 +96,8 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
         return (
           <div className="multimatrix-field-edit mie:space-y-3">
             <input
+              id={`${instanceId}-multimatrix-question-${f.id}`}
+              aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none"
               type="text"
               value={f.question || ""}
@@ -109,6 +111,8 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
                 {(f.rows || []).map((row) => (
                   <div key={row.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                     <input
+                      id={`${instanceId}-multimatrix-row-${f.id}-${row.id}`}
+                      aria-label={`Row ${row.id}`}
                       type="text"
                       value={row.value}
                       onChange={(e) => api.row.update(row.id, e.target.value)}
@@ -143,6 +147,8 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
                 {(f.columns || []).map((col) => (
                   <div key={col.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                     <input
+                      id={`${instanceId}-multimatrix-col-${f.id}-${col.id}`}
+                      aria-label={`Column ${col.id}`}
                       type="text"
                       value={col.value}
                       onChange={(e) => api.column.update(col.id, e.target.value)}

@@ -64,6 +64,8 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
         return (
           <div className="rating-field-edit mie:space-y-3">
             <input
+              id={`${instanceId}-rating-question-${f.id}`}
+              aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none"
               type="text"
               value={f.question || ""}
@@ -80,6 +82,8 @@ const RatingField = React.memo(function RatingField({ field, sectionId }) {
                 <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                   <div className="mie:w-3 mie:h-3 mie:rounded-full mie:bg-mieprimary mie:shrink-0" />
                   <input
+                    id={`${instanceId}-rating-option-${f.id}-${option.id}`}
+                    aria-label={`Option ${option.id}`}
                     type="text"
                     value={option.text || option.value}
                     onChange={(e) => api.option.update(option.id, { text: e.target.value, value: typeof option.value === 'number' ? option.value : e.target.value })}

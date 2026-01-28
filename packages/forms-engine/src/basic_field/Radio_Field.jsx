@@ -48,10 +48,12 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
         return (
           <div className="radio-field-edit mie:space-y-3">
             <div>
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
                 Question
-              </label>
+              </span>
               <input
+                id={`${instanceId}-radio-question-${f.id}`}
+                aria-label="Question"
                 type="text"
                 value={f.question || ""}
                 onChange={(e) => api.field.update("question", e.target.value)}
@@ -61,14 +63,16 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
             </div>
 
             <div>
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
                 Options
-              </label>
+              </span>
               <div className="mie:space-y-2">
                 {(f.options || []).map((option) => (
                   <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                     <span className="mie:shrink-0 mie:w-4 mie:h-4 mie:rounded-full mie:border mie:border-mieborder mie:bg-miesurface" />
                     <input
+                      id={`${instanceId}-radio-option-${f.id}-${option.id}`}
+                      aria-label={`Option ${option.id}`}
                       type="text"
                       value={option.value}
                       onChange={(e) => api.option.update(option.id, e.target.value)}

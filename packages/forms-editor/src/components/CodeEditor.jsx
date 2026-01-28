@@ -307,6 +307,8 @@ export default function CodeEditor() {
             scrollBeyondLastLine: false,
             padding: { top: 16 },
             contextmenu: true,
+            accessibilitySupport: "auto",
+            ariaLabel: "Code editor for form schema",
           }}
         />
       </div>

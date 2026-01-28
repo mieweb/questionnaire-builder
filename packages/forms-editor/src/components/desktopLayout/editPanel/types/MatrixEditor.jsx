@@ -1,7 +1,8 @@
 import React from "react";
-import { TRASHCANTWO_ICON } from "@mieweb/forms-engine";
+import { TRASHCANTWO_ICON, useInstanceId } from "@mieweb/forms-engine";
 
 export default function MatrixEditor({ field, api }) {
+  const instanceId = useInstanceId();
   const rows = field.rows || [];
   const columns = field.columns || [];
   const rowsContainerRef = React.useRef(null);
@@ -35,11 +36,13 @@ export default function MatrixEditor({ field, api }) {
     <div className="mie:space-y-4">
       {/* Rows Section */}
       <div className="mie:space-y-3">
-        <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Rows</label>
+        <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Rows</span>
         <div ref={rowsContainerRef} className="mie:space-y-2">
           {rows.map((row) => (
             <div key={row.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm mie:hover:border-mieprimary/50 mie:transition-colors">
               <input
+                id={`${instanceId}-editor-matrix-row-${field.id}-${row.id}`}
+                aria-label={`Row ${row.id}`}
                 className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent mie:text-mietext mie:placeholder:text-mietextmuted"
                 value={row.value}
                 onChange={(e) => api.row.update(row.id, e.target.value)}
@@ -69,11 +72,13 @@ export default function MatrixEditor({ field, api }) {
 
       {/* Columns Section */}
       <div className="mie:space-y-3">
-        <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Columns</label>
+        <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Columns</span>
         <div ref={colsContainerRef} className="mie:space-y-2">
           {columns.map((col) => (
             <div key={col.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm mie:hover:border-mieprimary/50 mie:transition-colors">
               <input
+                id={`${instanceId}-editor-matrix-col-${field.id}-${col.id}`}
+                aria-label={`Column ${col.id}`}
                 className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent mie:text-mietext mie:placeholder:text-mietextmuted"
                 value={col.value}
                 onChange={(e) => api.column.update(col.id, e.target.value)}

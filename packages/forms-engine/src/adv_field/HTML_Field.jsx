@@ -125,11 +125,12 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
 
             {/* Height Control */}
             <div>
-              <label className="height-control-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <span className="height-control-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
                 Preview Height (px)
-              </label>
+              </span>
               <div className="height-control-inputs mie:flex mie:gap-2 mie:items-center">
                 <input
+                  id={`${instanceId}-html-height-range-${f.id}`}
                   type="range"
                   min="50"
                   max="800"
@@ -144,6 +145,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                   aria-label="Preview height in pixels"
                 />
                 <input
+                  id={`${instanceId}-html-height-${f.id}`}
                   type="number"
                   min="50"
                   max="800"
@@ -164,9 +166,9 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
             {editMode ? (
               // Preview Mode
               <div>
-                <label className="preview-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+                <span className="preview-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
                   Preview
-                </label>
+                </span>
                 <iframe
                   ref={iframeRef}
                   srcDoc={wrapHTMLForIframe(f.htmlContent)}
@@ -188,10 +190,12 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
             ) : (
               // Edit Mode
               <div>
-                <label className="edit-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+                <span className="edit-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
                   HTML Content
-                </label>
+                </span>
                 <textarea
+                  id={`${instanceId}-html-content-${f.id}`}
+                  aria-label="HTML Content"
                   className="html-textarea mie:px-3 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:font-mono mie:text-sm mie:max-h-64 mie:overflow-y-auto"
                   value={f.htmlContent || ""}
                   onChange={(e) => api.field.update("htmlContent", e.target.value)}

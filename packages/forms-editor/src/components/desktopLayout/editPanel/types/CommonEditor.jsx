@@ -1,9 +1,10 @@
 import React from "react";
-import { useFormStore, CustomCheckbox } from "@mieweb/forms-engine";
+import { useFormStore, CustomCheckbox, useInstanceId } from "@mieweb/forms-engine";
 import DraftIdEditor from "./DraftIdEditor"
 import InputTypeEditor from "./InputTypeEditor";
 
 function CommonEditor({ f, onUpdateField }) {
+  const instanceId = useInstanceId();
   const byId = useFormStore(React.useCallback(s => s.byId, []));
 
   const validateId = React.useCallback((newId, oldId) => {
@@ -38,8 +39,10 @@ function CommonEditor({ f, onUpdateField }) {
       />
 
       <div>
-        <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Label / Question</label>
+        <span className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Label / Question</span>
         <input
+          id={`${instanceId}-editor-question-${f.id}`}
+          aria-label="Label / Question"
           className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
           value={f.question || ""}
           onChange={(e) => onUpdateField?.("question", e.target.value)}
@@ -52,8 +55,10 @@ function CommonEditor({ f, onUpdateField }) {
       )}
 
       <div className="mie:min-w-0">
-        <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Sublabel (optional)</label>
+        <span className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Sublabel (optional)</span>
         <textarea
+          id={`${instanceId}-editor-sublabel-${f.id}`}
+          aria-label="Sublabel (optional)"
           className="mie:w-full mie:min-w-0 mie:max-h-32 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:resize-y mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
           value={f.sublabel || ""}
           onChange={(e) => onUpdateField("sublabel", e.target.value)}
@@ -61,15 +66,14 @@ function CommonEditor({ f, onUpdateField }) {
         />
       </div>
 
-      <div>
-        <label className="mie:inline-flex mie:items-center mie:gap-2 mie:text-sm mie:text-mietext mie:cursor-pointer">
-          <CustomCheckbox
-            checked={!!f.required}
-            onChange={(checked) => onUpdateField?.("required", checked)}
-            size="md"
-          />
-          Required
-        </label>
+      <div className="required-checkbox-group mie:inline-flex mie:items-center mie:gap-2 mie:text-sm mie:text-mietext">
+        <CustomCheckbox
+          id={`${instanceId}-editor-required-${f.id}`}
+          checked={!!f.required}
+          onChange={(checked) => onUpdateField?.("required", checked)}
+          size="md"
+        />
+        <span>Required</span>
       </div>
     </div>
   );

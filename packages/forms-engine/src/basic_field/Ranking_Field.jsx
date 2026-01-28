@@ -103,6 +103,8 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
         return (
           <div className="ranking-field-edit mie:space-y-3">
             <input
+              id={`${instanceId}-ranking-question-${f.id}`}
+              aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none"
               type="text"
               value={f.question || ""}
@@ -115,6 +117,8 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
                 <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                   <UPDOWNARROW_ICON className="mie:text-mietextmuted mie:w-5 mie:h-5 mie:shrink-0" />
                   <input
+                    id={`${instanceId}-ranking-option-${f.id}-${option.id}`}
+                    aria-label={`Option ${option.id}`}
                     type="text"
                     value={option.value}
                     onChange={(e) => api.option.update(option.id, e.target.value)}

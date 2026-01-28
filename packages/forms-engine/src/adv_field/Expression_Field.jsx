@@ -442,10 +442,12 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
           <div className="expression-field-editor mie:space-y-4 mie:w-full">
             {/* Label */}
             <div className="label-field">
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
                 Label (Optional)
-              </label>
+              </span>
               <input
+                id={`${instanceId}-expression-label-${f.id}`}
+                aria-label="Label (Optional)"
                 className="mie:px-3 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
                 type="text"
                 value={f.label || ""}
@@ -456,10 +458,12 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
             {/* Expression Input */}
             <div className="expression-field">
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
                 Expression / Formula
-              </label>
+              </span>
               <textarea
+                id={`${instanceId}-expression-formula-${f.id}`}
+                aria-label="Expression / Formula"
                 className="mie:px-3 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:font-mono mie:text-sm"
                 value={f.expression || ""}
                 onChange={(e) => api.field.update("expression", e.target.value)}
@@ -477,10 +481,12 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
             {/* Display Format */}
             <div className="display-format-field">
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
                 Display Format
-              </label>
+              </span>
               <select
+                id={`${instanceId}-expression-format-${f.id}`}
+                aria-label="Display Format"
                 className="display-format mie:px-3 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:cursor-pointer mie:transition-colors"
                 value={f.displayFormat || "number"}
                 onChange={(e) => api.field.update("displayFormat", e.target.value)}
@@ -496,10 +502,12 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
             {/* Decimal Places (only show for numeric formats) */}
             {NUMERIC_EXPRESSION_FORMATS.includes(f.displayFormat) && (
               <div className="decimal-places-field">
-                <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+                <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
                   Decimal Places
-                </label>
+                </span>
                 <input
+                  id={`${instanceId}-expression-decimals-${f.id}`}
+                  aria-label="Decimal Places"
                   className="decimal-places mie:px-3 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
                   type="number"
                   min="0"
@@ -511,25 +519,24 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
             )}
 
             {/* Hide Debug Info */}
-            <div className="hide-debug-info-field">
-              <label className="mie:flex mie:items-center mie:gap-2 mie:cursor-pointer">
-                <CustomCheckbox
-                  checked={f.hideDebugInfo || false}
-                  onChange={(checked) => api.field.update("hideDebugInfo", checked)}
-                  size="md"
-                />
-                <span className="mie:text-sm mie:font-medium mie:text-mietext">
-                  Hide Expression and Result labels (show result only)
-                </span>
-              </label>
+            <div className="hide-debug-info-field mie:flex mie:items-center mie:gap-2">
+              <CustomCheckbox
+                id={`${instanceId}-expression-hidedebug-${f.id}`}
+                checked={f.hideDebugInfo || false}
+                onChange={(checked) => api.field.update("hideDebugInfo", checked)}
+                size="md"
+              />
+              <span className="mie:text-sm mie:font-medium mie:text-mietext">
+                Hide Expression and Result labels (show result only)
+              </span>
             </div>
 
             {/* Sample Data for Preview */}
             <div className="sample-data-section mie:border-t mie:border-mieborder mie:pt-4">
               <div className="sample-data-header mie:flex mie:items-center mie:justify-between mie:mb-3">
-                <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext">
+                <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext">
                   Sample Data (for preview testing)
-                </label>
+                </span>
                 <button
                   onClick={addSampleDataField}
                   className="mie:px-3 mie:py-1 mie:text-xs mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-miesurface mie:rounded mie:transition-colors"
@@ -550,6 +557,8 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                       <div key={stableKey} className="sample-data-row mie:flex mie:gap-2 mie:items-end">
                         <div className="field-id-input mie:flex-1">
                           <input
+                            id={`${instanceId}-expression-sampleid-${f.id}-${idx}`}
+                            aria-label={`Sample field ID ${idx + 1}`}
                             className="mie:px-3 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:text-sm"
                             type="text"
                             value={field.fieldId || ""}
@@ -559,6 +568,8 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                         </div>
                         <div className="field-value-input mie:flex-1">
                           <input
+                            id={`${instanceId}-expression-sampleval-${f.id}-${idx}`}
+                            aria-label={`Sample field value ${idx + 1}`}
                             className="mie:px-3 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:text-sm"
                             type="text"
                             value={field.value || ""}

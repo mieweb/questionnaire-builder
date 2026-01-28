@@ -37,15 +37,15 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
           );
         }
 
-        const questionInputId = `${instanceId}-multitext-question-${f.id}`;
         return (
           <div className="multitext-field-edit mie:space-y-3">
             <div>
-              <label htmlFor={questionInputId} className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
                 Question
-              </label>
+              </span>
               <input
-                id={questionInputId}
+                id={`${instanceId}-multitext-question-${f.id}`}
+                aria-label="Question"
                 type="text"
                 value={f.question || ""}
                 onChange={(e) => api.field.update("question", e.target.value)}
@@ -55,13 +55,15 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
             </div>
 
             <div>
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
                 Fields
-              </label>
+              </span>
               <div className="mie:space-y-2">
                 {(f.options || []).map((option) => (
                   <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                     <input
+                      id={`${instanceId}-multitext-field-${f.id}-${option.id}`}
+                      aria-label={`Field ${option.id}`}
                       type="text"
                       value={option.value}
                       onChange={(e) => api.option.update(option.id, e.target.value)}
