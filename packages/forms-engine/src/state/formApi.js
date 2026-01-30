@@ -42,6 +42,11 @@ export const useFormApi = (id, sectionId) => {
         add:    (type, initialPatch, index) => addField(type, { sectionId, initialPatch, index }),
         update: (k, v) => updateField(id, { [k]: v }, { sectionId, onIdChange }),
         patch:  (patchOrFn) => updateField(id, patchOrFn, { sectionId, onIdChange }),
+        drop: (...keys) => updateField(id, (prev) => {
+          const next = { ...prev };
+          keys.forEach(k => delete next[k]);
+          return next;
+        }, { sectionId, onIdChange }),
         renameId: (newId) => updateField(id, { id: newId }, { sectionId, onIdChange }),
         remove: () => deleteField(id, { sectionId }),
       },
