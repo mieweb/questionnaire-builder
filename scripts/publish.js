@@ -53,8 +53,6 @@ async function publishPackage(packageName, bumpType, shouldPublish) {
   console.log(`   Bump: ${bumpType}`);
   console.log(`   Publish: ${shouldPublish ? 'Yes' : 'No (dry-run)'}`);
   
-  const packagePath = path.join(__dirname, '..', 'packages', packageName);
-  
   // Build
   console.log(`\n🔨 Building ${packageName}...`);
   if (!exec(`npm run build --workspace=packages/${packageName}`)) {

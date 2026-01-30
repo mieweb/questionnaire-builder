@@ -202,7 +202,9 @@ export const createFormStore = (initProps = {}) => {
           const patch = typeof patchOrFn === "function" ? patchOrFn(prev) : patchOrFn;
           if (!patch) return null;
           
-          const { fieldType, id: fieldId, question, title, ...rest } = { ...prev, ...patch };
+          // Function-based updates return complete state, object patches merge with prev
+          const merged = typeof patchOrFn === "function" ? patch : { ...prev, ...patch };
+          const { fieldType, id: fieldId, question, title, ...rest } = merged;
           const base = {
             fieldType,
             id: fieldId,
@@ -518,7 +520,16 @@ const resolveOptionValue = (options, optionId) => {
 const stripFieldResponseValues = (field) => {
   if (!field) return field;
   
-  const { answer, selected, ...definition } = field;
+  // Strip all response-related properties (answers/drawings)
+  const { 
+    answer, 
+    selected, 
+    signatureData, 
+    signatureImage, 
+    markupData, 
+    markupImage,
+    ...definition 
+  } = field;
   
   // Handle sections with nested fields
   if (definition.fieldType === 'section' && Array.isArray(definition.fields)) {
@@ -600,6 +611,14 @@ const buildFieldResponse = (field) => {
       .map(opt => ({ id: opt.id, label: opt.value, value: opt.answer }));
     if (answers.length === 0) return null;
     return { id, text, answer: answers };
+  }
+  
+  // Media fields (signature, diagram) - store Base64 image data
+  if (FIELDS_BY_ANSWER_TYPE.media?.has(fieldType)) {
+    // Signature fields use signatureImage, diagram fields use markupImage
+    const imageData = field.signatureImage || field.markupImage;
+    if (!imageData) return null;
+    return { id, text, answer: [{ value: imageData }] };
   }
   
   return null;
