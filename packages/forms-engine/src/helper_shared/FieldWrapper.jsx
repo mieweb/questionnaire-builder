@@ -1,8 +1,10 @@
 import React from "react";
 import { EDIT_ICON, TRASHCAN_ICON, VIEWSMALL_ICON, VIEWBIG_ICON } from "./icons";
+import { useInstanceId } from "../state/uiStore";
 
 export default function FieldWrapper({ ctrl, children, noPadding }) {
   const [open, setOpen] = React.useState(true);
+  const instanceId = useInstanceId();
 
   // ────────── PREVIEW: no collapsible ──────────
   if (ctrl.isPreview || ctrl.insideSection) {
@@ -45,6 +47,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
               sectionId: ctrl.sectionId,
               selected: ctrl.selected,
               placeholder: ctrl.placeholder,
+              instanceId,
             })
             : children}
         </div>
@@ -106,7 +109,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
               setOpen((v) => !v);
             }}
             aria-expanded={open}
-            aria-controls={`fw-body-${ctrl.field?.id}`}
+            aria-controls={`${instanceId}-fw-body-${ctrl.field?.id}`}
             title={open ? "Collapse" : "Expand"}
             aria-label={open ? "Collapse field" : "Expand field"}
             className="field-collapse-btn mie:p-1.5 mie:bg-transparent mie:text-mietextmuted mie:hover:bg-miebackgroundhover mie:rounded mie:transition-colors mie:border-0 mie:outline-none mie:focus:outline-none"
@@ -121,7 +124,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
       </div>
 
       {open && (
-        <div id={`fw-body-${ctrl.field?.id}`} className="field-wrapper-body">
+        <div id={`${instanceId}-fw-body-${ctrl.field?.id}`} className="field-wrapper-body">
           {typeof children === "function"
             ? children({
               api: ctrl.api,
@@ -131,6 +134,7 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
               sectionId: ctrl.sectionId,
               selected: ctrl.selected,
               placeholder: ctrl.placeholder,
+              instanceId,
             })
             : children}
         </div>

@@ -38,7 +38,7 @@ export { generateFieldId, generateOptionId } from './src/helper_shared/idGenerat
 export { createFormStore, FormStoreContext, useFormStore, useField, useFieldsArray, useFormData, useVisibleFields, useFormDefinition, useFormResponse } from './src/state/formStore.js';
 export { useFormApi } from './src/state/formApi.js';
 export { useUIApi } from './src/state/uiApi.js';
-export { createUIStore, UIStoreContext, useUIStore } from './src/state/uiStore.js';
+export { createUIStore, UIStoreContext, useUIStore, useInstanceId } from './src/state/uiStore.js';
 
 //assets
 export * from './src/helper_shared/icons.jsx';

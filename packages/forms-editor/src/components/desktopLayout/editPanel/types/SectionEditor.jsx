@@ -2,10 +2,11 @@ import React from "react";
 import OptionListEditor from "./OptionListEditor";
 import MatrixEditor from "./MatrixEditor";
 import CommonEditor from "./CommonEditor";
-import { fieldTypes, FormStoreContext, useFormApi, useUIApi, TRASHCANTWO_ICON, ARROWDOWN_ICON } from "@mieweb/forms-engine";
+import { fieldTypes, FormStoreContext, useFormApi, useUIApi, TRASHCANTWO_ICON, ARROWDOWN_ICON, useInstanceId } from "@mieweb/forms-engine";
 import DraftIdEditor from "./DraftIdEditor"
 
 function SectionEditor({ section, onActiveChildChange }) {
+  const instanceId = useInstanceId();
   const sectionApi = useFormApi(section.id);
   const formStore = React.useContext(FormStoreContext);
   const ui = useUIApi();
@@ -141,8 +142,10 @@ function SectionEditor({ section, onActiveChildChange }) {
         />
 
         <div className="section-editor-title">
-          <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">Section Title</label>
+          <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">Section Title</span>
           <input
+            id={`${instanceId}-editor-section-title-${section.id}`}
+            aria-label="Section Title"
             className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none"
             value={section.title || ""}
             onChange={(e) => onUpdateSection("title", e.target.value)}
@@ -167,6 +170,8 @@ function SectionEditor({ section, onActiveChildChange }) {
             {/* Dropdown Field Selector */}
             <div className="mie:relative">
               <select
+                id={`${instanceId}-editor-section-child-${section.id}`}
+                aria-label="Section child field selector"
                 className="mie:w-full mie:px-3 mie:py-2 mie:pr-10 mie:border mie:border-mieborder mie:rounded mie:bg-miesurface mie:text-mietext mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:appearance-none mie:cursor-pointer"
                 value={activeChildId || ""}
                 onChange={(e) => handleChildSelect(e.target.value)}
@@ -202,8 +207,9 @@ function SectionEditor({ section, onActiveChildChange }) {
 
                 {activeChild.fieldType === "input" && (
                   <div className="section-editor-default-answer">
-                    <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">Default Answer</label>
+                    <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">Default Answer</span>
                     <input
+                      aria-label="Default Answer"
                       className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none"
                       value={activeChild.answer || ""}
                       onChange={(e) => onUpdateChild("answer", e.target.value)}

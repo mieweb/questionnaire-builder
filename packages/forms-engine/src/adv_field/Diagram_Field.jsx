@@ -97,7 +97,7 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl} noPadding={ctrl.isPreview === true ? true : false}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           return (
             <div>
@@ -132,6 +132,8 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
         return (
           <div ref={containerRef} tabIndex={-1} className="mie:space-y-3">
             <input
+              id={`${instanceId}-diagram-question-${f.id}`}
+              aria-label="Question"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
@@ -140,16 +142,18 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
             />
 
             <div className="mie:p-4 mie:border mie:border-mieborder mie:rounded-lg mie:bg-miebackground mie:shadow-sm">
-              <label className="mie:block mie:text-sm mie:font-semibold mie:text-mietext mie:mb-3">
+              <span className="mie:block mie:text-sm mie:font-semibold mie:text-mietext mie:mb-3">
                 Diagram Settings
-              </label>
+              </span>
 
               <div className="mie:space-y-3">
                 <div>
-                  <label className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-1">
+                  <span className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-1">
                     Placeholder Text
-                  </label>
+                  </span>
                   <input
+                    id={`${instanceId}-diagram-placeholder-${f.id}`}
+                    aria-label="Placeholder Text"
                     type="text"
                     value={f.placeholder || ""}
                     onChange={(e) => api.field.update("placeholder", e.target.value)}
@@ -159,14 +163,14 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                 </div>
 
                 <div>
-                  <label className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-2">
+                  <span className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-2">
                     Background Diagram Image
-                  </label>
+                  </span>
 
                   <div className="mie:mb-3">
-                    <label className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-2">
+                    <span className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-2">
                       Quick Presets
-                    </label>
+                    </span>
                     <CustomDropdown
                       options={[
                         ...DIAGRAM_PRESETS.map(preset => ({
@@ -242,12 +246,12 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
 
                 <div className="mie:flex mie:items-center mie:gap-2">
                   <CustomCheckbox
-                    id="required-diagram"
+                    id={`${instanceId}-required-diagram-${f.id}`}
                     checked={f.required === true}
                     onChange={(checked) => api.field.update("required", checked)}
                     size="md"
                   />
-                  <label htmlFor="required-diagram" className="mie:text-sm mie:text-mietext mie:cursor-pointer">
+                  <label htmlFor={`${instanceId}-required-diagram-${f.id}`} className="mie:text-sm mie:text-mietext mie:cursor-pointer">
                     Required diagram
                   </label>
                 </div>

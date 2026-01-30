@@ -101,6 +101,7 @@ export function PlaygroundView() {
               </button>
               <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
                 <input
+                  id="playground-collision-detector"
                   type="checkbox"
                   checked={showCollisionDetector}
                   onChange={(e) => setShowCollisionDetector(e.target.checked)}
