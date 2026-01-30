@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LandingPage } from './components/Landing';
 import { EditorView } from './components/EditorView';
 import { RendererView } from './components/RendererView';
+import { PlaygroundView } from './components/Playground';
 import './index.css';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/packages/editor" element={<EditorView />} />
         <Route path="/packages/renderer" element={<RendererView />} />
+        <Route path="/devPlayGround" element={<PlaygroundView />} />
       </Routes>
     </BrowserRouter>
   );
