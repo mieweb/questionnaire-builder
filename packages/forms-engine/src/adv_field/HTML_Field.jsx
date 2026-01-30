@@ -2,34 +2,95 @@ import React from "react";
 import FieldWrapper from "../helper_shared/FieldWrapper";
 import useFieldController from "../helper_shared/useFieldController";
 
+const clampHeight = (value) => Math.max(50, Math.min(800, parseInt(value) || 400));
+
+// Default theme values (light mode) - matches index.css
+const DEFAULT_THEME_STYLES = `
+  --mie-color-mietext: #111827;
+  --mie-color-mietextmuted: #6b7280;
+  --mie-color-miesurface: #ffffff;
+  --mie-color-miebackground: #f9fafb;
+  --mie-color-miebackgroundsecondary: #f3f4f6;
+  --mie-color-mieborder: #e5e7eb;
+  --mie-color-mieprimary: #3b82f6;
+`;
+
+// CSS variable names used for theming
+const THEME_VARS = [
+  '--mie-color-mietext',
+  '--mie-color-mietextmuted',
+  '--mie-color-miesurface',
+  '--mie-color-miebackground',
+  '--mie-color-miebackgroundsecondary',
+  '--mie-color-mieborder',
+  '--mie-color-mieprimary',
+];
+
+// Read CSS variable values from the root element
+const getThemeStyles = (root) => {
+  if (!root) return null;
+  const style = getComputedStyle(root);
+  return THEME_VARS.map(v => `${v}: ${style.getPropertyValue(v).trim()};`).join('\n      ');
+};
+
+// Check if HTML content has user-defined styles
+const hasUserStyles = (html) => {
+  if (!html || typeof html !== "string") return false;
+  return /<style[\s>]/i.test(html) || /\sstyle\s*=/i.test(html);
+};
+
 const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
   const [editMode, setEditMode] = React.useState(false);
-  const [renderError, setRenderError] = React.useState(null);
-  const iframeRef = React.useRef(null);
+  const containerRef = React.useRef(null);
   const [iframeHeight, setIframeHeight] = React.useState(field.iframeHeight || 400);
   const [viewportWidth, setViewportWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+  const [themeStyles, setThemeStyles] = React.useState(DEFAULT_THEME_STYLES);
 
-  // Base height is set for desktop (~1024px width). As viewport narrows, content wraps more and needs more height.
+  // Theme detection - read CSS variables from editor/renderer root
+  React.useEffect(() => {
+    const updateTheme = () => {
+      const root = containerRef.current?.closest('.qb-editor-root, .qb-renderer-root');
+      const styles = getThemeStyles(root);
+      if (styles) setThemeStyles(styles);
+    };
+    
+    // Ref might not be ready on first render, retry next frame
+    requestAnimationFrame(updateTheme);
+    
+    const root = containerRef.current?.closest('.qb-editor-root, .qb-renderer-root');
+    if (root) {
+      const observer = new MutationObserver(updateTheme);
+      observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+      return () => observer.disconnect();
+    }
+  }, []);
+
   const getResponsiveHeight = React.useCallback((baseHeight) => {
-    const referenceWidth = 1024;
-    // Calculate how much narrower we are than reference
-    // Narrower viewport = more text wrapping = need more height
-    const widthRatio = referenceWidth / Math.max(viewportWidth, 320);
-    // Scale height up as viewport gets smaller, dampen to ~0.35 for reduced scaling
-    // At 1024px: multiplier = 1.0, at 512px: multiplier = 1.35, at 375px: ~1.61, at 320px: ~1.78
+    const widthRatio = 1024 / Math.max(viewportWidth, 320);
     const scaleFactor = 1 + (widthRatio - 1) * 0.35;
     return Math.round(baseHeight * Math.max(1, scaleFactor));
   }, [viewportWidth]);
 
-  /**
-   * Wrap HTML in a complete document for iframe rendering
-   * Uses sandbox attribute to prevent scripts from escaping to parent
-   */
-  const wrapHTMLForIframe = React.useCallback((html) => {
-    if (!html || typeof html !== "string") {
-      return "";
-    }
+  const wrapHTMLForIframe = React.useCallback((html, styles) => {
+    if (!html || typeof html !== "string") return "";
+
+    const defaultStyles = hasUserStyles(html) ? '' : `
+    body { color: var(--mie-color-mietext); background-color: var(--mie-color-miesurface); }
+    a { color: var(--mie-color-mieprimary); }
+    a:hover { text-decoration: underline; }
+    h1, h2, h3, h4, h5, h6 { color: var(--mie-color-mietext); margin-top: 1em; margin-bottom: 0.5em; font-weight: 600; }
+    h1 { font-size: 1.875rem; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    p { margin: 0.75em 0; }
+    ul, ol { padding-left: 1.5em; margin: 0.75em 0; }
+    li { margin: 0.25em 0; }
+    blockquote { border-left: 3px solid var(--mie-color-mieborder); padding-left: 1em; margin: 1em 0; color: var(--mie-color-mietextmuted); }
+    code { background: var(--mie-color-miebackgroundsecondary); padding: 0.125em 0.375em; border-radius: 0.25em; font-size: 0.875em; }
+    pre { background: var(--mie-color-miebackgroundsecondary); padding: 1em; border-radius: 0.375em; overflow-x: auto; }
+    pre code { background: none; padding: 0; }
+    hr { border: none; border-top: 1px solid var(--mie-color-mieborder); margin: 1.5em 0; }`;
 
     return `<!DOCTYPE html>
 <html>
@@ -37,94 +98,75 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    html { padding: 24px 24px 0px 24px; margin: 0; }
+    :root { ${styles} }
+    html { padding: 24px 24px 0 24px; margin: 0; }
     body { font-family: inherit; margin: 0; line-height: 1.5; }
     img { max-width: 100%; height: auto; }
     table { border-collapse: collapse; width: 100%; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th, td { border: 1px solid var(--mie-color-mieborder); padding: 8px; text-align: left; }
+    th { background: var(--mie-color-miebackgroundsecondary); }${defaultStyles}
   </style>
 </head>
-<body>
-  ${html}
-</body>
+<body>${html}</body>
 </html>`;
   }, []);
 
-  // Removed iframe error event handler useEffect; it does not catch HTML parsing errors in srcDoc.
-  // Minimal debounce helper
-  function debounce(fn, delay) {
-    let timer;
-    return function(...args) {
-      clearTimeout(timer);
-      timer = setTimeout(() => fn.apply(this, args), delay);
-    };
-  }
-
-  // Track viewport width for responsive height scaling
   React.useEffect(() => {
-    const debouncedResize = debounce(() => setViewportWidth(window.innerWidth), 175);
-    window.addEventListener('resize', debouncedResize);
-    return () => window.removeEventListener('resize', debouncedResize);
+    let timer;
+    const onResize = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => setViewportWidth(window.innerWidth), 175);
+    };
+    window.addEventListener('resize', onResize);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', onResize);
+    };
   }, []);
 
-  React.useEffect(() => {
-    setRenderError(null);
-  }, [field.htmlContent]);
+  const updateHeight = (api, value) => {
+    const height = clampHeight(value);
+    setIframeHeight(height);
+    api.field.update("iframeHeight", height);
+  };
+
+  const ToggleButton = ({ active, onClick, children }) => (
+    <button
+      onClick={onClick}
+      className={`toggle-btn mie:px-4 mie:py-2 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:cursor-pointer mie:transition-colors ${
+        active
+          ? "mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-mietextsecondary"
+          : "mie:bg-miebackgroundsecondary mie:hover:bg-miebackgroundhover mie:text-mietext"
+      }`}
+    >
+      {children}
+    </button>
+  );
 
   return (
     <FieldWrapper ctrl={ctrl} noPadding={ctrl.isPreview}>
       {({ api, isPreview, field: f }) => {
         if (isPreview) {
-          const displayHeight = getResponsiveHeight(f.iframeHeight || 400);
           return (
-            <>
+            <div ref={containerRef} className="html-field-preview">
               <iframe
-                ref={iframeRef}
-                srcDoc={wrapHTMLForIframe(f.htmlContent)}
+                srcDoc={wrapHTMLForIframe(f.htmlContent, themeStyles)}
                 sandbox=""
-                style={{
-                  width: "100%",
-                  border: "none",
-                  height: `${displayHeight}px`,
-                }}
+                style={{ width: "100%", border: "none", height: `${getResponsiveHeight(f.iframeHeight || 400)}px` }}
                 title="HTML Content"
               />
-              {renderError && (
-                <div role="alert" className="render-error mie:mt-2 mie:p-2 mie:bg-miedanger/10 mie:border mie:border-miedanger/30 mie:rounded mie:text-xs mie:text-miedanger">
-                  {renderError}
-                </div>
-              )}
-            </>
+            </div>
           );
         }
 
-        // Edit mode
         return (
-          <div className="mie:space-y-4 mie:w-full mie:bg-miesurface">
-            {/* Editor/Preview Toggle */}
-            <div className="mie:flex mie:gap-2">
-              <button
-                onClick={() => setEditMode(false)}
-                className={`edit-mode-btn mie:px-4 mie:py-2 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:cursor-pointer mie:transition-colors ${!editMode
-                  ? "mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-mietextsecondary"
-                  : "mie:bg-miebackgroundsecondary mie:hover:bg-miebackgroundhover mie:text-mietext"
-                  }`}
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => setEditMode(true)}
-                className={`preview-mode-btn mie:px-4 mie:py-2 mie:rounded mie:border-0 mie:outline-none mie:focus:outline-none mie:cursor-pointer mie:transition-colors ${editMode
-                  ? "mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:text-mietextsecondary"
-                  : "mie:bg-miebackgroundsecondary mie:hover:bg-miebackgroundhover mie:text-mietext"
-                  }`}
-              >
-                Preview
-              </button>
+          <div ref={containerRef} className="html-field-editor mie:space-y-4 mie:w-full mie:bg-miesurface">
+            <div className="toggle-buttons mie:flex mie:gap-2">
+              <ToggleButton active={!editMode} onClick={() => setEditMode(false)}>Edit</ToggleButton>
+              <ToggleButton active={editMode} onClick={() => setEditMode(true)}>Preview</ToggleButton>
             </div>
 
-            {/* Height Control */}
-            <div>
+            <div className="height-control">
               <label className="height-control-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
                 Preview Height (px)
               </label>
@@ -135,11 +177,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                   max="800"
                   step="10"
                   value={iframeHeight}
-                  onChange={(e) => {
-                    const height = Math.max(50, Math.min(800, parseInt(e.target.value)));
-                    setIframeHeight(height);
-                    api.field.update("iframeHeight", height);
-                  }}
+                  onChange={(e) => updateHeight(api, e.target.value)}
                   className="height-slider mie:flex-1 mie:accent-mieprimary mie:bg-transparent mie:cursor-pointer"
                   aria-label="Preview height in pixels"
                 />
@@ -149,11 +187,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                   max="800"
                   step="10"
                   value={iframeHeight}
-                  onChange={(e) => {
-                    const height = parseInt(e.target.value) || 400;
-                    setIframeHeight(Math.max(50, Math.min(800, height)));
-                    api.field.update("iframeHeight", Math.max(50, Math.min(800, height)));
-                  }}
+                  onChange={(e) => updateHeight(api, e.target.value)}
                   className="height-input mie:w-20 mie:px-2 mie:py-1 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:text-sm mie:text-center mie:outline-none mie:focus:border-mieprimary"
                   aria-label="Preview height in pixels"
                 />
@@ -162,14 +196,10 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
             </div>
 
             {editMode ? (
-              // Preview Mode
-              <div>
-                <label className="preview-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
-                  Preview
-                </label>
+              <div className="preview-section">
+                <label className="preview-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">Preview</label>
                 <iframe
-                  ref={iframeRef}
-                  srcDoc={wrapHTMLForIframe(f.htmlContent)}
+                  srcDoc={wrapHTMLForIframe(f.htmlContent, themeStyles)}
                   sandbox=""
                   style={{
                     width: "100%",
@@ -179,23 +209,15 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                   }}
                   title="HTML Preview"
                 />
-                {renderError && (
-                  <div className="preview-error mie:mt-2 mie:p-2 mie:bg-miedanger/10 mie:border mie:border-miedanger/30 mie:rounded mie:text-xs mie:text-miedanger" role="alert">
-                    {renderError}
-                  </div>
-                )}
               </div>
             ) : (
-              // Edit Mode
-              <div>
-                <label className="edit-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
-                  HTML Content
-                </label>
+              <div className="edit-section">
+                <label className="edit-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">HTML Content</label>
                 <textarea
                   className="html-textarea mie:px-3 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:font-mono mie:text-sm mie:max-h-64 mie:overflow-y-auto"
                   value={f.htmlContent || ""}
                   onChange={(e) => api.field.update("htmlContent", e.target.value)}
-                  placeholder="Enter your HTML content here... (e.g., &lt;p&gt;text&lt;/p&gt;)"
+                  placeholder="Enter your HTML content here... (e.g., <p>text</p>)"
                   rows={8}
                   spellCheck="false"
                   autoComplete="off"
