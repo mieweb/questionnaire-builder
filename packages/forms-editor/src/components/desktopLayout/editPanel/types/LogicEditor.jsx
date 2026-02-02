@@ -1,5 +1,5 @@
 import React from "react";
-import { useUIApi, useFormStore, TRASHCANTWO_ICON, NUMERIC_EXPRESSION_FORMATS } from "@mieweb/forms-engine";
+import { useUIApi, useFormStore, TRASHCANTWO_ICON, NUMERIC_EXPRESSION_FORMATS, useInstanceId } from "@mieweb/forms-engine";
 
 // ────────── Operators by field type ──────────
 function getOperatorsForFieldType(fieldType, displayFormat, inputType) {
@@ -98,6 +98,7 @@ export default function LogicEditor() {
 
   // resolve current selected field and whether it is a section
   const selectedField = selectedId ? byId[selectedId] : null;
+  const instanceId = useInstanceId();
   const isSectionCtx = selectedField?.fieldType === "section";
 
   // children list for the current section (empty when not a section)
@@ -277,8 +278,10 @@ export default function LogicEditor() {
       {/* Target picker when a section is selected */}
       {isSectionCtx && (
         <div className="mie:space-y-2">
-          <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Target Field</label>
+          <label htmlFor={`${instanceId}-editor-logic-target-${effectiveId}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Target Field</label>
           <select
+            id={`${instanceId}-editor-logic-target-${effectiveId}`}
+            aria-label="Target Field"
             className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:bg-miesurface mie:text-mietext mie:cursor-pointer mie:transition-colors"
             value={target}
             onChange={(e) => handleTargetChange(e.target.value)}
@@ -295,8 +298,10 @@ export default function LogicEditor() {
 
       <div className="mie:space-y-3">
         <div className="mie:space-y-2">
-          <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Logic Operator</label>
+          <label htmlFor={`${instanceId}-editor-logic-operator-${effectiveId}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Logic Operator</label>
           <select
+            id={`${instanceId}-editor-logic-operator-${effectiveId}`}
+            aria-label="Logic Operator"
             value={ew.logic || "AND"}
             onChange={(e) => writeEnableWhen({ ...ew, logic: e.target.value })}
             className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:bg-miesurface mie:text-mietext mie:cursor-pointer mie:transition-colors"
@@ -362,8 +367,10 @@ export default function LogicEditor() {
 
                   <div className="mie:space-y-2">
                     <div>
-                      <label className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">When Field</label>
+                      <label htmlFor={`${instanceId}-editor-logic-when-${effectiveId}-${i}`} className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">When Field</label>
                       <select
+                        id={`${instanceId}-editor-logic-when-${effectiveId}-${i}`}
+                        aria-label="When Field"
                         className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:bg-miesurface mie:text-mietext mie:text-sm mie:cursor-pointer mie:transition-colors"
                         value={c.targetId}
                         onChange={(e) => updateCond(i, { targetId: e.target.value })}
@@ -381,8 +388,10 @@ export default function LogicEditor() {
                     {/* Property Accessor (optional - only for certain field types) */}
                     {hasPropertyAccessors && (
                       <div>
-                        <label className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Property (optional)</label>
+                        <label htmlFor={`${instanceId}-editor-logic-property-${effectiveId}-${i}`} className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Property (optional)</label>
                         <select
+                          id={`${instanceId}-editor-logic-property-${effectiveId}-${i}`}
+                          aria-label="Property (optional)"
                           className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:bg-miesurface mie:text-mietext mie:text-sm mie:cursor-pointer mie:transition-colors"
                           value={c.propertyAccessor || ''}
                           onChange={(e) => updateCond(i, { propertyAccessor: e.target.value || undefined })}
@@ -403,8 +412,10 @@ export default function LogicEditor() {
 
                     <div className="mie:grid mie:grid-cols-2 mie:gap-2">
                       <div>
-                        <label className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Operator</label>
+                        <label htmlFor={`${instanceId}-editor-logic-operator-cond-${effectiveId}-${i}`} className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Operator</label>
                         <select
+                          id={`${instanceId}-editor-logic-operator-cond-${effectiveId}-${i}`}
+                          aria-label="Operator"
                           className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:bg-miesurface mie:text-mietext mie:text-sm mie:cursor-pointer mie:transition-colors"
                           value={c.operator}
                           onChange={(e) => updateCond(i, { operator: e.target.value })}
@@ -419,13 +430,15 @@ export default function LogicEditor() {
                       </div>
 
                       <div>
-                        <label className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Value</label>
+                        <label htmlFor={`${instanceId}-editor-logic-value-${effectiveId}-${i}`} className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Value</label>
                         {!needsValue ? (
                           <div className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:bg-miebackground mie:text-sm mie:text-mietextmuted mie:flex mie:items-center">
                             (no value needed)
                           </div>
                         ) : hasOptions && !c.propertyAccessor && !isNumericComparison ? (
                           <select
+                            id={`${instanceId}-editor-logic-value-${effectiveId}-${i}`}
+                            aria-label="Value"
                             className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:bg-miesurface mie:text-mietext mie:text-sm mie:cursor-pointer mie:transition-colors"
                             value={c.value}
                             onChange={(e) => updateCond(i, { value: e.target.value })}
@@ -440,6 +453,8 @@ export default function LogicEditor() {
                           </select>
                         ) : (
                           <input
+                            id={`${instanceId}-editor-logic-value-${effectiveId}-${i}`}
+                            aria-label="Value"
                             className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:bg-miesurface mie:text-mietext mie:text-sm mie:transition-colors"
                             placeholder={c.propertyAccessor || isNumericComparison ? "Enter number" : "Enter value"}
                             type={c.propertyAccessor || isNumericComparison ? "number" : "text"}

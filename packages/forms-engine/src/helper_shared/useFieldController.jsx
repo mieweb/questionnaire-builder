@@ -29,7 +29,8 @@ export default function useFieldController(field, sectionId) {
     "mie:rounded-lg mie:bg-miesurface",
     !ui.state.isPreview ? "mie:border" : "",
     !insideSection && ui.state.isPreview ? "mie:border" : "",
-    field.fieldType === "section" && ui.state.isPreview ? "mie:p-0 mie:border" : "mie:p-6",
+    field.fieldType === "section" && ui.state.isPreview ? "mie:p-0 mie:border" : 
+      (insideSection && !ui.state.isPreview ? "mie:pt-2 mie:px-6 mie:pb-6" : "mie:p-6"),
     selected ? "mie:border-mieprimary mie:border-2 mie:border-dashed" : "mie:border-mieborder",
   ].join(" ");
 

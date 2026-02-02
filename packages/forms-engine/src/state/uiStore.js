@@ -2,7 +2,11 @@ import React from "react";
 import { createStore, useStore } from "zustand";
 
 export const createUIStore = (initProps = {}) => {
+  // Generate unique instance ID at store creation time
+  const instanceId = `form-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+
   const DEFAULT_PROPS = {
+    instanceId,
     isPreview: false,
     isCodeEditor: false,
     isEditModalOpen: false,
@@ -108,3 +112,6 @@ export const useUIStore = (selector) => {
   if (!store) throw new Error('Missing UIStoreContext.Provider in the tree');
   return useStore(store, selector);
 };
+
+/** Get the unique instance ID for this form (used to prevent duplicate DOM IDs) */
+export const useInstanceId = () => useUIStore((s) => s.instanceId);

@@ -120,7 +120,7 @@ const SectionField = React.memo(function SectionField({ field }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f }) => {
+      {({ api, isPreview, field: f, instanceId }) => {
         const children = Array.isArray(f.fields) ? f.fields : [];
 
         if (isPreview) {
@@ -141,6 +141,8 @@ const SectionField = React.memo(function SectionField({ field }) {
             <div className="mie:flex mie:justify-between mie:items-center mie:mb-3 mie:gap-2 section-field-header">
               <div className="mie:flex-1">
                 <input
+                  id={`${instanceId}-section-title-${f.id}`}
+                  aria-label="Section title"
                   type="text"
                   className="mie:w-full mie:min-w-0 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
                   value={f.title || ""}
