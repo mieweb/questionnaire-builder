@@ -526,9 +526,9 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                 onChange={(checked) => api.field.update("hideDebugInfo", checked)}
                 size="md"
               />
-              <span className="mie:text-sm mie:font-medium mie:text-mietext">
+              <label htmlFor={`${instanceId}-expression-hidedebug-${f.id}`} className="mie:text-sm mie:font-medium mie:text-mietext mie:cursor-pointer">
                 Hide Expression and Result labels (show result only)
-              </span>
+              </label>
             </div>
 
             {/* Sample Data for Preview */}
