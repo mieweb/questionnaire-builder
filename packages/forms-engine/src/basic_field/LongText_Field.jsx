@@ -29,15 +29,20 @@ const LongTextField = React.memo(function LongTextField({ field, sectionId }) {
 
         return (
           <div className="longtext-field-edit mie:space-y-2">
-            <input
-              id={`${instanceId}-longtext-question-${f.id}`}
-              aria-label="Question"
+            <div>
+              <label htmlFor={`${instanceId}-longtext-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
+                Question
+              </label>
+              <input
+                id={`${instanceId}-longtext-question-${f.id}`}
+                aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:transition-colors"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
+            </div>
 
             <textarea
               id={`${instanceId}-longtext-answer-${f.id}`}

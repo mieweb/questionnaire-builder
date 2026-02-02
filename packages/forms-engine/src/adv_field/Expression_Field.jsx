@@ -442,9 +442,9 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
           <div className="expression-field-editor mie:space-y-4 mie:w-full">
             {/* Label */}
             <div className="label-field">
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-expression-label-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Label (Optional)
-              </span>
+              </label>
               <input
                 id={`${instanceId}-expression-label-${f.id}`}
                 aria-label="Label (Optional)"
@@ -458,9 +458,9 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
             {/* Expression Input */}
             <div className="expression-field">
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-expression-formula-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Expression / Formula
-              </span>
+              </label>
               <textarea
                 id={`${instanceId}-expression-formula-${f.id}`}
                 aria-label="Expression / Formula"
@@ -481,9 +481,9 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
 
             {/* Display Format */}
             <div className="display-format-field">
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-expression-format-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Display Format
-              </span>
+              </label>
               <select
                 id={`${instanceId}-expression-format-${f.id}`}
                 aria-label="Display Format"
@@ -502,9 +502,9 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
             {/* Decimal Places (only show for numeric formats) */}
             {NUMERIC_EXPRESSION_FORMATS.includes(f.displayFormat) && (
               <div className="decimal-places-field">
-                <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+                <label htmlFor={`${instanceId}-expression-decimals-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                   Decimal Places
-                </span>
+                </label>
                 <input
                   id={`${instanceId}-expression-decimals-${f.id}`}
                   aria-label="Decimal Places"
@@ -593,7 +593,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
             {/* Preview Result */}
             {sampleDataFields?.length > 0 && (
               <div className="expression-preview-result mie:p-3 mie:bg-mieprimary/10 mie:border mie:border-mieprimary/30 mie:rounded-lg">
-                <p className="mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">Preview Result:</p>
+                <p className="mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">Preview Result:</p>
                 {samplePreview.error ? (
                   <p className="mie:text-sm mie:text-miedanger">Error: {samplePreview.error}</p>
                 ) : (

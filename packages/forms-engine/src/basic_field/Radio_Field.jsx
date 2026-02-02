@@ -48,9 +48,9 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
         return (
           <div className="radio-field-edit mie:space-y-3">
             <div>
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-radio-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Question
-              </span>
+              </label>
               <input
                 id={`${instanceId}-radio-question-${f.id}`}
                 aria-label="Question"
@@ -63,7 +63,7 @@ const RadioField = React.memo(function RadioField({ field, sectionId }) {
             </div>
 
             <div>
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
                 Options
               </span>
               <div className="mie:space-y-2">

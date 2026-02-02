@@ -40,9 +40,9 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
         return (
           <div className="multitext-field-edit mie:space-y-3">
             <div>
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-multitext-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Question
-              </span>
+              </label>
               <input
                 id={`${instanceId}-multitext-question-${f.id}`}
                 aria-label="Question"
@@ -55,7 +55,7 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
             </div>
 
             <div>
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
                 Fields
               </span>
               <div className="mie:space-y-2">

@@ -39,7 +39,7 @@ function CommonEditor({ f, onUpdateField }) {
       />
 
       <div>
-        <span className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Label / Question</span>
+        <label htmlFor={`${instanceId}-editor-question-${f.id}`} className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Label / Question</label>
         <input
           id={`${instanceId}-editor-question-${f.id}`}
           aria-label="Label / Question"
@@ -55,7 +55,7 @@ function CommonEditor({ f, onUpdateField }) {
       )}
 
       <div className="mie:min-w-0">
-        <span className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Sublabel (optional)</span>
+        <label htmlFor={`${instanceId}-editor-sublabel-${f.id}`} className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Sublabel (optional)</label>
         <textarea
           id={`${instanceId}-editor-sublabel-${f.id}`}
           aria-label="Sublabel (optional)"

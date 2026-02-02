@@ -113,9 +113,9 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
         return (
           <div ref={containerRef} tabIndex={-1} className="mie:space-y-3 mie:w-full mie:overflow-hidden">
             <div>
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-image-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Question / Title
-              </span>
+              </label>
               <input
                 id={`${instanceId}-image-question-${f.id}`}
                 aria-label="Question / Title"
@@ -128,9 +128,9 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
             </div>
 
             <div>
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-image-alttext-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Alt Text (Accessibility)
-              </span>
+              </label>
               <input
                 id={`${instanceId}-image-alttext-${f.id}`}
                 aria-label="Alt Text (Accessibility)"
@@ -143,9 +143,9 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
             </div>
 
             <div>
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-image-caption-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Caption (Optional)
-              </span>
+              </label>
               <input
                 id={`${instanceId}-image-caption-${f.id}`}
                 aria-label="Caption (Optional)"
@@ -176,7 +176,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
               </div>
 
               <div>
-                <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+                <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                   Alignment
                 </span>
                 <CustomDropdown
@@ -193,7 +193,7 @@ const ImageField = React.memo(function ImageField({ field, sectionId }) {
             </div>
 
             <div>
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
                 Padding
               </span>
               <CustomDropdown

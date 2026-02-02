@@ -125,9 +125,9 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
 
             {/* Height Control */}
             <div>
-              <span className="height-control-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-html-height-${f.id}`} className="height-control-label mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Preview Height (px)
-              </span>
+              </label>
               <div className="height-control-inputs mie:flex mie:gap-2 mie:items-center">
                 <input
                   id={`${instanceId}-html-height-range-${f.id}`}
@@ -166,7 +166,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
             {editMode ? (
               // Preview Mode
               <div>
-                <span className="preview-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+                <span className="preview-label mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
                   Preview
                 </span>
                 <iframe
@@ -190,9 +190,9 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
             ) : (
               // Edit Mode
               <div>
-                <span className="edit-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+                <label htmlFor={`${instanceId}-html-content-${f.id}`} className="edit-label mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
                   HTML Content
-                </span>
+                </label>
                 <textarea
                   id={`${instanceId}-html-content-${f.id}`}
                   aria-label="HTML Content"

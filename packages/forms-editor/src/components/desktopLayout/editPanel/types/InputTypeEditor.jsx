@@ -61,7 +61,7 @@ export default function InputTypeEditor({ field, onUpdate }) {
   return (
     <div className="mie:space-y-3">
       <div>
-        <span className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Input Type</span>
+        <label htmlFor={`${instanceId}-editor-input-type-${field.id}`} className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Input Type</label>
         <select
           id={`${instanceId}-editor-input-type-${field.id}`}
           aria-label="Input Type"
@@ -77,7 +77,7 @@ export default function InputTypeEditor({ field, onUpdate }) {
       
       {showUnitSelector && (
         <div>
-          <span className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Unit (optional)</span>
+          <label htmlFor={`${instanceId}-editor-unit-${field.id}`} className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Unit (optional)</label>
           <select
             id={`${instanceId}-editor-unit-${field.id}`}
             aria-label="Unit (optional)"

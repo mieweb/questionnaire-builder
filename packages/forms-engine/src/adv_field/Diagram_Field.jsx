@@ -131,26 +131,31 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
 
         return (
           <div ref={containerRef} tabIndex={-1} className="mie:space-y-3">
-            <input
-              id={`${instanceId}-diagram-question-${f.id}`}
-              aria-label="Question"
+            <div>
+              <label htmlFor={`${instanceId}-diagram-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
+                Question
+              </label>
+              <input
+                id={`${instanceId}-diagram-question-${f.id}`}
+                aria-label="Question"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Question / Title"}
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
             />
+            </div>
 
             <div className="mie:p-4 mie:border mie:border-mieborder mie:rounded-lg mie:bg-miebackground mie:shadow-sm">
-              <span className="mie:block mie:text-sm mie:font-semibold mie:text-mietext mie:mb-3">
+              <span className="mie:block mie:text-sm mie:font-semibold mie:text-mieprimary mie:mb-3">
                 Diagram Settings
               </span>
 
               <div className="mie:space-y-3">
                 <div>
-                  <span className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-1">
+                  <label htmlFor={`${instanceId}-diagram-placeholder-${f.id}`} className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-1">
                     Placeholder Text
-                  </span>
+                  </label>
                   <input
                     id={`${instanceId}-diagram-placeholder-${f.id}`}
                     aria-label="Placeholder Text"
@@ -164,13 +169,10 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
 
                 <div>
                   <span className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-2">
-                    Background Diagram Image
+                    Quick Presets
                   </span>
 
                   <div className="mie:mb-3">
-                    <span className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-2">
-                      Quick Presets
-                    </span>
                     <CustomDropdown
                       options={[
                         ...DIAGRAM_PRESETS.map(preset => ({
@@ -232,7 +234,7 @@ const DiagramField = React.memo(function DiagramField({ field, sectionId }) {
                       >
                         <div className="mie:text-center">
                           <UPLOAD_ICON className="mie:w-8 mie:h-8 mie:mx-auto mie:mb-2 mie:text-mietextmuted" />
-                          <p className="mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+                          <p className="mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                             Upload Diagram or Paste
                           </p>
                           <p className="mie:text-xs mie:text-mietextmuted">

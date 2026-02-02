@@ -42,21 +42,30 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
         // ────────── Edit Mode ──────────
         return (
           <div className="multiselect-dropdown-edit mie:space-y-3">
-            <input
-              id={`${instanceId}-multiselect-question-${f.id}`}
-              aria-label="Question"
+            <div>
+              <label htmlFor={`${instanceId}-multiselect-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
+                Question
+              </label>
+              <input
+                id={`${instanceId}-multiselect-question-${f.id}`}
+                aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
+            </div>
 
             <div className="mie:w-full mie:min-h-10 mie:px-4 mie:py-2 mie:shadow mie:border mie:border-mieborder mie:rounded-lg mie:bg-miebackground mie:flex mie:flex-wrap mie:gap-2 mie:items-center">
               <span className="mie:text-mietextmuted mie:text-sm">Multi-select dropdown (Preview mode only)</span>
             </div>
 
-            <div className="mie:space-y-2">
+            <div>
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
+                Options
+              </span>
+              <div className="mie:space-y-2">
               {(f.options || []).map((option) => (
                 <div
                   key={option.id}
@@ -80,6 +89,7 @@ const MultiSelectDropDownField = React.memo(function MultiSelectDropDownField({ 
                   </button>
                 </div>
               ))}
+              </div>
             </div>
 
             <button 

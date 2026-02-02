@@ -95,18 +95,23 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
 
         return (
           <div className="multimatrix-field-edit mie:space-y-3">
-            <input
-              id={`${instanceId}-multimatrix-question-${f.id}`}
-              aria-label="Question"
+            <div>
+              <label htmlFor={`${instanceId}-multimatrix-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
+                Question
+              </label>
+              <input
+                id={`${instanceId}-multimatrix-question-${f.id}`}
+                aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
+            </div>
 
             <div>
-              <div className="mie:text-sm mie:font-semibold mie:mb-2 mie:text-mietextmuted">Rows</div>
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">Rows</span>
               <div className="mie:space-y-2">
                 {(f.rows || []).map((row) => (
                   <div key={row.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
@@ -142,7 +147,7 @@ const MultiMatrixField = React.memo(function MultiMatrixField({ field, sectionId
             </div>
 
             <div>
-              <div className="mie:text-sm mie:font-semibold mie:mb-2 mie:text-mietextmuted">Columns</div>
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">Columns</span>
               <div className="mie:space-y-2">
                 {(f.columns || []).map((col) => (
                   <div key={col.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">

@@ -31,9 +31,9 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
         return (
           <div className="dropdown-field-edit mie:space-y-3">
             <div>
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-dropdown-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Question
-              </span>
+              </label>
               <input
                 id={`${instanceId}-dropdown-question-${f.id}`}
                 aria-label="Question"
@@ -46,7 +46,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
             </div>
 
             <div>
-              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
                 Options
               </span>
               <div className="mie:space-y-2">

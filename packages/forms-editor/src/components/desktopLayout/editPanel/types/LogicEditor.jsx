@@ -278,7 +278,7 @@ export default function LogicEditor() {
       {/* Target picker when a section is selected */}
       {isSectionCtx && (
         <div className="mie:space-y-2">
-          <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Target Field</span>
+          <label htmlFor={`${instanceId}-editor-logic-target-${effectiveId}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Target Field</label>
           <select
             id={`${instanceId}-editor-logic-target-${effectiveId}`}
             aria-label="Target Field"
@@ -298,7 +298,7 @@ export default function LogicEditor() {
 
       <div className="mie:space-y-3">
         <div className="mie:space-y-2">
-          <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Logic Operator</span>
+          <label htmlFor={`${instanceId}-editor-logic-operator-${effectiveId}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietext">Logic Operator</label>
           <select
             id={`${instanceId}-editor-logic-operator-${effectiveId}`}
             aria-label="Logic Operator"
@@ -367,7 +367,7 @@ export default function LogicEditor() {
 
                   <div className="mie:space-y-2">
                     <div>
-                      <span className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">When Field</span>
+                      <label htmlFor={`${instanceId}-editor-logic-when-${effectiveId}-${i}`} className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">When Field</label>
                       <select
                         id={`${instanceId}-editor-logic-when-${effectiveId}-${i}`}
                         aria-label="When Field"
@@ -388,7 +388,7 @@ export default function LogicEditor() {
                     {/* Property Accessor (optional - only for certain field types) */}
                     {hasPropertyAccessors && (
                       <div>
-                        <span className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Property (optional)</span>
+                        <label htmlFor={`${instanceId}-editor-logic-property-${effectiveId}-${i}`} className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Property (optional)</label>
                         <select
                           id={`${instanceId}-editor-logic-property-${effectiveId}-${i}`}
                           aria-label="Property (optional)"
@@ -412,7 +412,7 @@ export default function LogicEditor() {
 
                     <div className="mie:grid mie:grid-cols-2 mie:gap-2">
                       <div>
-                        <span className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Operator</span>
+                        <label htmlFor={`${instanceId}-editor-logic-operator-cond-${effectiveId}-${i}`} className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Operator</label>
                         <select
                           id={`${instanceId}-editor-logic-operator-cond-${effectiveId}-${i}`}
                           aria-label="Operator"
@@ -430,7 +430,7 @@ export default function LogicEditor() {
                       </div>
 
                       <div>
-                        <span className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Value</span>
+                        <label htmlFor={`${instanceId}-editor-logic-value-${effectiveId}-${i}`} className="mie:block mie:text-xs mie:font-medium mie:text-mietextmuted mie:mb-1">Value</label>
                         {!needsValue ? (
                           <div className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:bg-miebackground mie:text-sm mie:text-mietextmuted mie:flex mie:items-center">
                             (no value needed)

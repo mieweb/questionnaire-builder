@@ -28,9 +28,9 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
         tabIndex={-1}
       >
         {!ctrl.isPreview && (
-          <div className="field-wrapper-preview-content mie:text-mietext">
+          <div className="field-wrapper-label mie:text-mietext mie:mb-2">
             {ctrl.insideSection ? (
-              <div>{ctrl.label}</div>
+              <span className="mie:inline-block mie:text-xs mie:font-medium mie:text-mieprimary mie:bg-mieprimary/10 mie:px-2 mie:py-0.5 mie:rounded">{ctrl.label}</span>
             ) : (
               <div>{`(${ctrl.label})  ${ctrl.field.title}`}</div>
             )}
@@ -90,9 +90,9 @@ export default function FieldWrapper({ ctrl, children, noPadding }) {
       tabIndex={-1}
     >
       <div className={`field-wrapper-edit-header mie:flex mie:justify-between mie:items-center mie:gap-3 mie:px-3 mie:py-2.5 ${open ? "mie:-mx-6 mie:-mt-6 mie:mb-4" : "mie:m-0"} mie:bg-miebackgroundsecondary mie:border-b mie:border-mieborder ${open ? "mie:rounded-t-lg" : "mie:rounded-lg"} ${ctrl.insideSection ? "mie:hidden" : ""}`}>
-        <div className="mie:text-left mie:flex-1 mie:select-none mie:text-sm mie:font-medium mie:text-mietext mie:truncate">
-          {ctrl.insideSection ? (`${ctrl.label}`) :
-            (ctrl.field.fieldType === "section" ? (`(${ctrl.label}) ${ctrl.field.title || ""}`) : (`${ctrl.label} ${ctrl.field.question || ""}`))}
+        <div className="mie:text-left mie:flex-1 mie:select-none mie:text-sm mie:text-mietext mie:truncate mie:flex mie:items-center mie:gap-2">
+          <span className="mie:inline-block mie:text-xs mie:font-medium mie:text-mieprimary mie:bg-mieprimary/10 mie:px-2 mie:py-0.5 mie:rounded mie:shrink-0">{ctrl.label}</span>
+          <span className="mie:truncate">{ctrl.field.fieldType === "section" ? (ctrl.field.title || "") : (ctrl.field.question || "")}</span>
         </div>
 
         {/* actions: Edit (mobile), Toggle (small/big view), Delete */}

@@ -95,21 +95,26 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
 
         return (
           <div className="slider-field-edit mie:space-y-3">
-            <input              
-              id={`${instanceId}-slider-question-${f.id}`}              
-              aria-label="Question"
+            <div>
+              <label htmlFor={`${instanceId}-slider-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
+                Question
+              </label>
+              <input              
+                id={`${instanceId}-slider-question-${f.id}`}              
+                aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
-
-            <div className="mie:text-sm mie:text-mietextmuted">
-              Options (each will be a point on the slider):
             </div>
 
-            <div className="mie:space-y-2">
+            <div>
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
+                Options
+              </span>
+              <div className="mie:space-y-2">
               {options.map((option) => (
                 <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                   <div className="mie:w-3 mie:h-3 mie:rounded-full mie:bg-mieprimary mie:shrink-0" />
@@ -131,6 +136,7 @@ const SliderField = React.memo(function SliderField({ field, sectionId }) {
                   </button>
                 </div>
               ))}
+              </div>
             </div>
 
             <button 

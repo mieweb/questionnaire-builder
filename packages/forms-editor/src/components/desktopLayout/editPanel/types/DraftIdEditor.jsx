@@ -43,7 +43,7 @@ export default function DraftIdEditor({
 
   return (
     <div className={className ? `draft-id-editor-container ${className}` : "draft-id-editor-container"}>
-      <span className="mie:block mie:text-sm mie:text-mietext mie:mb-1">{label}</span>
+      <label htmlFor={`${instanceId}-editor-field-id-${id}`} className="mie:block mie:text-sm mie:text-mietext mie:mb-1">{label}</label>
       <input
         id={`${instanceId}-editor-field-id-${id}`}
         aria-label={label}

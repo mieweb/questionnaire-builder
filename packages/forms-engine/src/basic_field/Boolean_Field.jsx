@@ -55,15 +55,20 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
 
         return (
           <div className="boolean-field-edit mie:space-y-2">
-            <input
-              id={`${instanceId}-boolean-question-${f.id}`}
-              aria-label="Question"
+            <div>
+              <label htmlFor={`${instanceId}-boolean-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
+                Question
+              </label>
+              <input
+                id={`${instanceId}-boolean-question-${f.id}`}
+                aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
+            </div>
 
             <div className="mie:space-y-2">
             {options.map((opt) => (

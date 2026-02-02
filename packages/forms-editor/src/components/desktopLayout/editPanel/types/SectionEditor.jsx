@@ -142,7 +142,7 @@ function SectionEditor({ section, onActiveChildChange }) {
         />
 
         <div className="section-editor-title">
-          <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">Section Title</span>
+          <label htmlFor={`${instanceId}-editor-section-title-${section.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">Section Title</label>
           <input
             id={`${instanceId}-editor-section-title-${section.id}`}
             aria-label="Section Title"
@@ -207,8 +207,9 @@ function SectionEditor({ section, onActiveChildChange }) {
 
                 {activeChild.fieldType === "input" && (
                   <div className="section-editor-default-answer">
-                    <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">Default Answer</span>
+                    <label htmlFor={`${instanceId}-editor-default-answer-${activeChild.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">Default Answer</label>
                     <input
+                      id={`${instanceId}-editor-default-answer-${activeChild.id}`}
                       aria-label="Default Answer"
                       className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none"
                       value={activeChild.answer || ""}
