@@ -4,17 +4,6 @@ import useFieldController from "../helper_shared/useFieldController";
 
 const clampHeight = (value) => Math.max(50, Math.min(800, parseInt(value) || 400));
 
-// Default theme values (light mode) - matches index.css
-const DEFAULT_THEME_STYLES = `
-  --mie-color-mietext: #111827;
-  --mie-color-mietextmuted: #6b7280;
-  --mie-color-miesurface: #ffffff;
-  --mie-color-miebackground: #f9fafb;
-  --mie-color-miebackgroundsecondary: #f3f4f6;
-  --mie-color-mieborder: #e5e7eb;
-  --mie-color-mieprimary: #3b82f6;
-`;
-
 // CSS variable names used for theming
 const THEME_VARS = [
   '--mie-color-mietext',
@@ -26,9 +15,10 @@ const THEME_VARS = [
   '--mie-color-mieprimary',
 ];
 
-// Read CSS variable values from the root element
-const getThemeStyles = (root) => {
-  if (!root) return null;
+// Read CSS variable values from root element
+const getThemeStyles = () => {
+  const root = document.querySelector('.qb-editor-root, .qb-renderer-root');
+  if (!root) return '';
   const style = getComputedStyle(root);
   return THEME_VARS.map(v => `${v}: ${style.getPropertyValue(v).trim()};`).join('\n      ');
 };
@@ -42,28 +32,17 @@ const hasUserStyles = (html) => {
 const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
   const [editMode, setEditMode] = React.useState(false);
-  const containerRef = React.useRef(null);
   const [iframeHeight, setIframeHeight] = React.useState(field.iframeHeight || 400);
   const [viewportWidth, setViewportWidth] = React.useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
-  const [themeStyles, setThemeStyles] = React.useState(DEFAULT_THEME_STYLES);
+  const [, forceUpdate] = React.useReducer(x => x + 1, 0);
 
-  // Theme detection - read CSS variables from editor/renderer root
+  // Watch for dark mode changes on root element
   React.useEffect(() => {
-    const updateTheme = () => {
-      const root = containerRef.current?.closest('.qb-editor-root, .qb-renderer-root');
-      const styles = getThemeStyles(root);
-      if (styles) setThemeStyles(styles);
-    };
-    
-    // Ref might not be ready on first render, retry next frame
-    requestAnimationFrame(updateTheme);
-    
-    const root = containerRef.current?.closest('.qb-editor-root, .qb-renderer-root');
-    if (root) {
-      const observer = new MutationObserver(updateTheme);
-      observer.observe(root, { attributes: true, attributeFilter: ['class'] });
-      return () => observer.disconnect();
-    }
+    const root = document.querySelector('.qb-editor-root, .qb-renderer-root');
+    if (!root) return;
+    const observer = new MutationObserver(forceUpdate);
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
   }, []);
 
   const getResponsiveHeight = React.useCallback((baseHeight) => {
@@ -72,9 +51,10 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
     return Math.round(baseHeight * Math.max(1, scaleFactor));
   }, [viewportWidth]);
 
-  const wrapHTMLForIframe = React.useCallback((html, styles) => {
+  const wrapHTMLForIframe = (html) => {
     if (!html || typeof html !== "string") return "";
 
+    const styles = getThemeStyles();
     const defaultStyles = hasUserStyles(html) ? '' : `
     body { color: var(--mie-color-mietext); background-color: var(--mie-color-miesurface); }
     a { color: var(--mie-color-mieprimary); }
@@ -99,8 +79,8 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root { ${styles} }
-    html { padding: 24px 24px 0 24px; margin: 0; }
-    body { font-family: inherit; margin: 0; line-height: 1.5; }
+    html { padding: 24px 24px 0 24px; margin: 0; background-color: var(--mie-color-miesurface); }
+    body { font-family: inherit; margin: 0; line-height: 1.5; background-color: var(--mie-color-miesurface); }
     img { max-width: 100%; height: auto; }
     table { border-collapse: collapse; width: 100%; }
     th, td { border: 1px solid var(--mie-color-mieborder); padding: 8px; text-align: left; }
@@ -109,7 +89,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
 </head>
 <body>${html}</body>
 </html>`;
-  }, []);
+  };
 
   React.useEffect(() => {
     let timer;
@@ -148,9 +128,9 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
       {({ api, isPreview, field: f }) => {
         if (isPreview) {
           return (
-            <div ref={containerRef} className="html-field-preview">
+            <div className="html-field-preview">
               <iframe
-                srcDoc={wrapHTMLForIframe(f.htmlContent, themeStyles)}
+                srcDoc={wrapHTMLForIframe(f.htmlContent)}
                 sandbox=""
                 style={{ width: "100%", border: "none", height: `${getResponsiveHeight(f.iframeHeight || 400)}px` }}
                 title="HTML Content"
@@ -160,7 +140,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
         }
 
         return (
-          <div ref={containerRef} className="html-field-editor mie:space-y-4 mie:w-full mie:bg-miesurface">
+          <div className="html-field-editor mie:space-y-4 mie:w-full mie:bg-miesurface">
             <div className="toggle-buttons mie:flex mie:gap-2">
               <ToggleButton active={!editMode} onClick={() => setEditMode(false)}>Edit</ToggleButton>
               <ToggleButton active={editMode} onClick={() => setEditMode(true)}>Preview</ToggleButton>
@@ -199,7 +179,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
               <div className="preview-section">
                 <label className="preview-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">Preview</label>
                 <iframe
-                  srcDoc={wrapHTMLForIframe(f.htmlContent, themeStyles)}
+                  srcDoc={wrapHTMLForIframe(f.htmlContent)}
                   sandbox=""
                   style={{
                     width: "100%",
