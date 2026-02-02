@@ -73,7 +73,7 @@ function CommonEditor({ f, onUpdateField }) {
           onChange={(checked) => onUpdateField?.("required", checked)}
           size="md"
         />
-        <span>Required</span>
+        <label htmlFor={`${instanceId}-editor-required-${f.id}`} className="mie:cursor-pointer">Required</label>
       </div>
     </div>
   );
