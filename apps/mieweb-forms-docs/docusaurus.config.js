@@ -53,14 +53,10 @@ const config = {
           const base = {
             resolve: {
               alias: {
-                '@mieweb/forms-engine': path.resolve(__dirname, '../../packages/forms-engine/dist/index.js'),
-                '@mieweb/forms-editor': path.resolve(__dirname, '../../packages/forms-editor/dist/index.js'),
-                '@mieweb/forms-renderer': path.resolve(__dirname, '../../packages/forms-renderer/dist/react.js'),
                 react: path.resolve(__dirname, '../../node_modules/react'),
                 'react-dom': path.resolve(__dirname, '../../node_modules/react-dom'),
                 'react/jsx-runtime': path.resolve(__dirname, '../../node_modules/react/jsx-runtime'),
                 'react/jsx-dev-runtime': path.resolve(__dirname, '../../node_modules/react/jsx-dev-runtime'),
-                zustand: path.resolve(__dirname, '../../node_modules/zustand'),
               },
               symlinks: false,
             },
@@ -104,14 +100,6 @@ const config = {
               },
             },
           };
-        },
-        getPathsToWatch() {
-          const path = require('path');
-          return [
-            path.resolve(__dirname, '../../packages/forms-engine/dist'),
-            path.resolve(__dirname, '../../packages/forms-editor/dist'),
-            path.resolve(__dirname, '../../packages/forms-renderer/dist'),
-          ];
         },
       };
     },
@@ -167,13 +155,8 @@ const config = {
             label: 'Documentation',
           },
           {
-            to: '/editor-demo',
-            label: 'Editor Demo',
-            position: 'left',
-          },
-          {
-            to: '/renderer-demo',
-            label: 'Renderer Demo',
+            href: 'https://questionnaire-dev-test.opensource.mieweb.org',
+            label: 'Live Demo',
             position: 'left',
           },
           {
