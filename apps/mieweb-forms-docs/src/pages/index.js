@@ -136,11 +136,11 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="block"
               >
-                <div className="bg-linear-to-br from-slate-50 to-white p-8 rounded-xl shadow-xl border border-slate-200 hover:border-green-500 transition-all cursor-pointer">
+                <div className="bg-linear-to-br from-slate-50 to-white rounded-xl shadow-xl border border-slate-200 hover:border-green-500 transition-all cursor-pointer overflow-hidden max-h-[500px]">
                   <img 
-                    src="/img/renderer-preview.gif" 
+                    src="/img/preview.webp" 
                     alt="Interactive form renderer demo showing live preview" 
-                    className="w-full rounded-lg shadow-lg"
+                    className="w-full h-full object-cover object-top rounded-lg shadow-lg -mb-8"
                     onError={(e) => {
                       e.target.style.display = 'none';
                       e.target.parentElement.innerHTML = '<div class="text-center py-20"><p class="text-slate-600 text-lg">Preview image coming soon</p><p class="text-slate-500 text-sm mt-2">Click to try the live demo</p></div>';
