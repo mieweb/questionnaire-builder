@@ -29,6 +29,19 @@ See the complete documentation for:
 - Examples and tutorials
 - Integration guides
 
+## 🤝 Contributing
+
+We welcome contributions! 
+
+- **[Contributing Guide](./.github/CONTRIBUTING.md)** - Full guidelines on GitHub
+- **[Contributing Docs](https://questionnaire-builder.opensource.mieweb.org/docs/contributing)** - Guidelines and reference on our docs site
+
+Learn about:
+- Development setup and workflow
+- Coding standards and principles
+- Pull request process
+- Quality expectations
+
 ## 🛠️ Development
 
 ```bash

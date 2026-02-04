@@ -53,6 +53,7 @@ const sidebars = {
         'editor/exporting',
       ],
     },
+    'contributing',
   ],
 };
 
