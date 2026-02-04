@@ -8,6 +8,12 @@ import { themes as prismThemes } from 'prism-react-renderer';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+// Demo URL: use local dev server in development, production URL otherwise
+const isDev = process.env.NODE_ENV === 'development';
+const demoUrl = isDev 
+  ? 'http://localhost:3001' 
+  : 'https://questionnaire-dev-test.opensource.mieweb.org';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Forms at MIE',
@@ -42,6 +48,10 @@ const config = {
   projectName: 'questionnaire-builder', // Usually your repo name.
 
   onBrokenLinks: 'throw',
+
+  customFields: {
+    demoUrl,
+  },
 
   plugins: [
     function webpackConfigPlugin() {
@@ -142,9 +152,9 @@ const config = {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: 'MIE Forms',
+        title: 'Forms at MIE',
         logo: {
-          alt: 'MIE Forms Logo',
+          alt: 'Forms Icon',
           src: 'img/mie_forms.svg',
         },
         items: [
@@ -155,7 +165,7 @@ const config = {
             label: 'Documentation',
           },
           {
-            href: 'https://questionnaire-dev-test.opensource.mieweb.org',
+            href: demoUrl,
             label: 'Live Demo',
             position: 'left',
           },

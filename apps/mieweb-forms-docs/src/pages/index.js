@@ -1,4 +1,5 @@
 import Link from '@docusaurus/Link';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import { heroSection, featuresSection, interactiveDemoSection, quickStart, packagesSection, resourcesSection } from './index.config';
 import { useState } from 'react';
@@ -42,6 +43,7 @@ const CheckIcon = () => (
 );
 
 export default function Home() {
+  const { siteConfig } = useDocusaurusContext();
   const [copiedIndex, setCopiedIndex] = useState(null);
 
   const handleCopyCommand = (command, index) => {
@@ -131,12 +133,12 @@ export default function Home() {
             
             <div className="max-w-5xl mx-auto mb-10">
               <a 
-                href="https://questionnaire-dev-test.opensource.mieweb.org" 
+                href={siteConfig.customFields.demoUrl} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="block"
+                className="block group"
               >
-                <div className="bg-linear-to-br from-slate-50 to-white rounded-xl shadow-xl border border-slate-200 hover:border-green-500 transition-all cursor-pointer overflow-hidden max-h-[500px]">
+                <div className="relative bg-linear-to-br from-slate-50 to-white rounded-xl shadow-xl border border-slate-200 hover:border-green-500 transition-all cursor-pointer overflow-hidden max-h-[500px]">
                   <img 
                     src="/img/preview.webp" 
                     alt="Interactive form renderer demo showing live preview" 
@@ -146,6 +148,14 @@ export default function Home() {
                       e.target.parentElement.innerHTML = '<div class="text-center py-20"><p class="text-slate-600 text-lg">Preview image coming soon</p><p class="text-slate-500 text-sm mt-2">Click to try the live demo</p></div>';
                     }}
                   />
+                  <div className="absolute inset-0 flex items-center justify-center bg-slate-100/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-green-600 text-xl leading-relaxed flex items-center gap-2">
+                      Try Live Demo
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </span>
+                  </div>
                 </div>
               </a>
             </div>
