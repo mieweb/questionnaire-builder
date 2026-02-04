@@ -8,9 +8,11 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run build:watch --workspace=packages/forms-engine\" \"npm run build:watch --workspace=packages/forms-editor\" \"npm run build:watch --workspace=packages/forms-renderer\" \"npm run start --workspace=apps/mieweb-forms-docs\"",
+    "dev": "concurrently \"npm run build:watch --workspace=packages/forms-engine\" \"npm run build:watch --workspace=packages/forms-editor\" \"npm run build:watch --workspace=packages/forms-renderer\" \"npm run start --workspace=apps/mieweb-forms-docs\" \"npm run dev --workspace=apps/web-demo-packages\"",
+    "dev:docs": "concurrently \"npm run build:watch --workspace=packages/forms-engine\" \"npm run build:watch --workspace=packages/forms-editor\" \"npm run build:watch --workspace=packages/forms-renderer\" \"npm run start --workspace=apps/mieweb-forms-docs\"",
     "dev:demo": "concurrently \"npm run build:watch --workspace=packages/forms-engine\" \"npm run build:watch --workspace=packages/forms-editor\" \"npm run build:watch --workspace=packages/forms-renderer\" \"npm run dev --workspace=apps/web-demo-packages\"",
-    "prod": "npm run prod --workspace=apps/mieweb-forms-docs",
+    "prod:docs": "npm run prod --workspace=apps/mieweb-forms-docs",
+    "prod:demo": "npm run prod --workspace=apps/web-demo-packages",
     "build": "npm run build:packages && npm run build:docs && npm run build:demo",
     "build:packages": "npm run build --workspace=packages/forms-engine --workspace=packages/forms-editor --workspace=packages/forms-renderer",
     "build:docs": "npm run build --workspace=apps/mieweb-forms-docs",

@@ -5,11 +5,13 @@ import { LandingPage } from './components/Landing';
 import { EditorView } from './components/EditorView';
 import { RendererView } from './components/RendererView';
 import { PlaygroundView } from './components/Playground';
+import { Navbar } from './components/Shared';
 import './index.css';
 
 function App() {
   return (
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/packages/editor" element={<EditorView />} />

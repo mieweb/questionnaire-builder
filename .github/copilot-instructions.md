@@ -88,25 +88,47 @@ If any box is unchecked, **simplify**.
 
 ### React & Tailwind Specific
 
-- **CRITICAL: Always Use `mie:` Prefix for ALL Tailwind Classes**: This project uses Tailwind CSS v4 with `prefix(mie)` scoping. **Every single Tailwind utility class MUST have the `mie:` prefix**. This applies to:
+**IMPORTANT: Always reference these copilot instructions when working with React and Tailwind in this project.**
+
+- **CRITICAL: Use `mie:` Prefix ONLY in Package Components**: The `mie:` prefix is **ONLY** for components in:
+  - `packages/forms-engine`
+  - `packages/forms-editor`
+  - `packages/forms-renderer`
+  
+  **DO NOT use `mie:` prefix in**:
+  - `apps/web-demo-packages` (standalone Vite app - uses standard Tailwind)
+  - `apps/mieweb-forms-docs` (Docusaurus site - uses standard Tailwind)
+  
+  These package components are consumed by external applications with global CSS resets, so they need the scoped `mie:` prefix to avoid conflicts.
+
+- **CRITICAL: Always Use `mie:` Prefix for ALL Tailwind Classes in Packages**: When working in package components, **every single Tailwind utility class MUST have the `mie:` prefix**. This applies to:
   - Regular classes: `mie:flex`, `mie:p-4`, `mie:bg-miesurface`
   - Pseudo-state variants: `mie:hover:bg-mieprimary`, `mie:focus:ring-2`
   - Responsive variants: `mie:md:flex-row`, `mie:lg:hidden`
-  - Combined variants: `mie:hover:mie:bg-mieprimary` → **NO!** Use `mie:hover:bg-mieprimary`
+  - Combined variants: `mie:hover:bg-mieprimary` (NOT `mie:hover:mie:bg-mieprimary`)
   - Template literals: `` `mie:px-4 ${condition ? "mie:bg-mieprimary" : "mie:bg-miebackground"}` ``
   
-  The prefix goes BEFORE variant modifiers (hover:, focus:, md:, lg:, etc.).
+  **CRITICAL: Prefix Placement** - The `mie:` prefix goes BEFORE variant modifiers:
+  - ✅ `mie:hover:bg-mieprimary` (CORRECT)
+  - ❌ `hover:mie:bg-mieprimary` (WRONG - will not work)
+  - ❌ `mie:hover:mie:bg-mieprimary` (WRONG - double prefix)
+  
   ```jsx
-  // ❌ BAD - missing mie: prefix (WILL NOT WORK)
+  // ❌ BAD - missing mie: prefix in package component (WILL NOT WORK)
   <div className="flex gap-2 p-4 bg-white rounded">
-  <button className={`px-4 py-2 ${active ? "bg-blue-500" : "bg-gray-200"}`}>
   
-  // ✅ GOOD - all classes have mie: prefix with semantic colors
+  // ❌ BAD - wrong prefix placement (WILL NOT WORK)
+  <button className="hover:mie:bg-mieprimary focus:mie:ring-2">
+  
+  // ✅ GOOD - all classes have mie: prefix with semantic colors (package component)
   <div className="mie:flex mie:gap-2 mie:p-4 mie:bg-miesurface mie:rounded">
-  <button className={`mie:px-4 mie:py-2 ${active ? "mie:bg-mieprimary" : "mie:bg-miebackground"}`}>
   
-  // ✅ GOOD - variants with prefix (mie: comes first)
+  // ✅ GOOD - variants with prefix BEFORE modifiers (package component)
   <button className="mie:bg-mieprimary mie:hover:bg-mieprimary/90 mie:focus:ring-2 mie:md:px-6">
+  
+  // ✅ GOOD - standard Tailwind in demo app (NO mie: prefix)
+  <div className="flex gap-2 p-4 bg-white rounded">
+  <button className="bg-blue-500 hover:bg-blue-600 focus:ring-2">
   ```
 
 - **CRITICAL: Always Use Semantic Color Variables**: This project has a semantic color system. **Always use semantic colors instead of hardcoded Tailwind colors**:

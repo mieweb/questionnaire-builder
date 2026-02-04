@@ -8,6 +8,12 @@ import { themes as prismThemes } from 'prism-react-renderer';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+// Demo URL: use local dev server in development, production URL otherwise
+const isDev = process.env.NODE_ENV === 'development';
+const demoUrl = isDev 
+  ? 'http://localhost:3001' 
+  : 'https://questionnaire-dev-test.opensource.mieweb.org';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Forms at MIE',
@@ -43,6 +49,10 @@ const config = {
 
   onBrokenLinks: 'throw',
 
+  customFields: {
+    demoUrl,
+  },
+
   plugins: [
     function webpackConfigPlugin() {
       return {
@@ -53,14 +63,10 @@ const config = {
           const base = {
             resolve: {
               alias: {
-                '@mieweb/forms-engine': path.resolve(__dirname, '../../packages/forms-engine/dist/index.js'),
-                '@mieweb/forms-editor': path.resolve(__dirname, '../../packages/forms-editor/dist/index.js'),
-                '@mieweb/forms-renderer': path.resolve(__dirname, '../../packages/forms-renderer/dist/react.js'),
                 react: path.resolve(__dirname, '../../node_modules/react'),
                 'react-dom': path.resolve(__dirname, '../../node_modules/react-dom'),
                 'react/jsx-runtime': path.resolve(__dirname, '../../node_modules/react/jsx-runtime'),
                 'react/jsx-dev-runtime': path.resolve(__dirname, '../../node_modules/react/jsx-dev-runtime'),
-                zustand: path.resolve(__dirname, '../../node_modules/zustand'),
               },
               symlinks: false,
             },
@@ -105,14 +111,6 @@ const config = {
             },
           };
         },
-        getPathsToWatch() {
-          const path = require('path');
-          return [
-            path.resolve(__dirname, '../../packages/forms-engine/dist'),
-            path.resolve(__dirname, '../../packages/forms-editor/dist'),
-            path.resolve(__dirname, '../../packages/forms-renderer/dist'),
-          ];
-        },
       };
     },
   ],
@@ -154,9 +152,9 @@ const config = {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: 'MIE Forms',
+        title: 'Forms at MIE',
         logo: {
-          alt: 'MIE Forms Logo',
+          alt: 'Forms Icon',
           src: 'img/mie_forms.svg',
         },
         items: [
@@ -167,13 +165,8 @@ const config = {
             label: 'Documentation',
           },
           {
-            to: '/editor-demo',
-            label: 'Editor Demo',
-            position: 'left',
-          },
-          {
-            to: '/renderer-demo',
-            label: 'Renderer Demo',
+            href: demoUrl,
+            label: 'Live Demo',
             position: 'left',
           },
           {
