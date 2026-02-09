@@ -1,4 +1,5 @@
 import React from "react";
+import { useInstanceId } from "@mieweb/forms-engine";
 
 export default function DraftIdEditor({
   id = "",
@@ -8,6 +9,7 @@ export default function DraftIdEditor({
   placeholder = "Enter unique ID…",
   className = "",
 }) {
+  const instanceId = useInstanceId();
   const [draft, setDraft] = React.useState(id ?? "");
   const [err, setErr] = React.useState("");
 
@@ -41,8 +43,10 @@ export default function DraftIdEditor({
 
   return (
     <div className={className ? `draft-id-editor-container ${className}` : "draft-id-editor-container"}>
-      <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">{label}</label>
+      <label htmlFor={`${instanceId}-editor-field-id-${id}`} className="mie:block mie:text-sm mie:text-mietext mie:mb-1">{label}</label>
       <input
+        id={`${instanceId}-editor-field-id-${id}`}
+        aria-label={label}
         className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
         value={draft}
         onChange={(e) => {

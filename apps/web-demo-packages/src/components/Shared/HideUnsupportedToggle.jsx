@@ -13,6 +13,7 @@ export function HideUnsupportedToggle({ hideUnsupportedFields, setHideUnsupporte
       className="w-full inline-flex items-center gap-2 cursor-pointer bg-white/70 backdrop-blur-xl backdrop-saturate-150 text-slate-900 border border-white/30 px-4 py-3 text-xs tracking-tight rounded-2xl font-medium shadow-lg font-sans hover:bg-white/85 hover:border-white/50 hover:shadow-xl"
     >
       <input
+        id="hide-unsupported-toggle"
         type="checkbox"
         checked={hideUnsupportedFields}
         onChange={(e) => setHideUnsupportedFields(e.target.checked)}
