@@ -1,10 +1,11 @@
 import React from "react";
+import { useInstanceId } from "../state/uiStore";
 
 /**
  * CustomRadio - A styled radio button that supports theming and can be unselected.
  * 
  * @param {string} id - Input id
- * @param {string} name - Radio group name
+ * @param {string} name - Radio group name (will be prefixed with instanceId automatically)
  * @param {string} value - Radio value
  * @param {boolean} checked - Whether radio is selected
  * @param {function} onSelect - Called when radio is selected
@@ -27,6 +28,9 @@ const CustomRadio = React.memo(function CustomRadio({
   hidden = false,
   ...props
 }) {
+  const instanceId = useInstanceId();
+  const uniqueName = instanceId ? `${instanceId}-${name}` : name;
+  
   const lastCheckedRef = React.useRef(checked);
 
   React.useEffect(() => {
@@ -56,7 +60,7 @@ const CustomRadio = React.memo(function CustomRadio({
       <input
         id={id}
         type="radio"
-        name={name}
+        name={uniqueName}
         value={value}
         checked={checked}
         disabled={disabled}
@@ -81,7 +85,7 @@ const CustomRadio = React.memo(function CustomRadio({
       <input
         id={id}
         type="radio"
-        name={name}
+        name={uniqueName}
         value={value}
         checked={checked}
         disabled={disabled}

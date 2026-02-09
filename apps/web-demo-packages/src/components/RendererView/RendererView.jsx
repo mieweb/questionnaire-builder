@@ -67,6 +67,7 @@ export function RendererView() {
                 </svg>
                 Import Form
                 <input
+                  id="renderer-view-import"
                   type="file"
                   accept=".json"
                   onChange={handleFileImport}

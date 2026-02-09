@@ -8,25 +8,29 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           return (
             <div className="multitext-field-preview mie:text-mietext">
               <div className="mie:space-y-3 mie:pb-4">
                 {f.question && <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question}</div>}
                 <div className="mie:space-y-2 mie:w-full">
-                  {(f.options || []).map((option) => (
-                    <div key={option.id} className="mie:flex mie:flex-col mie:gap-1">
-                      <label className="mie:text-xs mie:font-medium mie:text-mietextmuted mie:px-0 mie:text-left">{option.value}</label>
-                      <input
-                        type="text"
-                        value={option.answer || ""}
-                        onChange={(e) => api.option.updateAnswer(option.id, e.target.value)}
-                        placeholder=""
-                        className="mie:w-full mie:px-4 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:min-w-0"
-                      />
-                    </div>
-                  ))}
+                  {(f.options || []).map((option) => {
+                    const inputId = `${instanceId}-multitext-${f.id}-${option.id}`;
+                    return (
+                      <div key={option.id} className="mie:flex mie:flex-col mie:gap-1">
+                        <label htmlFor={inputId} className="mie:text-xs mie:font-medium mie:text-mietextmuted mie:px-0 mie:text-left">{option.value}</label>
+                        <input
+                          id={inputId}
+                          type="text"
+                          value={option.answer || ""}
+                          onChange={(e) => api.option.updateAnswer(option.id, e.target.value)}
+                          placeholder=""
+                          className="mie:w-full mie:px-4 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:min-w-0"
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -36,10 +40,12 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
         return (
           <div className="multitext-field-edit mie:space-y-3">
             <div>
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-multitext-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Question
               </label>
               <input
+                id={`${instanceId}-multitext-question-${f.id}`}
+                aria-label="Question"
                 type="text"
                 value={f.question || ""}
                 onChange={(e) => api.field.update("question", e.target.value)}
@@ -49,13 +55,15 @@ const MultiTextField = React.memo(function MultiTextField({ field, sectionId }) 
             </div>
 
             <div>
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
                 Fields
-              </label>
+              </span>
               <div className="mie:space-y-2">
                 {(f.options || []).map((option) => (
                   <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                     <input
+                      id={`${instanceId}-multitext-field-${f.id}-${option.id}`}
+                      aria-label={`Field ${option.id}`}
                       type="text"
                       value={option.value}
                       onChange={(e) => api.option.update(option.id, e.target.value)}

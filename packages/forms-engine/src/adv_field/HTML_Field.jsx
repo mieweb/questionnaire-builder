@@ -125,7 +125,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl} noPadding={ctrl.isPreview}>
-      {({ api, isPreview, field: f }) => {
+      {({ api, isPreview, field: f, instanceId }) => {
         if (isPreview) {
           return (
             <div className="html-field-preview">
@@ -146,12 +146,14 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
               <ToggleButton active={editMode} onClick={() => setEditMode(true)}>Preview</ToggleButton>
             </div>
 
-            <div className="height-control">
-              <label className="height-control-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+            {/* Height Control */}
+            <div>
+              <label htmlFor={`${instanceId}-html-height-${f.id}`} className="height-control-label mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Preview Height (px)
               </label>
               <div className="height-control-inputs mie:flex mie:gap-2 mie:items-center">
                 <input
+                  id={`${instanceId}-html-height-range-${f.id}`}
                   type="range"
                   min="50"
                   max="800"
@@ -162,6 +164,7 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                   aria-label="Preview height in pixels"
                 />
                 <input
+                  id={`${instanceId}-html-height-${f.id}`}
                   type="number"
                   min="50"
                   max="800"
@@ -176,8 +179,11 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
             </div>
 
             {editMode ? (
-              <div className="preview-section">
-                <label className="preview-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">Preview</label>
+              // Preview Mode
+              <div>
+                <span className="preview-label mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
+                  Preview
+                </span>
                 <iframe
                   srcDoc={wrapHTMLForIframe(f.htmlContent)}
                   sandbox=""
@@ -191,9 +197,14 @@ const HtmlField = React.memo(function HtmlField({ field, sectionId }) {
                 />
               </div>
             ) : (
-              <div className="edit-section">
-                <label className="edit-label mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">HTML Content</label>
+              // Edit Mode
+              <div>
+                <label htmlFor={`${instanceId}-html-content-${f.id}`} className="edit-label mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
+                  HTML Content
+                </label>
                 <textarea
+                  id={`${instanceId}-html-content-${f.id}`}
+                  aria-label="HTML Content"
                   className="html-textarea mie:px-3 mie:py-2 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors mie:font-mono mie:text-sm mie:max-h-64 mie:overflow-y-auto"
                   value={f.htmlContent || ""}
                   onChange={(e) => api.field.update("htmlContent", e.target.value)}

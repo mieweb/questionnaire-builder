@@ -1,4 +1,5 @@
 import React from "react";
+import { useInstanceId } from "@mieweb/forms-engine";
 
 const INPUT_TYPES = [
   { value: "string", label: "String" },
@@ -52,6 +53,7 @@ const UNITS = {
 };
 
 export default function InputTypeEditor({ field, onUpdate }) {
+  const instanceId = useInstanceId();
   const inputType = field.inputType || "text";
   const unit = field.unit || "";
   const showUnitSelector = inputType === "number" || inputType === "range";
@@ -59,8 +61,10 @@ export default function InputTypeEditor({ field, onUpdate }) {
   return (
     <div className="mie:space-y-3">
       <div>
-        <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Input Type</label>
+        <label htmlFor={`${instanceId}-editor-input-type-${field.id}`} className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Input Type</label>
         <select
+          id={`${instanceId}-editor-input-type-${field.id}`}
+          aria-label="Input Type"
           className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:cursor-pointer mie:transition-colors"
           value={inputType}
           onChange={(e) => onUpdate("inputType", e.target.value)}
@@ -73,8 +77,10 @@ export default function InputTypeEditor({ field, onUpdate }) {
       
       {showUnitSelector && (
         <div>
-          <label className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Unit (optional)</label>
+          <label htmlFor={`${instanceId}-editor-unit-${field.id}`} className="mie:block mie:text-sm mie:text-mietext mie:mb-1">Unit (optional)</label>
           <select
+            id={`${instanceId}-editor-unit-${field.id}`}
+            aria-label="Unit (optional)"
             className="mie:w-full mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:cursor-pointer mie:transition-colors"
             value={unit}
             onChange={(e) => onUpdate("unit", e.target.value)}

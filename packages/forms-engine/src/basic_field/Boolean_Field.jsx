@@ -8,7 +8,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           return (
             <div className="boolean-field-preview">
@@ -16,7 +16,7 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
                 <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <div className="mie:flex mie:gap-2">
                   {(f.options || []).map((option) => {
-                    const inputId = `${f.id}-${option.id}`;
+                    const inputId = `${instanceId}-${f.id}-${option.id}`;
                     const isSelected = f.selected === option.id;
                     
                     return (
@@ -55,19 +55,28 @@ const BooleanField = React.memo(function BooleanField({ field, sectionId }) {
 
         return (
           <div className="boolean-field-edit mie:space-y-2">
-            <input
+            <div>
+              <label htmlFor={`${instanceId}-boolean-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
+                Question
+              </label>
+              <input
+                id={`${instanceId}-boolean-question-${f.id}`}
+                aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
+            </div>
 
             <div className="mie:space-y-2">
             {options.map((opt) => (
               <div key={opt.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                 <span className="mie:shrink-0 mie:w-4 mie:h-4 mie:rounded-full mie:border mie:border-mieborder mie:bg-miesurface" />
                 <input
+                  id={`${instanceId}-boolean-option-${f.id}-${opt.id}`}
+                  aria-label={`Option ${opt.id}`}
                   type="text"
                   value={opt.value}
                   onChange={(e) => api.option.update(opt.id, e.target.value)}

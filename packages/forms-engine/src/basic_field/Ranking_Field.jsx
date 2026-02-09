@@ -44,7 +44,7 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           const ranking = Array.isArray(f.selected) && f.selected.length > 0 
             ? f.selected 
@@ -102,19 +102,30 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
 
         return (
           <div className="ranking-field-edit mie:space-y-3">
-            <input
+            <div>
+              <label htmlFor={`${instanceId}-ranking-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
+                Question
+              </label>
+              <input
+                id={`${instanceId}-ranking-question-${f.id}`}
+                aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
+            </div>
 
-            <div className="mie:space-y-2">
-              {(f.options || []).map((option) => (
+            <div>
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">Items</span>
+              <div className="mie:space-y-2">
+                {(f.options || []).map((option) => (
                 <div key={option.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors">
                   <UPDOWNARROW_ICON className="mie:text-mietextmuted mie:w-5 mie:h-5 mie:shrink-0" />
                   <input
+                    id={`${instanceId}-ranking-option-${f.id}-${option.id}`}
+                    aria-label={`Option ${option.id}`}
                     type="text"
                     value={option.value}
                     onChange={(e) => api.option.update(option.id, e.target.value)}
@@ -130,6 +141,7 @@ const RankingField = React.memo(function RankingField({ field, sectionId }) {
                   </button>
                 </div>
               ))}
+              </div>
             </div>
 
             <button

@@ -22,7 +22,7 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
 
   return (
     <FieldWrapper ctrl={ctrl} noPadding={ ctrl.isPreview === true ? true : false }>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           return (
             <div>
@@ -53,25 +53,34 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
 
         return (
           <div className="signature-field-edit mie:space-y-3">
-            <input
+            <div>
+              <label htmlFor={`${instanceId}-signature-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
+                Question
+              </label>
+              <input
+                id={`${instanceId}-signature-question-${f.id}`}
+                aria-label="Question"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary mie:outline-none mie:transition-colors"
             />
+            </div>
 
             <div className="mie:p-4 mie:border mie:border-mieborder mie:rounded-lg mie:bg-miebackground mie:shadow-sm">
-              <label className="mie:block mie:text-sm mie:font-semibold mie:text-mietext mie:mb-3">
+              <span className="mie:block mie:text-sm mie:font-semibold mie:text-mieprimary mie:mb-3">
                 Signature Pad Settings
-              </label>
+              </span>
 
               <div className="mie:space-y-3">
                 <div>
-                  <label className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-1">
+                  <label htmlFor={`${instanceId}-signature-placeholder-${f.id}`} className="mie:block mie:text-sm mie:text-mietextmuted mie:mb-1">
                     Placeholder Text
                   </label>
                   <input
+                    id={`${instanceId}-signature-placeholder-${f.id}`}
+                    aria-label="Placeholder Text"
                     type="text"
                     value={f.placeholder || ""}
                     onChange={(e) => api.field.update("placeholder", e.target.value)}
@@ -82,12 +91,12 @@ const SignatureField = React.memo(function SignatureField({ field, sectionId }) 
 
                 <div className="mie:flex mie:items-center mie:gap-2">
                   <CustomCheckbox
-                    id="required-sig"
+                    id={`${instanceId}-required-sig-${f.id}`}
                     checked={f.required === true}
                     onChange={(checked) => api.field.update("required", checked)}
                     size="md"
                   />
-                  <label htmlFor="required-sig" className="mie:text-sm mie:text-mietext mie:cursor-pointer">
+                  <label htmlFor={`${instanceId}-required-sig-${f.id}`} className="mie:text-sm mie:text-mietext mie:cursor-pointer">
                     Required signature
                   </label>
                 </div>

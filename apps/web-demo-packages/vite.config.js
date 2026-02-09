@@ -6,8 +6,32 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Paths to watch for package rebuilds (same pattern as docusaurus getPathsToWatch)
+const packageDistPaths = [
+  path.resolve(__dirname, '../../packages/forms-engine/dist'),
+  path.resolve(__dirname, '../../packages/forms-editor/dist'),
+  path.resolve(__dirname, '../../packages/forms-renderer/dist'),
+];
+
+// Watch package dist folders and reload on change
+function watchPackages() {
+  return {
+    name: 'watch-packages',
+    configureServer(server) {
+      packageDistPaths.forEach(p => server.watcher.add(p));
+      
+      server.watcher.on('change', (file) => {
+        if (packageDistPaths.some(dist => file.startsWith(dist))) {
+          server.moduleGraph.invalidateAll();
+          server.ws.send({ type: 'full-reload' });
+        }
+      });
+    }
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), watchPackages()],
   base: process.env.NODE_ENV === 'production' ? '/demos/' : '/',
   resolve: {
     alias: {
