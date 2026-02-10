@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PACKAGES = ['forms-engine', 'forms-editor', 'forms-renderer'];
-const BUMP_TYPES = ['major', 'minor', 'patch'];
+const BUMP_TYPES = ['major', 'minor', 'patch', 'prerelease'];
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -48,9 +48,10 @@ function syncDeps(targetPackage, sourcePackage) {
   }
 }
 
-async function publishPackage(packageName, bumpType, shouldPublish) {
+async function publishPackage(packageName, bumpType, shouldPublish, npmTag) {
   console.log(`\n📦 Processing: ${packageName}`);
   console.log(`   Bump: ${bumpType}`);
+  console.log(`   Tag: ${npmTag}`);
   console.log(`   Publish: ${shouldPublish ? 'Yes' : 'No (dry-run)'}`);
   
   // Build
@@ -83,8 +84,9 @@ async function publishPackage(packageName, bumpType, shouldPublish) {
   
   // Publish
   if (shouldPublish) {
-    console.log(`\n🚀 Publishing ${packageName}...`);
-    if (!exec(`npm publish --workspace=packages/${packageName} --access public`)) {
+    const tagFlag = npmTag !== 'latest' ? ` --tag ${npmTag}` : '';
+    console.log(`\n🚀 Publishing ${packageName}${tagFlag ? ` with tag ${npmTag}` : ''}...`);
+    if (!exec(`npm publish --workspace=packages/${packageName} --access public${tagFlag}`)) {
       return false;
     }
     console.log(`✅ ${packageName} published successfully!`);
@@ -176,9 +178,9 @@ async function main() {
   
   // Select bump type
   console.log('\nVersion bump types:');
-  BUMP_TYPES.forEach((type, i) => console.log(`  ${i + 1}. ${type} (${type === 'major' ? '1.0.0' : type === 'minor' ? '0.1.0' : '0.0.1'})`));
+  BUMP_TYPES.forEach((type, i) => console.log(`  ${i + 1}. ${type} (${type === 'major' ? '1.0.0' : type === 'minor' ? '0.1.0' : type === 'patch' ? '0.0.1' : '0.0.1-beta.0'})`));
   
-  let bumpChoice = await question('\nSelect bump type (1-3): ');
+  let bumpChoice = await question('\nSelect bump type (1-4): ');
   bumpChoice = parseInt(bumpChoice) - 1;
   
   if (bumpChoice < 0 || bumpChoice >= BUMP_TYPES.length) {
@@ -187,7 +189,18 @@ async function main() {
     process.exit(1);
   }
   
-  const bumpType = BUMP_TYPES[bumpChoice];
+  let bumpType = BUMP_TYPES[bumpChoice];
+  let npmTag = 'latest';
+  
+  // If prerelease, ask for identifier
+  if (bumpType === 'prerelease') {
+    const preid = await question('\nPrerelease identifier (beta/alpha/rc) [beta]: ');
+    const identifier = preid.trim() || 'beta';
+    bumpType = `prerelease --preid ${identifier}`;
+    npmTag = identifier;
+    console.log(`\n📋 Will publish with npm tag: ${npmTag}`);
+    console.log(`   Install with: npm install @mieweb/<package>@${npmTag}`);
+  }
   
   // Publish or dry-run
   const publishAnswer = await question('\nPublish to npm? (y/n): ');
@@ -209,7 +222,7 @@ async function main() {
   }
   
   for (const pkg of selectedPackages) {
-    if (!await publishPackage(pkg, bumpType, shouldPublish)) {
+    if (!await publishPackage(pkg, bumpType, shouldPublish, npmTag)) {
       console.error(`\n❌ Failed to process ${pkg}`);
       process.exit(1);
     }
