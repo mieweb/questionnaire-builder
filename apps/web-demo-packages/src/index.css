@@ -7,3 +7,14 @@
 html, body, #root { height: 100%; margin: 0; }
 body { font-family: system-ui, sans-serif; }
 
+/* Custom theme: override package primary color to match demo navbar green */
+.qb-renderer-root,
+.qb-editor-root {
+  --mie-color-mieprimary: #16a34a; /* green-600 — matches navbar accent */
+}
+
+.qb-renderer-root.dark,
+.qb-editor-root.dark {
+  --mie-color-mieprimary: #166534; /* green-800 */
+}
+

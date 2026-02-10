@@ -18,7 +18,7 @@ const demoUrl = isDev
 const config = {
   title: 'Forms at MIE',
   tagline: 'Embeddable FHIR-compatible questionnaire editor and renderer',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/forms_favicon.ico',
 
   // Algolia site verification
   headTags: [
@@ -148,14 +148,14 @@ const config = {
       image: 'img/mie_forms_2.svg',
       colorMode: {
         defaultMode: 'light',
-        disableSwitch: false,
-        respectPrefersColorScheme: true,
+        disableSwitch: true,
+        respectPrefersColorScheme: false,
       },
       navbar: {
-        title: 'Forms at MIE',
+        title: 'Forms',
         logo: {
-          alt: 'Forms Icon',
-          src: 'img/mie_forms.svg',
+          alt: 'MIE Logo',
+          src: 'img/mie_icon_logo.png',
         },
         items: [
           {
@@ -168,11 +168,15 @@ const config = {
             href: demoUrl,
             label: 'Live Demo',
             position: 'left',
+            target: '_self',
+            className: 'header-live-demo-link',
           },
           {
             href: 'https://github.com/mieweb/questionnaire-builder',
             label: 'GitHub',
             position: 'right',
+            className: 'header-github-link',
+            'aria-label': 'GitHub Repository',
           },
         ],
       },
