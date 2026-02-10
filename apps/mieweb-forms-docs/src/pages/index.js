@@ -134,8 +134,6 @@ export default function Home() {
             <div className="max-w-5xl mx-auto mb-10">
               <a 
                 href={siteConfig.customFields.demoUrl} 
-                target="_blank" 
-                rel="noopener noreferrer"
                 className="block group"
               >
                 <div className="relative bg-linear-to-br from-slate-50 to-white rounded-xl shadow-xl border border-slate-200 hover:border-green-500 transition-all cursor-pointer overflow-hidden max-h-[500px]">
