@@ -13,7 +13,13 @@ export default function CodeEditor() {
   const editorRef = React.useRef(null);
   const hasUnsavedChanges = React.useRef(false);
   
+  // Refs to hold stable references for the unmount cleanup (to avoid running cleanup on dep changes)
+  const replaceAllRef = React.useRef(replaceAll);
+  const uiRef = React.useRef(ui);
+  const definitionRef = React.useRef(definition);
+  
   const [format, setFormat] = React.useState("yaml"); // "json" or "yaml"
+  const formatRef = React.useRef(format);
   const [isDark, setIsDark] = React.useState(false);
   
   // Detect dark mode from parent .qb-editor-root element
@@ -46,6 +52,14 @@ export default function CodeEditor() {
   React.useEffect(() => {
     ui.setCodeEditorHasError(false);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Keep refs updated for use in unmount cleanup (without triggering cleanup)
+  React.useEffect(() => {
+    replaceAllRef.current = replaceAll;
+    uiRef.current = ui;
+    definitionRef.current = definition;
+    formatRef.current = format;
+  });
 
   // Parse code based on format
   const parseCode = React.useCallback((codeText) => {
@@ -204,24 +218,38 @@ export default function CodeEditor() {
     }
   };
 
-  // Auto-save when switching away from code editor (component unmounting)
+  // Auto-save ONLY when component unmounts (switching away from code editor)
+  // Uses refs to avoid triggering cleanup on every dependency change
   React.useEffect(() => {
     return () => {
       const currentCode = codeRef.current?.trim();
+      const currentFormat = formatRef.current;
+      const currentDefinition = definitionRef.current;
+      const replaceAllFn = replaceAllRef.current;
+      const uiApi = uiRef.current;
+      
+      // Helper to parse based on current format
+      const parseCurrentCode = (text) => {
+        if (currentFormat === "json") {
+          return JSON.parse(text);
+        } else {
+          return YAML.load(text);
+        }
+      };
       
       if (!currentCode) {
-        replaceAll({ schemaType: MIE_FORMS_SCHEMA_TYPE, fields: [] });
+        replaceAllFn({ schemaType: MIE_FORMS_SCHEMA_TYPE, fields: [] });
         hasUnsavedChanges.current = false;
         return;
       }
 
       try {
-        const parsed = parseCode(currentCode);
+        const parsed = parseCurrentCode(currentCode);
 
         if (!parsed || typeof parsed !== "object") return;
 
         // Compare with current definition - only save if different
-        if (JSON.stringify(definition) === JSON.stringify(parsed)) return;
+        if (JSON.stringify(currentDefinition) === JSON.stringify(parsed)) return;
 
         const { schemaType } = parseAndDetect(parsed);
         const { fields, conversionReport } = adaptSchema(parsed, schemaType);
@@ -233,17 +261,17 @@ export default function CodeEditor() {
         };
 
         if (conversionReport) {
-          ui.setConversionReport(conversionReport);
+          uiApi.setConversionReport(conversionReport);
         }
 
-        replaceAll(finalSchema);
-        ui.setCodeEditorHasError(false);
+        replaceAllFn(finalSchema);
+        uiApi.setCodeEditorHasError(false);
         hasUnsavedChanges.current = false;
       } catch (err) {
         // Silently fail - error already shown in editor header
       }
     };
-  }, [parseCode, replaceAll, ui, definition]);
+  }, []); // Empty deps = only runs on mount/unmount
 
   return (
     <div ref={containerRef} className="code-editor-container mie:flex mie:flex-col mie:bg-miebackground mie:max-w-7xl mie:w-full" style={{ height: `${editorHeight}px` }}>
@@ -300,13 +328,15 @@ export default function CodeEditor() {
             fontSize: 13,
             lineHeight: 1.5,
             wordWrap: "on",
-            formatOnPaste: true,
-            formatOnType: true,
+            formatOnPaste: false,
+            formatOnType: false,
             tabSize: 2,
             automaticLayout: true,
             scrollBeyondLastLine: false,
             padding: { top: 16 },
             contextmenu: true,
+            accessibilitySupport: "auto",
+            ariaLabel: "Code editor for form schema",
           }}
         />
       </div>

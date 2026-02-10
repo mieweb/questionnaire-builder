@@ -9,7 +9,7 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         if (isPreview) {
           return (
             <div className="dropdown-field-preview">
@@ -31,10 +31,12 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
         return (
           <div className="dropdown-field-edit mie:space-y-3">
             <div>
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-1">
+              <label htmlFor={`${instanceId}-dropdown-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
                 Question
               </label>
               <input
+                id={`${instanceId}-dropdown-question-${f.id}`}
+                aria-label="Question"
                 type="text"
                 value={f.question || ""}
                 onChange={(e) => api.field.update("question", e.target.value)}
@@ -44,9 +46,9 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
             </div>
 
             <div>
-              <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext mie:mb-2">
+              <span className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-2">
                 Options
-              </label>
+              </span>
               <div className="mie:space-y-2">
                 {(f.options || []).map((option) => (
                   <div
@@ -54,6 +56,8 @@ const DropDownField = React.memo(function DropDownField({ field, sectionId }) {
                     className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:bg-miesurface mie:rounded-lg mie:shadow-sm mie:hover:border-mietextmuted mie:transition-colors"
                   >
                     <input
+                      id={`${instanceId}-dropdown-option-${f.id}-${option.id}`}
+                      aria-label={`Option ${option.id}`}
                       type="text"
                       value={option.value}
                       onChange={(e) => api.option.update(option.id, e.target.value)}

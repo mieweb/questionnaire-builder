@@ -59,7 +59,7 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
 
   return (
     <FieldWrapper ctrl={ctrl}>
-      {({ api, isPreview, field: f, placeholder }) => {
+      {({ api, isPreview, field: f, placeholder, instanceId }) => {
         const inputType = f.inputType || "string";
         const unit = f.unit || "";
         const isTel = inputType === "tel";
@@ -87,6 +87,8 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
                 <div className="mie:font-light mie:text-mietext mie:wrap-break-word mie:overflow-hidden">{f.question || "Question"}</div>
                 <div className="mie:relative">
                   <input
+                    id={`${instanceId}-text-answer-${f.id}`}
+                    aria-label={f.question || "Question"}
                     type={inputType}
                     value={f.answer || ""}
                     onChange={(e) => {
@@ -112,16 +114,25 @@ const TextField = React.memo(function TextField({ field, sectionId }) {
 
         return (
           <div className="mie:text-field-edit mie:space-y-2">
-            <input
+            <div>
+              <label htmlFor={`${instanceId}-text-question-${f.id}`} className="mie:block mie:text-sm mie:font-medium mie:text-mietextmuted mie:mb-1">
+                Question
+              </label>
+              <input
+                id={`${instanceId}-text-question-${f.id}`}
+                aria-label="Question"
               className="mie:px-3 mie:py-2 mie:h-10 mie:w-full mie:border mie:border-mieborder mie:bg-miesurface mie:text-mietext mie:rounded-lg mie:focus:border-mieprimary mie:focus:ring-1 mie:focus:ring-mieprimary/30 mie:outline-none mie:transition-colors"
               type="text"
               value={f.question || ""}
               onChange={(e) => api.field.update("question", e.target.value)}
               placeholder={placeholder?.question || "Enter question"}
             />
+            </div>
 
             <div className="mie:relative">
               <input
+                id={`${instanceId}-text-answer-${f.id}`}
+                aria-label="Answer preview"
                 type={inputType}
                 value={f.answer || ""}
                 placeholder={getPlaceholder()}

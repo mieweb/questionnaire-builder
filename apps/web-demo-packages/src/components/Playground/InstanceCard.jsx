@@ -115,6 +115,7 @@ export function InstanceCard({ instance, onRemove, onDuplicate, onUpdate, onRese
       {/* Controls */}
       <div className="playground-instance-controls flex flex-wrap items-center gap-3 px-4 py-3 bg-slate-50/50 border-b border-slate-100">
         <select
+          id={`instance-${instance.id}-preset`}
           value={instance.preset || ''}
           onChange={handlePresetChange}
           className="px-2 py-1.5 text-sm border border-slate-300 rounded-lg bg-white"
@@ -127,6 +128,7 @@ export function InstanceCard({ instance, onRemove, onDuplicate, onUpdate, onRese
           ))}
         </select>
         <select
+          id={`instance-${instance.id}-theme`}
           value={instance.theme}
           onChange={handleThemeChange}
           className="px-2 py-1.5 text-sm border border-slate-300 rounded-lg bg-white"
@@ -149,6 +151,7 @@ export function InstanceCard({ instance, onRemove, onDuplicate, onUpdate, onRese
         {isSchemaOpen && (
           <div className="px-4 py-3 bg-slate-50">
             <textarea
+              id={`instance-${instance.id}-schema`}
               value={schemaText}
               onChange={handleSchemaChange}
               className="w-full h-48 p-3 text-xs font-mono bg-white border border-slate-300 rounded-lg resize-y"

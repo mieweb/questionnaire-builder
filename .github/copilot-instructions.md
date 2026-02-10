@@ -235,6 +235,34 @@ If any box is unchecked, **simplify**.
   ```
   **Why `min-w-0`?** In flexbox, `min-width: auto` (default) prevents flex items from shrinking below their content width. Adding `min-w-0` allows the input to respect the `w-full` constraint instead of expanding the parent. Always add `min-w-0` to width-constrained elements in flex containers.
 
+- **Form Inputs Must Have `id` Attributes with `instanceId` Prefix**: All `<input>`, `<select>`, and `<textarea>` elements must have an `id` attribute for browser autofill support and accessibility. Use the `useInstanceId()` hook from `@mieweb/forms-engine` to ensure IDs are unique when multiple form instances use the same schema on one page.
+  
+  **ID patterns:**
+  - **forms-engine (renderer)**: `${instanceId}-{fieldType}-{purpose}-${f.id}` (e.g., `${instanceId}-text-question-${f.id}`)
+  - **forms-editor**: `${instanceId}-editor-{purpose}-${id}` (e.g., `${instanceId}-editor-question-${f.id}`)
+  
+  ```jsx
+  // ❌ BAD - no id (breaks autofill), or static id (duplicates when 2 forms on page)
+  <input type="text" value={value} />
+  <input id="question-field" type="text" value={value} />
+  
+  // ✅ GOOD - unique id with instanceId prefix
+  import { useInstanceId } from "@mieweb/forms-engine";
+  
+  const instanceId = useInstanceId();
+  <input
+    id={`${instanceId}-text-question-${f.id}`}
+    aria-label="Question"
+    type="text"
+    value={value}
+  />
+  ```
+  
+  **Why this matters:**
+  - Browser autofill requires `id` or `name` attributes to work
+  - Multiple forms with the same schema on one page would have duplicate IDs without `instanceId`
+  - Accessibility tools use IDs to associate labels with inputs
+
 ---
 
 ## Anti-Patterns to Avoid

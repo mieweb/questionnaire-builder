@@ -1,7 +1,8 @@
 import React from "react";
-import { TRASHCANTWO_ICON } from "@mieweb/forms-engine";
+import { TRASHCANTWO_ICON, useInstanceId } from "@mieweb/forms-engine";
 
 export default function OptionListEditor({ field, api }) {
+  const instanceId = useInstanceId();
   const opts = field.options || [];
   const isBoolean = field.fieldType === "boolean";
   const isMultitext = field.fieldType === "multitext";
@@ -25,11 +26,13 @@ export default function OptionListEditor({ field, api }) {
 
   return (
     <div className="mie:space-y-3">
-      <label className="mie:block mie:text-sm mie:font-medium mie:text-mietext">{label}</label>
+      <span className="mie:block mie:text-sm mie:font-medium mie:text-mietext">{label}</span>
       <div ref={containerRef} className="mie:space-y-2">
         {opts.map((opt) => (
           <div key={opt.id} className="mie:flex mie:items-center mie:gap-2 mie:px-3 mie:py-2 mie:border mie:border-mieborder mie:rounded-lg mie:shadow-sm mie:hover:border-mieprimary/50 mie:transition-colors">
             <input
+              id={`${instanceId}-editor-option-${field.id}-${opt.id}`}
+              aria-label={`${label} option ${opt.id}`}
               className="mie:flex-1 mie:min-w-0 mie:outline-none mie:bg-transparent"
               value={opt.value}
               onChange={(e) => api.option.update(opt.id, e.target.value)}
