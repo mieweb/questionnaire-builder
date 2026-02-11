@@ -12,7 +12,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 const isDev = process.env.NODE_ENV === 'development';
 const demoUrl = isDev 
   ? 'http://localhost:3001' 
-  : 'https://questionnaire-dev-test.opensource.mieweb.org';
+  : 'https://forms-demo.os.mieweb.org/';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
