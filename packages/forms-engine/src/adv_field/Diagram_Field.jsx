@@ -5,12 +5,12 @@ import useFieldController from "../helper_shared/useFieldController";
 import DrawingCanvas from "../helper_shared/DrawingCanvas";
 import CustomCheckbox from "../helper_shared/CustomCheckbox";
 import { UPLOAD_ICON, X_ICON } from "../helper_shared/icons";
-import maleChart from "../assets/body-male.png";
-import femaleChart from "../assets/body-female.png";
-import neutralChart from "../assets/body-neutral.png";
-import headChart from "../assets/head.png";
-import handsChart from "../assets/hands.png";
-import feetChart from "../assets/feet.png";
+import maleChart from "../assets/body-male.webp";
+import femaleChart from "../assets/body-female.webp";
+import neutralChart from "../assets/body-neutral.webp";
+import headChart from "../assets/head.webp";
+import handsChart from "../assets/hands.webp";
+import feetChart from "../assets/feet.webp";
 import dentalChart from "../assets/dental_chart.webp";
 
 // Preset diagrams configuration

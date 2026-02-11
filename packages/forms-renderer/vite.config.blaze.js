@@ -65,6 +65,6 @@ export default defineConfig({
         globals: {}
       }
     },
-    sourcemap: true
+    sourcemap: false
   }
 });

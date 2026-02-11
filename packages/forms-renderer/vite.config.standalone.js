@@ -71,6 +71,6 @@ export default defineConfig({
       external: []
     },
     cssCodeSplit: false,
-    sourcemap: true
+    sourcemap: false
   }
 });
