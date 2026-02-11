@@ -32,7 +32,7 @@ function watchPackages() {
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), watchPackages()],
-  base: process.env.NODE_ENV === 'production' ? '/demos/' : '/',
+  base: '/',
   resolve: {
     alias: {
       '@mieweb/forms-engine': path.resolve(__dirname, '../../packages/forms-engine/dist/index.js'),
