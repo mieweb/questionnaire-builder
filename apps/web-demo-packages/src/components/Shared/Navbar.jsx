@@ -4,7 +4,7 @@ export function Navbar() {
   const isDev = import.meta.env.DEV;
   const docsUrl = isDev 
     ? 'http://localhost:3000' 
-    : 'https://questionnaire-builder.opensource.mieweb.org';
+    : 'https://forms-doc.os.mieweb.org';
 
   return (
     <div className="back-to-docs h-[60px] px-6 flex items-center bg-white border-b border-slate-200 sticky top-0 z-50">
