@@ -12,6 +12,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    environment:
+      name: production
+      url: https://forms-doc.os.mieweb.org/
+
     steps:
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
@@ -29,3 +33,10 @@ jobs:
             npm run build
             pm2 restart forms
             pm2 save
+
+      - name: Add deployment links
+        run: |
+          echo "## 🚀 Production Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- 📘 Docs: https://forms-doc.os.mieweb.org/" >> $GITHUB_STEP_SUMMARY
+          echo "- 🧪 Demo: https://forms-demo.os.mieweb.org/" >> $GITHUB_STEP_SUMMARY
