@@ -8,11 +8,17 @@ import { themes as prismThemes } from 'prism-react-renderer';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+// Demo URL: use local dev server in development, production URL otherwise
+const isDev = process.env.NODE_ENV === 'development';
+const demoUrl = isDev 
+  ? 'http://localhost:3001' 
+  : 'https://questionnaire-dev-test.opensource.mieweb.org';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Forms at MIE',
   tagline: 'Embeddable FHIR-compatible questionnaire editor and renderer',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/forms_favicon.ico',
 
   // Algolia site verification
   headTags: [
@@ -43,6 +49,10 @@ const config = {
 
   onBrokenLinks: 'throw',
 
+  customFields: {
+    demoUrl,
+  },
+
   plugins: [
     function webpackConfigPlugin() {
       return {
@@ -53,14 +63,10 @@ const config = {
           const base = {
             resolve: {
               alias: {
-                '@mieweb/forms-engine': path.resolve(__dirname, '../../packages/forms-engine/dist/index.js'),
-                '@mieweb/forms-editor': path.resolve(__dirname, '../../packages/forms-editor/dist/index.js'),
-                '@mieweb/forms-renderer': path.resolve(__dirname, '../../packages/forms-renderer/dist/react.js'),
                 react: path.resolve(__dirname, '../../node_modules/react'),
                 'react-dom': path.resolve(__dirname, '../../node_modules/react-dom'),
                 'react/jsx-runtime': path.resolve(__dirname, '../../node_modules/react/jsx-runtime'),
                 'react/jsx-dev-runtime': path.resolve(__dirname, '../../node_modules/react/jsx-dev-runtime'),
-                zustand: path.resolve(__dirname, '../../node_modules/zustand'),
               },
               symlinks: false,
             },
@@ -105,14 +111,6 @@ const config = {
             },
           };
         },
-        getPathsToWatch() {
-          const path = require('path');
-          return [
-            path.resolve(__dirname, '../../packages/forms-engine/dist'),
-            path.resolve(__dirname, '../../packages/forms-editor/dist'),
-            path.resolve(__dirname, '../../packages/forms-renderer/dist'),
-          ];
-        },
       };
     },
   ],
@@ -150,14 +148,14 @@ const config = {
       image: 'img/mie_forms_2.svg',
       colorMode: {
         defaultMode: 'light',
-        disableSwitch: false,
-        respectPrefersColorScheme: true,
+        disableSwitch: true,
+        respectPrefersColorScheme: false,
       },
       navbar: {
-        title: 'MIE Forms',
+        title: 'Forms',
         logo: {
-          alt: 'MIE Forms Logo',
-          src: 'img/mie_forms.svg',
+          alt: 'MIE Logo',
+          src: 'img/mie_icon_logo.png',
         },
         items: [
           {
@@ -167,19 +165,18 @@ const config = {
             label: 'Documentation',
           },
           {
-            to: '/editor-demo',
-            label: 'Editor Demo',
+            href: demoUrl,
+            label: 'Live Demo',
             position: 'left',
-          },
-          {
-            to: '/renderer-demo',
-            label: 'Renderer Demo',
-            position: 'left',
+            target: '_self',
+            className: 'header-live-demo-link',
           },
           {
             href: 'https://github.com/mieweb/questionnaire-builder',
             label: 'GitHub',
             position: 'right',
+            className: 'header-github-link',
+            'aria-label': 'GitHub Repository',
           },
         ],
       },

@@ -18,7 +18,7 @@ export function MenuDropdown({
   const showHideToggle = setHideUnsupportedFields !== undefined;
 
   return (
-    <div className="fixed top-6 right-3 z-50">
+    <div className="fixed top-2 right-3 z-50">
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}

@@ -1,13 +1,8 @@
 import Link from '@docusaurus/Link';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import { heroSection, featuresSection, interactiveDemoSection, quickStart, packagesSection, resourcesSection, initialFormData } from './index.config';
-import { useState, useEffect } from 'react';
-import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
-import * as yaml from 'js-yaml';
-import CodeMirror from '@uiw/react-codemirror';
-import { json } from '@codemirror/lang-json';
-import { StreamLanguage } from '@codemirror/language';
-import { yaml as yamlMode } from '@codemirror/legacy-modes/mode/yaml';
+import { heroSection, featuresSection, interactiveDemoSection, quickStart, packagesSection, resourcesSection } from './index.config';
+import { useState } from 'react';
 
 const FeatureIcon = ({ path }) => (
   <div className="text-green-600 mb-4">
@@ -48,47 +43,13 @@ const CheckIcon = () => (
 );
 
 export default function Home() {
+  const { siteConfig } = useDocusaurusContext();
   const [copiedIndex, setCopiedIndex] = useState(null);
 
   const handleCopyCommand = (command, index) => {
     navigator.clipboard.writeText(command);
     setCopiedIndex(index);
     setTimeout(() => setCopiedIndex(null), 2000);
-  };
-
-  const [inputMode, setInputMode] = useState('json');
-  const [jsonInput, setJsonInput] = useState(JSON.stringify(initialFormData, null, 2));
-  const [formData, setFormData] = useState(initialFormData);
-  const [error, setError] = useState(null);
-
-  const handleModeSwitch = (mode) => {
-    if (mode === inputMode) return;
-    
-    try {
-      if (mode === 'yaml') {
-        const parsed = inputMode === 'json' ? JSON.parse(jsonInput) : yaml.load(jsonInput);
-        setJsonInput(yaml.dump(parsed, { indent: 2 }));
-      } else {
-        const parsed = inputMode === 'yaml' ? yaml.load(jsonInput) : JSON.parse(jsonInput);
-        setJsonInput(JSON.stringify(parsed, null, 2));
-      }
-      setInputMode(mode);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  const handleInputChange = (value) => {
-    setJsonInput(value);
-    
-    try {
-      const parsed = inputMode === 'json' ? JSON.parse(value) : yaml.load(value);
-      setFormData(parsed);
-      setError(null);
-    } catch (err) {
-      setError(err.message);
-    }
   };
 
   return (
@@ -170,65 +131,31 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
-              <div className="flex flex-col">
-                <div className="flex items-center justify-between mb-4 h-10">
-                  <h3 className="text-xl font-bold m-0 text-slate-800">{interactiveDemoSection.inputLabel}</h3>
-                  <div className="inline-flex bg-slate-100 rounded-xl p-1 gap-1">
-                    <button
-                      onClick={() => handleModeSwitch('json')}
-                      className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 border-0 outline-none ${
-                        inputMode === 'json' 
-                          ? 'bg-white text-slate-900 shadow-sm' 
-                          : 'bg-transparent text-slate-600 hover:text-slate-900'
-                      }`}>
-                      {interactiveDemoSection.formatSwitcher.json}
-                    </button>
-                    <button
-                      onClick={() => handleModeSwitch('yaml')}
-                      className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 border-0 outline-none ${
-                        inputMode === 'yaml' 
-                          ? 'bg-white text-slate-900 shadow-sm' 
-                          : 'bg-transparent text-slate-600 hover:text-slate-900'
-                      }`}>
-                      {interactiveDemoSection.formatSwitcher.yaml}
-                    </button>
+            <div className="max-w-5xl mx-auto mb-10">
+              <a 
+                href={siteConfig.customFields.demoUrl} 
+                className="block group"
+              >
+                <div className="relative bg-linear-to-br from-slate-50 to-white rounded-xl shadow-xl border border-slate-200 hover:border-green-500 transition-all cursor-pointer overflow-hidden max-h-[500px]">
+                  <img 
+                    src="/img/preview.webp" 
+                    alt="Interactive form renderer demo showing live preview" 
+                    className="w-full h-full object-cover object-top rounded-lg shadow-lg -mb-8"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.parentElement.innerHTML = '<div class="text-center py-20"><p class="text-slate-600 text-lg">Preview image coming soon</p><p class="text-slate-500 text-sm mt-2">Click to try the live demo</p></div>';
+                    }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-slate-100/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-green-600 text-xl leading-relaxed flex items-center gap-2">
+                      Try Live Demo
+                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </span>
                   </div>
                 </div>
-                <CodeMirror
-                  value={jsonInput}
-                  extensions={[inputMode === 'json' ? json() : StreamLanguage.define(yamlMode)]}
-                  onChange={handleInputChange}
-                  theme="dark"
-                  basicSetup={{
-                    lineNumbers: true,
-                    highlightActiveLineGutter: true,
-                    highlightActiveLine: true,
-                    foldGutter: true,
-                  }}
-                  className="custom-scrollbar rounded-xl overflow-hidden shadow-xl"
-                  height="550px"
-                />
-              </div>
-
-              <div className="flex flex-col">
-                <div className="flex items-center mb-4 h-10">
-                  <h3 className="text-xl font-bold m-0 text-slate-800">{interactiveDemoSection.outputLabel}</h3>
-                </div>
-                <div className="custom-scrollbar bg-linear-to-br from-slate-50 to-white p-8 rounded-xl shadow-xl overflow-y-auto border border-slate-200" style={{ height: '550px' }}>
-                  {!error && <QuestionnaireRenderer key={JSON.stringify(formData)} formData={formData} />}
-                  {error && (
-                    <div className="flex items-center justify-center h-full text-slate-400">
-                      <div className="text-center">
-                        <svg className="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <p className="text-lg font-medium">{interactiveDemoSection.errorMessage} {inputMode.toUpperCase()} format</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>
