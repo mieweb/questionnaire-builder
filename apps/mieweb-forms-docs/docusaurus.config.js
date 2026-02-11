@@ -18,7 +18,7 @@ const demoUrl = isDev
 const config = {
   title: 'Forms at MIE',
   tagline: 'Embeddable FHIR-compatible questionnaire editor and renderer',
-  favicon: 'img/forms_favicon.ico',
+  favicon: 'img/favicon.ico',
 
   // Algolia site verification
   headTags: [
@@ -37,7 +37,7 @@ const config = {
   },
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-site.example.com',
+  url: 'https://forms-doc.os.mieweb.org',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
