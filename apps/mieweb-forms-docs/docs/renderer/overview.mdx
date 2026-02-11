@@ -1,3 +1,5 @@
+import DemoLink from '@site/src/components/DemoLink';
+
 # Renderer Overview
 
 The `@mieweb/forms-renderer` package provides a lightweight, flexible solution for displaying questionnaires and collecting user responses.
@@ -16,11 +18,7 @@ The renderer is a display-only component that takes a form schema (JSON or YAML)
 
 Try out the renderer with a full interactive demo:
 
-<div className="p-8 bg-slate-50 rounded-lg text-center">
-  <h3 className="mt-0">Interactive Renderer Demo</h3>
-  <p>Experience the full-featured renderer with a sample patient health survey.</p>
-  <a href="https://questionnaire-dev-test.opensource.mieweb.org" target="_blank" rel="noopener noreferrer" className="renderer-demo-link button button--primary button--lg">Launch Live Demo →</a>
-</div>
+<DemoLink title="Interactive Renderer Demo" description="Experience the full-featured renderer with a sample patient health survey." className="renderer-demo-link" />
 
 ## Integration Options
 
