@@ -25,14 +25,47 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            set -e
+            set -euo pipefail
+
             cd "${{ secrets.DEPLOY_DIR }}"
             git fetch --all
             git reset --hard origin/main
+
             npm ci
             npm run build
-            pm2 reload forms --update-env
-            pm2 save
+
+            SHA="$(git rev-parse --short HEAD)"
+
+            # ----------------------------------------------
+            # Docs: build -> release -> atomic swap
+            # ----------------------------------------------
+            DOC_REL="/home/llatt/sites/forms-doc/releases/$SHA"
+            mkdir -p "$DOC_REL"
+            rm -rf "$DOC_REL"/*
+            cp -a apps/mieweb-forms-docs/build/. "$DOC_REL/"
+            ln -sfn "$DOC_REL" /home/llatt/sites/forms-doc/current
+
+            # ----------------------------------------------
+            # Demo: build -> release -> atomic swap
+            # ----------------------------------------------
+            DEMO_REL="/home/llatt/sites/forms-demo/releases/$SHA"
+            mkdir -p "$DEMO_REL"
+            rm -rf "$DEMO_REL"/*
+            cp -a apps/web-demo-packages/build/. "$DEMO_REL/"
+            ln -sfn "$DEMO_REL" /home/llatt/sites/forms-demo/current
+
+            # ----------------------------------------------
+            # Cleanup: keep last 5 releases
+            # ----------------------------------------------
+            cleanup_releases () {
+              local releases_dir="$1"
+              ls -1dt "$releases_dir"/* 2>/dev/null | tail -n +6 | xargs -r rm -rf
+            }
+
+            cleanup_releases "/home/llatt/sites/forms-doc/releases"
+            cleanup_releases "/home/llatt/sites/forms-demo/releases"
+
+            echo "Deployed SHA=$SHA (kept last 5 releases)"
 
       - name: Add deployment links
         run: |
