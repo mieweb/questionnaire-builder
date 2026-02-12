@@ -20,7 +20,7 @@ npm install @mieweb/forms-renderer
 
 ## 📖 Documentation
 
-**[Full Documentation](https://questionnaire-builder.opensource.mieweb.org/)**
+**[Full Documentation](https://forms-doc.os.mieweb.org/)**
 
 See the complete documentation for:
 - Getting started guides
@@ -34,7 +34,7 @@ See the complete documentation for:
 We welcome contributions! 
 
 - **[Contributing Guide](./.github/CONTRIBUTING.md)** - Full guidelines on GitHub
-- **[Contributing Docs](https://questionnaire-builder.opensource.mieweb.org/docs/contributing)** - Guidelines and reference on our docs site
+- **[Contributing Docs](https://forms-doc.os.mieweb.org/docs/contributing)** - Guidelines and reference on our docs site
 
 Learn about:
 - Development setup and workflow
