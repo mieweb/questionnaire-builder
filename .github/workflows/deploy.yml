@@ -31,7 +31,7 @@ jobs:
             git reset --hard origin/main
             npm ci
             npm run build
-            pm2 restart forms
+            pm2 reload forms --update-env
             pm2 save
 
       - name: Add deployment links
