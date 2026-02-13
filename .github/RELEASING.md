@@ -69,10 +69,10 @@ Labels: `scope:engine` + `bump:prerelease`
 - **Multiple bump labels** → `bump:prerelease` wins, then `patch`, then `minor`, then `major`
 - You can add labels after creating the PR, before merging
 
-## Trusted publishing
+## npm authentication
 
-Packages are published via npm OIDC trusted publishing (no `NPM_TOKEN` secret needed). The workflow uses the `Production` GitHub environment. Each package must be configured on npmjs.com:
+Packages are published using a **Granular Access Token** stored as the `NPM_TOKEN` repository secret.
 
-- **Repository:** `<org>/questionnaire-builder`
-- **Workflow:** `release.yml`
-- **Environment:** `Production`
+1. On npmjs.com, create a Granular Access Token with publish access to `@mieweb/forms-engine`, `@mieweb/forms-editor`, and `@mieweb/forms-renderer`
+2. In GitHub, go to **Settings → Secrets and variables → Actions** and add `NPM_TOKEN` with the token value
+3. The workflow uses the `Production` GitHub environment for deployment protection

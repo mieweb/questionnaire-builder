@@ -31,7 +31,6 @@ jobs:
 
     permissions:
       contents: write
-      id-token: write
 
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +39,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
           cache: npm
           registry-url: https://registry.npmjs.org
 
@@ -134,6 +133,8 @@ jobs:
             npm publish --workspace="packages/$pkg" --access public --tag "$NPM_TAG"
             echo "::endgroup::"
           done
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Commit version bumps and tag
       - name: Commit & tag
