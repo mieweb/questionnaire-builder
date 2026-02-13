@@ -1,0 +1,168 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    # Only run when PR is merged and has at least one scope + one bump label
+    if: >-
+      github.event.pull_request.merged == true &&
+      (
+        contains(github.event.pull_request.labels.*.name, 'scope:engine') ||
+        contains(github.event.pull_request.labels.*.name, 'scope:editor') ||
+        contains(github.event.pull_request.labels.*.name, 'scope:renderer')
+      ) &&
+      (
+        contains(github.event.pull_request.labels.*.name, 'bump:patch') ||
+        contains(github.event.pull_request.labels.*.name, 'bump:minor') ||
+        contains(github.event.pull_request.labels.*.name, 'bump:major') ||
+        contains(github.event.pull_request.labels.*.name, 'bump:prerelease')
+      )
+    runs-on: ubuntu-latest
+
+    environment: Production
+
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      # Determine bump type from labels (default: patch)
+      - name: Resolve bump type
+        id: bump
+        run: |
+          LABELS='${{ toJSON(github.event.pull_request.labels.*.name) }}'
+          if echo "$LABELS" | grep -q '"bump:prerelease"'; then
+            echo "type=prerelease" >> "$GITHUB_OUTPUT"
+            echo "tag=next" >> "$GITHUB_OUTPUT"
+          elif echo "$LABELS" | grep -q '"bump:major"'; then
+            echo "type=major" >> "$GITHUB_OUTPUT"
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          elif echo "$LABELS" | grep -q '"bump:minor"'; then
+            echo "type=minor" >> "$GITHUB_OUTPUT"
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          else
+            echo "type=patch" >> "$GITHUB_OUTPUT"
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Determine which packages to publish from labels
+      - name: Resolve packages
+        id: packages
+        run: |
+          LABELS='${{ toJSON(github.event.pull_request.labels.*.name) }}'
+          PKGS=""
+          if echo "$LABELS" | grep -q '"scope:engine"'; then
+            PKGS="forms-engine${PKGS:+ $PKGS}"
+          fi
+          if echo "$LABELS" | grep -q '"scope:editor"'; then
+            PKGS="${PKGS:+$PKGS }forms-editor"
+          fi
+          if echo "$LABELS" | grep -q '"scope:renderer"'; then
+            PKGS="${PKGS:+$PKGS }forms-renderer"
+          fi
+          echo "list=$PKGS" >> "$GITHUB_OUTPUT"
+          echo "Publishing: $PKGS (${{ steps.bump.outputs.type }})"
+
+      # Version bump, dep sync, build, and publish each package
+      - name: Bump, build & publish
+        run: |
+          set -euo pipefail
+          BUMP="${{ steps.bump.outputs.type }}"
+          PKGS="${{ steps.packages.outputs.list }}"
+
+          for pkg in $PKGS; do
+            echo "::group::📦 $pkg"
+
+            # Version bump
+            BUMP_FLAGS="$BUMP"
+            if [ "$BUMP" = "prerelease" ]; then
+              BUMP_FLAGS="prerelease --preid=prerelease"
+            fi
+            npm version $BUMP_FLAGS --workspace="packages/$pkg" --no-git-tag-version
+            NEW_VERSION=$(node -p "require('./packages/$pkg/package.json').version")
+            echo "Bumped $pkg to $NEW_VERSION"
+
+            # Sync cross-deps (editor & renderer depend on engine)
+            if [ "$pkg" = "forms-engine" ]; then
+              node -e "
+                const fs = require('fs');
+                for (const dep of ['forms-editor', 'forms-renderer']) {
+                  const p = './packages/' + dep + '/package.json';
+                  const pkg = JSON.parse(fs.readFileSync(p, 'utf8'));
+                  if (pkg.dependencies?.['@mieweb/forms-engine']) {
+                    pkg.dependencies['@mieweb/forms-engine'] = '^$NEW_VERSION';
+                    const indent = dep === 'forms-editor' ? '\t' : 2;
+                    fs.writeFileSync(p, JSON.stringify(pkg, null, indent) + '\n');
+                    console.log('Synced ' + dep + ' -> ^$NEW_VERSION');
+                  }
+                }
+              "
+            fi
+
+            echo "::endgroup::"
+          done
+
+          # Build all packages (order matters: engine first)
+          echo "::group::🔨 Building packages"
+          npm run build:packages
+          echo "::endgroup::"
+
+          # Publish each selected package
+          for pkg in $PKGS; do
+            echo "::group::🚀 Publishing $pkg"
+            NPM_TAG="${{ steps.bump.outputs.tag }}"
+            npm publish --workspace="packages/$pkg" --access public --provenance --tag "$NPM_TAG"
+            echo "::endgroup::"
+          done
+
+      # Commit version bumps and tag
+      - name: Commit & tag
+        run: |
+          set -euo pipefail
+          BUMP="${{ steps.bump.outputs.type }}"
+          PKGS="${{ steps.packages.outputs.list }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Collect version info for commit message
+          VERSIONS=""
+          for pkg in $PKGS; do
+            VER=$(node -p "require('./packages/$pkg/package.json').version")
+            VERSIONS="${VERSIONS:+$VERSIONS, }@mieweb/$pkg@$VER"
+            git tag "@mieweb/${pkg}@${VER}"
+          done
+
+          git add packages/*/package.json
+          git commit -m "release: $VERSIONS"
+          git push --follow-tags
+
+      - name: Summary
+        run: |
+          PKGS="${{ steps.packages.outputs.list }}"
+          echo "## 📦 Published to npm" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          for pkg in $PKGS; do
+            VER=$(node -p "require('./packages/$pkg/package.json').version")
+            echo "- [\`@mieweb/$pkg@$VER\`](https://www.npmjs.com/package/@mieweb/$pkg/v/$VER)" >> "$GITHUB_STEP_SUMMARY"
+          done
