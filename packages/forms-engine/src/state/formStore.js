@@ -119,7 +119,8 @@ export const createFormStore = (initProps = {}) => {
     schemaMetadata: {},
   };
 
-  return createStore((set, get) => ({
+  //set & get
+  return createStore((set) => ({
     // ────────── State ──────────
     ...DEFAULT_PROPS,
     ...initProps,
@@ -520,12 +521,12 @@ const stripFieldResponseValues = (field) => {
   
   // Strip all response-related properties (answers/drawings)
   const { 
-    answer, 
-    selected, 
-    signatureData, 
-    signatureImage, 
-    markupData, 
-    markupImage,
+    answer: _answer, 
+    selected: _selected, 
+    signatureData: _signatureData, 
+    signatureImage: _signatureImage, 
+    markupData: _markupData, 
+    markupImage: _markupImage,
     ...definition 
   } = field;
   
@@ -539,7 +540,7 @@ const stripFieldResponseValues = (field) => {
   
   // Handle multitext options that may have answer values
   if (Array.isArray(definition.options)) {
-    definition.options = definition.options.map(({ answer, ...opt }) => opt);
+    definition.options = definition.options.map(({ answer: _answer, ...opt }) => opt);
   }
   
   return definition;

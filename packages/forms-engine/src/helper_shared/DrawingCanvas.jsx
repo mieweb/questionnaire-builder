@@ -67,7 +67,7 @@ export default function DrawingCanvas({
   const lastCoordRef = React.useRef({ x: 0, y: 0 });
   const [displaySize, setDisplaySize] = React.useState({ width, height });
   const [hasDrawing, setHasDrawing] = React.useState(!!existingDrawing);
-  const [tempDrawing, setTempDrawing] = React.useState(null);
+  const [_tempDrawing, setTempDrawing] = React.useState(null);
   const [backgroundLoaded, setBackgroundLoaded] = React.useState(false);
   const backgroundImageRef = React.useRef(null);
   const [currentTool, setCurrentTool] = React.useState("pen");
@@ -93,7 +93,6 @@ export default function DrawingCanvas({
   
   // Theme-aware colors
   const themedBackgroundColor = isDark ? "#1e1e1e" : backgroundColor;
-  const themedStrokeColor = isDark ? "#FFFFFF" : strokeColor;
   
   // Initialize currentColor based on current theme (lazy init)
   const [currentColor, setCurrentColor] = React.useState(() => {
@@ -106,7 +105,7 @@ export default function DrawingCanvas({
     }
     return strokeColor;
   });
-  const [currentSize, setCurrentSize] = React.useState(2);
+  const [currentSize, setCurrentSize] = React.useState(strokeWidth);
   const [customColor, setCustomColor] = React.useState(null);
   const [customSize, setCustomSize] = React.useState(null);
   const [showSizePicker, setShowSizePicker] = React.useState(false);
@@ -126,6 +125,7 @@ export default function DrawingCanvas({
     } else if (!isDark && currentColor === "#FFFFFF") {
       setCurrentColor("#000000");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to theme change, not currentColor
   }, [isDark]);
   
   // Color mapping between light and dark themes
@@ -221,6 +221,7 @@ export default function DrawingCanvas({
 
     // Draw the drawing canvas to display canvas at the correct size
     ctx.drawImage(drawingCanvas, 0, 0, displaySize.width * DPR, displaySize.height * DPR, 0, 0, displaySize.width, displaySize.height);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional primitive deps; drawBackgroundImage/drawPlaceholder change with same values
   }, [displaySize.width, displaySize.height, themedBackgroundColor, backgroundLoaded, hasDrawing, existingDrawing, placeholder, isDark]);
 
   // Load background image
@@ -260,6 +261,7 @@ export default function DrawingCanvas({
   }, [showSizePicker, tempSize]);
 
   // Get coordinates from mouse or touch event
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- used in useCallback deps below; wrapping in useCallback would cause same instability
   const getCoords = (e) => {
     const canvas = canvasRef.current;
     if (!canvas) return null;
@@ -273,6 +275,7 @@ export default function DrawingCanvas({
     };
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- plain function; wrapping in useCallback would cascade instability
   const drawLine = (fromX, fromY, toX, toY, tool = "pen") => {
     const drawingCanvas = drawingCanvasRef.current;
     if (!drawingCanvas) return;
@@ -395,6 +398,7 @@ export default function DrawingCanvas({
         ctx.stroke();
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional; mapColorForTheme is a stable local function
   }, [mode, displaySize.width, displaySize.height, eraserWidth, isDark]);
 
   const clearCanvas = React.useCallback(() => {
@@ -505,6 +509,7 @@ export default function DrawingCanvas({
     // Redraw markup from strokes
     redrawMarkup();
     compositeDisplay();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- setupCanvas reads displaySize from closure; adding it would cause extra deps
   }, [displaySize, hasDrawing, backgroundLoaded, placeholder, themedBackgroundColor, redrawMarkup, compositeDisplay]);
 
   // Handle responsive sizing

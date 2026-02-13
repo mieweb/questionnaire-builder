@@ -28,7 +28,7 @@ export function adaptSchema(data, schemaType = 'mieforms') {
     case 'surveyjs':
       return surveyJSToMIEForms(data);
       
-    case 'mieforms':
+    case 'mieforms': {
       const { fields = [], schemaType: _st, ...metadata } = data;
       return { 
         fields, 
@@ -37,6 +37,7 @@ export function adaptSchema(data, schemaType = 'mieforms') {
           surveyMetadata: metadata
         } : null 
       };
+    }
       
     default:
       throw new Error(`Unsupported schema type: ${schemaType}. MIE Forms data must include schemaType field starting with 'mieforms-v'`);
@@ -297,7 +298,7 @@ function convertSurveyElement(element, fieldNames = new Set()) {
       field.signatureImage = '';
       break;
       
-    case 'expression':
+    case 'expression': {
       field.label = element.title || element.name || 'Calculated Result';
       const conversionResult = convertSurveyJSExpression(element.expression || '');
       field.expression = conversionResult.expression;
@@ -339,6 +340,7 @@ function convertSurveyElement(element, fieldNames = new Set()) {
         warnings.push(...conversionResult.warnings);
       }
       break;
+    }
       
     case 'section':
       field.title = element.title || element.name || 'Section';

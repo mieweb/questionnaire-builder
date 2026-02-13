@@ -211,7 +211,7 @@ export function InstanceCard({ instance, onRemove, onDuplicate, onUpdate, onRese
                 </pre>
               ) : (
                 <div className="w-full h-24 flex items-center justify-center text-xs text-green-600 bg-white border border-green-300 rounded-lg">
-                  Click "Get Response" to capture the current form state
+                  Click &quot;Get Response&quot; to capture the current form state
                 </div>
               )}
             </div>

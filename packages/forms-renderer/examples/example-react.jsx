@@ -6,6 +6,7 @@ import { QuestionnaireRenderer, buildQuestionnaireResponse, useFieldsArray } fro
  * Example: Using QuestionnaireRenderer as a React component
  * Requires: react, react-dom (peer dependencies)
  */
+// eslint-disable-next-line react-refresh/only-export-components -- example file, not a real module
 function App() {
   const [formData] = React.useState([
     {

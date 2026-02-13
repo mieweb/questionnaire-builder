@@ -13,7 +13,7 @@ export function RendererView() {
     setFormKey(prev => prev + 1);
   }, []);
 
-  const handleFormChange = (data) => {
+  const handleFormChange = (_data) => {
     // Renderer form change handler - currently unused but keeping for future functionality
   };
 

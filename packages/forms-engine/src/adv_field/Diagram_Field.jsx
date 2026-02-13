@@ -14,6 +14,7 @@ import feetChart from "../assets/feet.webp";
 import dentalChart from "../assets/dental_chart.webp";
 
 // Preset diagrams configuration
+// eslint-disable-next-line react-refresh/only-export-components -- config data co-located with component
 export const DIAGRAM_PRESETS = [
   { id: "male", label: "Male Body", image: maleChart },
   { id: "female", label: "Female Body", image: femaleChart },

@@ -474,7 +474,7 @@ const ExpressionField = React.memo(function ExpressionField({ field, sectionId }
                 <p className="expression-error mie:text-xs mie:text-miedanger mie:mt-1">Error: {samplePreview.error}</p>
               ) : (
                 <p className="expression-help mie:text-xs mie:text-mietextmuted mie:mt-1">
-                  Use {'{fieldId}'} to reference other fields. Arithmetic: {'{price} * {quantity}'}. Comparison: {'{age} >= 18'} → true/false. "contains" is not supported for numeric fields.
+                  Use {'{fieldId}'} to reference other fields. Arithmetic: {'{price} * {quantity}'}. Comparison: {'{age} >= 18'} &rarr; true/false. &quot;contains&quot; is not supported for numeric fields.
                 </p>
               )}
             </div>

@@ -33,6 +33,7 @@ export function AlertProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- hook co-located with provider
 export function useAlert() {
   const context = React.useContext(AlertContext);
   if (!context) {

@@ -111,8 +111,8 @@ function QuestionnaireEditorInner({
 }
 
 export function QuestionnaireEditor(props) {
-  const formStore = React.useRef(createFormStore()).current;
-  const uiStore = React.useRef(createUIStore()).current;
+  const formStore = React.useMemo(() => createFormStore(), []);
+  const uiStore = React.useMemo(() => createUIStore(), []);
 
   return (
     <FormStoreContext.Provider value={formStore}>

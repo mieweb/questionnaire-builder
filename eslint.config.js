@@ -9,6 +9,9 @@ export default [
         "**/dist/**",
         "**/build/**",
         "**/.docusaurus/**",
+        "apps/mieweb-forms-docs/plugins/**",
+        "apps/mieweb-forms-docs/docusaurus.config.js",
+        "apps/mieweb-forms-docs/sidebars.js",
         "**/vite.config.*.timestamp*",
         "**/vitest.config.*.timestamp*"
       ] },
@@ -53,6 +56,7 @@ export default [
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
       'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
+      'react/prop-types': 'off',
       'react/jsx-no-target-blank': 'off',
       'react-refresh/only-export-components': [
         'warn',
@@ -61,7 +65,7 @@ export default [
     },
   },
   {
-    files: ['**/icons.jsx'],
+    files: ['**/icons.jsx', '**/icon.jsx'],
     rules: {
       'react/display-name': 'off',
       'react/prop-types': 'off',

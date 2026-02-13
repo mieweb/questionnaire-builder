@@ -13,7 +13,10 @@ function SectionEditor({ section, onActiveChildChange }) {
 
   if (!formStore) throw new Error('Missing FormStoreContext.Provider in the tree');
 
-  const children = Array.isArray(section.fields) ? section.fields : [];
+  const children = React.useMemo(
+    () => Array.isArray(section.fields) ? section.fields : [],
+    [section.fields]
+  );
   
   // Initialize from global selectedChildId if valid for this section, otherwise first child
   const globalParentId = ui.selectedChildId.ParentId;
@@ -23,7 +26,8 @@ function SectionEditor({ section, onActiveChildChange }) {
       return globalChildId;
     }
     return children[0]?.id || null;
-  }, []); // Only compute once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentionally computed once on mount
+  }, []);
   
   const [activeChildId, setActiveChildId] = React.useState(initialChildId);
 

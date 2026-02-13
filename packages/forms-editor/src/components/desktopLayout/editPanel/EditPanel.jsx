@@ -20,12 +20,14 @@ export default function EditPanel({ isMobileModal = false }) {
     (sectionId, childId) => {
       ui.selectedChildId.set(sectionId, childId);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- .set is stable
     [ui.selectedChildId.set]
   );
 
   React.useEffect(() => {
     ui.selectedChildId.set(null, null);
     setTab("EDIT");
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only reset on field selection change
   }, [ui.selectedFieldId.value]);
 
   if (ui.state.isPreview) return null;
