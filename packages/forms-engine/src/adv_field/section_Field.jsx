@@ -1,7 +1,6 @@
 import React from "react";
-import fieldTypes, { registerFieldComponent, getFieldComponent } from "../helper_shared/fieldTypes-config.js";
+import { registerFieldComponent, getFieldComponent } from "../helper_shared/fieldTypes-config.js";
 import { isVisible } from "../helper_shared/logicVisibility.js";
-import { PLUSSQUARE_ICON } from "../helper_shared/icons.jsx";
 
 import FieldWrapper from "../helper_shared/FieldWrapper.jsx";
 import useFieldController from "../helper_shared/useFieldController.jsx";

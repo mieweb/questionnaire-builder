@@ -170,8 +170,6 @@ export const createFormStore = (initProps = {}) => {
         }
       });
       
-      const question = initialPatch?.question || tpl.question || '';
-      const title = initialPatch?.title || tpl.title || '';
       const id = generateFieldId(type, existingIds, sectionId);
       
       // Deep clone template to avoid shared array/object references

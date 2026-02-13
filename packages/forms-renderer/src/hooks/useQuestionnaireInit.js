@@ -47,7 +47,7 @@ export function useQuestionnaireInit(formData, schemaType, hideUnsupportedFields
       formStore.getState().replaceAll(schemaObject);
       ui.preview.set(true);
       initializedRef.current = true;
-    } catch (error) {
+    } catch (_error) {
       formStore.getState().replaceAll({ schemaType: 'mieforms-v1.0', fields: [] });
       ui.preview.set(true);
       initializedRef.current = true;

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 import { PRESETS, PRESET_KEYS } from './presets';

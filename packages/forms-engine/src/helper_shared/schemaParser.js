@@ -20,7 +20,7 @@ export function parseInput(input) {
       } catch {
         try {
           return yaml.load(trimmed);
-        } catch (yamlError) {
+        } catch (_yamlError) {
           throw new Error('Input must be valid JSON or YAML');
         }
       }

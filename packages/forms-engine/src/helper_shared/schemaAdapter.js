@@ -390,11 +390,6 @@ function convertSurveyElement(element, fieldNames = new Set()) {
   return field;
 }
 
-function removeWarning(warnings, type, property) {
-  const index = warnings.findIndex(w => w.type === type && w.property === property);
-  if (index !== -1) warnings.splice(index, 1);
-}
-
 function mapSurveyTypeToMIEForms(surveyType) {
   const typeMap = {
     // Text inputs

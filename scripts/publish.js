@@ -25,7 +25,7 @@ function exec(command, cwd = process.cwd()) {
   try {
     execSync(command, { cwd, stdio: 'inherit' });
     return true;
-  } catch (error) {
+  } catch (_error) {
     console.error(`❌ Command failed: ${command}`);
     return false;
   }
@@ -101,7 +101,7 @@ function checkNpmAuth() {
   try {
     execSync('npm whoami', { stdio: 'pipe' });
     return true;
-  } catch (error) {
+  } catch (_error) {
     return false;
   }
 }
@@ -133,7 +133,7 @@ async function main() {
     try {
       const username = execSync('npm whoami', { encoding: 'utf8' }).trim();
       console.log(`✅ Logged in as: ${username}\n`);
-    } catch (error) {
+    } catch (_error) {
       // Silent fail, we already know they're authed
     }
   }

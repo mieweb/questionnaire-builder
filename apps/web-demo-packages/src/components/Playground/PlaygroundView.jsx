@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { MenuDropdown } from '../Shared';
 import { PRESETS } from './presets';
 import { InstanceCard } from './InstanceCard';

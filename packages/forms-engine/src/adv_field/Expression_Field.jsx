@@ -288,7 +288,7 @@ const buildFieldData = (order, byId, excludeId) => {
 
 const ExpressionField = React.memo(function ExpressionField({ field, sectionId }) {
   const ctrl = useFieldController(field, sectionId);
-  const [evaluationError, setEvaluationError] = React.useState("");
+  const [, setEvaluationError] = React.useState("");
   const [sampleDataFields, setSampleDataFields] = React.useState(field.sampleDataFields || []);
   const order = useFormStore((s) => s.order);
   const byId = useFormStore((s) => s.byId);

@@ -42,10 +42,10 @@ export default defineConfig({
           const files = fs.readdirSync(outDir);
           files.forEach(f => {
             if (f.endsWith('.css')) {
-              try { fs.unlinkSync(resolve(outDir, f)); } catch (e) { /* ignore */ }
+              try { fs.unlinkSync(resolve(outDir, f)); } catch (_e) { /* ignore */ }
             }
           });
-        } catch (e) {
+        } catch (_e) {
           // non-fatal
         }
       }

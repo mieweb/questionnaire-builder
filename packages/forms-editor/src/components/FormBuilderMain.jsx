@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { fieldTypes, getFieldComponent, useVisibleFields, useFormStore, useUIApi, useUIStore } from "@mieweb/forms-engine";
+import { getFieldComponent, useVisibleFields, useFormStore, useUIApi, useUIStore } from "@mieweb/forms-engine";
 
 export default function FormBuilderMain() {
   const ui = useUIApi();

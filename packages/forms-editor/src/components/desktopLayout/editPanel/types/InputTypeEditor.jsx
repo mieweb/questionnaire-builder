@@ -1,4 +1,3 @@
-import React from "react";
 import { useInstanceId } from "@mieweb/forms-engine";
 
 const INPUT_TYPES = [

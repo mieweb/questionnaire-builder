@@ -1,5 +1,3 @@
-import React from 'react';
-
 export function InfoRow({ name, desc, npmLink }) {
   return (
     <a

@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { CHECK_ICON, X_ICON } from '../../assets/icon';
 

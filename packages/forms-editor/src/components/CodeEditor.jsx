@@ -137,7 +137,7 @@ export default function CodeEditor() {
     editorRef.current = editor;
     
     // Listen for paste events
-    editor.onDidPaste((e) => {
+    editor.onDidPaste((_e) => {
       const beforePaste = code;
       const fullText = editor.getModel().getValue();
       
@@ -194,7 +194,7 @@ export default function CodeEditor() {
             );
           }
         }
-      } catch (err) {
+      } catch (_err) {
         // Invalid JSON/YAML - ignore, validation will handle it
       }
     });
@@ -267,7 +267,7 @@ export default function CodeEditor() {
         replaceAllFn(finalSchema);
         uiApi.setCodeEditorHasError(false);
         hasUnsavedChanges.current = false;
-      } catch (err) {
+      } catch (_err) {
         // Silently fail - error already shown in editor header
       }
     };

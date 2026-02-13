@@ -1,5 +1,5 @@
 import React from "react";
-import { X_ICON, CHECK_ICON, PEN_ICON, ERASER_ICON } from "./icons";
+import { X_ICON, PEN_ICON, ERASER_ICON } from "./icons";
 
 const DPR = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
 
@@ -484,7 +484,7 @@ export default function DrawingCanvas({
         setHasDrawing(data.strokes.length > 0);
         setCanUndo(data.strokes.length > 0);
       }
-    } catch (e) {
+    } catch (_e) {
       // Not JSON, might be legacy base64 - ignore
       console.warn("Existing drawing is not JSON stroke data");
     }
