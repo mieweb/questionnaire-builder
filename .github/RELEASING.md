@@ -75,4 +75,4 @@ Packages are published using a **Granular Access Token** stored as the `NPM_TOKE
 
 1. On npmjs.com, create a Granular Access Token with publish access to `@mieweb/forms-engine`, `@mieweb/forms-editor`, and `@mieweb/forms-renderer`
 2. In GitHub, go to **Settings → Secrets and variables → Actions** and add `NPM_TOKEN` with the token value
-3. The workflow uses the `Production` GitHub environment for deployment protection
+3. The workflow uses the `Production` GitHub environment for deployment protection.
