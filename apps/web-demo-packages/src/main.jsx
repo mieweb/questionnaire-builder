@@ -1,4 +1,3 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LandingPage } from './components/Landing';
@@ -8,6 +7,7 @@ import { PlaygroundView } from './components/Playground';
 import { Navbar } from './components/Shared';
 import './index.css';
 
+// eslint-disable-next-line react-refresh/only-export-components -- app entry point, no exports needed
 function App() {
   return (
     <BrowserRouter>

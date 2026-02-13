@@ -21,8 +21,6 @@ const getCategoryIcon = (categoryName) => {
 };
 
 const ToolPanelImpl = ({ isPreview = false }) => {
-  if (isPreview) return null;
-
   const addField = useFormStore((s) => s.addField);
   const ui = useUIApi();
   
@@ -71,6 +69,7 @@ const ToolPanelImpl = ({ isPreview = false }) => {
     return result;
   }, []);
 
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization -- compiler infers selectedField; we intentionally use granular deps
   const handlers = useMemo(() => {
     const m = {};
     Object.values(categories).forEach(items => {
@@ -87,6 +86,8 @@ const ToolPanelImpl = ({ isPreview = false }) => {
     });
     return m;
   }, [categories, addField, isSectionSelected, selectedField?.id]);
+
+  if (isPreview) return null;
 
   return (
     <div 

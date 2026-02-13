@@ -14,8 +14,8 @@ import './index.css';
  * @param {React.Ref} [ref] - Ref exposing getResponse() method
  */
 export const QuestionnaireRenderer = React.forwardRef((props, ref) => {
-  const formStore = React.useRef(createFormStore()).current;
-  const uiStore = React.useRef(createUIStore()).current;
+  const formStore = React.useMemo(() => createFormStore(), []);
+  const uiStore = React.useMemo(() => createUIStore(), []);
 
   return (
     <FormStoreContext.Provider value={formStore}>
@@ -25,6 +25,7 @@ export const QuestionnaireRenderer = React.forwardRef((props, ref) => {
     </FormStoreContext.Provider>
   );
 });
+QuestionnaireRenderer.displayName = 'QuestionnaireRenderer';
 
 const QuestionnaireRendererInner = React.forwardRef(({
   formData,
@@ -55,3 +56,4 @@ const QuestionnaireRendererInner = React.forwardRef(({
     </div>
   );
 });
+QuestionnaireRendererInner.displayName = 'QuestionnaireRendererInner';

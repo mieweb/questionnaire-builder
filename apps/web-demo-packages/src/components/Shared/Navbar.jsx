@@ -1,5 +1,3 @@
-import React from 'react';
-
 export function Navbar() {
   const isDev = import.meta.env.DEV;
   const docsUrl = isDev 

@@ -1,5 +1,3 @@
-import React from 'react';
-
 export function ResourcesSection() {
   return (
     <div className="mt-12 pt-8 border-t border-slate-200">

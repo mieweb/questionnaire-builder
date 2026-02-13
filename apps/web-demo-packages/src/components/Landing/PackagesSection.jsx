@@ -1,4 +1,3 @@
-import React from 'react';
 import { InfoRow } from './InfoRow';
 
 export function PackagesSection() {

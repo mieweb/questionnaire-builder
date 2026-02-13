@@ -33,6 +33,9 @@ function watchPackages() {
 export default defineConfig({
   plugins: [react(), tailwindcss(), watchPackages()],
   base: '/',
+  build: {
+    outDir: 'build'
+  },
   resolve: {
     alias: {
       '@mieweb/forms-engine': path.resolve(__dirname, '../../packages/forms-engine/dist/index.js'),

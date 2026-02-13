@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { fieldTypes, getFieldComponent, useVisibleFields, useFormStore, useUIApi, useUIStore } from "@mieweb/forms-engine";
+import { getFieldComponent, useVisibleFields, useFormStore, useUIApi, useUIStore } from "@mieweb/forms-engine";
 
 export default function FormBuilderMain() {
   const ui = useUIApi();
@@ -48,14 +48,12 @@ export default function FormBuilderMain() {
   );
 }
 
+/* eslint-disable react-hooks/static-components -- getFieldComponent is a pure registry lookup, returns stable component refs */
 const FieldRow = React.memo(function FieldRow({ id }) {
   const field = useFormStore(React.useCallback((s) => s.byId[id], [id]));
+  const FieldComponent = field ? getFieldComponent(field.fieldType) : null;
 
-  if (!field) return null;
-
-  const FieldComponent = getFieldComponent(field.fieldType);
-
-  if (!FieldComponent) return null;
+  if (!field || !FieldComponent) return null;
 
   return (
     <div className="mie:mb-1.5" data-field-type={field.fieldType} data-field-id={field.id}>
@@ -63,6 +61,7 @@ const FieldRow = React.memo(function FieldRow({ id }) {
     </div>
   );
 });
+/* eslint-enable react-hooks/static-components */
 
 function EmptyState() {
   return (

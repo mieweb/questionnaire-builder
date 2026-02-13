@@ -1,4 +1,3 @@
-import React from 'react';
 import { DemoCard } from '../Shared';
 
 export function LandingPage() {

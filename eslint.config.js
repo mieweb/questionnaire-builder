@@ -8,6 +8,10 @@ export default [
   {       "ignores": [
         "**/dist/**",
         "**/build/**",
+        "**/.docusaurus/**",
+        "apps/mieweb-forms-docs/plugins/**",
+        "apps/mieweb-forms-docs/docusaurus.config.js",
+        "apps/mieweb-forms-docs/sidebars.js",
         "**/vite.config.*.timestamp*",
         "**/vitest.config.*.timestamp*"
       ] },
@@ -22,6 +26,24 @@ export default [
         sourceType: 'module',
       },
     },
+  },
+  {
+    files: ['scripts/**/*.js', '**/vite.config*.js', 'apps/mieweb-forms-docs/**/*.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
+  {
+    files: ['**/questionnaireRenderer-blaze.js'],
+    languageOptions: {
+      globals: {
+        Template: 'readonly',
+        Blaze: 'readonly',
+        HTML: 'readonly',
+      },
+    },
+  },
+  {
     settings: { react: { version: '18.3' } },
     plugins: {
       react,
@@ -33,11 +55,20 @@ export default [
       ...react.configs.recommended.rules,
       ...react.configs['jsx-runtime'].rules,
       ...reactHooks.configs.recommended.rules,
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
+      'react/prop-types': 'off',
       'react/jsx-no-target-blank': 'off',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
       ],
+    },
+  },
+  {
+    files: ['**/icons.jsx', '**/icon.jsx'],
+    rules: {
+      'react/display-name': 'off',
+      'react/prop-types': 'off',
     },
   },
 ]

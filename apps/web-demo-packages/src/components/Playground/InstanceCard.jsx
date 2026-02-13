@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { QuestionnaireEditor } from '@mieweb/forms-editor';
 import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 import { PRESETS, PRESET_KEYS } from './presets';
@@ -211,7 +211,7 @@ export function InstanceCard({ instance, onRemove, onDuplicate, onUpdate, onRese
                 </pre>
               ) : (
                 <div className="w-full h-24 flex items-center justify-center text-xs text-green-600 bg-white border border-green-300 rounded-lg">
-                  Click "Get Response" to capture the current form state
+                  Click &quot;Get Response&quot; to capture the current form state
                 </div>
               )}
             </div>

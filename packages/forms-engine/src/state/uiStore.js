@@ -18,7 +18,7 @@ export const createUIStore = (initProps = {}) => {
     codeEditorHasError: false,
   };
 
-  return createStore((set, get) => ({
+  return createStore((set, _get) => ({
     // ────────── State ──────────
     ...DEFAULT_PROPS,
     ...initProps,

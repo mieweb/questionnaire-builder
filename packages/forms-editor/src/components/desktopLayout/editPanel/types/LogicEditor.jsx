@@ -93,7 +93,7 @@ export default function LogicEditor() {
 
   // read selection (plain values)
   const selectedId = ui?.selectedFieldId?.value ?? null;
-  const rawParentId = ui?.selectedChildId?.ParentId ?? null;
+  const _rawParentId = ui?.selectedChildId?.ParentId ?? null;
   const rawChildId = ui?.selectedChildId?.ChildId ?? null;
 
   // resolve current selected field and whether it is a section
