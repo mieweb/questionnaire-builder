@@ -40,7 +40,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
           registry-url: https://registry.npmjs.org
 
@@ -131,7 +131,7 @@ jobs:
           for pkg in $PKGS; do
             echo "::group::🚀 Publishing $pkg"
             NPM_TAG="${{ steps.bump.outputs.tag }}"
-            npm publish --workspace="packages/$pkg" --access public --provenance --tag "$NPM_TAG"
+            npm publish --workspace="packages/$pkg" --access public --tag "$NPM_TAG"
             echo "::endgroup::"
           done
 
