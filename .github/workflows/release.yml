@@ -150,11 +150,17 @@ jobs:
           for pkg in $PKGS; do
             VER=$(node -p "require('./packages/$pkg/package.json').version")
             VERSIONS="${VERSIONS:+$VERSIONS, }@mieweb/$pkg@$VER"
-            git tag "@mieweb/${pkg}@${VER}"
           done
 
           git add packages/*/package.json
           git commit -m "release: $VERSIONS"
+
+          # Create tags on the release commit
+          for pkg in $PKGS; do
+            VER=$(node -p "require('./packages/$pkg/package.json').version")
+            git tag "@mieweb/${pkg}@${VER}"
+          done
+
           git push --follow-tags
 
       - name: Summary
