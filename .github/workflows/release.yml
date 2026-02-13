@@ -46,7 +46,7 @@ jobs:
 
       - run: npm ci
 
-      # Determine bump type from labels (default: patch)
+      # Determine bump type from labels (priority: prerelease > patch > minor > major)
       - name: Resolve bump type
         id: bump
         run: |
@@ -54,14 +54,14 @@ jobs:
           if echo "$LABELS" | grep -q '"bump:prerelease"'; then
             echo "type=prerelease" >> "$GITHUB_OUTPUT"
             echo "tag=next" >> "$GITHUB_OUTPUT"
-          elif echo "$LABELS" | grep -q '"bump:major"'; then
-            echo "type=major" >> "$GITHUB_OUTPUT"
+          elif echo "$LABELS" | grep -q '"bump:patch"'; then
+            echo "type=patch" >> "$GITHUB_OUTPUT"
             echo "tag=latest" >> "$GITHUB_OUTPUT"
           elif echo "$LABELS" | grep -q '"bump:minor"'; then
             echo "type=minor" >> "$GITHUB_OUTPUT"
             echo "tag=latest" >> "$GITHUB_OUTPUT"
           else
-            echo "type=patch" >> "$GITHUB_OUTPUT"
+            echo "type=major" >> "$GITHUB_OUTPUT"
             echo "tag=latest" >> "$GITHUB_OUTPUT"
           fi
 

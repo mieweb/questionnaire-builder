@@ -66,7 +66,7 @@ Labels: `scope:engine` + `bump:prerelease`
 
 - **No scope label** → workflow does not run
 - **No bump label** → workflow does not run
-- **Multiple bump labels** → `bump:prerelease` takes priority, then `major`, then `minor`, then `patch`
+- **Multiple bump labels** → `bump:prerelease` wins, then `patch`, then `minor`, then `major`
 - You can add labels after creating the PR, before merging
 
 ## Trusted publishing
