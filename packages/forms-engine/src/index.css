@@ -4,37 +4,39 @@
 
 @custom-variant dark (&:where(.qb-editor-root.dark, .qb-editor-root.dark *, .qb-renderer-root.dark, .qb-renderer-root.dark *));
 
-/* Scoped base styles - unlayered so host CSS can't override via @layer specificity */
-.qb-editor-root,
-.qb-editor-root *,
-.qb-editor-root *::before,
-.qb-editor-root *::after,
-.qb-renderer-root,
-.qb-renderer-root *,
-.qb-renderer-root *::before,
-.qb-renderer-root *::after {
-  box-sizing: border-box;
-  border-width: 0;
-  border-style: solid;
-  border-color: currentColor;
-}
+/* Scoped base styles - essential resets for mie: prefixed utilities */
+@layer base {
+  .qb-editor-root,
+  .qb-editor-root *,
+  .qb-editor-root *::before,
+  .qb-editor-root *::after,
+  .qb-renderer-root,
+  .qb-renderer-root *,
+  .qb-renderer-root *::before,
+  .qb-renderer-root *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: currentColor;
+  }
 
-.qb-editor-root,
-.qb-renderer-root {
-  font-family: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
-}
+  .qb-editor-root,
+  .qb-renderer-root {
+    font-family: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
+  }
 
-/* Form elements don't inherit font by default */
-.qb-editor-root input,
-.qb-editor-root textarea,
-.qb-editor-root select,
-.qb-editor-root button,
-.qb-renderer-root input,
-.qb-renderer-root textarea,
-.qb-renderer-root select,
-.qb-renderer-root button {
-  font-family: inherit;
-  font-size: inherit;
+  /* Form elements don't inherit font by default */
+  .qb-editor-root input,
+  .qb-editor-root textarea,
+  .qb-editor-root select,
+  .qb-editor-root button,
+  .qb-renderer-root input,
+  .qb-renderer-root textarea,
+  .qb-renderer-root select,
+  .qb-renderer-root button {
+    font-family: inherit;
+    font-size: inherit;
+  }
 }
 
 @theme {
