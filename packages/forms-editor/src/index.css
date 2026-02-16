@@ -8,30 +8,28 @@
 @source "../../../packages/forms-editor/src/**/*.{js,jsx}";
 @source "../../../packages/forms-engine/src/**/*.{js,jsx}";
 
-/* Scoped base styles - essential resets for mie: prefixed utilities */
-@layer base {
-  .qb-editor-root,
-  .qb-editor-root *,
-  .qb-editor-root *::before,
-  .qb-editor-root *::after {
-    box-sizing: border-box;
-    border-width: 0;
-    border-style: solid;
-    border-color: currentColor;
-  }
+/* Scoped base styles - unlayered so host CSS can't override via @layer specificity */
+.qb-editor-root,
+.qb-editor-root *,
+.qb-editor-root *::before,
+.qb-editor-root *::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: currentColor;
+}
 
-  .qb-editor-root {
-    font-family: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
-  }
+.qb-editor-root {
+  font-family: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
+}
 
-  /* Form elements don't inherit font by default */
-  .qb-editor-root input,
-  .qb-editor-root textarea,
-  .qb-editor-root select,
-  .qb-editor-root button {
-    font-family: inherit;
-    font-size: inherit;
-  }
+/* Form elements don't inherit font by default */
+.qb-editor-root input,
+.qb-editor-root textarea,
+.qb-editor-root select,
+.qb-editor-root button {
+  font-family: inherit;
+  font-size: inherit;
 }
 
 /* Remove focus-visible outline on divs and buttons to prevent Escape key outline */
