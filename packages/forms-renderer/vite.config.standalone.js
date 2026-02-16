@@ -55,12 +55,12 @@ export default defineConfig({
       }
     }
   ],
+  define: {
+    'process.env.NODE_ENV': JSON.stringify('production')
+  },
   build: {
     emptyOutDir: false,
     minify: 'esbuild',
-    define: {
-      'process.env.NODE_ENV': JSON.stringify('production')
-    },
     lib: {
       entry: resolve(__dirname, 'src/questionnaireRenderer-web.js'),
       name: 'QuestionnaireRenderer',

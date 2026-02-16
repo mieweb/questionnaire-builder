@@ -4,30 +4,28 @@
 
 @custom-variant dark (&:where(.qb-renderer-root.dark, .qb-renderer-root.dark *));
 
-/* Scoped base styles - essential resets for mie: prefixed utilities */
-@layer base {
-  .qb-renderer-root,
-  .qb-renderer-root *,
-  .qb-renderer-root *::before,
-  .qb-renderer-root *::after {
-    box-sizing: border-box;
-    border-width: 0;
-    border-style: solid;
-    border-color: currentColor;
-  }
+/* Scoped base styles - unlayered so host CSS can't override via @layer specificity */
+.qb-renderer-root,
+.qb-renderer-root *,
+.qb-renderer-root *::before,
+.qb-renderer-root *::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: currentColor;
+}
 
-  .qb-renderer-root {
-    font-family: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
-  }
+.qb-renderer-root {
+  font-family: "Titillium Web", ui-sans-serif, system-ui, sans-serif;
+}
 
-  /* Form elements don't inherit font by default */
-  .qb-renderer-root input,
-  .qb-renderer-root textarea,
-  .qb-renderer-root select,
-  .qb-renderer-root button {
-    font-family: inherit;
-    font-size: inherit;
-  }
+/* Form elements don't inherit font by default */
+.qb-renderer-root input,
+.qb-renderer-root textarea,
+.qb-renderer-root select,
+.qb-renderer-root button {
+  font-family: inherit;
+  font-size: inherit;
 }
 
 /* Tell Tailwind which files to scan for utility classes */
