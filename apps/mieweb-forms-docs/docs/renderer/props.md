@@ -28,23 +28,26 @@ import { QuestionnaireRenderer } from '@mieweb/forms-renderer';
 - Type: `string | object`
 - Meaning: Questionnaire schema.
 - Accepted formats:
-  - MIE Forms object (`{ schemaType: 'mieforms-v1.0', fields: [...] }`)
-  - SurveyJS object (`{ pages: [...] }`)
-  - JSON string
-  - YAML string
+  - **MIE Forms schema (definition)** - Recommended: `{ schemaType: 'mieforms-v1.0', fields: [...] }` — clean schema without answers
+  - **MIE Forms schema (complete)** - Backward compatibility: `{ schemaType: 'mieforms-v1.0', fields: [...] }` — includes `answer`/`selected` properties for pre-filled forms
+  - **SurveyJS schema**: `{ pages: [...] }` (auto-converted)
+  - JSON string (auto-parsed)
+  - YAML string (auto-parsed)
+
+**Best practice:** Pass MIE Forms schema definition from the editor. The renderer will initialize empty answers for users to fill in. Pass complete schema (with responses) only when you need pre-filled forms.
 
 ### `schemaType` (optional)
 
 - Type: `string`
 - Values: `'mieforms' | 'surveyjs'`
 
-If omitted, schema type is auto-detected.
+If omitted, schema type is auto-detected from the data structure. This prop helps the renderer identify which schema format to expect.
 
 ### `ref` (optional)
 
 - Type: `React.Ref`
 
-Exposes a `getResponse()` method to retrieve form responses on demand:
+Exposes a `getResponse()` method to retrieve form responses in MIE Forms response schema format:
 
 ```jsx
 const rendererRef = useRef();
@@ -53,9 +56,10 @@ const rendererRef = useRef();
 
 // Later, when you want the response:
 const response = rendererRef.current.getResponse();
+// Returns MIE Forms response schema: [{id, text, answer: [...]}, ...]
 ```
 
-See [Get Response](/docs/renderer/get-response) for full usage examples.
+See [Get Response](/docs/renderer/get-response) for full usage examples and format details.
 
 ### `hideUnsupportedFields` (optional)
 

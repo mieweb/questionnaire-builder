@@ -38,6 +38,9 @@ local-packages/
 # TESTING FILES
 TEMP
 
+# Internal tickets (local only)
+.github/INTERNAL-TICKETS/
+
 # Playwright MCP
 .playwright-mcp/
 

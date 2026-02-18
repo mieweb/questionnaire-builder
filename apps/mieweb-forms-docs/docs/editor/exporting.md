@@ -6,6 +6,17 @@ sidebar_position: 4
 
 Export your questionnaire schema as JSON for use in the renderer or external systems.
 
+## Definition vs Response
+
+**New in v1.0:** The editor exports **MIE Forms schema (clean definition)** by default — structure and questions only, without user answers. This separation makes templates reusable and easier to version control.
+
+- **MIE Forms Definition** = Schema with fields, questions, options, logic (no `answer`/`selected`)
+- **Form Response** = User's filled-in answers
+
+When you export from the editor, you get the MIE Forms schema definition ready to be deployed as a template.
+
+---
+
 ## Export Button
 
 Click the **Export** button in the header to download your form.
@@ -69,7 +80,7 @@ function MyEditor() {
 
 ## Export Format
 
-The exported JSON follows the MIE Forms schema:
+The exported JSON is **MIE Forms schema (definition only)** — no user answers:
 
 ```json
 {
@@ -81,18 +92,19 @@ The exported JSON follows the MIE Forms schema:
       "id": "name",
       "fieldType": "text",
       "question": "Full Name",
-      "required": true,
-      "answer": ""
+      "required": true
     },
     {
       "id": "dob",
       "fieldType": "text",
       "question": "Date of Birth",
-      "answer": ""
+      "inputType": "date"
     }
   ]
 }
 ```
+
+Notice there are no `answer` or `selected` properties — this is the MIE Forms schema definition ready to be loaded into the renderer.
 
 ---
 
@@ -100,11 +112,18 @@ The exported JSON follows the MIE Forms schema:
 
 The export includes:
 
-- **Schema Type** - Always `mieforms-v1.0`
+- **Schema Identifier** - Always `"mieforms-v1.0"` (marks this as a MIE Forms schema)
 - **Metadata** - `title`, `description`, and any custom root properties
-- **Fields Array** - Complete field definitions with all properties
+- **Fields Array** - Complete field definitions (structure and questions)
 - **Sections** - Nested field structures
 - **Conditional Logic** - All `enableWhen` rules
+
+**What's excluded:**
+- User answers (`answer`, `selected` properties are stripped)
+- Drawing data (`signatureData`, `markupData`)
+- Any response-specific data
+
+This gives you a clean, reusable template ready to deploy.
 
 ---
 

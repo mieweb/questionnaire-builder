@@ -6,6 +6,120 @@ sidebar_position: 3
 
 Complete reference for MIE Forms schema structure. The schema defines the questionnaire structure, metadata, and field definitions.
 
+## Definition vs Response
+
+**New in v1.0:** MIE Forms now separates **schema definition** (structure/questions) from **form response** (user answers). Both are part of the MIE Forms schema format, but with different purposes.
+
+### MIE Forms Schema (Definition Only)
+
+The **MIE Forms schema definition** contains only the questionnaire structure — fields, questions, options, conditional logic — without user answers. This is the clean schema you'll typically save, version control, and reuse.
+
+```json
+{
+  "schemaType": "mieforms-v1.0",
+  "title": "Patient Intake",
+  "fields": [
+    {
+      "id": "name",
+      "fieldType": "text",
+      "question": "Full Name",
+      "required": true
+    },
+    {
+      "id": "age",
+      "fieldType": "text",
+      "question": "Age",
+      "inputType": "number",
+      "unit": "years"
+    }
+  ]
+}
+```
+
+Notice there are no `answer` or `selected` properties — this is pure definition.
+
+### Form Response (Answers)
+
+The **MIE Forms response schema** contains only the user's answers, mapping field IDs to their values. This format is optimized for submission and storage:
+
+```json
+[
+  {
+    "id": "name",
+    "text": "Full Name",
+    "answer": [{ "value": "John Doe" }]
+  },
+  {
+    "id": "age",
+    "text": "Age",
+    "answer": [{ "value": "35" }]
+  }
+]
+```
+
+**Response Schema Structure:**
+- `id` - Field identifier
+- `text` - Question/field label
+- `answer` - Array of answer objects (structure varies by field type)
+
+This format is returned by `ref.current.getResponse()` and `useFormResponse()`.
+
+### MIE Forms Schema (Complete with Responses)
+
+The **complete MIE Forms schema** merges both definition and responses — useful when you need to persist a form with answers already filled in:
+
+```json
+{
+  "schemaType": "mieforms-v1.0",
+  "title": "Patient Intake",
+  "fields": [
+    {
+      "id": "name",
+      "fieldType": "text",
+      "question": "Full Name",
+      "required": true,
+      "answer": "John Doe"
+    },
+    {
+      "id": "age",
+      "fieldType": "text",
+      "question": "Age",
+      "inputType": "number",
+      "unit": "years",
+      "answer": "35"
+    }
+  ]
+}
+```
+
+### Using the Store Hooks (Advanced)
+
+**Note:** These hooks are engine-level APIs from `@mieweb/forms-engine`. Normal users of `@mieweb/forms-renderer` and `@mieweb/forms-editor` don't need these — use `ref.current.getResponse()` for the renderer and `onChange` callback for the editor instead.
+
+These hooks are only needed when building custom field components or your own renderer:
+
+```jsx
+import { useFormDefinition, useFormData, useFormResponse } from '@mieweb/forms-engine';
+
+// Get MIE Forms schema (definition only - recommended for saving/exporting)
+const definition = useFormDefinition();
+// Returns: { schemaType, title, fields: [...] } (no answer/selected)
+
+// Get MIE Forms schema (complete with responses - backward compatibility)
+const completeData = useFormData();
+// Returns: { schemaType, title, fields: [...] } (includes answer/selected)
+
+// Get responses only (for submission to backend - not MIE Forms schema format)
+const responses = useFormResponse();
+// Returns: [{ id, text, answer: [...] }, ...]
+```
+
+**For renderer users:** Use `ref.current.getResponse()` to get responses.  
+**For editor users:** Use the `onChange` callback to get the definition.  
+**For engine developers:** Use these hooks when building custom components.
+
+---
+
 ## Root Schema Properties
 
 ```json
@@ -21,13 +135,13 @@ Complete reference for MIE Forms schema structure. The schema defines the questi
 }
 ```
 
-MIE Forms requires `schemaType` and `fields`. Any additional root-level properties are treated as metadata and preserved when you edit/export the schema.
+MIE Forms requires `schemaType` and `fields`. The `schemaType` value `"mieforms-v1.0"` is a **schema identifier** that marks this as a MIE Forms schema (as opposed to SurveyJS or other formats). Any additional root-level properties are treated as metadata and preserved when you edit/export the schema.
 
 ### Required Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `schemaType` | string | Schema version identifier (use `"mieforms-v1.0"`) |
+| `schemaType` | string | Schema identifier (use `"mieforms-v1.0"` to mark as MIE Forms schema) |
 | `fields` | array | Array of field definitions (see [Field Types](/docs/field-types)) |
 
 ### Optional Properties
