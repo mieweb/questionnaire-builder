@@ -131,6 +131,11 @@ jobs:
             echo "::endgroup::"
           done
 
+          # Update lockfile to reflect version changes
+          echo "::group::📝 Updating lockfile"
+          npm install --package-lock-only
+          echo "::endgroup::"
+
           # Build all packages (order matters: engine first)
           echo "::group::🔨 Building packages"
           npm run build:packages
@@ -163,7 +168,7 @@ jobs:
             VERSIONS="${VERSIONS:+$VERSIONS, }@mieweb/$pkg@$VER"
           done
 
-          git add packages/*/package.json
+          git add packages/*/package.json package-lock.json
           git commit -m "release: $VERSIONS"
 
           # Create tags on the release commit
