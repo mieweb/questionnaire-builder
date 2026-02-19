@@ -11,7 +11,7 @@ import './index.css';
  * @param {string} [className] - Additional CSS classes
  * @param {boolean} [hideUnsupportedFields=true] - Hide unsupported field types
  * @param {'light'|'dark'} [theme='light'] - Theme: 'light' or 'dark'
- * @param {React.Ref} [ref] - Ref exposing getResponse() method
+ * @param {React.Ref} [ref] - Ref exposing getResponse() method (returns MIE Forms response schema)
  */
 export const QuestionnaireRenderer = React.forwardRef((props, ref) => {
   const formStore = React.useMemo(() => createFormStore(), []);

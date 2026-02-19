@@ -41,6 +41,7 @@ When proposing code, **adhere to all of the following**:
    - Do not create new modules/components/hooks unless duplication or complexity becomes worse without them.
    - Never create standalone markdown documentation files (e.g., PR tickets, feature docs, summaries).
    - Embed all information directly into code comments or verbally respond to user.
+   - **Exception:** Internal tickets can be created in `.github/INTERNAL-TICKETS/` for feature planning (gitignored, local only).
 
 4. **Zero Surprises**
    - Avoid side effects, global state changes, or cross-cutting refactors.
@@ -343,7 +344,57 @@ function getTotal(items) {
 - Create new architectural layers.
 
 ---
+## Internal Planning & Tickets
 
+For feature planning and TODO tracking, use the local-only internal tickets directory:
+
+- **Location:** `.github/INTERNAL-TICKETS/`
+- **Purpose:** Track feature ideas, implementation plans, and technical debt
+- **Format:** Markdown files with descriptive names (e.g., `custom-field-registration.md`)
+- **Status:** Gitignored (local only, never committed)
+- **Usage:** 
+  - Document incomplete/planned features before implementation
+  - Capture implementation details, checklists, and considerations
+  - Reference related files and existing code patterns
+  - Include success criteria and testing requirements
+
+**When to create an internal ticket:**
+- Feature is too complex to implement immediately
+- Need to plan API design before coding
+- Want to document decision rationale for future reference
+- Tracking multi-step implementation work
+
+**Ticket Template:**
+```markdown
+# Feature Name
+
+## Status
+🔴 Not Implemented / 🟡 In Progress / 🟢 Completed
+
+## Priority
+High / Medium / Low
+
+## Problem Statement
+[What problem does this solve?]
+
+## Proposed Solution
+[Implementation approach with code examples]
+
+## Implementation Checklist
+- [ ] Task 1
+- [ ] Task 2
+
+## Technical Considerations
+[Edge cases, compatibility, performance]
+
+## Success Criteria
+[How do we know it's done?]
+
+## Related Files
+[List of files that need changes]
+```
+
+---
 ## Copilot Prompt Template (paste into chat)
 
 > **Role:** You are my coding copilot for this repository.  

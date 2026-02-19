@@ -10,7 +10,9 @@ Complete reference for all supported field types in MIE Forms. Each field type h
 
 ### Text Field
 
-Single-line text input.
+Single-line text input with support for various input types, units, and validation.
+
+#### Basic Usage
 
 ```json
 {
@@ -22,13 +24,196 @@ Single-line text input.
 }
 ```
 
-**Use cases:** Names, email addresses, phone numbers, short text responses
+#### Input Types
+
+The `inputType` property controls the type of input and validation:
+
+**String Input (Default)**
+```json
+{
+  "id": "name",
+  "fieldType": "text",
+  "question": "Enter your name",
+  "inputType": "string",
+  "placeholder": "John Doe",
+  "answer": ""
+}
+```
+
+**Numeric Input**
+```json
+{
+  "id": "age",
+  "fieldType": "text",
+  "question": "What is your age?",
+  "inputType": "number",
+  "answer": ""
+}
+```
+
+**Numeric with Units**
+```json
+{
+  "id": "weight",
+  "fieldType": "text",
+  "question": "Weight",
+  "inputType": "number",
+  "unit": "kg",
+  "placeholder": "Enter weight",
+  "answer": ""
+}
+```
+
+**Email Input**
+```json
+{
+  "id": "email",
+  "fieldType": "text",
+  "question": "Email address",
+  "inputType": "email",
+  "placeholder": "your.email@example.com",
+  "answer": "",
+  "required": true
+}
+```
+
+**Telephone Input**
+```json
+{
+  "id": "phone",
+  "fieldType": "text",
+  "question": "Phone Number",
+  "inputType": "tel",
+  "placeholder": "+1 (555) 555-5555",
+  "answer": ""
+}
+```
+
+**Date Input**
+```json
+{
+  "id": "birthdate",
+  "fieldType": "text",
+  "question": "Date of Birth",
+  "inputType": "date",
+  "answer": ""
+}
+```
+
+**Date and Time Input**
+```json
+{
+  "id": "appointment",
+  "fieldType": "text",
+  "question": "Appointment Date and Time",
+  "inputType": "datetime-local",
+  "answer": ""
+}
+```
+
+**Month Input**
+```json
+{
+  "id": "startMonth",
+  "fieldType": "text",
+  "question": "Start Month",
+  "inputType": "month",
+  "placeholder": "MM/YYYY",
+  "answer": ""
+}
+```
+
+**Time Input**
+```json
+{
+  "id": "appointmentTime",
+  "fieldType": "text",
+  "question": "Preferred Time",
+  "inputType": "time",
+  "answer": ""
+}
+```
+
+**URL Input**
+```json
+{
+  "id": "website",
+  "fieldType": "text",
+  "question": "Website URL",
+  "inputType": "url",
+  "placeholder": "https://example.com",
+  "answer": ""
+}
+```
+
+#### Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | string | **Required.** Unique field identifier |
+| `fieldType` | string | **Required.** Must be `"text"` |
+| `question` | string | Field label/question text |
+| `inputType` | string | Input type: `"string"` (default), `"number"`, `"email"`, `"tel"`, `"date"`, `"datetime-local"`, `"month"`, `"time"`, `"url"` |
+| `answer` | string | The field's value |
+| `placeholder` | string | Placeholder text shown when field is empty |
+| `unit` | string | Unit label displayed after numeric inputs (e.g., "kg", "cm", "°F", "mg") |
+| `required` | boolean | Whether field must be filled (default: false) |
+| `enableWhen` | object | [Conditional logic](/docs/conditional-logic) for field visibility |
+
+#### Common Unit Examples
+
+Medical and scientific units work seamlessly with numeric inputs:
+- `"kg"`, `"lbs"` - Weight
+- `"cm"`, `"in"` - Height
+- `"°F"`, `"°C"` - Temperature
+- `"mg"`, `"g"` - Medication dosage
+- `"km/h"`, `"mph"` - Speed
+- `"kg/m²"` - BMI
+- `"µm"` - Micrometers
+- `"years"` - Duration
+
+#### Conditional Display Example
+
+Show a text field only when another field has a specific value:
+
+```json
+{
+  "id": "has_allergies",
+  "fieldType": "radio",
+  "question": "Do you have any allergies?",
+  "options": [
+    { "id": "opt-yes", "value": "Yes" },
+    { "id": "opt-no", "value": "No" }
+  ],
+  "selected": null
+},
+{
+  "id": "allergy_type",
+  "fieldType": "text",
+  "question": "What type of allergy?",
+  "inputType": "string",
+  "placeholder": "e.g., Peanuts, Shellfish",
+  "answer": "",
+  "enableWhen": {
+    "logic": "AND",
+    "conditions": [
+      {
+        "targetId": "has_allergies",
+        "operator": "equals",
+        "value": "opt-yes"
+      }
+    ]
+  }
+}
+```
+
+**Use cases:** Names, contact information, measurements, dates/times, medical data, any short text or numeric input
 
 ---
 
 ### Long Text (Textarea)
 
-Multi-line text input.
+Multi-line text input for longer responses.
 
 ```json
 {
@@ -39,9 +224,44 @@ Multi-line text input.
 }
 ```
 
+**With Placeholder**
+```json
+{
+  "id": "medicalHistory",
+  "fieldType": "longtext",
+  "question": "Medical history",
+  "placeholder": "Please provide detailed information about your medical history...",
+  "answer": "",
+  "required": false
+}
+```
+
+**With Pre-filled Value**
+```json
+{
+  "id": "termsReview",
+  "fieldType": "longtext",
+  "question": "Terms and conditions review",
+  "answer": "I have read and understood all terms and conditions of this service.",
+  "required": false
+}
+```
+
+#### Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | string | **Required.** Unique field identifier |
+| `fieldType` | string | **Required.** Must be `"longtext"` |
+| `question` | string | Field label/question text |
+| `answer` | string | The field's value |
+| `placeholder` | string | Placeholder text shown when field is empty |
+| `required` | boolean | Whether field must be filled (default: false) |
+| `enableWhen` | object | [Conditional logic](/docs/conditional-logic) for field visibility |
+
 **Note:** The fieldType is `"longtext"`, not `"textarea"`.
 
-**Use cases:** Comments, descriptions, long-form responses
+**Use cases:** Comments, descriptions, medical histories, symptom details, long-form responses
 
 ---
 
