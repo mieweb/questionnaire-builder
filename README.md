@@ -1,48 +1,91 @@
-# 📝 Questionnaire Builder
+# ⚠️ Questionnaire Builder (Deprecated)
 
-FHIR-compatible questionnaire system for building and rendering dynamic forms.
+> **Status:** Deprecated  
+> This repository is no longer actively developed and will be fully sunset after the support period.
 
-## 📦 Packages
+---
 
-- **[@mieweb/forms-editor](./packages/forms-editor)** - Visual form builder
-- **[@mieweb/forms-renderer](./packages/forms-renderer)** - Display questionnaires
-- **[@mieweb/forms-engine](./packages/forms-engine)** - Core state management
+## 📝 Overview
 
-## 🚀 Installation
+**Questionnaire Builder** is a FHIR-compatible system for building and rendering dynamic forms.
 
-```bash
-# For building forms & vieiwng
-npm install @mieweb/forms-editor
+This project previously provided tooling for:
+- Visual form creation
+- Questionnaire rendering
+- Core state and logic management
 
-# For displaying forms & submitting
-npm install @mieweb/forms-renderer
-```
+---
 
-## 📖 Documentation
+## 📦 Packages (Deprecated)
 
-**[Full Documentation](https://forms-doc.os.mieweb.org/)**
+- **[@mieweb/forms-editor](./packages/forms-editor)** — Visual form builder  
+- **[@mieweb/forms-renderer](./packages/forms-renderer)** — Display and submit forms  
+- **[@mieweb/forms-engine](./packages/forms-engine)** — Core state management  
 
-See the complete documentation for:
-- Getting started guides
-- API reference
-- Field types
-- Examples and tutorials
-- Integration guides
+All packages in this repository are now **deprecated**.
 
-## 🤝 Contributing
+---
 
-We welcome contributions! 
+## 🚨 Deprecation & Sunset Timeline
 
-- **[Contributing Guide](./.github/CONTRIBUTING.md)** - Full guidelines on GitHub
-- **[Contributing Docs](https://forms-doc.os.mieweb.org/docs/contributing)** - Guidelines and reference on our docs site
+This project is entering a **6-month maintenance window** starting from the date of deprecation.
 
-Learn about:
-- Development setup and workflow
-- Coding standards and principles
-- Pull request process
-- Quality expectations
+### During this period
 
-## 🛠️ Development
+- 🛠️ Critical bug fixes may still be addressed  
+- ⚠️ No new features will be added  
+- 📉 Limited support and maintenance  
+
+### After 6 months
+
+- ❌ No further updates or support  
+- 🪦 Repository will be considered fully sunset  
+- 🚫 Not safe for production reliance  
+
+---
+
+## 🔄 Migration Path (Recommended)
+
+This project has been **replaced by a new system**:
+
+👉 https://github.com/mieweb/eSheet
+
+You should begin migrating to the new platform as soon as possible.
+
+### Why migrate?
+
+- Active development and support  
+- Improved architecture and scalability  
+- Better long-term compatibility and maintainability  
+
+---
+
+## 🔄 For Existing Users
+
+If you are currently using this project:
+
+- Your existing applications will continue to function during the support window
+- You should begin planning migration immediately
+- Avoid adding new dependencies or features on top of this system
+
+---
+
+## 📖 Documentation (Legacy)
+
+Legacy documentation is still available for reference:
+
+👉 https://forms-doc.os.mieweb.org/
+
+Use this for:
+- Maintaining existing integrations
+- Reviewing legacy APIs
+- Understanding previous architecture
+
+---
+
+## 🛠️ Development (Legacy Only)
+
+This repository is preserved for maintenance during the deprecation window.
 
 ```bash
 git clone https://github.com/mieweb/questionnaire-builder.git
@@ -54,29 +97,51 @@ npm install
 
 ```bash
 # Build
-npm run build              # Build all packages + docs site
-npm run build:packages     # Build only packages
-npm run build:docs         # Build only docs site
+npm run build
+npm run build:packages
+npm run build:docs
 
 # Development
-npm run dev                # Start docs site with package watch mode
-npm run dev:demo           # Start demo app with package watch mode (port 3001)
+npm run dev
+npm run dev:demo
 
-# Publishing
-npm run publish            # Interactive publish script
+# Publishing (not recommended)
+npm run publish
 
-# Other
-npm run lint               # Run ESLint
+# Lint
+npm run lint
 ```
 
+---
 
-The script will:
-1. Prompt for package selection (engine, editor, renderer, or all)
-2. Ask for version bump type (major, minor, patch)
-3. Ask whether to publish to npm (or dry-run)
-4. Build, version bump, sync dependencies, and publish
+## 🤝 Contributing
 
-**Important:** When updating packages, remember to update the documentation site (`apps/mieweb-forms-docs`) to reflect any API changes, new features, or breaking changes.
+We are no longer accepting contributions for new features.
+
+Only critical fixes may be considered during the support window.
+
+For reference:
+
+- [Contributing Guide](./.github/CONTRIBUTING.md)  
+- https://forms-doc.os.mieweb.org/docs/contributing  
+
+---
+
+## 📌 Important Notes
+
+- This repository is maintained for **temporary legacy support only**
+- APIs and behavior may not align with future platform direction
+- Continued use beyond the support window is at your own risk
+
+---
+
+## 🔮 Future Direction
+
+All future development is moving to:
+
+👉 https://github.com/mieweb/eSheet
+
+---
 
 ## 📄 License
 
