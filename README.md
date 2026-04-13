@@ -1,7 +1,5 @@
 # ⚠️ Questionnaire Builder (Deprecated)
-
-> **Status:** Deprecated  
-> This repository is no longer actively developed and will be fully sunset after the support period.
+> Status: Deprecated — will be sunset after Oct 2026
 
 ---
 
